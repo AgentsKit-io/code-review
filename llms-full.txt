@@ -1018,6 +1018,12 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.7.2
+
+### Patch Changes
+
+- [#96](https://github.com/AgentsKit-io/code-review/pull/96) [`cc239fc`](https://github.com/AgentsKit-io/code-review/commit/cc239fcce33473bcfa06e3d52d22e9908b73969c) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Expose the quality matrix as an executable package binary so external runners such as Orca can invoke it without relying on repository npm scripts.
+
 ## 0.7.1
 
 ### Patch Changes
