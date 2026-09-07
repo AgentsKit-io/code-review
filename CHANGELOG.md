@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.0
+
+### Minor Changes
+
+- [#92](https://github.com/AgentsKit-io/code-review/pull/92) [`bd1a503`](https://github.com/AgentsKit-io/code-review/commit/bd1a503489fc4830096944b20d1cbc6b55a72972) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Add an automatic quality matrix and baseline comparison for review coverage, findings, safety, reliability, speed, token efficiency, batches, memory, configuration, comments, and integrations.
+
 ## 0.6.0
 
 ### Minor Changes
