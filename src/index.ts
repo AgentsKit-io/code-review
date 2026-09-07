@@ -10,4 +10,6 @@ export {
   validateConfig,
 } from './public-config.js'
 export { createFileMemory } from './file-memory.js'
+export { QUALITY_AREAS, compareQuality, evaluateQuality } from './quality-matrix.js'
+export type { QualityArea, QualityAreaResult, QualityInput, QualityReport, QualityStatus } from './quality-matrix.js'
 export type { ConfigInput, ReviewProjectConfig } from './public-config.js'
