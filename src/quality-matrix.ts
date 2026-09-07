@@ -41,6 +41,66 @@ export interface QualityReport {
   decision: 'PASS' | 'BLOCKED'
   areas: QualityAreaResult[]
   absoluteGates: { name: string; passed: boolean; detail: string }[]
+  inputError?: string
+}
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value)
+
+const requireRecord = (value: unknown, path: string): Record<string, unknown> => {
+  if (!isRecord(value)) throw new Error(`${path} must be an object`)
+  return value
+}
+
+const requireNumber = (value: unknown, path: string): number => {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) throw new Error(`${path} must be a finite non-negative number`)
+  return value
+}
+
+const requireBoolean = (value: unknown, path: string): boolean => {
+  if (typeof value !== 'boolean') throw new Error(`${path} must be a boolean`)
+  return value
+}
+
+const requireNumbers = (value: unknown, path: string, keys: readonly string[]): void => {
+  const record = requireRecord(value, path)
+  for (const key of keys) requireNumber(record[key], `${path}.${key}`)
+}
+
+const requireBooleans = (value: unknown, path: string, keys: readonly string[]): void => {
+  const record = requireRecord(value, path)
+  for (const key of keys) requireBoolean(record[key], `${path}.${key}`)
+}
+
+/** Validate and narrow JSON received from an external runner before scoring it. */
+export function parseQualityInput(value: unknown): QualityInput {
+  const input = requireRecord(value, 'input')
+  requireNumbers(input.coverage, 'coverage', ['eligibleFiles', 'reviewedFiles', 'unreviewedFiles', 'requiredLensRuns', 'completedRequiredLensRuns'])
+  requireNumbers(input.findings, 'findings', ['expected', 'detectedExpected', 'falsePositives', 'duplicates', 'severityMatches', 'severityTotal', 'actionable', 'detected'])
+  requireNumbers(input.comments, 'comments', ['inlineExpected', 'inlineValid', 'actionable', 'total'])
+  requireNumbers(input.security, 'security', ['secretLeaks', 'unsafeActions', 'failClosedViolations'])
+  requireNumbers(input.reliability, 'reliability', ['runs', 'completeRuns', 'incompleteAccepted', 'staleArtifactsAccepted', 'silentFailures'])
+  requireNumbers(input.performance, 'performance', ['p95Ms'])
+  requireNumbers(input.tokens, 'tokens', ['changedLines', 'validFindings'])
+  requireNumbers(input.batches, 'batches', ['planned', 'completed', 'retried', 'overBudget'])
+  requireBooleans(input.memory, 'memory', ['enabled', 'persistencePass', 'loadPass', 'malformedRejected', 'feedbackRecorded', 'rulesApproved'])
+  requireBooleans(input.configuration, 'configuration', ['validAccepted', 'invalidRejected', 'schemaAvailable'])
+  requireBooleans(input.integration, 'integration', ['githubPass', 'orcaPass', 'releasePass', 'mergeSafetyPass'])
+  return input as unknown as QualityInput
+}
+
+/** Return a deterministic fail-closed report for malformed external input. */
+export function blockedQualityReport(reason: string): QualityReport {
+  return {
+    version: 1,
+    minimumScore: 3,
+    decision: 'BLOCKED',
+    inputError: reason,
+    areas: QUALITY_AREAS.map((area) => ({ area, score: null, status: 'not-measured', metrics: {}, reason: 'QualityInput validation failed before scoring.' })),
+    absoluteGates: [
+      { name: 'valid-quality-input', passed: false, detail: reason },
+    ],
+  }
 }
 
 function ratioScore(numerator: number, denominator: number): number | null {

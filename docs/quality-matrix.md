@@ -28,6 +28,8 @@ The command exits `0` only for `PASS` and exits `2` for `BLOCKED`. The report in
 
 The matrix separates process evidence from review correctness. `expected`, `detectedExpected`, `falsePositives`, `severityMatches`, and `inlineValid` must come from a labelled evaluation set or human-confirmed ground truth. Without ground truth, the corresponding area is blocked rather than treated as successful.
 
+The CLI validates the complete `QualityInput` shape before scoring. A malformed or incompatible runner artifact produces a structured `BLOCKED` report with `inputError` and a failed `valid-quality-input` gate, and exits with code `2`; it never becomes an uncaught runtime exception or a partial pass.
+
 ## Input contract
 
 The JSON shape is the `QualityInput` type exported from the package root. It contains coverage, findings, comments, security, reliability, performance, tokens, batches, memory, configuration, and integration groups. A complete example is kept in `test/quality-matrix.test.mjs`.
