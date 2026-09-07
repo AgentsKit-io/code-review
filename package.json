@@ -37,12 +37,14 @@
     "docs/plans",
     "docs/assets",
     "docs/continuous-improvement.md",
+    "docs/quality-matrix.md",
     "test/cli-smoke.test.mjs",
     "test/continuous-improvement.test.mjs",
     "test/documentation.test.mjs",
     "test/release-workflow.test.mjs",
     "scripts/generate-llms-full.mjs",
-    "scripts/run-cycle-benchmark.mjs"
+    "scripts/run-cycle-benchmark.mjs",
+    "scripts/evaluate-quality.mjs"
   ],
   "repository": {
     "type": "git",
@@ -66,6 +68,7 @@
     "typecheck": "tsc --noEmit",
     "test": "npm run build && node --test --test-concurrency=1 test/*.test.mjs",
     "benchmark:cycle": "npm run build && node scripts/run-cycle-benchmark.mjs",
+    "quality:matrix": "npm run build && node scripts/evaluate-quality.mjs",
     "docs:full": "node scripts/generate-llms-full.mjs",
     "docs:index": "ak-docs index && npm run docs:full",
     "docs:gate": "ak-docs gate run && ak-docs conformance run documentation-standard-v1 --text && node scripts/generate-llms-full.mjs --check && node --test test/documentation.test.mjs",
