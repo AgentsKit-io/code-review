@@ -600,6 +600,19 @@ request and diagnostics do not print config values.
 Keep policy-only configuration in the file. Use trusted workflow flags or the
 runner environment for provider selection, credentials, and execution mode.
 
+When enabled in a project config, `memory.provider: "self-hosted"` is connected
+to the AgentsKit runtime through a bounded repository-local `ChatMemory`. It
+stores at most 200 messages/2 MiB, applies `retentionDays`, creates directories
+with mode `0700`, writes the memory file with mode `0600`, and fails closed on
+malformed records. The memory path is repository-relative. This is runtime
+conversation memory; it is not automatic rule promotion or an approval signal.
+
+The `comments` policy is applied by the GitHub reporter. It controls inline
+emission, summary emission, renderer detail level, section inclusion, and
+English/Portuguese section labels. Findings remain line-anchored and the
+reporter continues to fall back to a non-approving `COMMENT` when GitHub rejects
+the requested event.
+
 `prompt` is the default context mode. To review an explicit repository snapshot,
 set `context.mode` to `isolated-snapshot` and provide repository-relative
 patterns such as `src/**` or `!src/generated/**`. Sensitive directories/files,

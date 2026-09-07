@@ -28,8 +28,10 @@
       { "id": "circuit-breaker", "statement": "Repeated transient provider failures and terminal provider failures stop unnecessary fan-out and expose skipped-call evidence.", "checks": ["repo-check"] },
       { "id": "execution-evidence", "statement": "Completed reports expose profile, provider calls, failures, skips, elapsed time, deadline status, and circuit state.", "checks": ["regression", "repo-check"] },
       { "id": "continuous-improvement-benchmark", "statement": "A deterministic, credential-free benchmark proves clean approval, required-lens failure, and deadline fail-closed behavior with machine-readable evidence.", "checks": ["cycle-benchmark", "repo-check"] },
-      { "id": "release-version", "statement": "The minor release is consistently versioned as 0.4.0 in package metadata, lockfile, public examples, and release documentation.", "checks": ["repo-check", "docs-gate", "package"] },
-      { "id": "changesets-release", "statement": "Changesets creates a reviewable version pull request on main, and only its bot-authored merge can trigger a validated OIDC npm publication and immutable GitHub release without a long-lived npm token.", "checks": ["release-workflow", "repo-check", "package"] }
+      { "id": "release-version", "statement": "The current published baseline is consistently versioned as 0.5.0 in package metadata, lockfile, public examples, and release documentation.", "checks": ["repo-check", "docs-gate", "package"] },
+      { "id": "changesets-release", "statement": "Changesets creates a reviewable version pull request on main, and only its bot-authored merge can trigger a validated OIDC npm publication and immutable GitHub release without a long-lived npm token.", "checks": ["release-workflow", "repo-check", "package"] },
+      { "id": "self-hosted-memory", "statement": "The public memory configuration creates a bounded repository-local AgentsKit ChatMemory, persists messages, applies retention, and fails closed on malformed records.", "checks": ["repo-check", "package"] },
+      { "id": "comment-policy", "statement": "The public comment configuration reaches GitHub reporters and controls inline output, summary output, language labels, and detail sections without weakening non-approving fallback behavior.", "checks": ["batch-regression", "repo-check"] }
     ]
   },
   "surfaces": { "logic": true, "cli": true, "docs": true },

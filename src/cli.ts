@@ -13,9 +13,10 @@
  *
  * Exit code: 1 when a finding at/above --block survives (unless --no-fail) — wire to CI.
  */
-import type { AdapterFactory } from '@agentskit/core'
+import { buildMessage, type AdapterFactory } from '@agentskit/core'
 import { createProgressObserver } from '@agentskit/ink'
 import { readFileSync, writeFileSync } from 'node:fs'
+import { extname, join } from 'node:path'
 import { builtInLenses, createCodeReviewAgent, type Category, type CodeReviewConfig, type Reporter, type ReviewPlan, type Severity } from '../agents/code-review/agent.js'
 import { githubInlineReporter, githubSummaryReporter, markdownReporter, renderMarkdown, sarifReporter } from '../agents/code-review/reporters.js'
 import { claudeCode } from './claude-code-adapter.js'
@@ -31,6 +32,7 @@ import { getGithubReviewState, reviewFingerprint } from './github-review-state.j
 import { consolidateToArtifact, createBatchCoverage, partitionReviewableFiles, type BatchCoverageState, type BatchReviewArtifact, type ConsolidatedReviewArtifact } from './batch-coverage.js'
 import { assertBatchManifestComplete, batchPlanOverBudget, batchSourceRequested } from './batch-mode.js'
 import { generateConfigSchema, loadProjectConfig, toReviewConfig } from './public-config.js'
+import { createFileMemory } from './file-memory.js'
 
 function loadReviewConfigFromProject(config: Parameters<typeof toReviewConfig>[0], options: Parameters<typeof resolveReviewConfig>[1]): ResolvedReviewConfig {
   return resolveReviewConfig(toReviewConfig(config), options)
@@ -124,6 +126,11 @@ function shouldRedact(reviewConfig: ResolvedReviewConfig): boolean {
   const provider = reviewConfig.provider && resolveProviderId(reviewConfig.provider)
   const boundary = provider && providerEntry(provider)?.dataBoundary
   return (boundary === 'remote' || boundary === 'unknown') && !reviewConfig.allowUnredacted
+}
+
+function memoryFilePath(cwd: string, configuredPath: string): string {
+  const path = join(cwd, configuredPath)
+  return extname(path).toLowerCase() === '.json' ? path : join(path, 'messages.json')
 }
 
 async function resolveSource(reviewConfig: ResolvedReviewConfig): Promise<SourceConfig> {
@@ -295,11 +302,14 @@ async function main() {
   if (has('post') && source.kind === 'github-pr') {
     const { owner, repo, number, token } = source
     reporters.push(
-      githubInlineReporter({ owner, repo, number, token, commitId: githubState?.sha, marker: githubState?.marker }),
-      githubSummaryReporter({ owner, repo, number, token, marker: githubState?.marker }),
+      githubInlineReporter({ owner, repo, number, token, commitId: githubState?.sha, marker: githubState?.marker, policy: reviewConfig.comments }),
+      ...(reviewConfig.comments.summary ? [githubSummaryReporter({ owner, repo, number, token, marker: githubState?.marker })] : []),
     )
   }
 
+  const configuredMemory = projectConfig?.config.memory.enabled && projectConfig.config.memory.provider === 'self-hosted'
+    ? createFileMemory(memoryFilePath(process.cwd(), projectConfig.config.memory.path), projectConfig.config.memory.retentionDays)
+    : undefined
   const config: CodeReviewConfig = {
     source,
     reporters,
@@ -316,6 +326,7 @@ async function main() {
     batchLenses: reviewConfig.batchLenses,
     conventions: reviewConfig.conventions ? { path: reviewConfig.conventions } : autoConventions(),
     thresholds: reviewConfig.thresholds,
+    memory: configuredMemory,
   }
 
   let agent = createCodeReviewAgent(config)
@@ -355,6 +366,12 @@ async function main() {
   await preflightProvider(reviewConfig)
   agent.setAdapter(buildAdapter(reviewConfig))
   const review = await agent.run()
+  if (configuredMemory) {
+    await configuredMemory.save([
+      buildMessage({ role: 'user', content: `Review run for ${source.kind} (${review.evidence.profile})`, status: 'complete' }),
+      buildMessage({ role: 'assistant', content: renderMarkdown(review), status: 'complete' }),
+    ])
+  }
   if (resultFile) {
     if (requestedBatch !== undefined) {
       if (source.kind !== 'github-pr' || !githubState) throw new Error('--batch-index result needs a GitHub PR identity')

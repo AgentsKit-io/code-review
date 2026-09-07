@@ -54,6 +54,17 @@ const ReviewConfigSchema = z.object({
   trustMode: z.enum(['isolated', 'trusted-local']).optional(),
   redaction: z.enum(['required', 'high-confidence']).optional(),
   permissions: z.object({ tools: z.boolean().optional(), write: z.boolean().optional(), shell: z.boolean().optional(), mcp: z.boolean().optional() }).strict().optional(),
+  memory: z.object({
+    enabled: z.boolean().default(false), provider: z.enum(['self-hosted', 'agentskit']).default('self-hosted'),
+    path: relativePattern.default('.agentskit/review-memory/messages.json'), retentionDays: positiveInt.max(3650).default(365),
+    learnFromFeedback: z.boolean().default(true), autoPromoteRules: z.boolean().default(false),
+  }).strict().optional(),
+  comments: z.object({
+    renderer: z.enum(['github-inline', 'coderabbit-inspired', 'compact', 'detailed']).default('coderabbit-inspired'),
+    language: z.string().min(2).max(20).default('en'), inline: z.boolean().default(true), summary: z.boolean().default(true),
+    collapsibleDetails: z.boolean().default(true), includeReason: z.boolean().default(true), includeImpact: z.boolean().default(true),
+    includeInstructions: z.boolean().default(true), includeEvidence: z.boolean().default(true),
+  }).strict().optional(),
   batching: z.object({
     enabled: z.boolean().default(false),
     size: positiveInt.max(100).default(10),
@@ -89,6 +100,8 @@ export interface ResolvedReviewConfig {
   trustMode: 'isolated'; redaction: 'required' | 'high-confidence'
   permissions: { tools?: boolean; write?: boolean; shell?: boolean; mcp?: boolean }
   batching: { enabled: boolean; size: number; requireCompleteCoverage: boolean; failOnUnreviewableFiles: boolean }
+  memory: { enabled: boolean; provider: 'self-hosted' | 'agentskit'; path: string; retentionDays: number; learnFromFeedback: boolean; autoPromoteRules: boolean }
+  comments: { renderer: 'github-inline' | 'coderabbit-inspired' | 'compact' | 'detailed'; language: string; inline: boolean; summary: boolean; collapsibleDetails: boolean; includeReason: boolean; includeImpact: boolean; includeInstructions: boolean; includeEvidence: boolean }
 }
 
 export class ReviewConfigError extends Error {
@@ -166,6 +179,8 @@ export function resolveReviewConfig(
     healthCheck: overrides.healthCheck ?? file?.healthCheck ?? 'auto',
     trustMode: 'isolated' as const, redaction: file?.redaction ?? 'required', permissions: file?.permissions ?? {},
     batching: { enabled: file?.batching?.enabled ?? false, size: file?.batching?.size ?? 10, requireCompleteCoverage: file?.batching?.requireCompleteCoverage ?? true, failOnUnreviewableFiles: file?.batching?.failOnUnreviewableFiles ?? true },
+    memory: { enabled: file?.memory?.enabled ?? false, provider: file?.memory?.provider ?? 'self-hosted', path: file?.memory?.path ?? '.agentskit/review-memory/messages.json', retentionDays: file?.memory?.retentionDays ?? 365, learnFromFeedback: file?.memory?.learnFromFeedback ?? true, autoPromoteRules: file?.memory?.autoPromoteRules ?? false },
+    comments: { renderer: file?.comments?.renderer ?? 'coderabbit-inspired', language: file?.comments?.language ?? 'en', inline: file?.comments?.inline ?? true, summary: file?.comments?.summary ?? true, collapsibleDetails: file?.comments?.collapsibleDetails ?? true, includeReason: file?.comments?.includeReason ?? true, includeImpact: file?.comments?.includeImpact ?? true, includeInstructions: file?.comments?.includeInstructions ?? true, includeEvidence: file?.comments?.includeEvidence ?? true },
   }
   const validation = z.object({
     profile: z.enum(['full', 'fast']), healthCheck: z.enum(['auto', 'off']),
