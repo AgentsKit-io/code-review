@@ -35,9 +35,9 @@ const CODE_EXT = new Set([
   '.swift', '.scala', '.sql', '.sh', '.vue', '.svelte', '.html', '.css', '.md', '.mdx', '.json', '.jsonc', '.yaml', '.yml', '.toml', '.ini', '.cfg', '.conf', '.xml',
   '.graphql', '.gql', '.tf', '.tfvars', '.hcl', '.tsv',
 ])
-const SPECIAL_FILES = new Set(['Dockerfile', 'Containerfile', 'Makefile', 'Jenkinsfile', 'Procfile', 'llms.txt', 'llms-full.txt', ' justfile '].map((name) => name.trim()))
+const SPECIAL_FILES = new Set(['Dockerfile', 'Containerfile', 'Makefile', 'Jenkinsfile', 'Procfile', 'llms.txt', 'llms-full.txt', 'gitignore', 'dockerignore', 'npmignore', 'eslintignore', 'prettierignore', 'env.example', 'env.sample', 'env.template', ' justfile '].map((name) => name.trim()))
 const DENY_DIRS = new Set(['.git', 'node_modules', 'dist', 'build', 'coverage', '.next', 'out', 'vendor'])
-const DENY_FILE = /^(?:\.env(?:\..*)?|credentials(?:\..*)?|secrets?(?:\..*)?|.*\.(?:key|pem|crt|cer|p12|pfx))$/i
+const DENY_FILE = /^(?:\.env(?!\.(?:example|sample|template)$)(?:\..*)?|credentials(?:\..*)?|secrets?(?:\..*)?|.*\.(?:key|pem|crt|cer|p12|pfx))$/i
 
 const langOf = (file: string): string => {
   const base = file.split('/').pop() ?? file
@@ -56,7 +56,7 @@ function deniedPath(file: string): string | undefined {
 
 function isReviewableName(file: string): boolean {
   const base = file.split('/').pop() ?? file
-  return SPECIAL_FILES.has(base) || CODE_EXT.has(extname(file).toLowerCase()) || normalize(file).startsWith('.github/workflows/')
+  return SPECIAL_FILES.has(base) || SPECIAL_FILES.has(base.replace(/^\./, '')) || CODE_EXT.has(extname(file).toLowerCase()) || normalize(file).startsWith('.github/workflows/')
 }
 
 function changedRanges(patch: string): Array<{ start: number; end: number }> {

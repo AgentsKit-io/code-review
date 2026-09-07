@@ -110,6 +110,28 @@ test('GitHub PR ingestion treats tab-separated data as reviewable text', async (
   } finally { globalThis.fetch = originalFetch }
 })
 
+test('GitHub PR ingestion reviews safe repository dotfiles without allowing secret files', async () => {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = async (url) => {
+    const parsed = new URL(url)
+    if (parsed.pathname.endsWith('/pulls/13')) return Response.json({ head: { sha: 'sha-dotfiles' } })
+    if (parsed.pathname.endsWith('/pulls/13/files')) return Response.json([
+      { filename: '.gitignore', patch: '@@ -0,0 +1 @@', status: 'added' },
+      { filename: '.env.example', patch: '@@ -0,0 +1 @@', status: 'added' },
+      { filename: '.env', patch: '@@ -0,0 +1 @@', status: 'added' },
+    ])
+    if (parsed.pathname.endsWith('/contents/.gitignore')) return Response.json({ content: Buffer.from('node_modules\n').toString('base64'), encoding: 'base64' })
+    if (parsed.pathname.endsWith('/contents/.env.example')) return Response.json({ content: Buffer.from('PORT=3000\n').toString('base64'), encoding: 'base64' })
+    return new Response('not found', { status: 404 })
+  }
+  try {
+    const targets = await loadTargets({ kind: 'github-pr', owner: 'AgentsKit-io', repo: 'fixture', number: 13, token: 'test-token' })
+    assert.equal(targets.find((target) => target.file === '.gitignore')?.reviewStatus, undefined)
+    assert.equal(targets.find((target) => target.file === '.env.example')?.reviewStatus, undefined)
+    assert.equal(targets.find((target) => target.file === '.env')?.reviewStatus, 'UNREVIEWED')
+  } finally { globalThis.fetch = originalFetch }
+})
+
 test('GitHub PR ingestion does not download content for files outside the file budget', async () => {
   const originalFetch = globalThis.fetch
   const contentRequests = []
