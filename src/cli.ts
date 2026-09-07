@@ -250,19 +250,26 @@ async function main() {
   const requestedBatch = flag('batch-index')
   const resultFile = flag('result')
   const publishResult = flag('publish-result')
+  // A batched review has one logical policy even though the planner runs the
+  // full profile and workers run the bounded fast profile. Normalize every
+  // profile-derived field here, not only `profile`, so planner manifests and
+  // worker artifacts remain consolidatable under the same configuration.
+  const fingerprintLenses = reviewConfig.batching.enabled
+    ? Object.fromEntries(Object.entries(reviewConfig.lenses).map(([key, policy]) => [key, { ...policy, enabled: policy.required }]))
+    : reviewConfig.lenses
   const policyFingerprint = reviewFingerprint({
     engine: `@agentskit/code-review@${packageVersion()}`,
     provider: reviewConfig.provider,
     model: reviewConfig.model,
     transport: reviewConfig.transport,
-    lenses: reviewConfig.lenses,
+    lenses: fingerprintLenses,
     votes: reviewConfig.votes,
-    retries: reviewConfig.retries,
+    retries: reviewConfig.batching.enabled ? 0 : reviewConfig.retries,
     // Planning uses the full profile while batch workers may use the fast
     // profile. Both are one review policy and must produce the same artifact
     // fingerprint, otherwise valid batch results cannot be consolidated.
     profile: reviewConfig.batching.enabled ? 'batched-policy' : reviewConfig.profile,
-    thresholds: reviewConfig.thresholds,
+    thresholds: reviewConfig.batching.enabled ? { ...reviewConfig.thresholds, maxPerFile: 1 } : reviewConfig.thresholds,
     budget: reviewConfig.budget,
     context: reviewConfig.context,
     redaction: reviewConfig.redaction,
