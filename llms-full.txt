@@ -1018,6 +1018,12 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.7.3
+
+### Patch Changes
+
+- [#98](https://github.com/AgentsKit-io/code-review/pull/98) [`d5b229d`](https://github.com/AgentsKit-io/code-review/commit/d5b229d855db1f87654fbe975e63f051db249353) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Honor an explicit `--mode` CLI override when resolving project configuration, while continuing to reject `trusted-local` from project config and CI.
+
 ## 0.7.2
 
 ### Patch Changes
