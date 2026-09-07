@@ -61,3 +61,33 @@ test('GitHub inline reporter surfaces non-validation posting failures', async ()
     )
   } finally { globalThis.fetch = originalFetch }
 })
+
+test('GitHub inline reporter applies configured language and section policy', async () => {
+  const originalFetch = globalThis.fetch
+  let payload
+  globalThis.fetch = async (_url, init) => {
+    payload = JSON.parse(String(init?.body))
+    return Response.json({ html_url: 'https://github.test/review/2' })
+  }
+  try {
+    await githubInlineReporter({
+      owner: 'org', repo: 'repo', number: 2, token: 'test-token', commitId: 'abc123',
+      policy: { language: 'pt-BR', includeReason: false, includeImpact: false, includeEvidence: false, renderer: 'compact' },
+    }).emit(review)
+    assert.equal(payload.comments.length, 1)
+    assert.match(payload.comments[0].body, /Alteração necessária/)
+    assert.doesNotMatch(payload.comments[0].body, /Por que precisa de correção/)
+    assert.doesNotMatch(payload.comments[0].body, /Evidência da revisão/)
+    assert.doesNotMatch(payload.comments[0].body, /```diff/)
+  } finally { globalThis.fetch = originalFetch }
+})
+
+test('GitHub inline reporter can disable both inline and summary output', async () => {
+  const originalFetch = globalThis.fetch
+  let calls = 0
+  globalThis.fetch = async () => { calls += 1; return Response.json({ html_url: 'https://github.test/review/3' }) }
+  try {
+    await githubInlineReporter({ owner: 'org', repo: 'repo', number: 3, token: 'test-token', policy: { inline: false, summary: false } }).emit(review)
+    assert.equal(calls, 0)
+  } finally { globalThis.fetch = originalFetch }
+})

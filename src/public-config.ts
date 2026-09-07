@@ -157,6 +157,8 @@ export function toReviewConfig(config: ReviewProjectConfig): Record<string, unkn
     budget: { maxCalls: config.review.maxCalls, deadlineMs: config.review.deadlineMs, concurrency: config.execution.maxConcurrentPullRequests },
     conventions: config.review.conventions,
     batching: config.batches,
+    memory: config.memory,
+    comments: config.comments,
   }
 }
 

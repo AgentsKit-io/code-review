@@ -16,6 +16,37 @@ import { GITHUB_REQUEST_TIMEOUT_MS, githubIssueComments, readGithubResponseText 
 const SEV_ORDER: Finding['severity'][] = ['blocker', 'high', 'med', 'nit']
 const SEV_EMOJI: Record<Finding['severity'], string> = { blocker: '⛔', high: '🔴', med: '🟡', nit: '🔵' }
 
+export interface GithubCommentPolicy {
+  renderer?: 'github-inline' | 'coderabbit-inspired' | 'compact' | 'detailed'
+  language?: string
+  inline?: boolean
+  summary?: boolean
+  includeReason?: boolean
+  includeImpact?: boolean
+  includeInstructions?: boolean
+  includeEvidence?: boolean
+  collapsibleDetails?: boolean
+}
+
+function section(label: string, value: string, enabled: boolean): string {
+  return enabled ? `**${label}**\n${value}` : ''
+}
+
+function renderInlineFinding(f: Finding, policy: GithubCommentPolicy = {}): string {
+  const labels = policy.language?.toLowerCase().startsWith('pt')
+    ? { why: 'Por que precisa de correção', required: 'Alteração necessária', acceptance: 'Verificação de aceitação', evidence: 'Evidência da revisão' }
+    : { why: 'Why this needs correction', required: 'Required change', acceptance: 'Acceptance check', evidence: 'Review evidence' }
+  const parts = [
+    `**${SEV_EMOJI[f.severity]} ${f.severity} · ${f.category}** — ${f.title}`,
+    section(labels.why, f.rationale, policy.includeReason !== false),
+    section(labels.required, f.suggestion, policy.includeInstructions !== false),
+    section(labels.acceptance, 'Verify the changed behavior prevents this condition and preserves the intended flow.', policy.includeImpact !== false),
+    section(labels.evidence, `Verified finding · confidence ${f.confidence.toFixed(2)}`, policy.includeEvidence !== false),
+  ].filter(Boolean)
+  if (f.suggestedPatch && policy.renderer !== 'compact') parts.push(`\n\`\`\`diff\n${f.suggestedPatch}\n\`\`\``)
+  return parts.join('\n\n')
+}
+
 function groupBySeverity(findings: Finding[]): string {
   const lines: string[] = []
   for (const sev of SEV_ORDER) {
@@ -203,7 +234,7 @@ export function githubSummaryReporter(c: { owner: string; repo: string; number: 
  * overall verdict + summary body. Findings outside the diff are folded into the body
  * (GitHub rejects review comments on unchanged lines).
  */
-export function githubInlineReporter(c: { owner: string; repo: string; number: number; token: string; commitId?: string; marker?: string }): Reporter {
+export function githubInlineReporter(c: { owner: string; repo: string; number: number; token: string; commitId?: string; marker?: string; policy?: GithubCommentPolicy }): Reporter {
   // Never emit APPROVE — a GitHub Actions token and your own PR both reject it (422).
   const eventFor = (v: ReviewResult['verdict']) => (v === 'REQUEST CHANGES' ? 'REQUEST_CHANGES' : 'COMMENT')
   return {
@@ -211,10 +242,10 @@ export function githubInlineReporter(c: { owner: string; repo: string; number: n
     async emit(review: ReviewResult) {
       const inline = review.findings.filter((f) => f.inDiff)
       const outOfDiff = review.findings.filter((f) => !f.inDiff)
-      const comments = inline.map((f) => ({
+      const comments = c.policy?.inline === false ? [] : inline.map((f) => ({
         path: f.file,
         line: f.endLine ?? f.line,
-        body: `**${SEV_EMOJI[f.severity]} ${f.severity} · ${f.category}** — ${f.title}\n\n**Why this needs correction**\n${f.rationale}\n\n**Required change**\n${f.suggestion}\n\n**Acceptance check**\nVerify the changed behavior prevents this condition and preserves the intended flow.\n\n**Review evidence**\nVerified finding · confidence ${f.confidence.toFixed(2)}${f.suggestedPatch ? `\n\n\`\`\`diff\n${f.suggestedPatch}\n\`\`\`` : ''}`,
+        body: renderInlineFinding(f, c.policy),
       }))
       const body =
         `${c.marker ? `${c.marker}\n` : ''}## Code review — ${review.verdict}\n\n${review.summary}` +
@@ -225,6 +256,7 @@ export function githubInlineReporter(c: { owner: string; repo: string; number: n
         ...(comments.length ? { comments } : {}),
       }
       const path = `/repos/${c.owner}/${c.repo}/pulls/${c.number}/reviews`
+      if (c.policy?.summary === false && comments.length === 0) return
       try {
         await githubPost(c.token, path, { event: eventFor(review.verdict), ...payload })
       } catch (e) {

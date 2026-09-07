@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
@@ -150,6 +150,9 @@ test('public batch policy is carried into the executable review config', () => {
   })
   const resolved = resolveReviewConfig(toReviewConfig(config))
   assert.deepEqual(resolved.batching, { enabled: true, size: 8, requireCompleteCoverage: true, failOnUnreviewableFiles: true })
+  assert.equal(resolved.memory.enabled, true)
+  assert.equal(resolved.memory.path, '.agentskit/review-memory')
+  assert.equal(resolved.comments.language, 'en')
 })
 
 test('public config loader imports JavaScript and TypeScript config modules', async () => {
@@ -160,5 +163,23 @@ test('public config loader imports JavaScript and TypeScript config modules', as
     const loaded = await loadProjectConfig(cwd)
     assert.equal(loaded.config.target.repository, 'AgentsKit-io/agentskit-os')
     assert.equal(loaded.path, modulePath)
+  } finally { rmSync(cwd, { recursive: true, force: true }) }
+})
+
+test('CLI persists a final memory record when project memory is enabled', () => {
+  const cwd = tempRepo(undefined)
+  const configPath = join(cwd, 'code-review.config.mjs')
+  writeFileSync(configPath, `import { defineConfig } from ${JSON.stringify(join(root, 'dist/src/index.js'))}\nexport default defineConfig({ target: { repository: 'AgentsKit-io/agentskit-os' }, review: { provider: 'codex-cli' }, memory: { enabled: true, path: '.agentskit/review-memory/messages.json' }, batches: { enabled: false } })\n`)
+  const fixtureBin = join(root, 'test/fixtures/bin')
+  try {
+    const run = spawnSync(process.execPath, [join(root, 'dist/src/cli.js'), '--config', configPath, '--provider', 'codex-cli', '--stdin', '--profile', 'fast', '--health-check', 'off', '--votes', '1', '--no-fail'], {
+      cwd, input: 'export const answer = 42\n', encoding: 'utf8',
+      env: { ...process.env, CI: '', PATH: `${fixtureBin}:${process.env.PATH ?? ''}` },
+    })
+    assert.equal(run.status, 0, run.stderr)
+    const memoryPath = join(cwd, '.agentskit/review-memory/messages.json')
+    const record = JSON.parse(readFileSync(memoryPath, 'utf8'))
+    assert.equal(record.version, 1)
+    assert.ok(record.messages.length >= 2)
   } finally { rmSync(cwd, { recursive: true, force: true }) }
 })
