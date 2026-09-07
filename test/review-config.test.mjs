@@ -29,6 +29,12 @@ test('CLI overrides max findings per file without changing project config', () =
   assert.equal(config.thresholds.maxPerFile, 2)
 })
 
+test('explicit CLI trust mode reaches the resolved adapter configuration', () => {
+  assert.equal(resolveReviewConfig({ configVersion: 1 }, { overrides: { trustMode: 'trusted-local' } }).trustMode, 'trusted-local')
+  assert.throws(() => resolveReviewConfig({ configVersion: 1 }, { ci: true, overrides: { trustMode: 'trusted-local' } }), /forbidden in CI/)
+  assert.throws(() => resolveReviewConfig({ configVersion: 1, trustMode: 'trusted-local' }), /explicit trusted CLI invocation/)
+})
+
 test('merges independent lens policy and flags override file values', () => {
   const config = resolveReviewConfig({
     configVersion: 1,
