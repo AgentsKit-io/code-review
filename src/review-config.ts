@@ -78,7 +78,7 @@ type FileConfig = z.infer<typeof ReviewConfigSchema>
 export interface ReviewConfigOverrides {
   provider?: string; model?: string; transport?: string; votes?: number; retries?: number
   minSeverity?: Severity; minConfidence?: number; maxPerFile?: number; maxFiles?: number; maxCalls?: number; concurrency?: number; conventions?: string
-  profile?: 'full' | 'fast'; deadlineMs?: number; healthCheck?: 'auto' | 'off'
+  profile?: 'full' | 'fast'; deadlineMs?: number; healthCheck?: 'auto' | 'off'; trustMode?: 'isolated' | 'trusted-local'
 }
 
 export interface ResolvedReviewConfig {
@@ -97,7 +97,7 @@ export interface ResolvedReviewConfig {
   allowUnredacted: boolean
   provider?: string; model?: string; transport?: 'api' | 'acp' | 'headless' | 'auto' | 'http'
   healthCheck: 'auto' | 'off'
-  trustMode: 'isolated'; redaction: 'required' | 'high-confidence'
+  trustMode: 'isolated' | 'trusted-local'; redaction: 'required' | 'high-confidence'
   permissions: { tools?: boolean; write?: boolean; shell?: boolean; mcp?: boolean }
   batching: { enabled: boolean; size: number; requireCompleteCoverage: boolean; failOnUnreviewableFiles: boolean }
   memory: { enabled: boolean; provider: 'self-hosted' | 'agentskit'; path: string; retentionDays: number; learnFromFeedback: boolean; autoPromoteRules: boolean }
@@ -142,6 +142,7 @@ export function resolveReviewConfig(
     if (file.trustMode === 'trusted-local') throw new ReviewConfigError('project config cannot enable trusted-local mode; use an explicit trusted CLI invocation')
     if (file.context?.mode === 'isolated-snapshot' && !file.context.patterns?.length) throw new ReviewConfigError('isolated-snapshot requires at least one context pattern')
   }
+  if (options.ci && overrides.trustMode === 'trusted-local') throw new ReviewConfigError('trusted-local mode is forbidden in CI')
 
   const profile = overrides.profile ?? file?.profile ?? 'full'
   const configuredLenses = Object.fromEntries(BUILTIN_LENS_KEYS.map((key) => [key, { ...DEFAULT_LENSES[key], ...(file?.lenses?.[key] ?? {}) }])) as Record<BuiltinLensKey, LensPolicy>
@@ -177,7 +178,7 @@ export function resolveReviewConfig(
     provider: overrides.provider ?? file?.provider, model: overrides.model ?? file?.model,
     transport: (overrides.transport ?? file?.transport) as ResolvedReviewConfig['transport'],
     healthCheck: overrides.healthCheck ?? file?.healthCheck ?? 'auto',
-    trustMode: 'isolated' as const, redaction: file?.redaction ?? 'required', permissions: file?.permissions ?? {},
+    trustMode: overrides.trustMode ?? 'isolated', redaction: file?.redaction ?? 'required', permissions: file?.permissions ?? {},
     batching: { enabled: file?.batching?.enabled ?? false, size: file?.batching?.size ?? 10, requireCompleteCoverage: file?.batching?.requireCompleteCoverage ?? true, failOnUnreviewableFiles: file?.batching?.failOnUnreviewableFiles ?? true },
     memory: { enabled: file?.memory?.enabled ?? false, provider: file?.memory?.provider ?? 'self-hosted', path: file?.memory?.path ?? '.agentskit/review-memory/messages.json', retentionDays: file?.memory?.retentionDays ?? 365, learnFromFeedback: file?.memory?.learnFromFeedback ?? true, autoPromoteRules: file?.memory?.autoPromoteRules ?? false },
     comments: { renderer: file?.comments?.renderer ?? 'coderabbit-inspired', language: file?.comments?.language ?? 'en', inline: file?.comments?.inline ?? true, summary: file?.comments?.summary ?? true, collapsibleDetails: file?.comments?.collapsibleDetails ?? true, includeReason: file?.comments?.includeReason ?? true, includeImpact: file?.comments?.includeImpact ?? true, includeInstructions: file?.comments?.includeInstructions ?? true, includeEvidence: file?.comments?.includeEvidence ?? true },
