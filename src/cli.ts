@@ -258,7 +258,10 @@ async function main() {
     lenses: reviewConfig.lenses,
     votes: reviewConfig.votes,
     retries: reviewConfig.retries,
-    profile: reviewConfig.profile,
+    // Planning uses the full profile while batch workers may use the fast
+    // profile. Both are one review policy and must produce the same artifact
+    // fingerprint, otherwise valid batch results cannot be consolidated.
+    profile: reviewConfig.batching.enabled ? 'batched-policy' : reviewConfig.profile,
     thresholds: reviewConfig.thresholds,
     budget: reviewConfig.budget,
     context: reviewConfig.context,
