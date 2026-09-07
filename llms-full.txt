@@ -1018,6 +1018,12 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.6.0
+
+### Minor Changes
+
+- [#90](https://github.com/AgentsKit-io/code-review/pull/90) [`ab82590`](https://github.com/AgentsKit-io/code-review/commit/ab82590713dd6fa0ece33676c25cbc9551b11cee) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Connect self-hosted project memory and configurable GitHub comment rendering to the runtime, with bounded persistence and fail-closed malformed-memory handling.
+
 ## 0.5.1
 
 ### Patch Changes
