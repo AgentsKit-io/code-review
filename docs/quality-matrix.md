@@ -16,6 +16,12 @@ Build the package, then evaluate a JSON artifact produced by the Orca run:
 npm run quality:matrix -- --input ./artifacts/quality-input.json \
   --baseline ./artifacts/quality-baseline.json \
   --output ./artifacts/quality-report.json
+
+# From an installed package (for Orca and other external runners):
+npx --yes --package=@agentskit/code-review@latest agentskit-quality \
+  --input ./artifacts/quality-input.json \
+  --baseline ./artifacts/quality-baseline.json \
+  --output ./artifacts/quality-report.json
 ```
 
 The command exits `0` only for `PASS` and exits `2` for `BLOCKED`. The report includes the run ID, library version, source revision, every area score, gate details, and baseline regressions. The input must be tied to the reviewed PR SHA and exact library/configuration versions; manually estimated values are not valid evidence.
