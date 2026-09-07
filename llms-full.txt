@@ -1018,6 +1018,16 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.7.6
+
+### Patch Changes
+
+- [#104](https://github.com/AgentsKit-io/code-review/pull/104) [`1a29c23`](https://github.com/AgentsKit-io/code-review/commit/1a29c234a1b7fb5258f43a671cf2665813be9e54) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Fix batch planning and worker runs producing different policy fingerprints when workers use the fast profile, allowing valid complete batches to be consolidated.
+
+- [#104](https://github.com/AgentsKit-io/code-review/pull/104) [`1a29c23`](https://github.com/AgentsKit-io/code-review/commit/1a29c234a1b7fb5258f43a671cf2665813be9e54) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Keep planner manifests and fast batch artifacts on the same normalized policy fingerprint when batching is enabled.
+
+- [#104](https://github.com/AgentsKit-io/code-review/pull/104) [`1a29c23`](https://github.com/AgentsKit-io/code-review/commit/1a29c234a1b7fb5258f43a671cf2665813be9e54) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Validate quality-matrix input at the CLI boundary and emit structured fail-closed reports for malformed runner artifacts instead of uncaught runtime errors.
+
 ## 0.7.5
 
 ### Patch Changes
