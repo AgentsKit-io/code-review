@@ -22,7 +22,7 @@ Run it with `npm run benchmark:cycle`. It emits a versioned JSON report and exit
 
 ## Quality matrix
 
-The benchmark proves process safety; it does not prove that model findings are correct. For every real review cycle, Orca must also emit a SHA-bound `QualityInput` artifact and run `npm run quality:matrix -- --input <artifact> --baseline <previous-report>`. The matrix requires every area to score at least 3/4 and enforces absolute safety, completeness, inline-comment, and silent-failure gates. See `docs/quality-matrix.md` for the input contract and evidence rules. A missing ground-truth metric blocks the cycle.
+The benchmark proves process safety; it does not prove that model findings are correct. For every real review cycle, Orca must also emit a SHA-bound `QualityInput` artifact and run `npm run quality:matrix -- --input <artifact> --baseline <previous-report>` locally, or `npx --yes --package=@agentskit/code-review@latest agentskit-quality --input <artifact> --baseline <previous-report>` from an installed package. The matrix requires every area to score at least 3/4 and enforces absolute safety, completeness, inline-comment, and silent-failure gates. See `docs/quality-matrix.md` for the input contract and evidence rules. A missing ground-truth metric blocks the cycle.
 
 ## Closed cycle
 

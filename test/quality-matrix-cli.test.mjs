@@ -6,6 +6,8 @@ import { spawnSync } from 'node:child_process'
 import test from 'node:test'
 
 const root = new URL('..', import.meta.url).pathname
+const packageJson = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
+assert.equal(packageJson.bin['agentskit-quality'], 'scripts/evaluate-quality.mjs')
 const fixture = {
   runId: 'cli-fixture', version: '0.6.0', sourceRevision: 'fixture-sha',
   coverage: { eligibleFiles: 1, reviewedFiles: 1, unreviewedFiles: 0, requiredLensRuns: 1, completedRequiredLensRuns: 1 },
