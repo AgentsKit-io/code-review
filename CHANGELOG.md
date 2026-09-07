@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.1
+
+### Patch Changes
+
+- [#94](https://github.com/AgentsKit-io/code-review/pull/94) [`11a9dfd`](https://github.com/AgentsKit-io/code-review/commit/11a9dfdf7127e5588ec77f05751de394a6fa22a1) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Review safe repository dotfiles and environment example templates while continuing to fail closed on real secret files.
+
 ## 0.7.0
 
 ### Minor Changes
