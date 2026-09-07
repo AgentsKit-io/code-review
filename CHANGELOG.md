@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.4
+
+### Patch Changes
+
+- [#100](https://github.com/AgentsKit-io/code-review/pull/100) [`df7632c`](https://github.com/AgentsKit-io/code-review/commit/df7632c59184df7847706f399bf513641d7701e2) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Validate quality-matrix input at the CLI boundary and emit structured fail-closed reports for malformed runner artifacts instead of uncaught runtime errors.
+
 ## 0.7.3
 
 ### Patch Changes
