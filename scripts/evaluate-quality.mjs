@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { readFileSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { evaluateQuality, compareQuality } from '../dist/src/quality-matrix.js'
+import { blockedQualityReport, compareQuality, evaluateQuality, parseQualityInput } from '../dist/src/quality-matrix.js'
 
 const value = (name) => {
   const index = process.argv.indexOf(`--${name}`)
@@ -9,11 +9,16 @@ const value = (name) => {
 }
 const inputPath = value('input')
 if (!inputPath) throw new Error('--input <quality-input.json> is required')
-const input = JSON.parse(readFileSync(resolve(inputPath), 'utf8'))
-const report = evaluateQuality(input)
+let report
+try {
+  const input = JSON.parse(readFileSync(resolve(inputPath), 'utf8'))
+  report = evaluateQuality(parseQualityInput(input))
+} catch (error) {
+  report = blockedQualityReport(error instanceof Error ? error.message : String(error))
+}
 const baselinePath = value('baseline')
 const output = baselinePath
-  ? { ...report, comparison: compareQuality(report, JSON.parse(readFileSync(resolve(baselinePath), 'utf8'))) }
+  ? { ...report, comparison: report.inputError ? { regressions: [], improved: [] } : compareQuality(report, JSON.parse(readFileSync(resolve(baselinePath), 'utf8'))) }
   : report
 const outputPath = value('output')
 if (outputPath) writeFileSync(resolve(outputPath), `${JSON.stringify(output, null, 2)}\n`, { mode: 0o600 })

@@ -49,3 +49,20 @@ test('quality matrix CLI exits two for a blocked report', () => {
     rmSync(directory, { recursive: true, force: true })
   }
 })
+
+test('quality matrix CLI returns structured blocked evidence for malformed runner input', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'agentskit-quality-'))
+  try {
+    const input = join(directory, 'input.json')
+    const output = join(directory, 'report.json')
+    writeFileSync(input, JSON.stringify({ findingsQuality: 'not the public QualityInput schema' }))
+    const result = spawnSync(process.execPath, ['scripts/evaluate-quality.mjs', '--input', input, '--output', output], { cwd: root, encoding: 'utf8' })
+    assert.equal(result.status, 2)
+    const report = JSON.parse(readFileSync(output, 'utf8'))
+    assert.equal(report.decision, 'BLOCKED')
+    assert.match(report.inputError, /coverage must be an object/)
+    assert.equal(report.areas.length, 14)
+  } finally {
+    rmSync(directory, { recursive: true, force: true })
+  }
+})
