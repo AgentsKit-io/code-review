@@ -57,7 +57,8 @@ function terminateProcessTree(child: ChildProcess): void {
     spawn('taskkill', ['/pid', String(child.pid), '/t', '/f'], { stdio: 'ignore' })
     return
   }
-  try { process.kill(-child.pid, 'SIGKILL') } catch { child.kill('SIGKILL') }
+  try { process.kill(-child.pid, 'SIGKILL') } catch { /* The direct kill below handles non-grouped children. */ }
+  try { child.kill('SIGKILL') } catch { /* The child may already have exited. */ }
 }
 
 function createEnvironment(mode: LocalCliMode, credential?: LocalCliOptions['providerCredential']): { env: NodeJS.ProcessEnv; tempRoot?: string } {
@@ -105,11 +106,13 @@ export function runLocalCli(command: string, args: string[], options: LocalCliOp
     let parentShutdown = false
     let failureReason: Error | undefined
     let timeout: NodeJS.Timeout | undefined
+    let killFallback: NodeJS.Timeout | undefined
     let settled = false
     const secrets = options.providerCredential ? [options.providerCredential.value] : []
 
     const cleanup = () => {
       if (timeout) clearTimeout(timeout)
+      if (killFallback) clearTimeout(killFallback)
       options.signal?.removeEventListener('abort', onAbort)
       if (tempRoot) rmSync(tempRoot, { recursive: true, force: true })
     }
@@ -129,6 +132,7 @@ export function runLocalCli(command: string, args: string[], options: LocalCliOp
       if (settled || failureReason) return
       failureReason = reason
       terminateProcessTree(child)
+      killFallback = setTimeout(() => finishError(reason), 250)
     }
     const onAbort = () => { aborted = true; stop(new Error(`${command} aborted`)) }
 
