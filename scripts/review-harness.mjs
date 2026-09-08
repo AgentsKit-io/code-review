@@ -56,6 +56,10 @@ if (preflight) {
   if (report.status === 'ready') {
     const manifest = `${stateDir}/batch-manifest.json`
     const args = [join(packageRoot, 'dist/src/cli.js'), '--config', configFile, '--pr', pr, '--provider', provider, '--health-check', 'off', '--plan', '--json', '--batch-size', value('batch-size') ?? '5', '--batch-manifest', manifest]
+    for (const name of ['model', 'transport', 'profile', 'votes', 'max-calls', 'concurrency', 'deadline-ms', 'min-severity', 'min-confidence', 'max-findings-per-file', 'conventions']) {
+      const override = value(name)
+      if (override !== undefined) args.push(`--${name}`, override)
+    }
     const plan = spawnSync(process.execPath, args, { encoding: 'utf8', timeout: 120_000 })
     add('plan.complete', plan.status === 0, plan.status === 0 ? 'complete provider-free plan generated' : (plan.stderr.trim() || 'plan failed'), 'fix the plan failure before creating a worktree')
   }
