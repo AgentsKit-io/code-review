@@ -1018,6 +1018,12 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.7.11
+
+### Patch Changes
+
+- [#117](https://github.com/AgentsKit-io/code-review/pull/117) [`5d87717`](https://github.com/AgentsKit-io/code-review/commit/5d87717bbf18bbfa90c91b6af0bd2cd7fedccdc8) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Add a provider-free operational preflight that aggregates blockers before planning or live review.
+
 ## 0.7.10
 
 ### Patch Changes
