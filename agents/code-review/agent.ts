@@ -436,7 +436,10 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
           let runtimeTimer: NodeJS.Timeout | undefined
           try {
             const deadlineResult = new Promise<never>((_, reject) => {
-              runtimeTimer = setTimeout(() => reject(new ReviewDeadlineError(deadlineMs)), remainingMs)
+              runtimeTimer = setTimeout(() => {
+                deadlineExceeded = true
+                reject(new ReviewDeadlineError(deadlineMs))
+              }, remainingMs)
             })
             const result = await Promise.race([runtimeResult, deadlineResult])
             circuit.recordSuccess()
