@@ -45,7 +45,8 @@
     "test/release-workflow.test.mjs",
     "scripts/generate-llms-full.mjs",
     "scripts/run-cycle-benchmark.mjs",
-    "scripts/evaluate-quality.mjs"
+    "scripts/evaluate-quality.mjs",
+    "scripts/review-harness.mjs"
   ],
   "repository": {
     "type": "git",
@@ -70,6 +71,7 @@
     "test": "npm run build && node --test --test-concurrency=1 test/*.test.mjs",
     "benchmark:cycle": "npm run build && node scripts/run-cycle-benchmark.mjs",
     "quality:matrix": "npm run build && node scripts/evaluate-quality.mjs",
+    "harness": "npm run build && node scripts/review-harness.mjs",
     "docs:full": "node scripts/generate-llms-full.mjs",
     "docs:index": "ak-docs index && npm run docs:full",
     "docs:gate": "ak-docs gate run && ak-docs conformance run documentation-standard-v1 --text && node scripts/generate-llms-full.mjs --check && node --test test/documentation.test.mjs",
