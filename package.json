@@ -1,6 +1,6 @@
 {
   "name": "@agentskit/code-review",
-  "version": "0.7.6",
+  "version": "0.7.7",
   "type": "module",
   "description": "Provider-agnostic, low-noise AI code review for local development and GitHub Actions.",
   "license": "MIT",
@@ -86,7 +86,7 @@
   "dependencies": {
     "@agentskit/adapters": "^0.12.2",
     "@agentskit/core": "^1.9.0",
-    "@agentskit/ink": "^0.9.0",
+    "@agentskit/ink": "0.10.9",
     "@agentskit/runtime": "^0.7.3",
     "@agentskit/tools": "^0.9.4",
     "esbuild": "^0.25.0",
