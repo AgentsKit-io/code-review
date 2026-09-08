@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.17
+
+### Patch Changes
+
+- [#130](https://github.com/AgentsKit-io/code-review/pull/130) [`38bcd23`](https://github.com/AgentsKit-io/code-review/commit/38bcd23f1512f59e166d7023bc750f310d387611) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Enforce the global review deadline even when a provider runtime leaves an aborted request pending.
+
 ## 0.7.16
 
 ### Patch Changes
