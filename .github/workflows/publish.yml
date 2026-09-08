@@ -1,6 +1,8 @@
 name: Publish Package
 
 on:
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
     types: [closed]
@@ -11,10 +13,10 @@ permissions:
 jobs:
   publish:
     if: >-
-      github.event.pull_request.merged == true &&
-      github.event.pull_request.title == 'chore: version packages' &&
-      (github.event.pull_request.head.ref == 'changeset-release/main' ||
-       github.event.pull_request.head.ref == 'codex/release-0.4.1')
+      github.event_name == 'push' ||
+      (github.event.pull_request.merged == true &&
+       github.event.pull_request.title == 'chore: version packages' &&
+       github.event.pull_request.head.ref == 'changeset-release/main')
     runs-on: ubuntu-latest
     permissions:
       contents: write

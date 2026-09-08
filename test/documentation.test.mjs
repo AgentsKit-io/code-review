@@ -43,10 +43,11 @@ test('Changesets release automation is tokenless, gated, and recoverable', () =>
   assert.doesNotMatch(versionWorkflow, /id-token: write/)
   const publishJob = publishWorkflow.match(/\n  publish:\n([\s\S]*?)(?=\n  [A-Za-z0-9_-]+:|\n\S|$)/)?.[1] ?? ''
   assert.match(publishJob, /id-token: write/)
+  assert.match(publishWorkflow, /push:\n    branches: \[main\]/)
+  assert.match(publishWorkflow, /github\.event_name == 'push'/)
   assert.match(publishWorkflow, /github\.event\.pull_request\.title == 'chore: version packages'/)
   assert.match(publishWorkflow, /github\.event\.pull_request\.head\.ref == 'changeset-release\/main'/)
-  assert.match(publishWorkflow, /github\.event\.pull_request\.head\.ref == 'codex-release-0\.4\.1'|github\.event\.pull_request\.head\.ref == 'codex\/release-0\.4\.1'/)
-  assert.doesNotMatch(publishWorkflow, /workflow_dispatch|RECOVERY_VERSION/)
+  assert.doesNotMatch(publishWorkflow, /workflow_dispatch|RECOVERY_VERSION|codex\/release-0\.4\.1/)
   assert.match(publishWorkflow, /github\.event\.pull_request\.merge_commit_sha \|\| github\.sha/)
   assert.match(publishWorkflow, /gh release view/)
   assert.match(publishWorkflow, /npm publish --access public/)
