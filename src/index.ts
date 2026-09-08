@@ -15,4 +15,17 @@ export { assertCanaryReady, createHarnessContract, createHarnessRun, fingerprint
 export type { CanaryResult, HarnessBlocker, HarnessCheck, HarnessContract, HarnessReport, HarnessRunState, HarnessStage } from './harness.js'
 export { QUALITY_AREAS, blockedQualityReport, compareQuality, evaluateQuality, parseQualityInput } from './quality-matrix.js'
 export type { QualityArea, QualityAreaResult, QualityInput, QualityReport, QualityStatus } from './quality-matrix.js'
+export {
+  QualityBaselineIdentitySchema,
+  QualityBaselineSchema,
+  QualityDurationBreakdownSchema,
+  QualityTokenBreakdownSchema,
+  RealCampaignBaselineSchema,
+  RealRunBaselineSchema,
+  SyntheticRunBaselineSchema,
+  parseQualityBaseline,
+  qualityBaselineIdentity,
+  validateStudyOutputPath,
+} from './quality-baseline.js'
+export type { QualityBaseline, QualityBaselineIdentity, QualityDurationBreakdown, QualityTokenBreakdown } from './quality-baseline.js'
 export type { ConfigInput, ReviewProjectConfig } from './public-config.js'

@@ -1,5 +1,7 @@
 # Review quality matrix
 
+The versioned baseline evidence classes and v0.8.0 reproduction command are defined in [the baseline protocol](baseline-protocol.md).
+
 The quality matrix is the release gate for continuous improvement of the review process. It measures the result of a real review run; it does not turn a benchmark pass, a file count, or a rendered report into evidence of semantic correctness.
 
 ## Decision rule

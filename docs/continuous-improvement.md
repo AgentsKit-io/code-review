@@ -18,7 +18,7 @@ Run these deterministic, credential-free cases before and after every process ch
 
 The benchmark records elapsed time, provider calls, failed/skipped calls, execution coverage, verdict, incomplete state, and deadline state. It is run with the fixture provider; representative live runs are a separate acceptance check, never a replacement for this baseline.
 
-Run it with `npm run benchmark:cycle`. It emits a versioned JSON report and exits non-zero when any of the three cases stops preserving its stated fail-closed behavior.
+Run it with `npm run benchmark:cycle`. To capture the stable schema-v2 comparison point, run `npm run benchmark:baseline -- --library-version 0.8.0`; see [the baseline protocol](baseline-protocol.md). Both commands exit non-zero when a case stops preserving its fail-closed behavior.
 
 ## Quality matrix
 
