@@ -1018,6 +1018,12 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.7.13
+
+### Patch Changes
+
+- [#122](https://github.com/AgentsKit-io/code-review/pull/122) [`125f4c4`](https://github.com/AgentsKit-io/code-review/commit/125f4c40a44ac55895f1c92043dea65f138bacfa) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Expose the deterministic review harness as a packaged CLI for Orca automation.
+
 ## 0.7.12
 
 ### Patch Changes
