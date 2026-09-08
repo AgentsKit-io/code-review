@@ -16,9 +16,9 @@ const fixture = {
   security: { secretLeaks: 0, unsafeActions: 0, failClosedViolations: 0 },
   reliability: { runs: 1, completeRuns: 1, incompleteAccepted: 0, staleArtifactsAccepted: 0, silentFailures: 0 },
   performance: { p95Ms: 100, baselineP95Ms: 100 },
-  tokens: { tokensUsed: 100, changedLines: 10, validFindings: 1, baselineTokensPerFinding: 100 },
+  tokens: { tokensUsed: 100, changedLines: 10, validFindings: 1, baselineTokensPerChangedLine: 10 },
   batches: { planned: 1, completed: 1, retried: 0, overBudget: 0 },
-  memory: { enabled: true, persistencePass: true, loadPass: true, malformedRejected: true, feedbackRecorded: true, rulesApproved: true },
+  memory: { enabled: true, persistencePass: true, loadPass: true, malformedRejected: true, feedbackRecorded: true, rulesApproved: true, learningEvaluationPass: true, learningDetectionLift: true, learningPrecisionPass: true, learningTokenPass: true },
   configuration: { validAccepted: true, invalidRejected: true, schemaAvailable: true },
   integration: { githubPass: true, orcaPass: true, releasePass: true, mergeSafetyPass: true },
 }

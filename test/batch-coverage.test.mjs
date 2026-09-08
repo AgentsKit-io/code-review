@@ -28,3 +28,10 @@ test('only complete, matching batch artifacts can become a publishable review', 
   assert.deepEqual({ repository: publishable.repository, pullNumber: publishable.pullNumber, headSha: publishable.headSha, policyFingerprint: publishable.policyFingerprint, incomplete: publishable.review.incomplete }, { repository: state.repository, pullNumber: state.pullNumber, headSha: state.headSha, policyFingerprint: state.policyFingerprint, incomplete: false })
   assert.throws(() => consolidateBatchArtifacts(state, [artifact(0, ['wrong.ts']), artifact(1, ['b.ts'])]), /manifest/)
 })
+
+test('consolidation preserves provider token evidence only when every batch reports it', () => {
+  const state = createBatchCoverage({ repository: 'owner/repo', pullNumber: 1, headSha: 'a'.repeat(40), policyFingerprint: 'policy', batches: [{ index: 0, files: ['a.ts'] }, { index: 1, files: ['b.ts'] }] })
+  const artifact = (index, tokensUsed) => ({ version: 1, repository: state.repository, pullNumber: 1, headSha: state.headSha, policyFingerprint: state.policyFingerprint, batch: { index, files: [`${index ? 'b' : 'a'}.ts`] }, review: { verdict: 'APPROVE', blocking: false, incomplete: false, findings: [], dropped: [], execution: { attempted: 1, succeeded: 1, failed: 0 }, evidence: { profile: 'full', providerCalls: 1, failedProviderCalls: 0, skippedProviderCalls: 0, elapsedMs: 1, deadlineMs: 10, deadlineExceeded: false, circuitState: 'closed', ...(tokensUsed === undefined ? {} : { tokensUsed }) }, summary: 'ok' } })
+  assert.equal(consolidateBatchArtifacts(state, [artifact(0, 10), artifact(1, 20)]).evidence.tokensUsed, 30)
+  assert.equal(consolidateBatchArtifacts(state, [artifact(0, 10), artifact(1)]).evidence.tokensUsed, undefined)
+})

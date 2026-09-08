@@ -1,8 +1,6 @@
 name: Publish Package
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
     types: [closed]
@@ -13,10 +11,11 @@ permissions:
 jobs:
   publish:
     if: >-
-      github.event_name == 'push' ||
-      (github.event.pull_request.merged == true &&
+      github.event.pull_request.merged == true &&
        github.event.pull_request.title == 'chore: version packages' &&
-       github.event.pull_request.head.ref == 'changeset-release/main')
+       github.event.pull_request.head.ref == 'changeset-release/main' &&
+       github.event.pull_request.user.login == 'github-actions[bot]' &&
+       github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     permissions:
       contents: write

@@ -14,6 +14,10 @@ if (countFile) {
   writeFileSync(countFile, String(count + 1))
 }
 if (process.env.CODEX_FIXTURE_HANG === '1') setInterval(() => {}, 1_000)
+if (process.env.CODEX_FIXTURE_FORBID_GITHUB_TOKEN === '1' && (process.env.GITHUB_TOKEN || process.env.GH_TOKEN)) {
+  process.stderr.write('fixture provider inherited a GitHub credential\n')
+  process.exit(1)
+}
 
 if (
   process.env.CODEX_FIXTURE_FAIL_ALL === '1' ||
@@ -70,3 +74,4 @@ const output = healthProbe
   ? 'Here is the requested result:\n```json\n{"findings":[]}\n```\n'
   : JSON.stringify({ findings: [] })
 writeFileSync(process.argv[outputIndex + 1], output)
+if (process.argv.includes('--json')) process.stdout.write(`${JSON.stringify({ type: 'turn.completed', usage: { input_tokens: 100, cached_input_tokens: 20, output_tokens: 10, reasoning_output_tokens: 0 } })}\n`)

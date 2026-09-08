@@ -60,14 +60,36 @@ export function hardenOutputSchema(value: unknown): unknown {
 }
 
 /** Run `codex exec` and return its final message (captured via -o). */
-async function runCodex(prompt: string, schema: unknown, model?: string, signal?: AbortSignal, mode?: LocalCliMode, worker?: { timeoutMs?: number; maxOutputBytes?: number }): Promise<string> {
+type CodexUsage = { inputTokens: number; cachedInputTokens: number; outputTokens: number; reasoningOutputTokens: number }
+
+function parseUsage(output: string): CodexUsage | undefined {
+  for (const line of output.trim().split('\n').reverse()) {
+    try {
+      const event = JSON.parse(line) as { type?: string; usage?: { input_tokens?: number; cached_input_tokens?: number; output_tokens?: number; reasoning_output_tokens?: number } }
+      if (event.type !== 'turn.completed' || !event.usage) continue
+      return {
+        inputTokens: event.usage.input_tokens ?? 0,
+        cachedInputTokens: event.usage.cached_input_tokens ?? 0,
+        outputTokens: event.usage.output_tokens ?? 0,
+        reasoningOutputTokens: event.usage.reasoning_output_tokens ?? 0,
+      }
+    } catch { /* Ignore non-JSON diagnostics from older Codex versions. */ }
+  }
+  return undefined
+}
+
+async function runCodex(prompt: string, schema: unknown, model?: string, signal?: AbortSignal, mode?: LocalCliMode, worker?: { timeoutMs?: number; maxOutputBytes?: number }): Promise<{ output: string; usage?: CodexUsage }> {
   const dir = mkdtempSync(join(tmpdir(), "cr-codex-"));
   const outFile = join(dir, "out.txt");
   try {
-    const run = async (useSchema: boolean): Promise<void> => {
+    const run = async (useSchema: boolean) => {
       const args = [
         "exec",
         "--skip-git-repo-check",
+        "--ephemeral",
+        "--ignore-user-config",
+        "--ignore-rules",
+        "--json",
         "-s",
         "read-only",
         "-o",
@@ -82,7 +104,7 @@ async function runCodex(prompt: string, schema: unknown, model?: string, signal?
       }
       if (model) args.push("-m", model);
       args.push(prompt);
-      await runLocalCli("codex", args, {
+      return runLocalCli("codex", args, {
         signal,
         mode,
         timeoutMs: worker?.timeoutMs ?? localCliTimeoutMs(DEFAULT_CODEX_CLI_TIMEOUT_MS),
@@ -90,23 +112,24 @@ async function runCodex(prompt: string, schema: unknown, model?: string, signal?
       });
     };
 
+    let execution
     try {
-      await run(schema !== undefined);
+      execution = await run(schema !== undefined);
     } catch (error) {
       // Codex versions can reject an otherwise valid JSON Schema at request time
       // (for example, when they require every object property to be required).
       // Retry only that compatibility failure; auth, timeout, and process failures
       // must not double the provider calls.
       if (schema === undefined || !isOutputSchemaRejection(error)) throw error;
-      await run(false);
+      execution = await run(false);
     }
-    return readFileSync(outFile, "utf8");
+    return { output: readFileSync(outFile, "utf8"), usage: parseUsage(execution.stdout) };
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
 }
 
-export function codexCli(opts: { model?: string; mode?: LocalCliMode; worker?: { timeoutMs?: number; maxOutputBytes?: number } } = {}): AdapterFactory {
+export function codexCli(opts: { model?: string; mode?: LocalCliMode; worker?: { timeoutMs?: number; maxOutputBytes?: number }; onUsage?: (usage: CodexUsage) => void } = {}): AdapterFactory {
   return {
     capabilities: { streaming: false, tools: true, structuredOutput: true },
     createSource: (request: AdapterRequest): StreamSource => {
@@ -128,7 +151,9 @@ export function codexCli(opts: { model?: string; mode?: LocalCliMode; worker?: {
           }
 
           const schema = tools.length === 1 ? tools[0]!.schema : undefined;
-          const out = (await runCodex(prompt, schema, opts.model, controller.signal, opts.mode, opts.worker)).trim();
+          const result = await runCodex(prompt, schema, opts.model, controller.signal, opts.mode, opts.worker);
+          if (result.usage) opts.onUsage?.(result.usage);
+          const out = result.output.trim();
 
           if (tools.length === 1) {
             yield { type: "tool_call", toolCall: { id: `tc-${Date.now()}`, name: tools[0]!.name, args: extractJson(out) } };

@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "rule": "Security policy: sendV1 is forbidden for outbound customer data; use auditedSend instead.",
+  "case": {
+    "id": "approved-memory-rule",
+    "language": "ts",
+    "source": "declare function sendV1(payload: string): void\n\nexport function deliverCustomerData(payload: string): void {\n  sendV1(payload)\n}\n",
+    "findings": [
+      {
+        "line": 4,
+        "lineTolerance": 1,
+        "severity": "high",
+        "titleIncludes": ["sendV1", "auditedSend", "security policy", "forbidden"]
+      }
+    ]
+  }
+}

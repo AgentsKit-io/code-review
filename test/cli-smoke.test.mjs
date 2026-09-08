@@ -27,12 +27,15 @@ const adapterRequest = {
 
 test('a clean local Codex CLI fixture completes an offline stdin review', () => {
   const fixtureBin = join(root, 'test/fixtures/bin')
+  const directory = mkdtempSync(join(tmpdir(), 'codex-usage-'))
+  const result = join(directory, 'result.json')
   const run = spawnSync(process.execPath, [
     'dist/src/cli.js',
     '--provider', 'codex-cli',
     '--stdin',
     '--lang', 'ts',
     '--health-check', 'off',
+    '--result', result,
     '--no-fail',
   ], {
     cwd: root,
@@ -50,6 +53,9 @@ test('a clean local Codex CLI fixture completes an offline stdin review', () => 
   assert.match(run.stdout, /Code review — APPROVE/)
   assert.match(run.stdout, /No findings above threshold/)
   assert.match(run.stdout, /7\/7 lens executions succeeded/)
+  const evidence = JSON.parse(readFileSync(result, 'utf8')).evidence
+  assert.ok(evidence.tokensUsed > 0)
+  rmSync(directory, { recursive: true, force: true })
 })
 
 test('normal Codex review probes provider health once before fan-out', () => {
@@ -299,7 +305,7 @@ test('fast profile batches required lenses and stays within a small call budget'
     'dist/src/cli.js', '--provider', 'codex-cli', '--stdin', '--profile', 'fast', '--health-check', 'off', '--no-fail',
   ], {
     cwd: root, input: 'export const answer = 42\n', encoding: 'utf8',
-    env: { ...process.env, PATH: `${fixtureBin}:${process.env.PATH ?? ''}` },
+    env: { ...process.env, GITHUB_TOKEN: 'github_pat_fixture_should_not_reach_provider', CODEX_FIXTURE_FORBID_GITHUB_TOKEN: '1', PATH: `${fixtureBin}:${process.env.PATH ?? ''}` },
   })
   assert.equal(run.status, 0, run.stderr)
   assert.match(run.stdout, /profile=fast/)

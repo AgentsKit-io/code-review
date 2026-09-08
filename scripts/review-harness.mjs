@@ -92,7 +92,14 @@ if (canaryStatus) {
 if (!checksFile && !(manifestFile && artifactFile) && !replay) {
   throw new Error('use --checks <json>, --manifest <json> --artifact <json>, or --replay')
 }
-const replayRun = replay ? spawnSync(process.execPath, ['--test', join(packageRoot, 'test/harness.test.mjs')], { encoding: 'utf8' }) : undefined
+const replayRun = replay ? spawnSync(process.execPath, [
+  '--test', '--test-concurrency=1',
+  join(packageRoot, 'test/harness.test.mjs'),
+  join(packageRoot, 'test/batch-coverage.test.mjs'),
+  join(packageRoot, 'test/quality-matrix.test.mjs'),
+  join(packageRoot, 'test/quality-matrix-cli.test.mjs'),
+  join(packageRoot, 'test/cli-smoke.test.mjs'),
+], { encoding: 'utf8', timeout: 120_000 }) : undefined
 const report = replay
   ? { status: replayRun.status === 0 ? 'ready' : 'blocked', blockers: replayRun.status === 0 ? [] : [{ id: 'replay.tests', severity: 'blocker', ok: false, detail: replayRun.stderr.trim() || replayRun.stdout.trim() }] }
   : checksFile ? runBlockerSweep(json(checksFile, 'checks')) : validateCanary(json(manifestFile, 'manifest'), json(artifactFile, 'artifact'))

@@ -99,7 +99,7 @@ function applyLimits(targets: ReviewTarget[], limits?: SourceLimits): ReviewTarg
   return [...targets.filter((target) => target.reviewStatus === 'UNREVIEWED'), ...reviewable.filter(({ target }) => selected.has(target)).map(({ target }) => target), ...skipped]
 }
 
-function readTarget(file: string, cwd: string, limits: SourceLimits, redact: boolean, changed?: ReviewTarget['changedRanges']): ReviewTarget {
+function readTarget(file: string, cwd: string, limits: SourceLimits, redact: boolean, changed?: ReviewTarget['changedRanges'], patch?: string): ReviewTarget {
   const normalized = normalize(file)
   const denied = deniedPath(normalized)
   if (denied) return unreviewed(normalized, denied)
@@ -113,7 +113,7 @@ function readTarget(file: string, cwd: string, limits: SourceLimits, redact: boo
     if (size > maxFileBytes) return unreviewed(normalized, `file exceeds ${maxFileBytes} byte limit`)
     const fullContent = readFileSync(fd, 'utf8')
     if (fullContent.includes('\0')) return unreviewed(normalized, 'binary content')
-    return { file: normalized, language: langOf(normalized), fullContent: redact ? redactSecrets(fullContent) : fullContent, changedRanges: changed, isChanged: Boolean(changed) }
+    return { file: normalized, language: langOf(normalized), fullContent: redact ? redactSecrets(fullContent) : fullContent, changedRanges: changed, patch, isChanged: Boolean(changed) }
   } catch { return unreviewed(normalized, 'file is not readable text')
   } finally { closeSync(fd) }
 }
@@ -178,7 +178,7 @@ async function fromGitDiff(c: Extract<SourceConfig, { kind: 'git-diff' }>): Prom
   for (const block of diff.split(/^diff --git /m).slice(1)) {
     const pathMatch = block.match(/^a\/(.+?) b\/(.+)$/m); const file = pathMatch?.[2]
     if (!file || block.includes('\ndeleted file mode')) continue
-    const target = readTarget(file, cwd, { maxFileBytes: c.limits?.maxFileBytes }, Boolean(c.redact), changedRanges(block))
+    const target = readTarget(file, cwd, { maxFileBytes: c.limits?.maxFileBytes }, Boolean(c.redact), changedRanges(block), block)
     targets.push(target)
   }
   return targets
@@ -260,7 +260,7 @@ async function fromGithubPr(c: Extract<SourceConfig, { kind: 'github-pr' }>): Pr
       continue
     }
     downloadedBytes += size
-    targets.push({ file: f.filename, language: langOf(f.filename), fullContent: c.redact ? redactSecrets(raw) : raw, changedRanges: f.patch ? changedRanges(f.patch) : [], isChanged: true, commitId: sha })
+    targets.push({ file: f.filename, language: langOf(f.filename), fullContent: c.redact ? redactSecrets(raw) : raw, changedRanges: f.patch ? changedRanges(f.patch) : [], patch: f.patch, isChanged: true, commitId: sha })
   }
   if (metadataTruncated) targets.push(unreviewed('[github-pr file list]', `PR file metadata truncated after ${MAX_GITHUB_PR_METADATA_FILES} files`))
   return applyLimits(targets, c.limits)
