@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.15
+
+### Patch Changes
+
+- [#126](https://github.com/AgentsKit-io/code-review/pull/126) [`0828a57`](https://github.com/AgentsKit-io/code-review/commit/0828a570ea2b6c794b86f18cb9a34dfc8fcfcbf4) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Run trusted-local providers from the review workspace while preserving the caller environment.
+
 ## 0.7.14
 
 ### Patch Changes
