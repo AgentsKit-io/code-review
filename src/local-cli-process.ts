@@ -195,13 +195,11 @@ export function runLocalCliProtocol<T>(
     let parentShutdown = false
     let failureReason: Error | undefined
     let timeout: NodeJS.Timeout | undefined
-    let killFallback: NodeJS.Timeout | undefined
     let settled = false
     const secrets = options.providerCredential ? [options.providerCredential.value] : []
 
     const cleanup = () => {
       if (timeout) clearTimeout(timeout)
-      if (killFallback) clearTimeout(killFallback)
       options.signal?.removeEventListener('abort', onAbort)
       rl.close()
       if (tempRoot) rmSync(tempRoot, { recursive: true, force: true })
