@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.16
+
+### Patch Changes
+
+- [#128](https://github.com/AgentsKit-io/code-review/pull/128) [`f142fab`](https://github.com/AgentsKit-io/code-review/commit/f142fab7a5b4545e3d24764f7e420a3e74e65721) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Fail fast and cleanly terminate local provider workers when a deadline or abort fires.
+
 ## 0.7.15
 
 ### Patch Changes
