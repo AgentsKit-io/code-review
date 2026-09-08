@@ -5,6 +5,7 @@
 ### Patch Changes
 
 - Allow full-profile batch artifacts to be publishable when every required lens completes, and align the Ink dependency with the current AgentsKit core contract.
+- Release prepared through the repository's Changesets publishing workflow.
 
 ## 0.7.6
 
