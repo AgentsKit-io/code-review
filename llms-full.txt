@@ -1018,6 +1018,12 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.7.8
+
+### Patch Changes
+
+- [#108](https://github.com/AgentsKit-io/code-review/pull/108) [`0dab9da`](https://github.com/AgentsKit-io/code-review/commit/0dab9da2facafebc58fe41db4a5fb71e89866e7e) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Add deterministic harness primitives for blocker sweeps, immutable run contracts, and fail-closed live canary validation.
+
 ## 0.7.7
 
 ### Patch Changes
