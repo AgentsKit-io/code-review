@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.14
+
+### Patch Changes
+
+- [#124](https://github.com/AgentsKit-io/code-review/pull/124) [`2829683`](https://github.com/AgentsKit-io/code-review/commit/28296832ea07b5daf90522932333e155188ac493) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Make the packaged harness independent of the caller's working directory.
+
 ## 0.7.13
 
 ### Patch Changes
