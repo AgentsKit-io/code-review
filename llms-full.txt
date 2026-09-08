@@ -1018,6 +1018,12 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.7.9
+
+### Patch Changes
+
+- [#113](https://github.com/AgentsKit-io/code-review/pull/113) [`6f4e53d`](https://github.com/AgentsKit-io/code-review/commit/6f4e53d903a30d2ed68a5c15c389999e713b00c5) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Extend the deterministic harness with bounded canary retries, resumable batch state, and provider-free replay execution.
+
 ## 0.7.8
 
 ### Patch Changes
