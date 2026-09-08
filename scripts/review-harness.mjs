@@ -1,7 +1,11 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync, renameSync, unlinkSync, writeFileSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { createHarnessRun, recordBatchCompletion, recordCanaryAttempt, validateCanary, runBlockerSweep } from '../dist/src/harness.js'
+
+const packageRoot = dirname(dirname(fileURLToPath(import.meta.url)))
 
 const value = (name) => {
   const index = process.argv.indexOf(`--${name}`)
@@ -51,7 +55,7 @@ if (preflight) {
   const report = runBlockerSweep(checks)
   if (report.status === 'ready') {
     const manifest = `${stateDir}/batch-manifest.json`
-    const args = ['dist/src/cli.js', '--config', configFile, '--pr', pr, '--provider', provider, '--health-check', 'off', '--plan', '--json', '--batch-size', value('batch-size') ?? '5', '--batch-manifest', manifest]
+    const args = [join(packageRoot, 'dist/src/cli.js'), '--config', configFile, '--pr', pr, '--provider', provider, '--health-check', 'off', '--plan', '--json', '--batch-size', value('batch-size') ?? '5', '--batch-manifest', manifest]
     const plan = spawnSync(process.execPath, args, { encoding: 'utf8', timeout: 120_000 })
     add('plan.complete', plan.status === 0, plan.status === 0 ? 'complete provider-free plan generated' : (plan.stderr.trim() || 'plan failed'), 'fix the plan failure before creating a worktree')
   }
@@ -84,7 +88,7 @@ if (canaryStatus) {
 if (!checksFile && !(manifestFile && artifactFile) && !replay) {
   throw new Error('use --checks <json>, --manifest <json> --artifact <json>, or --replay')
 }
-const replayRun = replay ? spawnSync(process.execPath, ['--test', 'test/harness.test.mjs'], { encoding: 'utf8' }) : undefined
+const replayRun = replay ? spawnSync(process.execPath, ['--test', join(packageRoot, 'test/harness.test.mjs')], { encoding: 'utf8' }) : undefined
 const report = replay
   ? { status: replayRun.status === 0 ? 'ready' : 'blocked', blockers: replayRun.status === 0 ? [] : [{ id: 'replay.tests', severity: 'blocker', ok: false, detail: replayRun.stderr.trim() || replayRun.stdout.trim() }] }
   : checksFile ? runBlockerSweep(json(checksFile, 'checks')) : validateCanary(json(manifestFile, 'manifest'), json(artifactFile, 'artifact'))
