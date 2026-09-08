@@ -434,7 +434,6 @@ async function validateMemory(config, runDir, stateRoot, consolidated, contract,
 
 function qualityInput({ runId, version, sourceRevision, manifest, artifacts, changedLines, elapsedBaseline, baselineTokensPerChangedLine, memory, evaluation, evidence = {}, integration }) {
   const reviews = artifacts.map((artifact) => artifact.review)
-  const findings = reviews.flatMap((review) => review.findings)
   const files = manifest.batches.reduce((count, batch) => count + batch.files.length, 0)
   const requiredLenses = 3
   const elapsedValues = reviews.map((review) => review.evidence.elapsedMs).sort((a, b) => a - b)
