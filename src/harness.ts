@@ -26,6 +26,19 @@ export type HarnessContract = {
   createdAt: string
 }
 
+export type HarnessStage = 'contract' | 'preflight' | 'replay' | 'canary' | 'full-review' | 'consolidation' | 'quality' | 'gates' | 'complete' | 'blocked'
+
+export type HarnessRunState = {
+  runId: string
+  stage: HarnessStage
+  canaryAttempts: number
+  maxCanaryAttempts: number
+  completedBatches: number[]
+  pendingBatches: number[]
+  blockers: HarnessBlocker[]
+}
+
+
 export type CanaryResult = {
   ready: boolean
   blockers: HarnessBlocker[]
@@ -59,6 +72,27 @@ export function runBlockerSweep(checks: readonly HarnessCheck[]): HarnessReport 
   const ordered = [...checks].sort((a, b) => a.id.localeCompare(b.id))
   const blockers = ordered.filter((check) => !check.ok).map((check) => ({ ...check, severity: 'blocker' as const }))
   return { status: blockers.length ? 'blocked' : 'ready', blockers, checks: ordered }
+}
+
+export function createHarnessRun(input: { runId: string; batchIndices: readonly number[]; maxCanaryAttempts?: number }): HarnessRunState {
+  const pendingBatches = [...new Set(input.batchIndices)].sort((a, b) => a - b)
+  if (pendingBatches.some((index) => !Number.isInteger(index) || index < 0)) throw new Error('batch indices must be non-negative integers')
+  return { runId: input.runId, stage: 'contract', canaryAttempts: 0, maxCanaryAttempts: input.maxCanaryAttempts ?? 2, completedBatches: [], pendingBatches, blockers: [] }
+}
+
+export function recordCanaryAttempt(state: HarnessRunState, result: CanaryResult): HarnessRunState {
+  const canaryAttempts = state.canaryAttempts + 1
+  if (result.ready) return { ...state, stage: 'full-review', canaryAttempts, blockers: [] }
+  const blockers = result.blockers
+  return { ...state, stage: canaryAttempts >= state.maxCanaryAttempts ? 'blocked' : 'canary', canaryAttempts, blockers }
+}
+
+export function recordBatchCompletion(state: HarnessRunState, batchIndex: number): HarnessRunState {
+  if (state.stage !== 'full-review') throw new Error('batches cannot complete before the canary')
+  if (!state.pendingBatches.includes(batchIndex) || state.completedBatches.includes(batchIndex)) throw new Error(`batch ${batchIndex} is not pending`)
+  const completedBatches = [...state.completedBatches, batchIndex].sort((a, b) => a - b)
+  const pendingBatches = state.pendingBatches.filter((index) => index !== batchIndex)
+  return { ...state, stage: pendingBatches.length ? 'full-review' : 'consolidation', completedBatches, pendingBatches }
 }
 
 function canaryChecks(state: BatchCoverageState, artifact: BatchReviewArtifact): HarnessCheck[] {

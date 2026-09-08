@@ -46,7 +46,8 @@
     "scripts/generate-llms-full.mjs",
     "scripts/run-cycle-benchmark.mjs",
     "scripts/evaluate-quality.mjs",
-    "scripts/review-harness.mjs"
+    "scripts/review-harness.mjs",
+    "test/harness.test.mjs"
   ],
   "repository": {
     "type": "git",
