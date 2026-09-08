@@ -370,7 +370,6 @@ async function main() {
     selectedBatch = batches.find((item) => item.index === Number(requestedBatch))
     if (!selectedBatch) throw new Error('--batch-index is outside the planned batch manifest')
     config.targetFiles = selectedBatch.files
-    config.incompleteProfile = true
     config.reviewContext = `Complete PR file manifest (${plan.reviewableFiles.length} reviewable file(s)); only the selected batch source is shown:\n${plan.reviewableFiles.map((file) => `- ${file}`).join('\n')}`
     agent = createCodeReviewAgent(config)
     await agent.plan()
