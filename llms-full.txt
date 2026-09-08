@@ -1018,6 +1018,12 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.7.18
+
+### Patch Changes
+
+- [#133](https://github.com/AgentsKit-io/code-review/pull/133) [`49c77c7`](https://github.com/AgentsKit-io/code-review/commit/49c77c77d222fef6ee4059ef1b9eb9d51fb449b7) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Keep preflight manifests aligned with review runs when policy overrides are supplied.
+
 ## 0.7.17
 
 ### Patch Changes
