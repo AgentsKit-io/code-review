@@ -26,7 +26,7 @@ npx --yes --package=@agentskit/code-review@latest agentskit-quality \
 
 The command exits `0` only for `PASS` and exits `2` for `BLOCKED`. The report includes the run ID, library version, source revision, every area score, gate details, and baseline regressions. The input must be tied to the reviewed PR SHA and exact library/configuration versions; manually estimated values are not valid evidence.
 
-The matrix separates process evidence from review correctness. `expected`, `detectedExpected`, `falsePositives`, `severityMatches`, and `inlineValid` must come from a labelled evaluation set or human-confirmed ground truth. Without ground truth, the corresponding area is blocked rather than treated as successful.
+The matrix separates process evidence from review correctness. `expected`, `detectedExpected`, `falsePositives`, `severityMatches`, and `inlineValid` come from the versioned labelled corpus executed with the same live provider and policy. A clean target PR is still useful operational evidence, but it cannot substitute for known-positive detection cases.
 
 The CLI validates the complete `QualityInput` shape before scoring. A malformed or incompatible runner artifact produces a structured `BLOCKED` report with `inputError` and a failed `valid-quality-input` gate, and exits with code `2`; it never becomes an uncaught runtime exception or a partial pass.
 
@@ -34,10 +34,10 @@ The CLI validates the complete `QualityInput` shape before scoring. A malformed 
 
 The JSON shape is the `QualityInput` type exported from the package root. It contains coverage, findings, comments, security, reliability, performance, tokens, batches, memory, configuration, and integration groups. A complete example is kept in `test/quality-matrix.test.mjs`.
 
-Memory and feedback are measured only when enabled. If memory is enabled, persistence, loading, malformed-input rejection, feedback recording, and rule approval all require evidence. The matrix does not claim automatic learning until the feedback path has actually recorded and approved a rule.
+Memory and feedback are measured only when enabled. If memory is enabled, persistence, loading, malformed-input rejection, feedback recording, and approval gating all require evidence. A live A/B canary also runs the same labelled case with and without one explicitly approved memory rule. Memory passes only when the rule creates a detection lift without false positives or duplicates and keeps tokens per provider call within 10% of the memory-off arm. This normalization accounts for the required skeptic call that only a detected finding triggers. Raw review transcripts are retained for audit but are never loaded as review instructions; only bounded messages marked as approved rules enter the review context.
 
 ## Baselines and regressions
 
-Use the same labelled corpus and comparable PR shape when creating a baseline. `compareQuality()` reports score regressions and improvements by area; it does not override an absolute gate. A regression to 2 or a newly missing area blocks publication even if the aggregate result looks better.
+Use the same labelled corpus and comparable PR shape when creating a baseline. Token efficiency is measured per changed line so clean reviews remain measurable. `compareQuality()` reports score regressions and improvements by area; it does not override an absolute gate. A regression to 2 or a newly missing area blocks publication even if the aggregate result looks better.
 
 The deterministic `npm run benchmark:cycle` remains a process-safety benchmark. It is complementary to this matrix and cannot provide the semantic ground truth needed for detection or precision.

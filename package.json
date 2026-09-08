@@ -6,6 +6,7 @@
   "license": "MIT",
   "bin": {
     "agentskit-review": "dist/src/cli.js",
+    "agentskit-review-cycle": "scripts/review-cycle.mjs",
     "agentskit-review-harness": "scripts/review-harness.mjs",
     "agentskit-quality": "scripts/evaluate-quality.mjs"
   },
@@ -48,7 +49,16 @@
     "scripts/run-cycle-benchmark.mjs",
     "scripts/evaluate-quality.mjs",
     "scripts/review-harness.mjs",
-    "test/harness.test.mjs"
+    "scripts/review-cycle.mjs",
+    "quality/corpus/default.json",
+    "quality/learning/default.json",
+    "test/harness.test.mjs",
+    "test/batch-coverage.test.mjs",
+    "test/quality-matrix.test.mjs",
+    "test/quality-matrix-cli.test.mjs",
+    "test/fixtures/bin/codex",
+    "test/fixtures/review/good.ts",
+    "test/fixtures/review/unreviewed.ts"
   ],
   "repository": {
     "type": "git",
@@ -74,6 +84,7 @@
     "benchmark:cycle": "npm run build && node scripts/run-cycle-benchmark.mjs",
     "quality:matrix": "npm run build && node scripts/evaluate-quality.mjs",
     "harness": "npm run build && node scripts/review-harness.mjs",
+    "cycle": "npm run build && node scripts/review-cycle.mjs",
     "docs:full": "node scripts/generate-llms-full.mjs",
     "docs:index": "ak-docs index && npm run docs:full",
     "docs:gate": "ak-docs gate run && ak-docs conformance run documentation-standard-v1 --text && node scripts/generate-llms-full.mjs --check && node --test test/documentation.test.mjs",

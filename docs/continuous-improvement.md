@@ -22,7 +22,9 @@ Run it with `npm run benchmark:cycle`. It emits a versioned JSON report and exit
 
 ## Quality matrix
 
-The benchmark proves process safety; it does not prove that model findings are correct. For every real review cycle, Orca must also emit a SHA-bound `QualityInput` artifact and run `npm run quality:matrix -- --input <artifact> --baseline <previous-report>` locally, or `npx --yes --package=@agentskit/code-review@latest agentskit-quality --input <artifact> --baseline <previous-report>` from an installed package. The matrix requires every area to score at least 3/4 and enforces absolute safety, completeness, inline-comment, and silent-failure gates. See `docs/quality-matrix.md` for the input contract and evidence rules. A missing ground-truth metric blocks the cycle.
+The benchmark proves process safety; it does not prove that model findings are correct. `agentskit-review-cycle` therefore runs the versioned labelled corpus with the live provider in addition to the real PR, then emits a SHA-bound `QualityInput` and immutable matrix. The matrix requires every area to score at least 3/4 and enforces absolute safety, completeness, inline-comment, and silent-failure gates. See `docs/quality-matrix.md` for the evidence contract.
+
+Enabled learning also requires a live A/B canary. The memory-on arm must apply an explicitly approved rule and detect the labelled policy violation; the memory-off arm must not invent that project policy. Precision and bounded token overhead remain gates. Persisting transcripts or pending feedback alone is not evidence of learning.
 
 ## Closed cycle
 

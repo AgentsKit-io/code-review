@@ -247,6 +247,11 @@ async function main() {
     },
     })
   let source = await resolveSource(reviewConfig)
+  // Source credentials are captured in the source object above; providers must
+  // never inherit repository credentials, including in trusted-local mode.
+  delete process.env.GITHUB_TOKEN
+  delete process.env.GH_TOKEN
+  delete process.env.GITLAB_TOKEN
   const requestedBatch = flag('batch-index')
   const resultFile = flag('result')
   const publishResult = flag('publish-result')
@@ -375,8 +380,11 @@ async function main() {
     await agent.plan()
   }
   await preflightProvider(reviewConfig)
-  agent.setAdapter(buildAdapter(reviewConfig))
+  let providerTokens = 0
+  let hasProviderTokens = false
+  agent.setAdapter(buildAdapter(reviewConfig, (tokens) => { providerTokens += tokens; hasProviderTokens = true }))
   const review = await agent.run()
+  if (hasProviderTokens) review.evidence.tokensUsed = providerTokens
   if (configuredMemory) {
     await configuredMemory.save([
       buildMessage({ role: 'user', content: `Review run for ${source.kind} (${review.evidence.profile})`, status: 'complete' }),
@@ -403,14 +411,14 @@ async function main() {
  * name resolves to a `@agentskit/adapters` factory and is given
  * `{ apiKey, model, baseUrl? }`. `--api` is a back-compat alias for `--provider anthropic`.
  */
-function buildAdapter(reviewConfig: ResolvedReviewConfig): AdapterFactory {
+function buildAdapter(reviewConfig: ResolvedReviewConfig, onTokens?: (tokens: number) => void): AdapterFactory {
   const requestedProvider = reviewConfig.provider
   const provider = requestedProvider && resolveProviderId(requestedProvider)
   if (!provider) throw new Error(requestedProvider ? `unknown --provider "${requestedProvider}" (run --list-providers for common options)` : 'choose a provider with --provider <name> (run --list-providers for common options)')
   const model = reviewConfig.model ?? (has('api') ? 'claude-opus-4-8' : undefined)
   const mode = flag('mode') === 'trusted-local' ? 'trusted-local' as const : 'isolated' as const
   if (provider === 'claude-cli') return claudeCode({ model, mode, oauthToken: process.env.CLAUDE_CODE_OAUTH_TOKEN, worker: reviewConfig.worker })
-  if (provider === 'codex-cli') return codexCli({ model, mode, worker: reviewConfig.worker })
+  if (provider === 'codex-cli') return codexCli({ model, mode, worker: reviewConfig.worker, onUsage: (usage) => onTokens?.(usage.inputTokens + usage.outputTokens) })
   if (provider === 'grok-cli') {
     const apiKey = flag('api-key') ?? process.env.XAI_API_KEY ?? process.env.LLM_API_KEY
     const options = { model, mode, apiKey, worker: reviewConfig.worker }

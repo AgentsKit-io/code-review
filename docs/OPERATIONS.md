@@ -166,6 +166,23 @@ English/Portuguese section labels. Findings remain line-anchored and the
 reporter continues to fall back to a non-approving `COMMENT` when GitHub rejects
 the requested event.
 
+## Deterministic scheduled cycle
+
+`agentskit-review-cycle` is the supported Orca entrypoint. Give it one PR, one
+validated config, and a private run directory. The command collects all static
+blockers before provider execution, locks the PR SHA and policy fingerprints,
+runs replay and one canary, resumes only missing valid batches, consolidates the
+complete result, validates self-hosted memory/feedback, and writes
+`cycle-summary.json` even when blocked. The default labelled corpus is shipped
+with the package and prevents a clean PR from turning detection, precision,
+severity, and actionability into guessed scores.
+
+Orca should supervise this one process and independently require its exit code,
+summary identity, complete batch state, and quality decision. It must not create
+an ad-hoc batch script or accept a missing artifact as an empty review. Use a
+unique run directory for a changed SHA or policy; reuse the same directory and
+run ID only for crash recovery.
+
 `prompt` is the default context mode. To review an explicit repository snapshot,
 set `context.mode` to `isolated-snapshot` and provide repository-relative
 patterns such as `src/**` or `!src/generated/**`. Sensitive directories/files,

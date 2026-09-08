@@ -80,6 +80,21 @@ Use `--profile fast` when latency and provider budget matter more than the optio
 
 Do not silently cap a large PR and treat the partial result as clean. `--plan --json --batch-size <n>` exposes a stable, alphabetically ordered file manifest. With a GitHub PR, `--batch-manifest <private-file>` writes the immutable state that binds every batch to the exact head SHA and review-policy fingerprint. Run each batch with `--batch-index <n> --result <private-file>`; partial batches reject `--post` and their result files are private (`0600`). `--consolidate-manifest <manifest> --artifacts <comma-list> --result <private-file>` accepts only every planned batch with complete evidence. Its output is the only artifact accepted by `--publish-result <file> --pr owner/repo#N --post`; that command rechecks the current SHA and policy before creating one GitHub review. A new commit or policy change invalidates the artifacts and requires a new manifest.
 
+For scheduled operation, use the packaged cycle runner instead of scripting those
+steps independently:
+
+```sh
+npx --yes --package=@agentskit/code-review@latest agentskit-review-cycle \
+  --repository owner/repository --pull 42 \
+  --config /absolute/path/code-review.config.ts \
+  --run-dir /absolute/path/review-runs/42
+```
+
+It performs one aggregate preflight, deterministic replay, a single canary batch,
+crash-safe full batching, consolidation, memory checks, a live labelled quality
+evaluation, and an immutable quality matrix. It never creates a target worktree.
+Posting and merging are opt-in and remain forbidden unless the final matrix passes.
+
 ![AgentsKit Code Review showing an APPROVE result after seven review lenses complete](docs/assets/code-review-terminal.png)
 
 The current command runs directly from GitHub. After the first npm release, the shorter form will be:

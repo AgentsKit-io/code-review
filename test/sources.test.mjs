@@ -42,6 +42,7 @@ test('GitHub PR ingestion downloads files returned with encoding none', async ()
   try {
     const [target] = await loadTargets({ kind: 'github-pr', owner: 'AgentsKit-io', repo: 'example', number: 8, token: 'test-token' })
     assert.equal(target?.fullContent, 'export const answer = 42\n')
+    assert.equal(target?.patch, '@@ -0,0 +1 @@')
   } finally {
     globalThis.fetch = originalFetch
   }

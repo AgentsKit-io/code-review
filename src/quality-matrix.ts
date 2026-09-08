@@ -12,14 +12,14 @@ export interface QualityInput {
   version?: string
   sourceRevision?: string
   coverage: { eligibleFiles: number; reviewedFiles: number; unreviewedFiles: number; requiredLensRuns: number; completedRequiredLensRuns: number }
-  findings: { expected: number; detectedExpected: number; falsePositives: number; duplicates: number; severityMatches: number; severityTotal: number; actionable: number; detected: number }
+  findings: { expected: number; detectedExpected: number; falsePositives: number; duplicates: number; severityMatches: number; severityWithinOne?: number; severityTotal: number; actionable: number; detected: number }
   comments: { inlineExpected: number; inlineValid: number; actionable: number; total: number }
   security: { secretLeaks: number; unsafeActions: number; failClosedViolations: number }
   reliability: { runs: number; completeRuns: number; incompleteAccepted: number; staleArtifactsAccepted: number; silentFailures: number }
   performance: { p95Ms: number; baselineP95Ms?: number }
-  tokens: { tokensUsed?: number; changedLines: number; validFindings: number; baselineTokensPerFinding?: number }
+  tokens: { tokensUsed?: number; changedLines: number; validFindings: number; baselineTokensPerChangedLine?: number }
   batches: { planned: number; completed: number; retried: number; overBudget: number }
-  memory: { enabled: boolean; persistencePass: boolean; loadPass: boolean; malformedRejected: boolean; feedbackRecorded: boolean; rulesApproved: boolean }
+  memory: { enabled: boolean; persistencePass: boolean; loadPass: boolean; malformedRejected: boolean; feedbackRecorded: boolean; rulesApproved: boolean; learningEvaluationPass: boolean; learningDetectionLift: boolean; learningPrecisionPass: boolean; learningTokenPass: boolean }
   configuration: { validAccepted: boolean; invalidRejected: boolean; schemaAvailable: boolean; requiredFlags?: number }
   integration: { githubPass: boolean; orcaPass: boolean; releasePass: boolean; mergeSafetyPass: boolean }
 }
@@ -77,13 +77,14 @@ export function parseQualityInput(value: unknown): QualityInput {
   const input = requireRecord(value, 'input')
   requireNumbers(input.coverage, 'coverage', ['eligibleFiles', 'reviewedFiles', 'unreviewedFiles', 'requiredLensRuns', 'completedRequiredLensRuns'])
   requireNumbers(input.findings, 'findings', ['expected', 'detectedExpected', 'falsePositives', 'duplicates', 'severityMatches', 'severityTotal', 'actionable', 'detected'])
+  if (requireRecord(input.findings, 'findings').severityWithinOne !== undefined) requireNumber(requireRecord(input.findings, 'findings').severityWithinOne, 'findings.severityWithinOne')
   requireNumbers(input.comments, 'comments', ['inlineExpected', 'inlineValid', 'actionable', 'total'])
   requireNumbers(input.security, 'security', ['secretLeaks', 'unsafeActions', 'failClosedViolations'])
   requireNumbers(input.reliability, 'reliability', ['runs', 'completeRuns', 'incompleteAccepted', 'staleArtifactsAccepted', 'silentFailures'])
   requireNumbers(input.performance, 'performance', ['p95Ms'])
   requireNumbers(input.tokens, 'tokens', ['changedLines', 'validFindings'])
   requireNumbers(input.batches, 'batches', ['planned', 'completed', 'retried', 'overBudget'])
-  requireBooleans(input.memory, 'memory', ['enabled', 'persistencePass', 'loadPass', 'malformedRejected', 'feedbackRecorded', 'rulesApproved'])
+  requireBooleans(input.memory, 'memory', ['enabled', 'persistencePass', 'loadPass', 'malformedRejected', 'feedbackRecorded', 'rulesApproved', 'learningEvaluationPass', 'learningDetectionLift', 'learningPrecisionPass', 'learningTokenPass'])
   requireBooleans(input.configuration, 'configuration', ['validAccepted', 'invalidRejected', 'schemaAvailable'])
   requireBooleans(input.integration, 'integration', ['githubPass', 'orcaPass', 'releasePass', 'mergeSafetyPass'])
   return input as unknown as QualityInput
@@ -126,12 +127,11 @@ export function evaluateQuality(input: QualityInput): QualityReport {
     ratioScore(input.coverage.reviewedFiles, input.coverage.eligibleFiles),
     ratioScore(input.coverage.completedRequiredLensRuns, input.coverage.requiredLensRuns),
   ])
-  const detection = minimum([
-    ratioScore(input.findings.detectedExpected, input.findings.expected),
-    ratioScore(input.findings.detectedExpected, input.findings.detected),
-  ])
+  const detection = ratioScore(input.findings.detectedExpected, input.findings.expected)
   const precision = ratioScore(Math.max(0, input.findings.detected - input.findings.falsePositives - input.findings.duplicates), input.findings.detected)
-  const severity = ratioScore(input.findings.severityMatches, input.findings.severityTotal)
+  const exactSeverity = ratioScore(input.findings.severityMatches, input.findings.severityTotal)
+  const nearSeverity = ratioScore(input.findings.severityWithinOne ?? input.findings.severityMatches, input.findings.severityTotal)
+  const severity = exactSeverity === 4 ? 4 : nearSeverity === 4 ? 3 : nearSeverity
   const actionability = minimum([
     ratioScore(input.findings.actionable, input.findings.detected),
     ratioScore(input.comments.actionable, input.comments.total),
@@ -149,17 +149,17 @@ export function evaluateQuality(input: QualityInput): QualityReport {
   ])
   const speed = input.performance.baselineP95Ms === undefined || input.performance.baselineP95Ms <= 0
     ? null
-    : input.performance.p95Ms <= input.performance.baselineP95Ms ? 4 : input.performance.p95Ms <= input.performance.baselineP95Ms * 1.1 ? 3 : input.performance.p95Ms <= input.performance.baselineP95Ms * 1.25 ? 2 : 1
-  const tokensPerFinding = input.tokens.tokensUsed === undefined || input.tokens.validFindings === 0 ? null : input.tokens.tokensUsed / input.tokens.validFindings
-  const tokenEfficiency = input.tokens.baselineTokensPerFinding === undefined || tokensPerFinding === null
+    : input.performance.p95Ms <= input.performance.baselineP95Ms ? 4 : input.performance.p95Ms <= input.performance.baselineP95Ms * 1.25 ? 3 : input.performance.p95Ms <= input.performance.baselineP95Ms * 1.5 ? 2 : 1
+  const tokensPerChangedLine = input.tokens.tokensUsed === undefined || input.tokens.changedLines === 0 ? null : input.tokens.tokensUsed / input.tokens.changedLines
+  const tokenEfficiency = input.tokens.baselineTokensPerChangedLine === undefined || tokensPerChangedLine === null
     ? null
-    : tokensPerFinding <= input.tokens.baselineTokensPerFinding ? 4 : tokensPerFinding <= input.tokens.baselineTokensPerFinding * 1.1 ? 3 : input.tokens.baselineTokensPerFinding * 1.25 >= tokensPerFinding ? 2 : 1
+    : tokensPerChangedLine <= input.tokens.baselineTokensPerChangedLine ? 4 : tokensPerChangedLine <= input.tokens.baselineTokensPerChangedLine * 1.1 ? 3 : input.tokens.baselineTokensPerChangedLine * 1.25 >= tokensPerChangedLine ? 2 : 1
   const batchEfficiency = minimum([
     ratioScore(input.batches.completed, input.batches.planned),
     zeroScore(input.batches.overBudget),
   ])
   const memoryLearning = input.memory.enabled
-    ? minimum([booleanScore(input.memory.persistencePass), booleanScore(input.memory.loadPass), booleanScore(input.memory.malformedRejected), booleanScore(input.memory.feedbackRecorded), booleanScore(input.memory.rulesApproved)])
+    ? minimum([booleanScore(input.memory.persistencePass), booleanScore(input.memory.loadPass), booleanScore(input.memory.malformedRejected), booleanScore(input.memory.feedbackRecorded), booleanScore(input.memory.rulesApproved), booleanScore(input.memory.learningEvaluationPass), booleanScore(input.memory.learningDetectionLift), booleanScore(input.memory.learningPrecisionPass), booleanScore(input.memory.learningTokenPass)])
     : null
   const configuration = minimum([booleanScore(input.configuration.validAccepted), booleanScore(input.configuration.invalidRejected), booleanScore(input.configuration.schemaAvailable)])
   const integration = minimum([booleanScore(input.integration.githubPass), booleanScore(input.integration.orcaPass), booleanScore(input.integration.releasePass), booleanScore(input.integration.mergeSafetyPass)])
@@ -167,15 +167,15 @@ export function evaluateQuality(input: QualityInput): QualityReport {
     result('coverage', coverage, { reviewedFiles: input.coverage.reviewedFiles, eligibleFiles: input.coverage.eligibleFiles, unreviewedFiles: input.coverage.unreviewedFiles }, 'All eligible files and required lenses must be covered.'),
     result('detection', detection, { expected: input.findings.expected, detectedExpected: input.findings.detectedExpected, detected: input.findings.detected }, 'Known findings must be detected without treating absence of ground truth as success.'),
     result('precision', precision, { detected: input.findings.detected, falsePositives: input.findings.falsePositives, duplicates: input.findings.duplicates }, 'False positives and duplicate findings reduce precision.'),
-    result('severity', severity, { severityMatches: input.findings.severityMatches, severityTotal: input.findings.severityTotal }, 'Reported severity must match the reference classification.'),
+    result('severity', severity, { severityMatches: input.findings.severityMatches, severityWithinOne: input.findings.severityWithinOne ?? input.findings.severityMatches, severityTotal: input.findings.severityTotal }, 'Reported severity should match the reference classification; one adjacent level scores three.'),
     result('actionability', actionability, { actionableFindings: input.findings.actionable, detected: input.findings.detected }, 'Findings must tell an agent why, what to change, and how to verify it.'),
     result('comments', comments, { inlineValid: input.comments.inlineValid, inlineExpected: input.comments.inlineExpected }, 'Inline locations and actionable comment structure must remain valid.'),
     result('security', security, { secretLeaks: input.security.secretLeaks, unsafeActions: input.security.unsafeActions, failClosedViolations: input.security.failClosedViolations }, 'Security and fail-closed violations are absolute defects.'),
     result('reliability', reliability, { completeRuns: input.reliability.completeRuns, runs: input.reliability.runs, staleArtifactsAccepted: input.reliability.staleArtifactsAccepted }, 'Incomplete, stale, or silently failed work cannot be accepted.'),
     result('speed', speed, { p95Ms: input.performance.p95Ms, baselineP95Ms: input.performance.baselineP95Ms ?? 'missing' }, 'Speed is relative to a measured baseline.'),
-    result('token-efficiency', tokenEfficiency, { tokensUsed: input.tokens.tokensUsed ?? 'missing', tokensPerFinding: tokensPerFinding ?? 'missing' }, 'Token efficiency is relative to a measured baseline.'),
+    result('token-efficiency', tokenEfficiency, { tokensUsed: input.tokens.tokensUsed ?? 'missing', changedLines: input.tokens.changedLines, tokensPerChangedLine: tokensPerChangedLine ?? 'missing', baselineTokensPerChangedLine: input.tokens.baselineTokensPerChangedLine ?? 'missing' }, 'Token efficiency is relative to a measured baseline.'),
     result('batch-efficiency', batchEfficiency, { planned: input.batches.planned, completed: input.batches.completed, overBudget: input.batches.overBudget }, 'Batches must complete within budget without avoidable retries.'),
-    result('memory-learning', memoryLearning, { enabled: input.memory.enabled, feedbackRecorded: input.memory.feedbackRecorded, rulesApproved: input.memory.rulesApproved }, 'Memory and learning require explicit evidence; disabled memory is not silently scored.'),
+    result('memory-learning', memoryLearning, { enabled: input.memory.enabled, feedbackRecorded: input.memory.feedbackRecorded, rulesApproved: input.memory.rulesApproved, learningEvaluationPass: input.memory.learningEvaluationPass, learningDetectionLift: input.memory.learningDetectionLift, learningPrecisionPass: input.memory.learningPrecisionPass, learningTokenPass: input.memory.learningTokenPass }, 'Enabled memory must persist safely and prove an approved-rule detection lift in a live A/B evaluation without precision or token regression.'),
     result('configuration', configuration, { validAccepted: input.configuration.validAccepted, invalidRejected: input.configuration.invalidRejected, schemaAvailable: input.configuration.schemaAvailable }, 'The public configuration must validate before execution.'),
     result('integration', integration, { githubPass: input.integration.githubPass, orcaPass: input.integration.orcaPass, releasePass: input.integration.releasePass, mergeSafetyPass: input.integration.mergeSafetyPass }, 'External integration evidence must be explicit.'),
   ]

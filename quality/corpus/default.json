@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "auth-bypass",
+      "language": "ts",
+      "source": "type Request = { headers: Record<string, string | undefined>; user?: { role: string } }\n\nexport function canDeleteAccount(request: Request, accountId: string): boolean {\n  const token = request.headers.authorization\n  if (!token) return false\n  return Boolean(accountId)\n}\n",
+      "findings": [
+        {
+          "line": 6,
+          "lineTolerance": 2,
+          "severity": "blocker",
+          "titleIncludes": ["author", "permission", "access", "role"]
+        }
+      ]
+    },
+    {
+      "id": "ignored-delete-result",
+      "language": "ts",
+      "source": "type AccountStore = { remove(accountId: string): Promise<boolean> }\n\nexport async function deleteAccount(store: AccountStore, accountId: string): Promise<boolean> {\n  await store.remove(accountId)\n  return true\n}\n",
+      "findings": [
+        {
+          "line": 5,
+          "lineTolerance": 2,
+          "severity": "high",
+          "titleIncludes": ["result", "failure", "success", "return"]
+        }
+      ]
+    }
+  ]
+}

@@ -10,9 +10,9 @@ const complete = (overrides = {}) => ({
   security: { secretLeaks: 0, unsafeActions: 0, failClosedViolations: 0 },
   reliability: { runs: 10, completeRuns: 10, incompleteAccepted: 0, staleArtifactsAccepted: 0, silentFailures: 0 },
   performance: { p95Ms: 1000, baselineP95Ms: 1100 },
-  tokens: { tokensUsed: 4000, changedLines: 100, validFindings: 4, baselineTokensPerFinding: 1200 },
+  tokens: { tokensUsed: 4000, changedLines: 100, validFindings: 4, baselineTokensPerChangedLine: 45 },
   batches: { planned: 3, completed: 3, retried: 0, overBudget: 0 },
-  memory: { enabled: true, persistencePass: true, loadPass: true, malformedRejected: true, feedbackRecorded: true, rulesApproved: true },
+  memory: { enabled: true, persistencePass: true, loadPass: true, malformedRejected: true, feedbackRecorded: true, rulesApproved: true, learningEvaluationPass: true, learningDetectionLift: true, learningPrecisionPass: true, learningTokenPass: true },
   configuration: { validAccepted: true, invalidRejected: true, schemaAvailable: true },
   integration: { githubPass: true, orcaPass: true, releasePass: true, mergeSafetyPass: true },
   ...overrides,
@@ -30,6 +30,24 @@ test('quality matrix blocks incomplete coverage and absolute safety violations',
   assert.equal(report.decision, 'BLOCKED')
   assert.equal(report.areas.find((area) => area.area === 'coverage')?.score, 3)
   assert.equal(report.absoluteGates.find((gate) => gate.name === 'no-secret-leaks')?.passed, false)
+})
+
+test('severity accepts an adjacent classification at the minimum passing score', () => {
+  const report = evaluateQuality(complete({ findings: { ...complete().findings, severityMatches: 0, severityWithinOne: 4 } }))
+  assert.equal(report.areas.find((area) => area.area === 'severity')?.score, 3)
+})
+
+test('speed tolerates ordinary provider latency jitter without hiding a regression', () => {
+  const passing = evaluateQuality(complete({ performance: { p95Ms: 1249, baselineP95Ms: 1000 } }))
+  const failing = evaluateQuality(complete({ performance: { p95Ms: 1501, baselineP95Ms: 1000 } }))
+  assert.equal(passing.areas.find((area) => area.area === 'speed')?.score, 3)
+  assert.equal(failing.areas.find((area) => area.area === 'speed')?.score, 1)
+})
+
+test('memory cannot pass without a measured A/B learning lift', () => {
+  const report = evaluateQuality(complete({ memory: { ...complete().memory, learningEvaluationPass: false, learningDetectionLift: false } }))
+  assert.equal(report.decision, 'BLOCKED')
+  assert.equal(report.areas.find((area) => area.area === 'memory-learning')?.score, 1)
 })
 
 test('quality comparison reports regressions and improvements by area', () => {
