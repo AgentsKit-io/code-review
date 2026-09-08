@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "project": "agentskit-code-review-quality-matrix",
+  "project": "agentskit-code-review-prd-137-issue-138",
   "root": "..",
   "profile": "custom",
   "exemptions": [
     "This repository is a CLI/library; endpoint, database, MCP, and UI product surfaces are out of scope for this fix."
   ],
   "contract": {
-    "intent": "Implement and validate an automatic quality matrix for real Orca PR-review cycles, preserving deterministic batch safety and the Changesets-based, tokenless npm release path for @agentskit/code-review.",
+    "intent": "Establish the approved PRD #137 architecture decisions and a reproducible v0.8.0 baseline contract for issue #138 without changing live review behavior or committing real-run study artifacts.",
     "outcomes": [
       { "id": "batch-manifest", "statement": "The CLI exposes a deterministic reviewable-file manifest, batch plan, and private SHA/policy-bound manifest without model execution.", "checks": ["batch-regression", "repo-check"] },
       { "id": "batch-artifact", "statement": "A partial batch writes a private artifact bound to the exact PR SHA, policy fingerprint, index, and file manifest; it cannot post to GitHub.", "checks": ["batch-regression", "repo-check"] },
@@ -36,6 +36,10 @@
       ,{ "id": "quality-matrix", "statement": "The exported quality matrix scores every approved review-quality area, blocks any unmeasured or sub-three area, and enforces absolute safety, completeness, inline-comment, stale-artifact, and silent-failure gates.", "checks": ["quality-matrix", "repo-check"] }
       ,{ "id": "quality-cli", "statement": "The quality-matrix CLI evaluates a SHA-bound JSON artifact, compares an optional baseline, writes a private report, and returns exit code 2 for BLOCKED results.", "checks": ["quality-matrix", "repo-check", "package"] }
       ,{ "id": "deterministic-cycle", "statement": "One packaged command owns blocker collection, contract lock, replay, canary, crash-safe batch resume, consolidation, quality reports, safe posting and merge gates, and always emits cycle-summary.json.", "checks": ["cycle-runner", "repo-check", "package"] }
+      ,{ "id": "baseline-v2-contract", "statement": "Version 2 baseline contracts distinguish synthetic process evidence, real pull-request evidence, and real campaign evidence while representing missing token and duration dimensions as unmeasured rather than zero.", "checks": ["baseline-contract", "repo-check", "package"] }
+      ,{ "id": "reproducible-v080-baseline", "statement": "A credential-free command wraps the existing deterministic cycle benchmark in a stable v0.8.0 baseline identity and rejects repository-local study output paths.", "checks": ["baseline-contract", "baseline-command", "repo-check", "package"] }
+      ,{ "id": "architecture-decisions", "statement": "Accepted ADRs document the deterministic engine, provider and SCM adapter boundaries, diff-first token strategy, and separated safe learning memory, with explicit trade-offs and PRD references.", "checks": ["architecture-docs", "docs-gate", "repo-check", "package"] }
+      ,{ "id": "local-study-boundary", "statement": "Real-run quality matrices and measurements remain local study artifacts and are neither required nor shipped in the npm package.", "checks": ["baseline-contract", "architecture-docs", "package"] }
     ]
   },
   "surfaces": { "logic": true, "cli": true, "docs": true },
@@ -50,6 +54,9 @@
     ,{ "id": "quality-matrix", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/quality-matrix.test.mjs test/quality-matrix-cli.test.mjs", "timeoutMs": 60000 }
     ,{ "id": "cycle-runner", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/harness.test.mjs test/review-cycle.test.mjs", "timeoutMs": 180000 }
     ,{ "id": "memory-learning", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/file-memory.test.mjs test/review-learning.test.mjs test/quality-matrix.test.mjs", "timeoutMs": 60000 }
+    ,{ "id": "baseline-contract", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/quality-baseline.test.mjs", "timeoutMs": 60000 }
+    ,{ "id": "baseline-command", "category": "cli", "execution": "real", "command": "npm run benchmark:baseline -- --library-version 0.8.0", "timeoutMs": 60000 }
+    ,{ "id": "architecture-docs", "category": "docs", "execution": "real", "command": "node --test --test-concurrency=1 test/architecture-baseline-docs.test.mjs", "timeoutMs": 60000 }
   ],
   "tracking": { "required": false, "reason": "The human authorized a release PR; its URL will be recorded in the release report. Publication remains blocked until the PR is merged and a stable GitHub Release exists." },
   "cleanup": { "roots": [".codex/verification/tmp"] }
