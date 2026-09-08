@@ -77,10 +77,13 @@ export function runBlockerSweep(checks: readonly HarnessCheck[]): HarnessReport 
 export function createHarnessRun(input: { runId: string; batchIndices: readonly number[]; maxCanaryAttempts?: number }): HarnessRunState {
   const pendingBatches = [...new Set(input.batchIndices)].sort((a, b) => a - b)
   if (pendingBatches.some((index) => !Number.isInteger(index) || index < 0)) throw new Error('batch indices must be non-negative integers')
-  return { runId: input.runId, stage: 'contract', canaryAttempts: 0, maxCanaryAttempts: input.maxCanaryAttempts ?? 2, completedBatches: [], pendingBatches, blockers: [] }
+  const maxCanaryAttempts = input.maxCanaryAttempts ?? 2
+  if (!Number.isInteger(maxCanaryAttempts) || maxCanaryAttempts < 1) throw new Error('max canary attempts must be a positive integer')
+  return { runId: input.runId, stage: 'contract', canaryAttempts: 0, maxCanaryAttempts, completedBatches: [], pendingBatches, blockers: [] }
 }
 
 export function recordCanaryAttempt(state: HarnessRunState, result: CanaryResult): HarnessRunState {
+  if (state.stage !== 'contract' && state.stage !== 'canary') throw new Error('canary cannot run after the review has advanced or stopped')
   const canaryAttempts = state.canaryAttempts + 1
   if (result.ready) return { ...state, stage: 'full-review', canaryAttempts, blockers: [] }
   const blockers = result.blockers
