@@ -51,7 +51,7 @@ if (preflight) {
   const report = runBlockerSweep(checks)
   if (report.status === 'ready') {
     const manifest = `${stateDir}/batch-manifest.json`
-    const args = ['dist/src/cli.js', '--config', configFile, '--pr', pr, '--provider', provider, '--plan', '--json', '--batch-size', value('batch-size') ?? '5', '--batch-manifest', manifest]
+    const args = ['dist/src/cli.js', '--config', configFile, '--pr', pr, '--provider', provider, '--health-check', 'off', '--plan', '--json', '--batch-size', value('batch-size') ?? '5', '--batch-manifest', manifest]
     const plan = spawnSync(process.execPath, args, { encoding: 'utf8', timeout: 120_000 })
     add('plan.complete', plan.status === 0, plan.status === 0 ? 'complete provider-free plan generated' : (plan.stderr.trim() || 'plan failed'), 'fix the plan failure before creating a worktree')
   }
