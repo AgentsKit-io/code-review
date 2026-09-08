@@ -95,7 +95,7 @@ export function runLocalCli(command: string, args: string[], options: LocalCliOp
   return new Promise((resolve, reject) => {
     const { env, tempRoot } = createEnvironment(mode, options.providerCredential)
     const child = spawn(command, args, {
-      cwd: options.cwd ?? (mode === 'trusted-local' ? process.env.HOME : join(tempRoot!, 'home')), env,
+      cwd: options.cwd ?? (mode === 'trusted-local' ? process.cwd() : join(tempRoot!, 'home')), env,
       detached: process.platform !== 'win32', stdio: ['pipe', 'pipe', 'pipe'],
     })
     let stdout = ''
@@ -175,7 +175,7 @@ export function runLocalCliProtocol<T>(
 
   return new Promise((resolve, reject) => {
     const { env, tempRoot } = createEnvironment(mode, options.providerCredential)
-    const cwd = options.cwd ?? (mode === 'trusted-local' ? process.env.HOME ?? process.cwd() : join(tempRoot!, 'home'))
+    const cwd = options.cwd ?? (mode === 'trusted-local' ? process.cwd() : join(tempRoot!, 'home'))
     const child = spawn(command, args, { cwd, env, detached: process.platform !== 'win32', stdio: ['pipe', 'pipe', 'pipe'] })
     const rl = createInterface({ input: child.stdout })
     let stdout = ''
