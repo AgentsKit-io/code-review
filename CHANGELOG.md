@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.12
+
+### Patch Changes
+
+- [#118](https://github.com/AgentsKit-io/code-review/pull/118) [`f83b2f2`](https://github.com/AgentsKit-io/code-review/commit/f83b2f2ed31fc4e3d7cccdca429a8d8ff9f1de0b) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Keep operational preflight planning provider-free by disabling provider smoke checks.
+
 ## 0.7.11
 
 ### Patch Changes
