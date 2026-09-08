@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.10
+
+### Patch Changes
+
+- [#115](https://github.com/AgentsKit-io/code-review/pull/115) [`20283f4`](https://github.com/AgentsKit-io/code-review/commit/20283f408e1e06ae415c04b9c3cc9fdc468332be) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Harden harness state transitions and add atomic CLI persistence for canary retries and resumable batches.
+
 ## 0.7.9
 
 ### Patch Changes
