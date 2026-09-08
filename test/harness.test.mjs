@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { createHarnessContract, fingerprint, runBlockerSweep, validateCanary } from '../dist/src/harness.js'
+import { createHarnessContract, createHarnessRun, fingerprint, recordBatchCompletion, recordCanaryAttempt, runBlockerSweep, validateCanary } from '../dist/src/harness.js'
 
 const state = {
   version: 1,
@@ -51,4 +51,20 @@ test('harness contract fingerprints are deterministic', () => {
   const contract = createHarnessContract({ runId: 'run-1', sourceSha: state.headSha, config: { a: 1 }, manifest: state, createdAt: '2026-01-01T00:00:00Z' })
   assert.equal(contract.version, 1)
   assert.match(contract.configFingerprint, /^[a-f0-9]{64}$/)
+})
+
+test('run state fails closed, retries canary twice, and resumes batches idempotently', () => {
+  const initial = createHarnessRun({ runId: 'run-1', batchIndices: [2, 0, 1] })
+  const blockedCanary = { ready: false, blockers: [{ id: 'identity.sha', ok: false, detail: 'stale', severity: 'blocker' }], artifact: artifact() }
+  const retry = recordCanaryAttempt(initial, blockedCanary)
+  assert.equal(retry.stage, 'canary')
+  const blocked = recordCanaryAttempt(retry, blockedCanary)
+  assert.equal(blocked.stage, 'blocked')
+  const ready = recordCanaryAttempt(retry, { ...blockedCanary, ready: true, blockers: [] })
+  assert.equal(ready.stage, 'full-review')
+  const afterFirst = recordBatchCompletion(ready, 0)
+  assert.deepEqual(afterFirst.pendingBatches, [1, 2])
+  const afterRestart = { ...afterFirst, completedBatches: [...afterFirst.completedBatches] }
+  assert.equal(recordBatchCompletion(afterRestart, 1).pendingBatches.length, 1)
+  assert.throws(() => recordBatchCompletion(afterRestart, 0), /not pending/)
 })
