@@ -431,9 +431,19 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
         }
         if (++providerCalls > maxCalls) throw new ReviewCallBudgetError(maxCalls)
         try {
-          const result = await runtime.run(task, { skill, signal })
-          circuit.recordSuccess()
-          return result
+          const remainingMs = Math.max(1, deadlineMs - (Date.now() - runStartedAt))
+          const runtimeResult = runtime.run(task, { skill, signal })
+          let runtimeTimer: NodeJS.Timeout | undefined
+          try {
+            const deadlineResult = new Promise<never>((_, reject) => {
+              runtimeTimer = setTimeout(() => reject(new ReviewDeadlineError(deadlineMs)), remainingMs)
+            })
+            const result = await Promise.race([runtimeResult, deadlineResult])
+            circuit.recordSuccess()
+            return result
+          } finally {
+            if (runtimeTimer) clearTimeout(runtimeTimer)
+          }
         } catch (error) {
           failedProviderCalls++
           const terminal = isTerminalProviderFailure(error)
