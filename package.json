@@ -6,6 +6,7 @@
   "license": "MIT",
   "bin": {
     "agentskit-review": "dist/src/cli.js",
+    "agentskit-review-harness": "scripts/review-harness.mjs",
     "agentskit-quality": "scripts/evaluate-quality.mjs"
   },
   "exports": {
