@@ -25,11 +25,18 @@ test('quality matrix passes only when every area is measured at least three', ()
   assert.ok(report.absoluteGates.every((gate) => gate.passed))
 })
 
+test('disabled memory is explicitly not applicable instead of an unmeasured failure', () => {
+  const report = evaluateQuality(complete({ memory: { ...complete().memory, enabled: false } }))
+  assert.equal(report.decision, 'PASS')
+  assert.equal(report.areas.find((area) => area.area === 'memory-learning')?.status, 'not-applicable')
+})
+
 test('quality matrix blocks incomplete coverage and absolute safety violations', () => {
   const report = evaluateQuality(complete({ coverage: { eligibleFiles: 10, reviewedFiles: 9, unreviewedFiles: 1, requiredLensRuns: 30, completedRequiredLensRuns: 27 }, security: { secretLeaks: 1, unsafeActions: 0, failClosedViolations: 0 } }))
   assert.equal(report.decision, 'BLOCKED')
   assert.equal(report.areas.find((area) => area.area === 'coverage')?.score, 3)
   assert.equal(report.absoluteGates.find((gate) => gate.name === 'no-secret-leaks')?.passed, false)
+  assert.equal(report.absoluteGates.find((gate) => gate.name === 'complete-file-coverage')?.passed, false)
 })
 
 test('severity accepts an adjacent classification at the minimum passing score', () => {

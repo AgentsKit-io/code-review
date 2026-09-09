@@ -5,7 +5,7 @@ export const QUALITY_AREAS = [
 ] as const
 
 export type QualityArea = typeof QUALITY_AREAS[number]
-export type QualityStatus = 'passed' | 'failed' | 'not-measured'
+export type QualityStatus = 'passed' | 'failed' | 'not-measured' | 'not-applicable'
 
 export interface QualityInput {
   runId?: string
@@ -163,6 +163,9 @@ export function evaluateQuality(input: QualityInput): QualityReport {
     : null
   const configuration = minimum([booleanScore(input.configuration.validAccepted), booleanScore(input.configuration.invalidRejected), booleanScore(input.configuration.schemaAvailable)])
   const integration = minimum([booleanScore(input.integration.githubPass), booleanScore(input.integration.orcaPass), booleanScore(input.integration.releasePass), booleanScore(input.integration.mergeSafetyPass)])
+  const memoryResult: QualityAreaResult = input.memory.enabled
+    ? result('memory-learning', memoryLearning, { enabled: true, feedbackRecorded: input.memory.feedbackRecorded, rulesApproved: input.memory.rulesApproved, learningEvaluationPass: input.memory.learningEvaluationPass, learningDetectionLift: input.memory.learningDetectionLift, learningPrecisionPass: input.memory.learningPrecisionPass, learningTokenPass: input.memory.learningTokenPass }, 'Enabled memory must persist safely and prove an approved-rule detection lift in a live A/B evaluation without precision or token regression.')
+    : { area: 'memory-learning', score: null, status: 'not-applicable', metrics: { enabled: false }, reason: 'Memory learning is not applicable because memory is disabled for this run.' }
   const areas: QualityAreaResult[] = [
     result('coverage', coverage, { reviewedFiles: input.coverage.reviewedFiles, eligibleFiles: input.coverage.eligibleFiles, unreviewedFiles: input.coverage.unreviewedFiles }, 'All eligible files and required lenses must be covered.'),
     result('detection', detection, { expected: input.findings.expected, detectedExpected: input.findings.detectedExpected, detected: input.findings.detected }, 'Known findings must be detected without treating absence of ground truth as success.'),
@@ -175,12 +178,12 @@ export function evaluateQuality(input: QualityInput): QualityReport {
     result('speed', speed, { p95Ms: input.performance.p95Ms, baselineP95Ms: input.performance.baselineP95Ms ?? 'missing' }, 'Speed is relative to a measured baseline.'),
     result('token-efficiency', tokenEfficiency, { tokensUsed: input.tokens.tokensUsed ?? 'missing', changedLines: input.tokens.changedLines, tokensPerChangedLine: tokensPerChangedLine ?? 'missing', baselineTokensPerChangedLine: input.tokens.baselineTokensPerChangedLine ?? 'missing' }, 'Token efficiency is relative to a measured baseline.'),
     result('batch-efficiency', batchEfficiency, { planned: input.batches.planned, completed: input.batches.completed, overBudget: input.batches.overBudget }, 'Batches must complete within budget without avoidable retries.'),
-    result('memory-learning', memoryLearning, { enabled: input.memory.enabled, feedbackRecorded: input.memory.feedbackRecorded, rulesApproved: input.memory.rulesApproved, learningEvaluationPass: input.memory.learningEvaluationPass, learningDetectionLift: input.memory.learningDetectionLift, learningPrecisionPass: input.memory.learningPrecisionPass, learningTokenPass: input.memory.learningTokenPass }, 'Enabled memory must persist safely and prove an approved-rule detection lift in a live A/B evaluation without precision or token regression.'),
+    memoryResult,
     result('configuration', configuration, { validAccepted: input.configuration.validAccepted, invalidRejected: input.configuration.invalidRejected, schemaAvailable: input.configuration.schemaAvailable }, 'The public configuration must validate before execution.'),
     result('integration', integration, { githubPass: input.integration.githubPass, orcaPass: input.integration.orcaPass, releasePass: input.integration.releasePass, mergeSafetyPass: input.integration.mergeSafetyPass }, 'External integration evidence must be explicit.'),
   ]
   const absoluteGates = [
-    { name: 'complete-file-coverage', passed: input.coverage.unreviewedFiles === 0 && input.coverage.reviewedFiles === input.coverage.eligibleFiles, detail: `${input.coverage.unreviewedFiles} unreviewed file(s)` },
+    { name: 'complete-file-coverage', passed: input.coverage.unreviewedFiles === 0 && input.coverage.reviewedFiles === input.coverage.eligibleFiles && input.coverage.completedRequiredLensRuns === input.coverage.requiredLensRuns, detail: `${input.coverage.unreviewedFiles} unreviewed file(s); ${Math.max(0, input.coverage.requiredLensRuns - input.coverage.completedRequiredLensRuns)} required lens run(s) missing` },
     { name: 'no-secret-leaks', passed: input.security.secretLeaks === 0, detail: `${input.security.secretLeaks} secret leak(s)` },
     { name: 'no-unsafe-actions', passed: input.security.unsafeActions === 0 && input.security.failClosedViolations === 0, detail: `${input.security.unsafeActions + input.security.failClosedViolations} unsafe/fail-open event(s)` },
     { name: 'no-stale-acceptance', passed: input.reliability.staleArtifactsAccepted === 0, detail: `${input.reliability.staleArtifactsAccepted} stale artifact(s) accepted` },
@@ -188,7 +191,7 @@ export function evaluateQuality(input: QualityInput): QualityReport {
     { name: 'no-invalid-inline-comments', passed: input.comments.inlineValid === input.comments.inlineExpected, detail: `${input.comments.inlineExpected - input.comments.inlineValid} invalid inline comment(s)` },
     { name: 'no-silent-failures', passed: input.reliability.silentFailures === 0, detail: `${input.reliability.silentFailures} silent failure(s)` },
   ]
-  return { version: 1, runId: input.runId, libraryVersion: input.version, sourceRevision: input.sourceRevision, minimumScore: 3, decision: areas.every((area) => area.score !== null && area.score >= 3) && absoluteGates.every((gate) => gate.passed) ? 'PASS' : 'BLOCKED', areas, absoluteGates }
+  return { version: 1, runId: input.runId, libraryVersion: input.version, sourceRevision: input.sourceRevision, minimumScore: 3, decision: areas.every((area) => area.status === 'passed' || area.status === 'not-applicable') && absoluteGates.every((gate) => gate.passed) ? 'PASS' : 'BLOCKED', areas, absoluteGates }
 }
 
 export function compareQuality(current: QualityReport, baseline: QualityReport): { regressions: { area: QualityArea; from: number | null; to: number | null }[]; improved: QualityArea[] } {

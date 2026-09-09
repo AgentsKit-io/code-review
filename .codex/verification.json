@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "project": "agentskit-code-review-prd-137-issue-150",
+  "project": "agentskit-code-review-quality-evals",
   "root": "..",
   "profile": "custom",
   "exemptions": [
     "This repository is a CLI/library; endpoint, database, MCP, and UI product surfaces are out of scope for this fix."
   ],
   "contract": {
-    "intent": "Classify every context pack from deterministic risk evidence and reserve additional specialized correctness or security analysis for elevated-risk changes for issue #150.",
+    "intent": "Validate the versioned semantic evaluation corpus and fail the quality matrix closed when required lens coverage is incomplete.",
     "outcomes": [
       { "id": "batch-manifest", "statement": "The CLI exposes a deterministic reviewable-file manifest, batch plan, and private SHA/policy-bound manifest without model execution.", "checks": ["batch-regression", "repo-check"] },
       { "id": "batch-artifact", "statement": "A partial batch writes a private artifact bound to the exact PR SHA, policy fingerprint, index, and file manifest; it cannot post to GitHub.", "checks": ["batch-regression", "repo-check"] },
@@ -90,6 +90,8 @@
       ,{ "id": "risk-low-cost", "statement": "Documentation and generated-only context packs follow explicit low-risk single-analysis policy.", "checks": ["risk-depth", "repo-check"] }
       ,{ "id": "risk-artifact-evidence", "statement": "Every context-pack plan and completed result records risk level, contributing evidence, and specialized categories.", "checks": ["risk-depth", "repo-check", "package"] }
       ,{ "id": "risk-critical-quality", "statement": "Critical security defects preserve the approved fixed-corpus detection level under risk-based specialization.", "checks": ["risk-depth", "multidimensional-analysis", "repo-check"] }
+      ,{ "id": "semantic-evals", "statement": "A versioned evaluation corpus exercises known-positive and clean cases and measures detection, precision, severity, actionability, and coverage against the current review engine.", "checks": ["quality-evals", "repo-check", "package"] }
+      ,{ "id": "matrix-coverage-gate", "statement": "The quality matrix cannot pass when any required lens execution is missing, even if file coverage is complete.", "checks": ["quality-evals", "quality-matrix", "repo-check"] }
     ]
   },
   "surfaces": { "logic": true, "cli": true, "docs": true },
@@ -119,6 +121,7 @@
     ,{ "id": "multidimensional-analysis", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/multidimensional-analysis.test.mjs test/cli-smoke.test.mjs", "timeoutMs": 120000 }
     ,{ "id": "context-packs", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/context-packs.test.mjs test/sources.test.mjs test/review-config.test.mjs", "timeoutMs": 120000 }
     ,{ "id": "risk-depth", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/risk-depth.test.mjs test/multidimensional-analysis.test.mjs", "timeoutMs": 120000 }
+    ,{ "id": "quality-evals", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/quality-evals.test.mjs", "timeoutMs": 120000 }
   ],
   "tracking": { "required": false, "reason": "The human authorized a release PR; its URL will be recorded in the release report. Publication remains blocked until the PR is merged and a stable GitHub Release exists." },
   "cleanup": { "roots": [".codex/verification/tmp"] }
