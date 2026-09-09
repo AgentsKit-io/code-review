@@ -6,7 +6,7 @@ export type RiskSignalKind = 'documentation' | 'generated' | 'test' | 'security'
 export interface RiskSignal { kind: RiskSignalKind; file: string; reason: string }
 export interface RiskAssessment { level: RiskLevel; signals: RiskSignal[]; specializedCategories: Category[] }
 
-const documentation = /(?:^|\/)(?:docs?|examples?)\/|\.(?:md|mdx|txt)$/i
+const documentation = /(?:(?:^|\/)(?:docs?|examples?)\/|\.(?:md|mdx|txt)$)/i
 const generated = /(?:^|\/)(?:generated|dist|build)\/|\.generated\.|(?:^|\/)(?:pnpm-lock\.yaml|package-lock\.json|yarn\.lock)$/i
 const testFile = /(?:^|[./_-])(?:test|tests|spec|fixtures?)(?:[./_-]|$)/i
 const securityPath = /(?:^|[./_-])(?:auth|oauth|authorization|permission|rbac|acl|security|secrets?|credentials?|tokens?|vault|crypto)(?:[./_-]|$)/i
