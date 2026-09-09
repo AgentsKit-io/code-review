@@ -1,6 +1,6 @@
-import { createHash } from 'node:crypto'
 import type { ReviewResult } from '../agents/code-review/agent.js'
 import type { BatchCoverageState, BatchReviewArtifact } from './batch-coverage.js'
+import { stableFingerprint } from './stable-fingerprint.js'
 
 export type HarnessCheck = {
   id: string
@@ -45,16 +45,8 @@ export type CanaryResult = {
   artifact: BatchReviewArtifact
 }
 
-function stable(value: unknown): string {
-  if (Array.isArray(value)) return `[${value.map(stable).join(',')}]`
-  if (value && typeof value === 'object') {
-    return `{${Object.entries(value).sort(([a], [b]) => a.localeCompare(b)).map(([key, item]) => `${JSON.stringify(key)}:${stable(item)}`).join(',')}}`
-  }
-  return JSON.stringify(value)
-}
-
 export function fingerprint(value: unknown): string {
-  return createHash('sha256').update(stable(value)).digest('hex')
+  return stableFingerprint(value)
 }
 
 export function createHarnessContract(input: Omit<HarnessContract, 'version' | 'configFingerprint' | 'manifestFingerprint'> & { config: unknown; manifest: unknown }): HarnessContract {

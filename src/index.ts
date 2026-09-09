@@ -28,4 +28,31 @@ export {
   validateStudyOutputPath,
 } from './quality-baseline.js'
 export type { QualityBaseline, QualityBaselineIdentity, QualityDurationBreakdown, QualityTokenBreakdown } from './quality-baseline.js'
+export {
+  BudgetEnvelopeSchema,
+  CampaignContractSchema,
+  CampaignEventSchema,
+  CampaignTerminalOutcomeSchema,
+  DomainFailureSchema,
+  ExecutionBudgetSchema,
+  FailureDispositionSchema,
+  PullRequestRunContractSchema,
+  PullRequestTerminalOutcomeSchema,
+  ReviewIdentitySchema,
+  ReviewUnitContractSchema,
+  reviewIdentityFingerprint,
+} from './domain-contracts.js'
+export type {
+  BudgetEnvelope,
+  CampaignContract,
+  CampaignEvent,
+  CampaignTerminalOutcome,
+  DomainFailure,
+  ExecutionBudget,
+  FailureDisposition,
+  PullRequestRunContract,
+  PullRequestTerminalOutcome,
+  ReviewIdentity,
+  ReviewUnitContract,
+} from './domain-contracts.js'
 export type { ConfigInput, ReviewProjectConfig } from './public-config.js'
