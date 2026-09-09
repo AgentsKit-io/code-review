@@ -10,6 +10,7 @@ const packageJson = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 assert.equal(packageJson.bin['agentskit-quality'], 'scripts/evaluate-quality.mjs')
 const fixture = {
   runId: 'cli-fixture', version: '0.6.0', sourceRevision: 'fixture-sha',
+  evidence: { kind: 'synthetic', fixtureId: 'cli-fixture' },
   coverage: { eligibleFiles: 1, reviewedFiles: 1, unreviewedFiles: 0, requiredLensRuns: 1, completedRequiredLensRuns: 1 },
   findings: { expected: 1, detectedExpected: 1, falsePositives: 0, duplicates: 0, severityMatches: 1, severityTotal: 1, actionable: 1, detected: 1 },
   comments: { inlineExpected: 1, inlineValid: 1, actionable: 1, total: 1 },
@@ -60,7 +61,7 @@ test('quality matrix CLI returns structured blocked evidence for malformed runne
     assert.equal(result.status, 2)
     const report = JSON.parse(readFileSync(output, 'utf8'))
     assert.equal(report.decision, 'BLOCKED')
-    assert.match(report.inputError, /coverage must be an object/)
+    assert.match(report.inputError, /evidence must be an object/)
     assert.equal(report.areas.length, 14)
   } finally {
     rmSync(directory, { recursive: true, force: true })

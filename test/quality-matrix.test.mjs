@@ -1,9 +1,10 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { compareQuality, evaluateQuality } from '../dist/src/quality-matrix.js'
+import { compareQuality, evaluateCampaignQuality, evaluateQuality, evaluateQualityAgainstBaseline } from '../dist/src/quality-matrix.js'
 
 const complete = (overrides = {}) => ({
   runId: 'fixture-run', version: '0.6.0', sourceRevision: 'fixture-sha',
+  evidence: { kind: 'synthetic', fixtureId: 'quality-matrix' },
   coverage: { eligibleFiles: 10, reviewedFiles: 10, unreviewedFiles: 0, requiredLensRuns: 30, completedRequiredLensRuns: 30 },
   findings: { expected: 4, detectedExpected: 4, falsePositives: 0, duplicates: 0, severityMatches: 4, severityTotal: 4, actionable: 4, detected: 4 },
   comments: { inlineExpected: 4, inlineValid: 4, actionable: 4, total: 4 },
@@ -63,4 +64,35 @@ test('quality comparison reports regressions and improvements by area', () => {
   const comparison = compareQuality(current, baseline)
   assert.ok(comparison.regressions.some((entry) => entry.area === 'detection'))
   assert.ok(comparison.regressions.some((entry) => entry.area === 'precision'))
+  assert.ok(comparison.materialRegressions.some((entry) => entry.area === 'detection'))
+})
+
+test('campaign matrices require every discovered pull request to reach a terminal quality result', () => {
+  const report = evaluateCampaignQuality({
+    evidence: { kind: 'real-campaign', campaignId: 'campaign-1' },
+    campaign: { discovered: 2, terminal: 1, completed: 1, partial: 0, blocked: 0, skipped: 0, cancelled: 0, qualityReports: 1, retries: 0, wastedCalls: 0, wallClockMs: 100 },
+    pullRequestReports: [evaluateQuality(complete())],
+  })
+  assert.equal(report.decision, 'BLOCKED')
+  assert.equal(report.absoluteGates.find((gate) => gate.name === 'campaign-terminal-coverage')?.passed, false)
+  assert.equal(report.evidence?.kind, 'real-campaign')
+})
+
+test('retries, wasted calls, wall clock, and reported token classes participate in scores', () => {
+  const base = complete({
+    performance: { p95Ms: 1000, baselineP95Ms: 1000, wallClockMs: 1000, baselineWallClockMs: 1000 },
+    tokens: { changedLines: 100, validFindings: 4, baselineTokensPerChangedLine: 45, accounting: { inputTokens: 1000, cachedInputTokens: 100, outputTokens: 100, reasoningOutputTokens: 100, memoryTokens: 100, retryTokens: 0, total: 1400 } },
+    batches: { planned: 10, completed: 10, retried: 0, wastedCalls: 0, providerCalls: 10, baselineProviderCalls: 10, overBudget: 0 },
+  })
+  const degraded = evaluateQuality({ ...base, performance: { ...base.performance, wallClockMs: 1600 }, tokens: { ...base.tokens, accounting: { ...base.tokens.accounting, retryTokens: 300, total: 1700 } }, batches: { ...base.batches, retried: 2, wastedCalls: 2 } })
+  assert.equal(degraded.areas.find((area) => area.area === 'speed')?.score, 1)
+  assert.equal(degraded.areas.find((area) => area.area === 'batch-efficiency')?.score, 1)
+  assert.ok((degraded.areas.find((area) => area.area === 'token-efficiency')?.metrics.tokensUsed ?? 0) > 1400)
+})
+
+test('a material baseline regression blocks the release decision', () => {
+  const baseline = evaluateQuality(complete())
+  const report = evaluateQualityAgainstBaseline(complete({ findings: { ...complete().findings, detectedExpected: 3 } }), baseline)
+  assert.equal(report.decision, 'BLOCKED')
+  assert.equal(report.absoluteGates.find((gate) => gate.name === 'no-material-regressions')?.passed, false)
 })
