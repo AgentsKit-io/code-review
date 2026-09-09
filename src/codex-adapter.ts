@@ -152,7 +152,18 @@ export function codexCli(opts: { model?: string; mode?: LocalCliMode; worker?: {
 
           const schema = tools.length === 1 ? tools[0]!.schema : undefined;
           const result = await runCodex(prompt, schema, opts.model, controller.signal, opts.mode, opts.worker);
-          if (result.usage) opts.onUsage?.(result.usage);
+          if (result.usage) {
+            opts.onUsage?.(result.usage);
+            yield {
+              type: "usage",
+              usage: {
+                promptTokens: result.usage.inputTokens,
+                completionTokens: result.usage.outputTokens + result.usage.reasoningOutputTokens,
+                totalTokens: result.usage.inputTokens + result.usage.cachedInputTokens + result.usage.outputTokens + result.usage.reasoningOutputTokens,
+              },
+              metadata: { usageDimensions: result.usage },
+            };
+          }
           const out = result.output.trim();
 
           if (tools.length === 1) {

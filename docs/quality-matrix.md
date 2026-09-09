@@ -40,6 +40,8 @@ Memory and feedback are measured only when enabled. If memory is enabled, persis
 
 Review-unit reuse is recorded in the optional `cache` input group: `hits`, `misses`, miss reasons, and `savedTokens`. These are evidence fields, not a license to accept stale work. A cache hit must still pass the current artifact validator, and only the complete identity fingerprint can select a record.
 
+Budget evidence is retained in `tokens.accounting` when the provider reports it. The fields distinguish input, cached input, output, reasoning, memory, retry, provider-call, and wall-clock usage. Missing provider dimensions are omitted rather than guessed. A quality run must also retain the resolved campaign, pull-request, context-pack, analysis, and verification limits so a passing result cannot hide a child scope that consumed a parent reserve.
+
 ## Baselines and regressions
 
 Use the same labelled corpus and comparable PR shape when creating a baseline. Token efficiency is measured per changed line so clean reviews remain measurable. `compareQuality()` reports score regressions and improvements by area; it does not override an absolute gate. A regression to 2 or a newly missing area blocks publication even if the aggregate result looks better.
