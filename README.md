@@ -376,6 +376,11 @@ source SHAs plus policy, prompt, configuration, model, and package identity.
 These contracts are provider-free; execution and persistence are added by later
 engine phases. `transitionCampaign()` is the pure lifecycle authority and
 `replayCampaign()` deterministically rebuilds state from an ordered event log.
+`saveCampaignCheckpoint()` persists the event log, derived state, evidence, and
+external-effect idempotency keys in one crash-safe snapshot. Acquire a
+campaign lease before writing; it excludes both the campaign and every included
+pull request. `loadCampaignCheckpoint()` rejects changed identities, while
+`pendingReviewUnitIds()` and `shouldApplyExternalEffect()` make resume explicit.
 
 ### Doctor
 

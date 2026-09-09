@@ -14,6 +14,7 @@ Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and
 ## Ownership map
 
 - `src/cli.ts`: public flags, source selection, provider selection, exit policy.
+- `src/campaign-reducer.ts` and `src/campaign-store.ts`: deterministic lifecycle, atomic checkpoints, leases, replay, and resume.
 - `src/<provider>-adapter.ts`: logged-in local CLI adapters.
 - `agents/code-review/`: review pipeline, lenses, input normalization, reporters.
 - `action.yml`: composite GitHub Action contract.
@@ -37,6 +38,7 @@ Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and
 - CLI flag/provider behavior: start at `src/cli.ts`, then update README, operations docs, and tests.
 - Local CLI subprocess behavior: start at the matching `src/<provider>-adapter.ts` and add an offline fixture.
 - Review logic or noise reduction: start at `agents/code-review/agent.ts` and the relevant lens; prove both survival and rejection behavior.
+- Campaign lifecycle or resume behavior: update the reducer/store together and run their focused crash/replay tests.
 - GitHub comments/SARIF: start at `agents/code-review/reporters.ts` and verify permissions/failure docs.
 - Action input: update `action.yml`, `examples/pull-request.yml`, README, and contract tests together.
 - Release automation: update `.github/workflows/release.yml`, `.github/workflows/publish.yml`, Changesets configuration, and the automated publishing section in `docs/OPERATIONS.md` together.
