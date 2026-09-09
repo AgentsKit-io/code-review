@@ -18,6 +18,7 @@ Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and
 - `src/<provider>-adapter.ts`: logged-in local CLI adapters.
 - `src/provider-registry.ts`: validated provider capabilities and conservative execution policy around AgentsKit adapters.
 - `src/provider-execution.ts`: typed provider failures, bounded retry delay, adaptive concurrency, and cancellation-aware queueing.
+- `src/scm-contract.ts`: provider-neutral change-request, publication, readiness, and merge contracts plus explicit capability checks.
 - `agents/code-review/`: review pipeline, lenses, input normalization, reporters.
 - `action.yml`: composite GitHub Action contract.
 - `.github/workflows/release.yml`: Changesets version-pull-request workflow.

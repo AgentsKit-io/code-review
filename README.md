@@ -181,6 +181,11 @@ jobs:
 
 The Action fetches the PR diff and posts one batched inline review plus a compact, persistent walkthrough. The walkthrough reports outcome and review evidence; actionable detail appears only on the relevant diff lines. Its defaults review at most 17 files, 7 findings per file, and 1,000 provider calls. It is advisory by default. Advisory mode affects findings only: source, provider, or execution failures still fail the check, and any reviewable file with zero successful primary lenses prevents approval. `codex-cli` requires a pre-authenticated `trusted-local` self-hosted runner; use an API provider with a secret on GitHub-hosted runners. Enable `fail-on-block` and branch protection when you are ready to use findings as a merge gate.
 
+The package also exports a provider-neutral SCM contract for discovery, diffs,
+review state/publication, merge readiness, and revision-locked merge. GitHub is
+the first implementation target. GitLab is intentionally unsupported until an
+adapter passes the same contract tests.
+
 Building a conversational review experience? Use [AgentsKit Chat](https://chat.agentskit.io/docs) for the cross-framework application layer instead of embedding chat here. Looking for organization-wide orchestration, governance, and production controls? Continue with [AKOS](https://akos.agentskit.io/docs).
 
 Pin the Action to an immutable release tag such as `@v0.4.0`; use a full commit SHA when your policy requires the strongest reproducibility.

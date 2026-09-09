@@ -199,6 +199,11 @@ jobs:
 
 The Action fetches the PR diff and posts one batched inline review plus a compact, persistent walkthrough. The walkthrough reports outcome and review evidence; actionable detail appears only on the relevant diff lines. Its defaults review at most 17 files, 7 findings per file, and 1,000 provider calls. It is advisory by default. Advisory mode affects findings only: source, provider, or execution failures still fail the check, and any reviewable file with zero successful primary lenses prevents approval. `codex-cli` requires a pre-authenticated `trusted-local` self-hosted runner; use an API provider with a secret on GitHub-hosted runners. Enable `fail-on-block` and branch protection when you are ready to use findings as a merge gate.
 
+The package also exports a provider-neutral SCM contract for discovery, diffs,
+review state/publication, merge readiness, and revision-locked merge. GitHub is
+the first implementation target. GitLab is intentionally unsupported until an
+adapter passes the same contract tests.
+
 Building a conversational review experience? Use [AgentsKit Chat](https://chat.agentskit.io/docs) for the cross-framework application layer instead of embedding chat here. Looking for organization-wide orchestration, governance, and production controls? Continue with [AKOS](https://akos.agentskit.io/docs).
 
 Pin the Action to an immutable release tag such as `@v0.4.0`; use a full commit SHA when your policy requires the strongest reproducibility.
@@ -512,6 +517,16 @@ npx --yes github:AgentsKit-io/code-review doctor --provider openai --model gpt-4
 ```
 
 It checks the named executable and version, transport, model requirement, configuration mode, and credential presence without making a model request. API keys are represented only as `configured` or `missing`; they are never printed. Local CLI credentials are represented as login-managed because login storage is provider-specific. `doctor --live` is the explicit provider smoke-test path; normal Codex reviews run the same bounded smoke check before fan-out. Unknown local CLI versions warn during local runs and fail in CI. Doctor exits `0` when checks pass, `1` when a provider check fails, and `2` for invalid usage.
+
+## SCM boundary
+
+The public internal contract normalizes change-request discovery, metadata,
+complete diffs, review state, inline/summary publication, merge readiness, and
+revision-locked merge. Adapters declare every capability; requesting an
+unsupported operation throws `UnsupportedScmCapabilityError`. Platform payloads
+and credentials stay inside adapters rather than entering deterministic core
+contracts. GitHub is the first implementation target. GitLab is future work and
+is not supported until an adapter passes the same contract suite.
 
 ## First local setup
 
@@ -928,6 +943,7 @@ Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and
 - `src/<provider>-adapter.ts`: logged-in local CLI adapters.
 - `src/provider-registry.ts`: validated provider capabilities and conservative execution policy around AgentsKit adapters.
 - `src/provider-execution.ts`: typed provider failures, bounded retry delay, adaptive concurrency, and cancellation-aware queueing.
+- `src/scm-contract.ts`: provider-neutral change-request, publication, readiness, and merge contracts plus explicit capability checks.
 - `agents/code-review/`: review pipeline, lenses, input normalization, reporters.
 - `action.yml`: composite GitHub Action contract.
 - `.github/workflows/release.yml`: Changesets version-pull-request workflow.
