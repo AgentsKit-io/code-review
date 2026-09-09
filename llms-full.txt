@@ -1060,6 +1060,12 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.11.0
+
+### Minor Changes
+
+- [#166](https://github.com/AgentsKit-io/code-review/pull/166) [`c9ee837`](https://github.com/AgentsKit-io/code-review/commit/c9ee837dfa1f82326e2c6580e6d6d4a752f94c2a) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Add the pure, fail-closed campaign lifecycle reducer with immutable state and deterministic event replay.
+
 ## 0.10.0
 
 ### Minor Changes
