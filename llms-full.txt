@@ -1167,6 +1167,12 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.21.3
+
+### Patch Changes
+
+- [#194](https://github.com/AgentsKit-io/code-review/pull/194) [`3a02b4c`](https://github.com/AgentsKit-io/code-review/commit/3a02b4cbc88ffc210768186c327090e3e8d50967) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Reuse validated review units across identical cycle executions with immutable identity fingerprints, provenance, and saved-token metrics.
+
 ## 0.21.2
 
 ### Patch Changes
