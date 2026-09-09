@@ -33,6 +33,8 @@ export const ChangeRequestMetadataSchema = z.object({
   targetRevision: revision,
   sourceBranch: identifier,
   targetBranch: identifier,
+  additions: z.number().int().nonnegative().default(0),
+  deletions: z.number().int().nonnegative().default(0),
   isDraft: z.boolean(),
   isFork: z.boolean(),
   labels: z.array(identifier),
@@ -52,6 +54,16 @@ export const ChangeRequestDiffSchema = z.object({
     truncated: z.boolean().default(false),
   }).strict().readonly()),
 }).strict().readonly()
+
+export const ScmCheckPolicySchema = z.object({
+  mode: z.enum(['required', 'reported', 'named', 'disabled']).default('required'),
+  names: z.array(identifier).max(100).default([]),
+}).strict().superRefine((value, context) => {
+  if (new Set(value.names).size !== value.names.length) context.addIssue({ code: z.ZodIssueCode.custom, path: ['names'], message: 'check names must be unique' })
+  if (value.mode === 'named' && value.names.length === 0) context.addIssue({ code: z.ZodIssueCode.custom, path: ['names'], message: 'named policy requires at least one check name' })
+  if (value.mode !== 'named' && value.names.length > 0) context.addIssue({ code: z.ZodIssueCode.custom, path: ['names'], message: 'check names are only valid with the named policy' })
+}).readonly()
+export type ScmCheckPolicy = z.infer<typeof ScmCheckPolicySchema>
 
 export const ScmFileContentSchema = z.object({
   content: z.string(),
@@ -125,7 +137,7 @@ export interface ScmAdapter {
   fileContent(ref: ChangeRequestRef, path: string, revision: string, maxBytes: number): Promise<ScmFileContent>
   reviewState(ref: ChangeRequestRef, fingerprint: string): Promise<ScmReviewState>
   publishReview(ref: ChangeRequestRef, review: ScmReviewPublication): Promise<ScmPublicationReceipt>
-  mergeReadiness(ref: ChangeRequestRef): Promise<ScmMergeReadiness>
+  mergeReadiness(ref: ChangeRequestRef, checkPolicy?: ScmCheckPolicy): Promise<ScmMergeReadiness>
   merge(ref: ChangeRequestRef, request: ScmMergeRequest): Promise<ScmMergeReceipt>
 }
 
