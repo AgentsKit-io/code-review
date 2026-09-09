@@ -41,8 +41,10 @@ export function reviewMarker(sha: string, fingerprint: string): string {
 
 function retryableGithubGet(error: unknown): boolean {
   const message = error instanceof Error ? error.message : String(error)
-  return /GitHub GET .* → (429|5\d\d)/.test(message)
-    || /(?:aborted|timed out|fetch failed|network)/i.test(message)
+  const marker = message.indexOf(' → ')
+  const status = marker < 0 ? Number.NaN : Number(message.slice(marker + 3, marker + 6))
+  return status === 429 || (status >= 500 && status < 600)
+    || ['aborted', 'timed out', 'fetch failed', 'network'].some((term) => message.toLowerCase().includes(term))
 }
 
 export async function readGithubResponseText(response: Response, maxBytes = MAX_GITHUB_RESPONSE_BYTES): Promise<string> {
@@ -76,11 +78,11 @@ async function responseDetail(response: Response): Promise<string> {
   catch (error) { return error instanceof GithubResponseLimitError ? error.message : '' }
 }
 
-export async function githubFetch(token: string, url: string, accept = 'application/vnd.github+json'): Promise<Response> {
+export async function githubFetch(token: string, url: string, accept = 'application/vnd.github+json', fetcher: typeof fetch = fetch): Promise<Response> {
   let lastError: unknown
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
-      const response = await fetch(url, {
+      const response = await fetcher(url, {
         headers: { authorization: `Bearer ${token}`, accept, 'user-agent': 'agentskit-code-review' },
         signal: AbortSignal.timeout(GITHUB_REQUEST_TIMEOUT_MS),
       })
@@ -97,8 +99,8 @@ export async function githubFetch(token: string, url: string, accept = 'applicat
   throw lastError instanceof Error ? lastError : new Error('GitHub GET failed')
 }
 
-export async function githubGet<T>(token: string, path: string): Promise<T> {
-  const response = await githubFetch(token, `${API}${path}`)
+export async function githubGet<T>(token: string, path: string, fetcher: typeof fetch = fetch): Promise<T> {
+  const response = await githubFetch(token, `${API}${path}`, 'application/vnd.github+json', fetcher)
   return JSON.parse(await readGithubResponseText(response)) as T
 }
 
@@ -107,10 +109,10 @@ export interface GithubIssueComment {
   body?: string
 }
 
-export async function githubIssueComments(token: string, owner: string, repo: string, number: number): Promise<{ comments: GithubIssueComment[]; truncated: boolean }> {
+export async function githubIssueComments(token: string, owner: string, repo: string, number: number, fetcher: typeof fetch = fetch): Promise<{ comments: GithubIssueComment[]; truncated: boolean }> {
   const comments: GithubIssueComment[] = []
   for (let page = 1; page <= MAX_COMMENT_PAGES; page++) {
-    const batch = await githubGet<GithubIssueComment[]>(token, `/repos/${owner}/${repo}/issues/${number}/comments?per_page=${COMMENT_PAGE_SIZE}&page=${page}&sort=created&direction=desc`)
+    const batch = await githubGet<GithubIssueComment[]>(token, `/repos/${owner}/${repo}/issues/${number}/comments?per_page=${COMMENT_PAGE_SIZE}&page=${page}&sort=created&direction=desc`, fetcher)
     comments.push(...batch)
     if (batch.length < COMMENT_PAGE_SIZE) return { comments, truncated: false }
   }
@@ -132,19 +134,20 @@ export async function getGithubReviewState(input: {
   number: number
   token: string
   fingerprint: string
+  fetcher?: typeof fetch
 }): Promise<GithubReviewState> {
   const pr = await githubGet<{
     head: { sha: string; repo?: { full_name?: string } }
     base: { sha: string; repo?: { full_name?: string } }
-  }>(input.token, `/repos/${input.owner}/${input.repo}/pulls/${input.number}`)
+  }>(input.token, `/repos/${input.owner}/${input.repo}/pulls/${input.number}`, input.fetcher)
   const marker = reviewMarker(pr.head.sha, input.fingerprint)
-  const history = await githubIssueComments(input.token, input.owner, input.repo, input.number)
+  const history = await githubIssueComments(input.token, input.owner, input.repo, input.number, input.fetcher)
   if (history.truncated) throw new Error(`GitHub review comment history exceeded ${MAX_COMMENT_PAGES * COMMENT_PAGE_SIZE} comments; refusing to post without idempotency proof`)
   const comments = history.comments
   const previousSha = comments.map((comment) => previousMarker(comment.body, input.fingerprint)).find(Boolean)
   let scope: GithubReviewState['scope'] = 'full'
   if (previousSha && previousSha !== pr.head.sha) {
-    const comparison = await githubGet<{ status?: string }>(input.token, `/repos/${input.owner}/${input.repo}/compare/${previousSha}...${pr.head.sha}`)
+    const comparison = await githubGet<{ status?: string }>(input.token, `/repos/${input.owner}/${input.repo}/compare/${previousSha}...${pr.head.sha}`, input.fetcher)
     if (comparison.status === 'ahead') scope = 'incremental'
   }
   return {

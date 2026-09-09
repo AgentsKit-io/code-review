@@ -9,7 +9,7 @@ import {
 
 const ref = ChangeRequestRefSchema.parse({ repository: 'org/repo', id: '42' })
 const capabilities = ScmCapabilitiesSchema.parse(Object.fromEntries([
-  'discovery', 'metadata', 'diff', 'review-state', 'publish-review', 'merge-readiness', 'merge',
+  'discovery', 'metadata', 'diff', 'file-content', 'review-state', 'publish-review', 'merge-readiness', 'merge',
 ].map((capability) => [capability, true])))
 
 class FakeScmAdapter {
@@ -25,11 +25,15 @@ class FakeScmAdapter {
   }
   async metadata(input) {
     requireScmCapability(this, 'metadata')
-    return ChangeRequestMetadataSchema.parse({ ref: input, title: 'Safe change', author: 'teammate', sourceRevision: 'abcdef1', targetRevision: '1234567', sourceBranch: 'feature', targetBranch: 'main', isDraft: false, isFork: false, labels: ['team'], updatedAt: '2026-09-09T00:00:00.000Z' })
+    return ChangeRequestMetadataSchema.parse({ ref: input, title: 'Safe change', state: 'open', author: 'teammate', sourceRevision: 'abcdef1', targetRevision: '1234567', sourceBranch: 'feature', targetBranch: 'main', isDraft: false, isFork: false, labels: ['team'], updatedAt: '2026-09-09T00:00:00.000Z' })
   }
   async diff(_input, baselineRevision) {
     requireScmCapability(this, 'diff')
     return ChangeRequestDiffSchema.parse({ baseRevision: baselineRevision ?? '1234567', headRevision: 'abcdef1', complete: true, files: [{ path: 'src/a.ts', status: 'modified', patch: '@@ -1 +1 @@', content: 'export const a = 2', truncated: false }] })
+  }
+  async fileContent() {
+    requireScmCapability(this, 'file-content')
+    return { content: 'export const a = 2', truncated: false }
   }
   async reviewState(_input, fingerprint) {
     requireScmCapability(this, 'review-state')
@@ -57,12 +61,14 @@ test('a deterministic fake SCM adapter exercises a complete change-request lifec
   const [found] = await scm.discover({ repository: 'org/repo', state: 'open', authors: ['teammate'], excludeAuthors: ['dependabot'], labels: ['team'] })
   const metadata = await scm.metadata(found)
   const diff = await scm.diff(found)
+  const content = await scm.fileContent(found, diff.files[0].path, metadata.sourceRevision, 1_024)
   const state = await scm.reviewState(found, 'policy-v1')
-  const publication = await scm.publishReview(found, { headRevision: metadata.sourceRevision, fingerprint: state.fingerprint, verdict: 'APPROVE', summary: 'Complete and clean.', annotations: [{ path: diff.files[0].path, line: 1, body: 'Verified.' }] })
+  const publication = await scm.publishReview(found, { channel: 'review', headRevision: metadata.sourceRevision, fingerprint: state.fingerprint, verdict: 'APPROVE', summary: 'Complete and clean.', annotations: [{ path: diff.files[0].path, line: 1, body: 'Verified.' }] })
   const readiness = await scm.mergeReadiness(found)
   const merged = await scm.merge(found, { expectedHeadRevision: readiness.headRevision, method: 'squash' })
 
   assert.equal(diff.complete, true)
+  assert.match(content.content, /export const a/)
   assert.equal(publication.id, 'review-1')
   assert.equal(readiness.ready, true)
   assert.equal(merged.revision, 'fedcba9')

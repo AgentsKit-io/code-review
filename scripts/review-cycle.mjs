@@ -9,7 +9,7 @@ import { validateCanary } from '../dist/src/harness.js'
 import { createFileMemory } from '../dist/src/file-memory.js'
 import { createApprovedReviewRule } from '../dist/src/review-learning.js'
 import { loadProjectConfig } from '../dist/src/public-config.js'
-import { getGithubReviewState } from '../dist/src/github-review-state.js'
+import { createGithubScmAdapter } from '../dist/src/github-scm-adapter.js'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const cli = join(root, 'dist/src/cli.js')
@@ -88,6 +88,15 @@ async function main() {
     summary.sourceRevision = sourceRevision
     const ghToken = process.env.GITHUB_TOKEN || safeExec('gh', ['auth', 'token']).stdout
     const childEnv = { ...process.env, ...(ghToken ? { GITHUB_TOKEN: ghToken } : {}) }
+    const scmRef = { repository, id: String(pullNumber) }
+    const github = ghToken ? createGithubScmAdapter({
+      token: ghToken,
+      command: async (command, args) => {
+        const result = safeExec(command, [...args], { env: childEnv, timeout: 180_000 })
+        if (!result.ok) throw new Error(result.stderr || result.stdout || `${command} failed`)
+        return result
+      },
+    }) : undefined
     const checks = []
     checks.push(check('config.exists', existsSync(configFile), `configuration: ${configFile}`, 'provide an existing configuration file', configFile))
     checks.push(check('config.path', isAbsolute(configFile), 'configuration path is absolute', 'resolve the configuration path before execution', configFile))
@@ -150,17 +159,18 @@ async function main() {
     checks.push(check('artifacts.disk', freeBytes >= 100 * 1024 * 1024, `free artifact storage: ${freeBytes} bytes`, 'free at least 100 MiB', String(freeBytes)))
     const stateDisk = statfsSync(stateRoot)
     checks.push(check('state.writable', Number(stateDisk.bavail) > 0, `persistent state root: ${stateRoot}`, 'use a writable persistent state directory', stateRoot))
-    const pr = ghToken ? safeExec('gh', ['api', `repos/${repository}/pulls/${pullNumber}`], { env: childEnv }) : { ok: false, stderr: 'GitHub token unavailable' }
     let prData
-    try { prData = JSON.parse(pr.stdout) } catch { /* collected below */ }
-    checks.push(check('pr.exists', Boolean(pr.ok && prData), `pull request ${repository}#${pullNumber}`, 'choose an accessible open pull request', pr.ok ? `state=${prData?.state}` : pr.stderr))
+    let prError = 'GitHub token unavailable'
+    try { if (github) prData = await github.metadata(scmRef) } catch (error) { prError = error instanceof Error ? error.message : String(error) }
+    checks.push(check('pr.exists', Boolean(prData), `pull request ${repository}#${pullNumber}`, 'choose an accessible open pull request', prData ? `state=${prData.state}` : prError))
     checks.push(check('pr.open', prData?.state === 'open', `PR state: ${prData?.state ?? 'unknown'}`, 'choose an open pull request', prData?.state ?? 'missing'))
-    checks.push(check('pr.not-draft', prData?.draft === false, `PR draft: ${String(prData?.draft)}`, 'choose a non-draft pull request', String(prData?.draft)))
-    checks.push(check('pr.not-dependabot', prData?.user?.login !== 'dependabot[bot]', `PR author: ${prData?.user?.login ?? 'unknown'}`, 'choose a non-Dependabot pull request', prData?.user?.login ?? 'missing'))
-    checks.push(check('pr.not-fork', prData?.head?.repo?.fork === false, `PR fork: ${String(prData?.head?.repo?.fork)}`, 'choose an organization-owned pull request', String(prData?.head?.repo?.fork)))
-    const firstSha = prData?.head?.sha
-    const stable = firstSha ? safeExec('gh', ['api', `repos/${repository}/pulls/${pullNumber}`, '--jq', '.head.sha'], { env: childEnv }) : { ok: false, stderr: 'head SHA unavailable' }
-    checks.push(check('pr.stable-sha', Boolean(stable.ok && stable.stdout === firstSha), `head SHA: ${firstSha ?? 'unknown'}`, 'restart after the PR head stabilizes', stable.ok ? stable.stdout : stable.stderr))
+    checks.push(check('pr.not-draft', prData?.isDraft === false, `PR draft: ${String(prData?.isDraft)}`, 'choose a non-draft pull request', String(prData?.isDraft)))
+    checks.push(check('pr.not-dependabot', prData?.author !== 'dependabot[bot]', `PR author: ${prData?.author ?? 'unknown'}`, 'choose a non-Dependabot pull request', prData?.author ?? 'missing'))
+    checks.push(check('pr.not-fork', prData?.isFork === false, `PR fork: ${String(prData?.isFork)}`, 'choose an organization-owned pull request', String(prData?.isFork)))
+    const firstSha = prData?.sourceRevision
+    let stableSha
+    try { if (github && firstSha) stableSha = (await github.metadata(scmRef)).sourceRevision } catch { /* collected below */ }
+    checks.push(check('pr.stable-sha', Boolean(stableSha && stableSha === firstSha), `head SHA: ${firstSha ?? 'unknown'}`, 'restart after the PR head stabilizes', stableSha ?? 'head SHA unavailable'))
 
     const planPrerequisiteFailed = checks.some((item) => !item.ok && /^(?:config\.|input\.|github\.|pr\.)/.test(item.id))
     let plan
@@ -175,9 +185,9 @@ async function main() {
         if (existsSync(manifestFile)) {
           const plannedManifest = readJson(manifestFile)
           try {
-            const [owner, repo] = repository.split('/')
-            const reviewState = await getGithubReviewState({ owner, repo, number: pullNumber, token: ghToken, fingerprint: plannedManifest.policyFingerprint })
-            checks.push(check('pr.not-reviewed', !reviewState.alreadyReviewed, 'same SHA and policy review marker', 'wait for a new SHA or change the review policy', String(reviewState.alreadyReviewed)))
+            if (!github) throw new Error('GitHub SCM adapter unavailable')
+            const reviewState = await github.reviewState(scmRef, plannedManifest.policyFingerprint)
+            checks.push(check('pr.not-reviewed', !reviewState.alreadyPublished, 'same SHA and policy review marker', 'wait for a new SHA or change the review policy', String(reviewState.alreadyPublished)))
           } catch (error) { checks.push(check('pr.review-state', false, 'unable to prove GitHub review idempotency state', 'restore bounded GitHub comment-history access', error instanceof Error ? error.message : String(error))) }
         }
       }
@@ -192,7 +202,7 @@ async function main() {
     if (!projectConfig) throw new Error('validated configuration unavailable')
     const configContent = readFileSync(configFile, 'utf8')
     const manifestFingerprint = sha256(readFileSync(manifestFile))
-    const proposedContract = { version: 1, runId, libraryVersion: pkg.version, sourceRevision, repository, pullNumber, headSha: manifest.headSha, baseSha: prData.base.sha, provider, model: model ?? null, transport: transport ?? null, mode, configFingerprint: sha256(configContent), qualityCorpusFingerprint: sha256(readFileSync(corpusFile)), learningCorpusFingerprint: sha256(readFileSync(learningCorpusFile)), policyFingerprint: manifest.policyFingerprint, manifestFingerprint, requiredLenses: plan.requiredLenses, retryLimit: maxRetries, maxCalls, maxTokens, deadlineMs, globalDeadlineMs, concurrency, batchConcurrency, runDir, stateRoot }
+    const proposedContract = { version: 1, runId, libraryVersion: pkg.version, sourceRevision, repository, pullNumber, headSha: manifest.headSha, baseSha: prData.targetRevision, provider, model: model ?? null, transport: transport ?? null, mode, configFingerprint: sha256(configContent), qualityCorpusFingerprint: sha256(readFileSync(corpusFile)), learningCorpusFingerprint: sha256(readFileSync(learningCorpusFile)), policyFingerprint: manifest.policyFingerprint, manifestFingerprint, requiredLenses: plan.requiredLenses, retryLimit: maxRetries, maxCalls, maxTokens, deadlineMs, globalDeadlineMs, concurrency, batchConcurrency, runDir, stateRoot }
     const contract = existsSync(contractFile) ? readJson(contractFile) : { ...proposedContract, createdAt: new Date().toISOString() }
     for (const [key, value] of Object.entries(proposedContract)) if (JSON.stringify(contract[key]) !== JSON.stringify(value)) throw new Error(`existing contract mismatch: ${key}`)
     if (!existsSync(contractFile)) atomicJson(contractFile, contract)
@@ -324,11 +334,10 @@ async function main() {
       if (!has('post') || quality.decision !== 'PASS') throw new Error('merge forbidden: posting and quality PASS are required')
       if (consolidated.review.verdict !== 'APPROVE') summary.artifacts.merge = 'skipped:review-findings'
       else {
-        const currentSha = safeExec('gh', ['api', `repos/${repository}/pulls/${pullNumber}`, '--jq', '.head.sha'], { env: childEnv })
-        const checksRun = safeExec('gh', ['pr', 'checks', String(pullNumber), '-R', repository, '--required'], { env: childEnv, timeout: 180_000 })
-        if (!currentSha.ok || currentSha.stdout !== manifest.headSha || !checksRun.ok) throw new Error(`merge gate blocked: sha=${currentSha.stdout}; checks=${checksRun.stderr || checksRun.stdout}`)
-        const merge = safeExec('gh', ['pr', 'merge', String(pullNumber), '-R', repository, `--${projectConfig.merge.method}`, ...(has('admin') ? ['--admin'] : [])], { env: childEnv, timeout: 180_000 })
-        if (!merge.ok) throw new Error(`merge blocked: ${merge.stderr || merge.stdout}`)
+        if (!github) throw new Error('merge blocked: GitHub SCM adapter unavailable')
+        const readiness = await github.mergeReadiness(scmRef)
+        if (!readiness.ready || readiness.headRevision !== manifest.headSha) throw new Error(`merge gate blocked: sha=${readiness.headRevision}; blockers=${readiness.blockers.join(', ')}`)
+        await github.merge(scmRef, { expectedHeadRevision: manifest.headSha, method: projectConfig.merge.method, admin: has('admin') })
         summary.artifacts.merge = 'github'
       }
     }

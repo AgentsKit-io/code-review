@@ -1,10 +1,10 @@
 import { z } from 'zod'
 
 const identifier = z.string().min(1).max(200)
-const revision = z.string().min(7).max(128)
+const revision = z.string().min(4).max(128)
 
 export const ScmCapabilitySchema = z.enum([
-  'discovery', 'metadata', 'diff', 'review-state', 'publish-review', 'merge-readiness', 'merge',
+  'discovery', 'metadata', 'diff', 'file-content', 'review-state', 'publish-review', 'merge-readiness', 'merge',
 ])
 export type ScmCapability = z.infer<typeof ScmCapabilitySchema>
 
@@ -27,6 +27,7 @@ export const ChangeRequestQuerySchema = z.object({
 export const ChangeRequestMetadataSchema = z.object({
   ref: ChangeRequestRefSchema,
   title: z.string().min(1).max(1_000),
+  state: z.enum(['open', 'closed']),
   author: identifier,
   sourceRevision: revision,
   targetRevision: revision,
@@ -52,6 +53,11 @@ export const ChangeRequestDiffSchema = z.object({
   }).strict().readonly()),
 }).strict().readonly()
 
+export const ScmFileContentSchema = z.object({
+  content: z.string(),
+  truncated: z.boolean(),
+}).strict().readonly()
+
 export const ScmReviewStateSchema = z.object({
   headRevision: revision,
   fingerprint: identifier,
@@ -61,8 +67,9 @@ export const ScmReviewStateSchema = z.object({
 }).strict().readonly()
 
 export const ScmReviewPublicationSchema = z.object({
+  channel: z.enum(['review', 'summary']),
   headRevision: revision,
-  fingerprint: identifier,
+  fingerprint: identifier.optional(),
   verdict: z.enum(['APPROVE', 'COMMENT', 'REQUEST_CHANGES']),
   summary: z.string().max(65_536),
   annotations: z.array(z.object({
@@ -89,6 +96,7 @@ export const ScmMergeReadinessSchema = z.object({
 export const ScmMergeRequestSchema = z.object({
   expectedHeadRevision: revision,
   method: z.enum(['merge', 'squash', 'rebase']),
+  admin: z.boolean().default(false),
 }).strict().readonly()
 
 export const ScmMergeReceiptSchema = z.object({
@@ -100,6 +108,7 @@ export type ChangeRequestRef = z.infer<typeof ChangeRequestRefSchema>
 export type ChangeRequestQuery = z.infer<typeof ChangeRequestQuerySchema>
 export type ChangeRequestMetadata = z.infer<typeof ChangeRequestMetadataSchema>
 export type ChangeRequestDiff = z.infer<typeof ChangeRequestDiffSchema>
+export type ScmFileContent = z.infer<typeof ScmFileContentSchema>
 export type ScmReviewState = z.infer<typeof ScmReviewStateSchema>
 export type ScmReviewPublication = z.infer<typeof ScmReviewPublicationSchema>
 export type ScmPublicationReceipt = z.infer<typeof ScmPublicationReceiptSchema>
@@ -113,6 +122,7 @@ export interface ScmAdapter {
   discover(query: ChangeRequestQuery): Promise<readonly ChangeRequestRef[]>
   metadata(ref: ChangeRequestRef): Promise<ChangeRequestMetadata>
   diff(ref: ChangeRequestRef, baselineRevision?: string): Promise<ChangeRequestDiff>
+  fileContent(ref: ChangeRequestRef, path: string, revision: string, maxBytes: number): Promise<ScmFileContent>
   reviewState(ref: ChangeRequestRef, fingerprint: string): Promise<ScmReviewState>
   publishReview(ref: ChangeRequestRef, review: ScmReviewPublication): Promise<ScmPublicationReceipt>
   mergeReadiness(ref: ChangeRequestRef): Promise<ScmMergeReadiness>

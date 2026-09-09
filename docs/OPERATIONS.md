@@ -43,8 +43,10 @@ complete diffs, review state, inline/summary publication, merge readiness, and
 revision-locked merge. Adapters declare every capability; requesting an
 unsupported operation throws `UnsupportedScmCapabilityError`. Platform payloads
 and credentials stay inside adapters rather than entering deterministic core
-contracts. GitHub is the first implementation target. GitLab is future work and
-is not supported until an adapter passes the same contract suite.
+contracts. The GitHub adapter owns ingestion, bounded review-state inspection,
+inline and summary publication, conservative merge readiness, and
+revision-locked normal/admin merge. GitLab is future work and is not supported
+until an adapter passes the same contract suite.
 
 ## First local setup
 
