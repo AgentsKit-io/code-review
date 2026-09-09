@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.19.0
+
+### Minor Changes
+
+- [#184](https://github.com/AgentsKit-io/code-review/pull/184) [`1c53222`](https://github.com/AgentsKit-io/code-review/commit/1c532222ff83847ef99fdc08496d1ce415c036e3) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Review every enabled quality dimension in one structured analysis call per context pack and report explicit category coverage.
+
 ## 0.18.0
 
 ### Minor Changes
