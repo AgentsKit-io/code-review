@@ -3,7 +3,9 @@ import type { AdapterFactory } from '@agentskit/core'
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { z } from 'zod'
 import { runLocalCli } from './local-cli-process.js'
+import { DEFAULT_CODEX_CLI_TIMEOUT_MS, DEFAULT_LOCAL_CLI_TIMEOUT_MS } from './local-cli-timeout.js'
 
 export const PROVIDER_REGISTRY_VERSION = 1 as const
 
@@ -11,6 +13,48 @@ export type ProviderKind = 'api' | 'cli' | 'local-server'
 export type SupportLevel = 'stable' | 'experimental' | 'unsupported'
 export type Transport = 'api' | 'acp' | 'headless' | 'auto' | 'http'
 export type ModelRequirement = 'required' | 'optional' | 'none'
+
+const support = z.enum(['supported', 'unsupported', 'unknown'])
+export const ProviderCapabilitiesSchema = z.object({
+  version: z.literal(1),
+  streaming: support,
+  tools: support,
+  structuredOutput: support,
+  tokenAccounting: z.enum(['reported', 'unavailable', 'unknown']),
+  cancellation: support,
+  promptCaching: support,
+  contextWindowTokens: z.number().int().positive().nullable(),
+  sessions: support,
+  safeConcurrency: z.number().int().min(1).max(32),
+  requestTimeoutMs: z.number().int().positive(),
+}).strict().readonly()
+
+export type ProviderCapabilities = z.infer<typeof ProviderCapabilitiesSchema>
+
+export interface ProviderExecutionPolicy {
+  readonly structuredOutput: boolean
+  readonly tokenAccounting: 'reported' | 'unavailable' | 'unknown'
+  readonly cancellation: boolean
+  readonly promptCaching: boolean
+  readonly contextWindowTokens: number | null
+  readonly sessions: boolean
+  readonly safeConcurrency: number
+  readonly requestTimeoutMs: number
+}
+
+const UNKNOWN_CAPABILITIES = ProviderCapabilitiesSchema.parse({
+  version: 1,
+  streaming: 'unknown',
+  tools: 'unknown',
+  structuredOutput: 'unknown',
+  tokenAccounting: 'unknown',
+  cancellation: 'unknown',
+  promptCaching: 'unknown',
+  contextWindowTokens: null,
+  sessions: 'unknown',
+  safeConcurrency: 1,
+  requestTimeoutMs: DEFAULT_LOCAL_CLI_TIMEOUT_MS,
+})
 
 export interface ProviderEntry {
   readonly id: string
@@ -28,7 +72,7 @@ export interface ProviderEntry {
   readonly dataBoundary: 'local' | 'remote' | 'unknown'
   readonly credentialEnv: readonly string[]
   readonly credentialMode: 'api-key' | 'login' | 'none'
-  readonly capabilities: Readonly<Record<string, boolean>>
+  readonly capabilities: ProviderCapabilities
 }
 
 const API_METADATA: Record<string, Omit<ProviderEntry, 'id' | 'aliases' | 'factoryName'>> = {
@@ -44,7 +88,7 @@ const API_METADATA: Record<string, Omit<ProviderEntry, 'id' | 'aliases' | 'facto
 }
 
 const LOCAL_PROVIDERS: readonly ProviderEntry[] = [
-  cli('codex-cli', 'OpenAI Codex CLI', 'codex', 'stable'),
+  cli('codex-cli', 'OpenAI Codex CLI', 'codex', 'stable', { tokenAccounting: 'reported', requestTimeoutMs: DEFAULT_CODEX_CLI_TIMEOUT_MS }),
   cli('claude-cli', 'Claude Code CLI', 'claude', 'stable'),
   {
     ...cli('grok-cli', 'Grok Build CLI', 'grok', 'stable'),
@@ -66,15 +110,18 @@ function api(description: string, credentialEnv: readonly string[]): Omit<Provid
   return {
     kind: 'api', support: 'stable', description, transports: ['api'], defaultTransport: 'api', model: 'required',
     dataBoundary: 'remote', credentialEnv, credentialMode: 'api-key',
-    capabilities: { streaming: true, tools: true, structuredOutput: true },
+    capabilities: capabilities({ streaming: 'supported', tools: 'supported', structuredOutput: 'supported', cancellation: 'supported', safeConcurrency: 4 }),
   }
 }
 
-function cli(id: string, description: string, executable: string, support: SupportLevel): ProviderEntry {
+function cli(id: string, description: string, executable: string, support: SupportLevel, capabilityOverrides: Partial<Omit<ProviderCapabilities, 'version'>> = {}): ProviderEntry {
   return {
     id, aliases: [], kind: 'cli', support, description, executable, versionArgs: ['--version'], minimumVersion: '0.1.0',
     transports: ['headless'], defaultTransport: 'headless', model: 'optional', dataBoundary: 'local',
-    credentialEnv: [], credentialMode: 'login', capabilities: { streaming: false, tools: true, structuredOutput: true },
+    credentialEnv: [], credentialMode: 'login', capabilities: capabilities({
+      streaming: 'unsupported', tools: 'supported', structuredOutput: 'supported', cancellation: 'supported',
+      ...capabilityOverrides,
+    }),
   }
 }
 
@@ -82,8 +129,12 @@ function localServer(id: string, description: string, support: SupportLevel): Pr
   return {
     id, aliases: [], kind: 'local-server', support, description,
     transports: ['http'], defaultTransport: 'http', model: 'required', dataBoundary: 'local',
-    credentialEnv: [], credentialMode: 'none', capabilities: { streaming: true, tools: true, structuredOutput: true },
+    credentialEnv: [], credentialMode: 'none', capabilities: capabilities({ streaming: 'supported', tools: 'supported', structuredOutput: 'supported', cancellation: 'supported', safeConcurrency: 2 }),
   }
+}
+
+function capabilities(overrides: Partial<Omit<ProviderCapabilities, 'version'>> = {}): ProviderCapabilities {
+  return ProviderCapabilitiesSchema.parse({ ...UNKNOWN_CAPABILITIES, ...overrides })
 }
 
 export function discoverApiFactories(source: Record<string, unknown> = adapters): string[] {
@@ -98,6 +149,7 @@ export function providerRegistry(source: Record<string, unknown> = adapters): Pr
     const metadata = API_METADATA[id] ?? {
       ...api(`${id} API adapter`, [`${id.toUpperCase()}_API_KEY`]),
       support: KNOWN_API_SUPPORT.has(id) ? 'stable' : 'experimental',
+      capabilities: UNKNOWN_CAPABILITIES,
     }
     entries.set(id, { id, aliases: id === 'anthropic' ? ['api'] : [], factoryName: id, ...metadata })
   }
@@ -115,6 +167,21 @@ export function resolveProviderId(id: string, entries: readonly ProviderEntry[] 
 export function providerEntry(id: string, entries: readonly ProviderEntry[] = providerRegistry()): ProviderEntry | undefined {
   const resolved = resolveProviderId(id, entries)
   return entries.find((entry) => entry.id === resolved)
+}
+
+export function providerExecutionPolicy(id: string | undefined, entries: readonly ProviderEntry[] = providerRegistry(), adapter?: AdapterFactory): ProviderExecutionPolicy {
+  const capability = id ? providerEntry(id, entries)?.capabilities ?? UNKNOWN_CAPABILITIES : UNKNOWN_CAPABILITIES
+  const adapterCapabilities = adapter?.capabilities
+  return {
+    structuredOutput: adapterCapabilities?.structuredOutput ?? (capability.structuredOutput === 'supported'),
+    tokenAccounting: adapterCapabilities?.usage === true ? 'reported' : adapterCapabilities?.usage === false ? 'unavailable' : capability.tokenAccounting,
+    cancellation: capability.cancellation === 'supported',
+    promptCaching: capability.promptCaching === 'supported',
+    contextWindowTokens: capability.contextWindowTokens,
+    sessions: capability.sessions === 'supported',
+    safeConcurrency: capability.safeConcurrency,
+    requestTimeoutMs: capability.requestTimeoutMs,
+  }
 }
 
 export interface DoctorCheck {

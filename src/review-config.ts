@@ -3,7 +3,8 @@ import { join } from 'node:path'
 import { z } from 'zod'
 import type { Category, Severity } from '../agents/code-review/agent.js'
 import { ABSOLUTE_LOCAL_CLI_OUTPUT_BYTES, ABSOLUTE_LOCAL_CLI_TIMEOUT_MS, DEFAULT_LOCAL_CLI_OUTPUT_BYTES } from './local-cli-process.js'
-import { DEFAULT_CODEX_CLI_TIMEOUT_MS, localCliTimeoutMs } from './local-cli-timeout.js'
+import { localCliTimeoutMs } from './local-cli-timeout.js'
+import { providerExecutionPolicy, resolveProviderId } from './provider-registry.js'
 
 export const BUILTIN_LENS_KEYS = [
   'correctness', 'security', 'performance', 'maintainability', 'design', 'tests', 'conventions',
@@ -165,13 +166,14 @@ export function resolveReviewConfig(
     ...(overrides.deadlineMs === undefined ? {} : { deadlineMs: overrides.deadlineMs }),
   }
   const provider = overrides.provider ?? file?.provider
-  const defaultConcurrency = profile === 'fast' ? (provider?.endsWith('-cli') ? 1 : 2) : provider?.endsWith('-cli') ? 1 : 4
+  const providerPolicy = providerExecutionPolicy(provider && resolveProviderId(provider))
+  const defaultConcurrency = Math.min(profile === 'fast' ? 2 : 4, providerPolicy.safeConcurrency)
   const defaultDeadlineMs = profile === 'fast' ? 120_000 : 10 * 60 * 1000
   const effective = {
     configVersion: 1 as const, profile, batchLenses: profile === 'fast', lenses, incompleteProfile,
     votes: overrides.votes ?? file?.votes ?? (profile === 'fast' ? 1 : 3), retries: overrides.retries ?? file?.retries ?? (profile === 'fast' ? 0 : 1),
     thresholds, budget: { ...budget, concurrency: budget.concurrency ?? defaultConcurrency, maxCalls: budget.maxCalls ?? 1000, deadlineMs: budget.deadlineMs ?? defaultDeadlineMs },
-    worker: { timeoutMs: file?.worker?.timeoutMs ?? localCliTimeoutMs(provider === 'codex-cli' ? DEFAULT_CODEX_CLI_TIMEOUT_MS : undefined), maxOutputBytes: file?.worker?.maxOutputBytes ?? DEFAULT_LOCAL_CLI_OUTPUT_BYTES },
+    worker: { timeoutMs: file?.worker?.timeoutMs ?? localCliTimeoutMs(providerPolicy.requestTimeoutMs), maxOutputBytes: file?.worker?.maxOutputBytes ?? DEFAULT_LOCAL_CLI_OUTPUT_BYTES },
     conventions: overrides.conventions ?? file?.conventions,
     context: { mode: file?.context?.mode ?? 'prompt', patterns: file?.context?.patterns ?? [] },
     allowUnredacted: Boolean(options.allowUnredacted),

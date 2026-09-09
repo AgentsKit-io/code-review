@@ -19,6 +19,14 @@ Do not run hosted review on code whose policy forbids external processing. A loc
 
 Provider IDs are versioned registry entries. `grok` is the xAI API adapter, while `grok-cli` and `opencode-cli` are stable local CLI providers. `--list-providers` prints registry metadata and dynamically discovered API factories, including each support level (`stable`, `experimental`, or `unsupported`), transport, and model requirement.
 
+Each entry also carries a validated capability contract for structured output,
+token accounting, cancellation, prompt caching, context limits, sessions, safe
+concurrency, and request timeout. Execution defaults use that contract rather
+than provider-name checks. Missing metadata is conservative: unsupported
+optimizations stay off, context remains unknown, and concurrency falls back to
+one. Explicit `AdapterFactory.capabilities` hints from AgentsKit can refine
+structured-output and usage support without introducing another model layer.
+
 Use the offline doctor before execution:
 
 ```sh
