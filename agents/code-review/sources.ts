@@ -5,7 +5,7 @@ import { promisify } from 'node:util'
 import type { ReviewTarget } from './agent.js'
 import { redactSecrets } from '../../src/local-cli-process.js'
 import { createGithubScmAdapter } from '../../src/github-scm-adapter.js'
-import type { ScmAdapter } from '../../src/scm-contract.js'
+import type { ChangeRequestDiff, ChangeRequestRef, ScmAdapter } from '../../src/scm-contract.js'
 
 const run = promisify(execFile)
 const DEFAULT_SNAPSHOT_FILES = 100
@@ -26,6 +26,7 @@ export interface SourceLimits {
 
 export type SourceConfig =
   | { kind: 'git-diff'; base: string; head?: string; cwd?: string; redact?: boolean; limits?: SourceLimits }
+  | { kind: 'scm'; adapter: ScmAdapter; ref: ChangeRequestRef; diff?: ChangeRequestDiff; baselineRevision?: string; collectErrors?: boolean; redact?: boolean; limits?: SourceLimits }
   | { kind: 'github-pr'; owner: string; repo: string; number: number; token: string; baselineSha?: string; redact?: boolean; limits?: SourceLimits; adapter?: ScmAdapter }
   | { kind: 'paths'; paths: string[]; cwd?: string; redact?: boolean; limits?: SourceLimits }
   | { kind: 'stdin'; content: string; filename?: string; redact?: boolean; limits?: SourceLimits }
@@ -47,6 +48,17 @@ const langOf = (file: string): string => {
 }
 
 function normalize(file: string): string { return file.replaceAll('\\', '/') }
+
+function promptText(content: string): string | undefined {
+  let nul = 0; let controls = 0
+  for (const character of content) {
+    const code = character.charCodeAt(0)
+    if (code === 0) nul += 1
+    else if ((code < 32 && code !== 9 && code !== 10 && code !== 13) || code === 0xfffd) controls += 1
+    if (nul > 8 || controls > 8) return undefined
+  }
+  return content.replaceAll('\0', '\\0')
+}
 
 function deniedPath(file: string): string | undefined {
   const parts = normalize(file).split('/')
@@ -112,8 +124,8 @@ function readTarget(file: string, cwd: string, limits: SourceLimits, redact: boo
     const size = fstatSync(fd).size
     const maxFileBytes = limits.maxFileBytes ?? DEFAULT_PROMPT_FILE_BYTES
     if (size > maxFileBytes) return unreviewed(normalized, `file exceeds ${maxFileBytes} byte limit`)
-    const fullContent = readFileSync(fd, 'utf8')
-    if (fullContent.includes('\0')) return unreviewed(normalized, 'binary content')
+    const fullContent = promptText(readFileSync(fd, 'utf8'))
+    if (fullContent === undefined) return unreviewed(normalized, 'binary content')
     return { file: normalized, language: langOf(normalized), fullContent: redact ? redactSecrets(fullContent) : fullContent, changedRanges: changed, patch, isChanged: Boolean(changed) }
   } catch { return unreviewed(normalized, 'file is not readable text')
   } finally { closeSync(fd) }
@@ -185,10 +197,8 @@ async function fromGitDiff(c: Extract<SourceConfig, { kind: 'git-diff' }>): Prom
   return targets
 }
 
-async function fromGithubPr(c: Extract<SourceConfig, { kind: 'github-pr' }>): Promise<ReviewTarget[]> {
-  const adapter = c.adapter ?? createGithubScmAdapter({ token: c.token })
-  const ref = { repository: `${c.owner}/${c.repo}`, id: String(c.number) }
-  const diff = await adapter.diff(ref, c.baselineSha)
+export async function loadScmTargets(c: { adapter: ScmAdapter; ref: ChangeRequestRef; diff?: ChangeRequestDiff; baselineRevision?: string; collectErrors?: boolean; redact?: boolean; limits?: SourceLimits }): Promise<ReviewTarget[]> {
+  const diff = c.diff ?? await c.adapter.diff(c.ref, c.baselineRevision)
   const sha = diff.headRevision
   const files = diff.files
   const maxFiles = Math.min(c.limits?.maxFiles ?? DEFAULT_GITHUB_PR_FILES, MAX_GITHUB_PR_METADATA_FILES)
@@ -202,7 +212,7 @@ async function fromGithubPr(c: Extract<SourceConfig, { kind: 'github-pr' }>): Pr
   let downloadedBytes = 0
   let byteBudgetHit = false
   for (const f of files) {
-    if (f.status === 'removed') continue
+    if (f.status === 'removed') { targets.push(unreviewed(f.path, 'deleted file requires diff-first review')); continue }
     const denied = deniedPath(f.path)
     if (denied || !isReviewableName(f.path)) { targets.push(unreviewed(f.path, denied ?? 'unsupported text format')); continue }
     if (!selectedFiles.has(f.path)) { targets.push(unreviewed(f.path, `PR exceeds ${maxFiles} file limit`)); continue }
@@ -213,15 +223,21 @@ async function fromGithubPr(c: Extract<SourceConfig, { kind: 'github-pr' }>): Pr
     const fileLimit = c.limits?.maxFileBytes ?? DEFAULT_PROMPT_FILE_BYTES
     const remainingBytes = (c.limits?.maxBytes ?? Number.POSITIVE_INFINITY) - downloadedBytes
     const downloadLimit = Math.min(fileLimit, remainingBytes)
-    const content = await adapter.fileContent(ref, f.path, sha, downloadLimit)
+    let content
+    try { content = await c.adapter.fileContent(c.ref, f.path, sha, downloadLimit) }
+    catch (error) {
+      if (!c.collectErrors) throw error
+      targets.push(unreviewed(f.path, `file content unavailable: ${error instanceof Error ? error.message : String(error)}`)); continue
+    }
     if (content.truncated) {
       targets.push(unreviewed(f.path, remainingBytes <= fileLimit ? `PR exceeds ${c.limits?.maxBytes} byte limit` : `file exceeds ${fileLimit} byte limit`))
       if (remainingBytes <= fileLimit) byteBudgetHit = true
       continue
     }
-    const raw = content.content
+    const raw = promptText(content.content)
+    if (raw === undefined) { targets.push(unreviewed(f.path, 'binary content')); continue }
     const size = Buffer.byteLength(raw, 'utf8'); const limit = fileLimit
-    if (size > limit || raw.includes('\0')) { targets.push(unreviewed(f.path, size > limit ? `file exceeds ${limit} byte limit` : 'binary content')); continue }
+    if (size > limit) { targets.push(unreviewed(f.path, `file exceeds ${limit} byte limit`)); continue }
     if (downloadedBytes + size > (c.limits?.maxBytes ?? Number.POSITIVE_INFINITY)) {
       targets.push(unreviewed(f.path, `PR exceeds ${c.limits?.maxBytes} byte limit`))
       byteBudgetHit = true
@@ -232,6 +248,16 @@ async function fromGithubPr(c: Extract<SourceConfig, { kind: 'github-pr' }>): Pr
   }
   if (!diff.complete) targets.push(unreviewed('[github-pr file list]', `PR file metadata truncated after ${MAX_GITHUB_PR_METADATA_FILES} files`))
   return applyLimits(targets, c.limits)
+}
+
+async function fromGithubPr(c: Extract<SourceConfig, { kind: 'github-pr' }>): Promise<ReviewTarget[]> {
+  return loadScmTargets({
+    adapter: c.adapter ?? createGithubScmAdapter({ token: c.token }),
+    ref: { repository: `${c.owner}/${c.repo}`, id: String(c.number) },
+    ...(c.baselineSha ? { baselineRevision: c.baselineSha } : {}),
+    redact: c.redact,
+    limits: c.limits,
+  })
 }
 
 function fromPaths(c: Extract<SourceConfig, { kind: 'paths' }>): ReviewTarget[] {
@@ -269,7 +295,9 @@ function fromSnapshot(c: Extract<SourceConfig, { kind: 'isolated-snapshot' }>): 
 }
 
 function fromStdin(c: Extract<SourceConfig, { kind: 'stdin' }>): ReviewTarget[] {
-  const file = c.filename ?? 'snippet.txt'; const content = c.redact ? redactSecrets(c.content) : c.content
+  const file = c.filename ?? 'snippet.txt'; const text = promptText(c.content)
+  if (text === undefined) return [unreviewed(file, 'binary content')]
+  const content = c.redact ? redactSecrets(text) : text
   const size = Buffer.byteLength(content, 'utf8'); const limit = c.limits?.maxFileBytes ?? DEFAULT_PROMPT_FILE_BYTES
   return [size > limit ? unreviewed(file, `file exceeds ${limit} byte limit`) : { file, language: langOf(file), fullContent: content, isChanged: true }]
 }
@@ -277,6 +305,7 @@ function fromStdin(c: Extract<SourceConfig, { kind: 'stdin' }>): ReviewTarget[] 
 export async function loadTargets(source: SourceConfig): Promise<ReviewTarget[]> {
   switch (source.kind) {
     case 'git-diff': return fromGitDiff(source)
+    case 'scm': return loadScmTargets(source)
     case 'github-pr': return fromGithubPr(source)
     case 'paths': return fromPaths(source)
     case 'stdin': return fromStdin(source)

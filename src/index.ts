@@ -75,6 +75,8 @@ export type { ProviderCapabilities, ProviderEntry, ProviderExecutionPolicy } fro
 export { AdaptiveConcurrencyGate, normalizeProviderFailure, providerRetryDelay, waitForProviderRetry } from './provider-execution.js'
 export { createGithubScmAdapter } from './github-scm-adapter.js'
 export type { GithubScmAdapterOptions } from './github-scm-adapter.js'
+export { CampaignPreflightEntrySchema, CampaignPreflightReportSchema, blockedCampaignPreflightReport, preflightCampaign } from './campaign-preflight.js'
+export type { CampaignPreflightEntry, CampaignPreflightReport } from './campaign-preflight.js'
 export {
   ChangeRequestDiffSchema, ChangeRequestMetadataSchema, ChangeRequestQuerySchema, ChangeRequestRefSchema,
   ScmCapabilitiesSchema, ScmCapabilitySchema, ScmFileContentSchema, ScmMergeReadinessSchema, ScmMergeReceiptSchema,

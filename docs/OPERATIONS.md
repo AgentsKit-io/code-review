@@ -188,6 +188,14 @@ the requested event.
 
 ## Deterministic scheduled cycle
 
+Run `agentskit-review-campaign --config /absolute/path/code-review.config.ts
+--output /private/path/campaign-preflight.json` before live campaign execution.
+It validates the one project configuration, checks static provider health, discovers
+all open change requests through the SCM adapter, and gives every discovered request
+an explicit `ready`, `skipped`, or `blocked` outcome. The command performs no model
+analysis and creates no worktree. Downstream execution may create a worktree only
+when the immutable report entry has `worktreeAllowed: true`.
+
 `agentskit-review-cycle` is the supported Orca entrypoint. Give it one PR, one
 validated config, and a private run directory. The command collects all static
 blockers before provider execution, locks the PR SHA and policy fingerprints,

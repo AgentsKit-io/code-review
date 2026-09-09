@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "project": "agentskit-code-review-prd-137-issue-145",
+  "project": "agentskit-code-review-prd-137-issue-146",
   "root": "..",
   "profile": "custom",
   "exemptions": [
     "This repository is a CLI/library; endpoint, database, MCP, and UI product surfaces are out of scope for this fix."
   ],
   "contract": {
-    "intent": "Route GitHub ingestion, review state, publication, merge readiness, and merge mutations through the provider-neutral SCM contract while preserving existing safety and output behavior for issue #145.",
+    "intent": "Discover every configured change request and deterministically classify eligibility and complete provider-free preflight before any model call or worktree creation for issue #146.",
     "outcomes": [
       { "id": "batch-manifest", "statement": "The CLI exposes a deterministic reviewable-file manifest, batch plan, and private SHA/policy-bound manifest without model execution.", "checks": ["batch-regression", "repo-check"] },
       { "id": "batch-artifact", "statement": "A partial batch writes a private artifact bound to the exact PR SHA, policy fingerprint, index, and file manifest; it cannot post to GitHub.", "checks": ["batch-regression", "repo-check"] },
@@ -68,6 +68,10 @@
       ,{ "id": "github-safety-preserved", "statement": "GitHub request deadlines, bounded reads and history, safe raw-content hosts, redaction, idempotency markers, complete-check evidence, and advisory fallback remain enforced.", "checks": ["github-scm", "batch-regression", "repo-check"] }
       ,{ "id": "github-output-compatibility", "statement": "Public inline and summary reporter APIs preserve rendering, language, sections, and non-approving fallback behavior through adapter-backed wrappers.", "checks": ["github-scm", "batch-regression", "repo-check"] }
       ,{ "id": "github-safe-merge", "statement": "Normal and administrative merges are revision-locked and fail closed unless draft, mergeability, check-run completeness, checks, and commit status are acceptable.", "checks": ["github-scm", "repo-check"] }
+      ,{ "id": "campaign-discovery", "statement": "One validated project configuration drives provider-neutral discovery and includes every discovered change request exactly once in stable order.", "checks": ["campaign-preflight", "repo-check", "package"] }
+      ,{ "id": "campaign-eligibility", "statement": "Dependabot, configured authors, drafts, forks, closed requests, and previously reviewed SHA-policy pairs receive explicit deterministic eligibility outcomes.", "checks": ["campaign-preflight", "repo-check"] }
+      ,{ "id": "campaign-preflight", "statement": "Every eligible change request receives complete diff, changed-file, source-coverage, and budget preflight evidence before execution.", "checks": ["campaign-preflight", "repo-check"] }
+      ,{ "id": "provider-free-sweep", "statement": "Campaign preflight collects all discoverable blockers without model analysis or worktree creation and always emits a machine-readable report.", "checks": ["campaign-preflight", "repo-check", "package"] }
     ]
   },
   "surfaces": { "logic": true, "cli": true, "docs": true },
@@ -92,6 +96,7 @@
     ,{ "id": "provider-execution", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/provider-execution.test.mjs test/provider-circuit-breaker.test.mjs test/cli-smoke.test.mjs", "timeoutMs": 180000 }
     ,{ "id": "scm-contract", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/scm-contract.test.mjs", "timeoutMs": 60000 }
     ,{ "id": "github-scm", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/github-scm-adapter.test.mjs test/github-review-state.test.mjs test/sources.test.mjs test/reporters.test.mjs test/review-cycle.test.mjs", "timeoutMs": 120000 }
+    ,{ "id": "campaign-preflight", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/campaign-preflight.test.mjs", "timeoutMs": 120000 }
   ],
   "tracking": { "required": false, "reason": "The human authorized a release PR; its URL will be recorded in the release report. Publication remains blocked until the PR is merged and a stable GitHub Release exists." },
   "cleanup": { "roots": [".codex/verification/tmp"] }

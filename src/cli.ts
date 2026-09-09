@@ -28,12 +28,12 @@ import { ollamaReview } from './ollama-adapter.js'
 import type { SourceConfig } from '../agents/code-review/sources.js'
 import { diagnoseProvider, factoryFor, providerEntry, providerRegistry, resolveProviderId, type DoctorReport, type ProviderEntry } from './provider-registry.js'
 import { loadReviewConfig, resolveReviewConfig, type ResolvedReviewConfig } from './review-config.js'
-import { reviewFingerprint } from './github-review-state.js'
 import { createGithubScmAdapter } from './github-scm-adapter.js'
 import { consolidateToArtifact, createBatchCoverage, partitionReviewableFiles, type BatchCoverageState, type BatchReviewArtifact, type ConsolidatedReviewArtifact } from './batch-coverage.js'
 import { assertBatchManifestComplete, batchPlanOverBudget, batchSourceRequested } from './batch-mode.js'
 import { generateConfigSchema, loadProjectConfig, toReviewConfig } from './public-config.js'
 import { createFileMemory } from './file-memory.js'
+import { reviewPolicyFingerprint } from './review-policy.js'
 
 function loadReviewConfigFromProject(config: Parameters<typeof toReviewConfig>[0], options: Parameters<typeof resolveReviewConfig>[1]): ResolvedReviewConfig {
   return resolveReviewConfig(toReviewConfig(config), options)
@@ -263,28 +263,7 @@ async function main() {
   // full profile and workers run the bounded fast profile. Normalize every
   // profile-derived field here, not only `profile`, so planner manifests and
   // worker artifacts remain consolidatable under the same configuration.
-  const fingerprintLenses = reviewConfig.batching.enabled
-    ? Object.fromEntries(Object.entries(reviewConfig.lenses).map(([key, policy]) => [key, { ...policy, enabled: policy.required }]))
-    : reviewConfig.lenses
-  const policyFingerprint = reviewFingerprint({
-    engine: `@agentskit/code-review@${packageVersion()}`,
-    provider: reviewConfig.provider,
-    model: reviewConfig.model,
-    transport: reviewConfig.transport,
-    lenses: fingerprintLenses,
-    votes: reviewConfig.votes,
-    retries: reviewConfig.batching.enabled ? 0 : reviewConfig.retries,
-    // Planning uses the full profile while batch workers may use the fast
-    // profile. Both are one review policy and must produce the same artifact
-    // fingerprint, otherwise valid batch results cannot be consolidated.
-    profile: reviewConfig.batching.enabled ? 'batched-policy' : reviewConfig.profile,
-    thresholds: reviewConfig.batching.enabled ? { ...reviewConfig.thresholds, maxPerFile: 1 } : reviewConfig.thresholds,
-    budget: reviewConfig.budget,
-    context: reviewConfig.context,
-    redaction: reviewConfig.redaction,
-    conventions: reviewConfig.conventions ?? 'auto',
-    batching: reviewConfig.batching,
-  })
+  const policyFingerprint = reviewPolicyFingerprint(reviewConfig)
   const githubState = source.kind === 'github-pr' && (has('post') || requestedBatch !== undefined || resultFile !== undefined || publishResult !== undefined || flag('batch-manifest') !== undefined)
     ? await githubAdapter!.reviewState(githubRef!, policyFingerprint)
     : undefined
@@ -519,16 +498,6 @@ function formatPlan(plan: ReviewPlan): string {
   for (const reason of plan.overBudget) lines.push(`Refusal: ${reason}`)
   for (const suggestion of plan.suggestions) lines.push(`Suggestion: ${suggestion}`)
   return lines.join('\n')
-}
-
-function packageVersion(): string {
-  for (const path of [new URL('../package.json', import.meta.url), new URL('../../package.json', import.meta.url)]) {
-    try {
-      const value = JSON.parse(readFileSync(path, 'utf8')) as { version?: unknown }
-      if (typeof value.version === 'string' && value.version) return value.version
-    } catch { /* try the package root relative to the compiled CLI */ }
-  }
-  return 'unknown'
 }
 
 function parseJsonFile<T>(path: string, label: string): T {
