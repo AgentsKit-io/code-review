@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "project": "agentskit-code-review-prd-137-issue-142",
+  "project": "agentskit-code-review-prd-137-issue-143",
   "root": "..",
   "profile": "custom",
   "exemptions": [
     "This repository is a CLI/library; endpoint, database, MCP, and UI product surfaces are out of scope for this fix."
   ],
   "contract": {
-    "intent": "Expose validated model-provider capabilities around the existing AgentsKit AdapterFactory boundary and derive conservative execution defaults without provider-name conditionals for issue #142.",
+    "intent": "Add safe per-unit provider retries, adaptive concurrency, cancellation, and controlled circuit recovery without losing successful sibling work for issue #143.",
     "outcomes": [
       { "id": "batch-manifest", "statement": "The CLI exposes a deterministic reviewable-file manifest, batch plan, and private SHA/policy-bound manifest without model execution.", "checks": ["batch-regression", "repo-check"] },
       { "id": "batch-artifact", "statement": "A partial batch writes a private artifact bound to the exact PR SHA, policy fingerprint, index, and file manifest; it cannot post to GitHub.", "checks": ["batch-regression", "repo-check"] },
@@ -56,6 +56,11 @@
       ,{ "id": "agentskit-adapter-boundary", "statement": "AgentsKit AdapterFactory remains the model abstraction and its explicit capability hints refine registry policy without a wrapper model interface.", "checks": ["provider-capabilities", "repo-check"] }
       ,{ "id": "conservative-unknown-provider", "statement": "Unknown provider metadata disables unsupported optimizations, leaves limits unknown, and limits concurrency to one.", "checks": ["provider-capabilities", "repo-check"] }
       ,{ "id": "provider-neutral-execution-defaults", "statement": "Review concurrency and timeout defaults derive from capability metadata without provider-name branches.", "checks": ["provider-capabilities", "repo-check"] }
+      ,{ "id": "typed-provider-failures", "statement": "Timeout, rate-limit, server, authentication, malformed-output, cancellation, and unknown provider failures normalize to explicit retryable, terminal, or cancelled dispositions.", "checks": ["provider-execution", "repo-check", "package"] }
+      ,{ "id": "bounded-provider-retry", "statement": "Only retryable provider failures receive bounded exponential backoff with jitter; authentication and cancellation fail without retry.", "checks": ["provider-execution", "regression", "repo-check"] }
+      ,{ "id": "adaptive-provider-concurrency", "statement": "Provider instability lowers live concurrency without exceeding capability-derived maximums, and sustained success cautiously restores capacity.", "checks": ["provider-execution", "provider-capabilities", "repo-check"] }
+      ,{ "id": "provider-circuit-recovery", "statement": "Repeated provider instability stops fan-out and, after cooldown, admits exactly one controlled recovery probe.", "checks": ["provider-execution", "repo-check"] }
+      ,{ "id": "provider-unit-isolation", "statement": "A failed review unit does not discard successful sibling evidence, and queued work cancels immediately without starting provider execution.", "checks": ["provider-execution", "regression", "repo-check"] }
     ]
   },
   "surfaces": { "logic": true, "cli": true, "docs": true },
@@ -77,6 +82,7 @@
     ,{ "id": "campaign-reducer", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/campaign-reducer.test.mjs", "timeoutMs": 60000 }
     ,{ "id": "campaign-store", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/campaign-store.test.mjs", "timeoutMs": 60000 }
     ,{ "id": "provider-capabilities", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/provider-registry.test.mjs test/review-config.test.mjs", "timeoutMs": 120000 }
+    ,{ "id": "provider-execution", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/provider-execution.test.mjs test/provider-circuit-breaker.test.mjs test/cli-smoke.test.mjs", "timeoutMs": 180000 }
   ],
   "tracking": { "required": false, "reason": "The human authorized a release PR; its URL will be recorded in the release report. Publication remains blocked until the PR is merged and a stable GitHub Release exists." },
   "cleanup": { "roots": [".codex/verification/tmp"] }
