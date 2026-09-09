@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.0
+
+### Minor Changes
+
+- [#162](https://github.com/AgentsKit-io/code-review/pull/162) [`072bae3`](https://github.com/AgentsKit-io/code-review/commit/072bae3155c7bd41e1f8c11f1940b5db99bc3ee5) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Add versioned quality baseline contracts, a reproducible v0.8.0 fixture baseline command, and accepted architecture decisions for the deterministic campaign engine.
+
 ## 0.8.0
 
 ### Minor Changes
