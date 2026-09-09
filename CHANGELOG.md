@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.21.2
+
+### Patch Changes
+
+- [#192](https://github.com/AgentsKit-io/code-review/pull/192) [`ce97df5`](https://github.com/AgentsKit-io/code-review/commit/ce97df5dae1fc3b59ca89badba834fd7f6225409) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Batch skeptical verification and fail closed when required verification evidence is missing.
+
 ## 0.21.1
 
 ### Patch Changes
