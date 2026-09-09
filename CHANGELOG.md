@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.21.0
+
+### Minor Changes
+
+- [#188](https://github.com/AgentsKit-io/code-review/pull/188) [`37dbe7d`](https://github.com/AgentsKit-io/code-review/commit/37dbe7d87bb0d21dc139a0296ed9238da0911dbe) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Classify context packs from deterministic risk evidence and reserve additional correctness or security analysis for elevated-risk changes while keeping documentation and generated content on the low-cost path.
+
 ## 0.20.0
 
 ### Minor Changes
