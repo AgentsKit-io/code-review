@@ -70,4 +70,6 @@ export {
   shouldApplyExternalEffect,
 } from './campaign-store.js'
 export type { CampaignCheckpoint, CampaignLease } from './campaign-store.js'
+export { PROVIDER_REGISTRY_VERSION, ProviderCapabilitiesSchema, providerEntry, providerExecutionPolicy, providerRegistry, resolveProviderId } from './provider-registry.js'
+export type { ProviderCapabilities, ProviderEntry, ProviderExecutionPolicy } from './provider-registry.js'
 export type { ConfigInput, ReviewProjectConfig } from './public-config.js'
