@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.25.0
+
+### Minor Changes
+
+- [#202](https://github.com/AgentsKit-io/code-review/pull/202) [`6db325d`](https://github.com/AgentsKit-io/code-review/commit/6db325df3ea33ef94484dd1499827d7e02bd0a29) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Add bounded, repository/path/language/category-scoped approved-rule retrieval through the AgentsKit Retriever contract.
+
 ## 0.24.0
 
 ### Minor Changes
