@@ -1,13 +1,14 @@
 import { writeFileSync } from 'node:fs'
 import type { Finding, Reporter, ReviewResult } from './agent.js'
-import { GITHUB_REQUEST_TIMEOUT_MS, githubIssueComments, readGithubResponseText } from '../../src/github-review-state.js'
+import { createGithubScmAdapter } from '../../src/github-scm-adapter.js'
+import type { ChangeRequestRef, ScmAdapter } from '../../src/scm-contract.js'
 
 /**
  * Reporters turn a ReviewResult into an output surface. They are orchestration code
  * (string building + GitHub REST), not model calls. Add your own by implementing
  * `Reporter` and passing it in `reporters`.
  *
- * The GitHub reporters POST directly to the REST API. The model-facing equivalents are
+ * The GitHub compatibility reporters route through the common SCM adapter. The model-facing equivalents are
  * the `github_create_pr_review_comment` / `github_create_pr_review` tools in
  * `@agentskit/tools` — use those when an LLM should decide to post; use these reporters
  * when orchestration posts deterministically after the pipeline.
@@ -173,60 +174,38 @@ export function jsonReporter(opts: { file: string }): Reporter {
   return { name: 'json', async emit(review: ReviewResult) { writeFileSync(opts.file, JSON.stringify(review, null, 2), { mode: 0o600 }) } }
 }
 
-async function githubPost(token: string, path: string, body: unknown): Promise<{ html_url?: string }> {
-  const res = await fetch(`https://api.github.com${path}`, {
-    method: 'POST',
-    headers: {
-      authorization: `Bearer ${token}`,
-      accept: 'application/vnd.github+json',
-      'user-agent': 'agentskit-code-review',
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify(body),
-    signal: AbortSignal.timeout(GITHUB_REQUEST_TIMEOUT_MS),
-  })
-  if (!res.ok) {
-    const detail = (await readGithubResponseText(res, 4096)).trim().slice(0, 300)
-    throw new Error(`GitHub POST ${path} → ${res.status}${detail ? `: ${detail}` : ''}`)
-  }
-  return JSON.parse(await readGithubResponseText(res)) as { html_url?: string }
+function markerIdentity(marker?: string): { headRevision?: string; fingerprint?: string } {
+  const match = marker?.match(/sha=([^ ]+) fingerprint=([^ ]+) -->/)
+  return match ? { headRevision: match[1], fingerprint: match[2] } : {}
 }
 
-async function githubPatch(token: string, path: string, body: unknown): Promise<void> {
-  const res = await fetch(`https://api.github.com${path}`, {
-    method: 'PATCH',
-    headers: {
-      authorization: `Bearer ${token}`,
-      accept: 'application/vnd.github+json',
-      'user-agent': 'agentskit-code-review',
-      'content-type': 'application/json',
+export function scmReviewReporter(c: { adapter: ScmAdapter; ref: ChangeRequestRef; channel: 'review' | 'summary'; headRevision: string; fingerprint?: string; policy?: GithubCommentPolicy }): Reporter {
+  return {
+    name: `scm-${c.channel}`,
+    async emit(review: ReviewResult) {
+      if (c.channel === 'summary') {
+        await c.adapter.publishReview(c.ref, { channel: 'summary', headRevision: c.headRevision, ...(c.fingerprint ? { fingerprint: c.fingerprint } : {}), verdict: review.verdict === 'REQUEST CHANGES' ? 'REQUEST_CHANGES' : review.verdict, summary: renderGithubWalkthrough(review), annotations: [] })
+        return
+      }
+      const inline = c.policy?.inline === false ? [] : review.findings.filter((finding) => finding.inDiff)
+      const outOfDiff = review.findings.filter((finding) => !finding.inDiff)
+      const summary = `## Code review — ${review.verdict}\n\n${review.summary}` +
+        (outOfDiff.length ? `\n\n### Findings outside the diff\n${groupBySeverity(outOfDiff)}` : '')
+      if (c.policy?.summary === false && inline.length === 0) return
+      await c.adapter.publishReview(c.ref, {
+        channel: 'review', headRevision: c.headRevision, ...(c.fingerprint ? { fingerprint: c.fingerprint } : {}),
+        verdict: review.verdict === 'REQUEST CHANGES' ? 'REQUEST_CHANGES' : review.verdict,
+        summary,
+        annotations: inline.map((finding) => ({ path: finding.file, line: finding.line, ...(finding.endLine ? { endLine: finding.endLine } : {}), body: renderInlineFinding(finding, c.policy) })),
+      })
     },
-    body: JSON.stringify(body),
-    signal: AbortSignal.timeout(GITHUB_REQUEST_TIMEOUT_MS),
-  })
-  if (!res.ok) {
-    const detail = (await readGithubResponseText(res, 4096)).trim().slice(0, 300)
-    throw new Error(`GitHub PATCH ${path} → ${res.status}${detail ? `: ${detail}` : ''}`)
   }
 }
 
 /** One summary comment on the PR thread (uses the issues endpoint — always available). */
 export function githubSummaryReporter(c: { owner: string; repo: string; number: number; token: string; marker?: string }): Reporter {
-  return {
-    name: 'github-summary',
-    async emit(review: ReviewResult) {
-      const body = `${c.marker ? `${c.marker}\n` : ''}${renderGithubWalkthrough(review)}`
-      if (!c.marker) {
-        await githubPost(c.token, `/repos/${c.owner}/${c.repo}/issues/${c.number}/comments`, { body })
-        return
-      }
-      const history = await githubIssueComments(c.token, c.owner, c.repo, c.number)
-      if (history.truncated) throw new Error('GitHub review comment history is too large to update safely')
-      const existing = history.comments.find((comment) => comment.id !== undefined && comment.body?.includes(c.marker!))
-      if (existing) await githubPatch(c.token, `/repos/${c.owner}/${c.repo}/issues/comments/${existing.id}`, { body })
-      else await githubPost(c.token, `/repos/${c.owner}/${c.repo}/issues/${c.number}/comments`, { body })
-    },
-  }
+  const identity = markerIdentity(c.marker)
+  return { ...scmReviewReporter({ adapter: createGithubScmAdapter({ token: c.token }), ref: { repository: `${c.owner}/${c.repo}`, id: String(c.number) }, channel: 'summary', headRevision: identity.headRevision ?? 'unknown', ...(identity.fingerprint ? { fingerprint: identity.fingerprint } : {}) }), name: 'github-summary' }
 }
 
 /**
@@ -235,38 +214,6 @@ export function githubSummaryReporter(c: { owner: string; repo: string; number: 
  * (GitHub rejects review comments on unchanged lines).
  */
 export function githubInlineReporter(c: { owner: string; repo: string; number: number; token: string; commitId?: string; marker?: string; policy?: GithubCommentPolicy }): Reporter {
-  // Never emit APPROVE — a GitHub Actions token and your own PR both reject it (422).
-  const eventFor = (v: ReviewResult['verdict']) => (v === 'REQUEST CHANGES' ? 'REQUEST_CHANGES' : 'COMMENT')
-  return {
-    name: 'github-inline',
-    async emit(review: ReviewResult) {
-      const inline = review.findings.filter((f) => f.inDiff)
-      const outOfDiff = review.findings.filter((f) => !f.inDiff)
-      const comments = c.policy?.inline === false ? [] : inline.map((f) => ({
-        path: f.file,
-        line: f.endLine ?? f.line,
-        body: renderInlineFinding(f, c.policy),
-      }))
-      const body =
-        `${c.marker ? `${c.marker}\n` : ''}## Code review — ${review.verdict}\n\n${review.summary}` +
-        (outOfDiff.length ? `\n\n### Findings outside the diff\n${groupBySeverity(outOfDiff)}` : '')
-      const payload = {
-        body,
-        ...(c.commitId ? { commit_id: c.commitId } : {}),
-        ...(comments.length ? { comments } : {}),
-      }
-      const path = `/repos/${c.owner}/${c.repo}/pulls/${c.number}/reviews`
-      if (c.policy?.summary === false && comments.length === 0) return
-      try {
-        await githubPost(c.token, path, { event: eventFor(review.verdict), ...payload })
-      } catch (e) {
-        // APPROVE / REQUEST_CHANGES are rejected on your OWN PR and for a GitHub
-        // Actions token (422). The verdict is in the body anyway — fall back to a
-        // plain COMMENT review so the findings still post.
-        const msg = e instanceof Error ? e.message : String(e)
-        if (msg.includes('422')) await githubPost(c.token, path, { event: 'COMMENT', ...payload })
-        else throw e
-      }
-    },
-  }
+  const identity = markerIdentity(c.marker)
+  return { ...scmReviewReporter({ adapter: createGithubScmAdapter({ token: c.token }), ref: { repository: `${c.owner}/${c.repo}`, id: String(c.number) }, channel: 'review', headRevision: c.commitId ?? identity.headRevision ?? 'unknown', ...(identity.fingerprint ? { fingerprint: identity.fingerprint } : {}), policy: c.policy }), name: 'github-inline' }
 }

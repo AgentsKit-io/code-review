@@ -18,7 +18,7 @@ import { createProgressObserver } from '@agentskit/ink'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { extname, join } from 'node:path'
 import { builtInLenses, createCodeReviewAgent, type Category, type CodeReviewConfig, type Reporter, type ReviewPlan, type Severity } from '../agents/code-review/agent.js'
-import { githubInlineReporter, githubSummaryReporter, markdownReporter, renderMarkdown, sarifReporter } from '../agents/code-review/reporters.js'
+import { markdownReporter, renderMarkdown, sarifReporter, scmReviewReporter } from '../agents/code-review/reporters.js'
 import { claudeCode } from './claude-code-adapter.js'
 import { codexCli } from './codex-adapter.js'
 import { grokCli, grokHeadless } from './grok-cli-adapter.js'
@@ -28,7 +28,8 @@ import { ollamaReview } from './ollama-adapter.js'
 import type { SourceConfig } from '../agents/code-review/sources.js'
 import { diagnoseProvider, factoryFor, providerEntry, providerRegistry, resolveProviderId, type DoctorReport, type ProviderEntry } from './provider-registry.js'
 import { loadReviewConfig, resolveReviewConfig, type ResolvedReviewConfig } from './review-config.js'
-import { getGithubReviewState, reviewFingerprint } from './github-review-state.js'
+import { reviewFingerprint } from './github-review-state.js'
+import { createGithubScmAdapter } from './github-scm-adapter.js'
 import { consolidateToArtifact, createBatchCoverage, partitionReviewableFiles, type BatchCoverageState, type BatchReviewArtifact, type ConsolidatedReviewArtifact } from './batch-coverage.js'
 import { assertBatchManifestComplete, batchPlanOverBudget, batchSourceRequested } from './batch-mode.js'
 import { generateConfigSchema, loadProjectConfig, toReviewConfig } from './public-config.js'
@@ -247,6 +248,9 @@ async function main() {
     },
     })
   let source = await resolveSource(reviewConfig)
+  const githubAdapter = source.kind === 'github-pr' ? createGithubScmAdapter({ token: source.token }) : undefined
+  const githubRef = source.kind === 'github-pr' ? { repository: `${source.owner}/${source.repo}`, id: String(source.number) } : undefined
+  if (source.kind === 'github-pr' && githubAdapter) source = { ...source, adapter: githubAdapter }
   // Source credentials are captured in the source object above; providers must
   // never inherit repository credentials, including in trusted-local mode.
   delete process.env.GITHUB_TOKEN
@@ -282,45 +286,42 @@ async function main() {
     batching: reviewConfig.batching,
   })
   const githubState = source.kind === 'github-pr' && (has('post') || requestedBatch !== undefined || resultFile !== undefined || publishResult !== undefined || flag('batch-manifest') !== undefined)
-    ? await getGithubReviewState({
-      ...source,
-      fingerprint: policyFingerprint,
-    })
+    ? await githubAdapter!.reviewState(githubRef!, policyFingerprint)
     : undefined
-  if (has('post') && githubState?.fork) {
-    console.error(`SKIPPED: fork PR ${githubState.owner}/${githubState.repo}#${githubState.number} cannot be posted from this workflow boundary`)
+  const githubMetadata = has('post') && githubAdapter && githubRef ? await githubAdapter.metadata(githubRef) : undefined
+  if (has('post') && githubMetadata?.isFork) {
+    console.error(`SKIPPED: fork PR ${githubRef!.repository}#${githubRef!.id} cannot be posted from this workflow boundary`)
     process.exitCode = 2
     return
   }
-  if (has('post') && githubState?.alreadyReviewed) {
-    console.log(`SKIPPED: ${githubState.owner}/${githubState.repo}#${githubState.number} already reviewed at ${githubState.sha} with the same fingerprint`)
+  if (has('post') && githubState?.alreadyPublished) {
+    console.log(`SKIPPED: ${githubRef!.repository}#${githubRef!.id} already reviewed at ${githubState.headRevision} with the same fingerprint`)
     return
   }
-  if (has('post') && githubState?.scope === 'incremental' && githubState.baselineSha && source.kind === 'github-pr') {
-    source = { ...source, baselineSha: githubState.baselineSha }
+  if (has('post') && githubState?.scope === 'incremental' && githubState.baselineRevision && source.kind === 'github-pr') {
+    source = { ...source, baselineSha: githubState.baselineRevision }
   }
   if (publishResult) {
     if (!has('post') || source.kind !== 'github-pr' || !githubState) throw new Error('--publish-result needs --pr, --post, and GITHUB_TOKEN')
     const artifact = parseJsonFile<ConsolidatedReviewArtifact>(publishResult, 'consolidated result')
-    if (artifact.version !== 1 || artifact.repository !== `${source.owner}/${source.repo}` || artifact.pullNumber !== source.number || artifact.headSha !== githubState.sha || artifact.policyFingerprint !== policyFingerprint || !artifact.review || 'batch' in artifact) {
+    if (artifact.version !== 1 || artifact.repository !== `${source.owner}/${source.repo}` || artifact.pullNumber !== source.number || artifact.headSha !== githubState.headRevision || artifact.policyFingerprint !== policyFingerprint || !artifact.review || 'batch' in artifact) {
       throw new Error('consolidated result is stale, mismatched, or not publishable')
     }
     if (artifact.review.incomplete || artifact.review.unreviewed?.length || artifact.review.missingRequiredLenses?.length || artifact.review.execution.failed || artifact.review.execution.succeeded !== artifact.review.execution.attempted || artifact.review.evidence.deadlineExceeded) {
       throw new Error('consolidated result has incomplete review evidence')
     }
-    if (githubState.fork || githubState.alreadyReviewed) throw new Error('current PR cannot receive this consolidated result safely')
-    await githubInlineReporter({ owner: source.owner, repo: source.repo, number: source.number, token: source.token, commitId: githubState.sha, marker: githubState.marker }).emit(artifact.review)
-    await githubSummaryReporter({ owner: source.owner, repo: source.repo, number: source.number, token: source.token, marker: githubState.marker }).emit(artifact.review)
+    if (githubMetadata?.isFork || githubState.alreadyPublished) throw new Error('current PR cannot receive this consolidated result safely')
+    await scmReviewReporter({ adapter: githubAdapter!, ref: githubRef!, channel: 'review', headRevision: githubState.headRevision, fingerprint: policyFingerprint }).emit(artifact.review)
+    await scmReviewReporter({ adapter: githubAdapter!, ref: githubRef!, channel: 'summary', headRevision: githubState.headRevision, fingerprint: policyFingerprint }).emit(artifact.review)
     process.exit(artifact.review.blocking && !has('no-fail') ? 1 : 0)
   }
   const reporters: Reporter[] = [markdownReporter()]
   const sarif = flag('sarif')
   if (sarif) reporters.push(sarifReporter({ file: sarif }))
   if (has('post') && source.kind === 'github-pr') {
-    const { owner, repo, number, token } = source
     reporters.push(
-      githubInlineReporter({ owner, repo, number, token, commitId: githubState?.sha, marker: githubState?.marker, policy: reviewConfig.comments }),
-      ...(reviewConfig.comments.summary ? [githubSummaryReporter({ owner, repo, number, token, marker: githubState?.marker })] : []),
+      scmReviewReporter({ adapter: githubAdapter!, ref: githubRef!, channel: 'review', headRevision: githubState!.headRevision, fingerprint: policyFingerprint, policy: reviewConfig.comments }),
+      ...(reviewConfig.comments.summary ? [scmReviewReporter({ adapter: githubAdapter!, ref: githubRef!, channel: 'summary', headRevision: githubState!.headRevision, fingerprint: policyFingerprint })] : []),
     )
   }
 
@@ -361,7 +362,7 @@ async function main() {
       // codeql[js/http-to-file-access] -- This is an explicit user-selected local
       // orchestration artifact. Remote PR metadata is serialized as data only and
       // is never loaded as configuration or executed by this command.
-      writeFileSync(batchManifest, JSON.stringify(createBatchCoverage({ repository: `${source.owner}/${source.repo}`, pullNumber: source.number, headSha: githubState.sha, policyFingerprint, batches }), null, 2), { mode: 0o600 })
+      writeFileSync(batchManifest, JSON.stringify(createBatchCoverage({ repository: `${source.owner}/${source.repo}`, pullNumber: source.number, headSha: githubState.headRevision, policyFingerprint, batches }), null, 2), { mode: 0o600 })
     }
     if (has('json')) console.log(JSON.stringify({ ...plan, ...(batches ? { batches } : {}) }))
     else console.log(formatPlan(plan))
@@ -395,7 +396,7 @@ async function main() {
     if (requestedBatch !== undefined) {
       if (source.kind !== 'github-pr' || !githubState) throw new Error('--batch-index result needs a GitHub PR identity')
       if (!selectedBatch) throw new Error('--batch-index selection was not retained')
-      const artifact: BatchReviewArtifact = { version: 1, repository: `${source.owner}/${source.repo}`, pullNumber: source.number, headSha: githubState.sha, policyFingerprint, batch: selectedBatch, review }
+      const artifact: BatchReviewArtifact = { version: 1, repository: `${source.owner}/${source.repo}`, pullNumber: source.number, headSha: githubState.headRevision, policyFingerprint, batch: selectedBatch, review }
       // codeql[js/http-to-file-access] -- The explicit --result path is a private,
       // local handoff artifact. Its remote-derived contents are serialized only.
       writeFileSync(resultFile, JSON.stringify(artifact, null, 2), { mode: 0o600 })
