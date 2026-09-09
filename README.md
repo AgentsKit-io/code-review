@@ -95,6 +95,22 @@ crash-safe full batching, consolidation, memory checks, a live labelled quality
 evaluation, and an immutable quality matrix. It never creates a target worktree.
 Posting and merging are opt-in and remain forbidden unless the final matrix passes.
 
+Before scheduling live work, sweep every open pull request from the typed project
+configuration with one provider-free command:
+
+```sh
+npx --yes --package=@agentskit/code-review@latest agentskit-review-campaign \
+  --config /absolute/path/code-review.config.ts \
+  --output /absolute/path/campaign-preflight.json
+```
+
+The report includes every discovered pull request in numeric order. Dependabot,
+configured author exclusions, drafts, forks, wrong base branches, and previously
+reviewed SHA/policy pairs are skipped explicitly. Eligible requests receive a
+complete source and call-budget plan. Only entries marked `ready` set
+`worktreeAllowed: true`; the sweep itself makes zero model calls and creates zero
+worktrees.
+
 ![AgentsKit Code Review showing an APPROVE result after seven review lenses complete](docs/assets/code-review-terminal.png)
 
 The current command runs directly from GitHub. After the first npm release, the shorter form will be:

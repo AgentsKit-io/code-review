@@ -450,6 +450,15 @@ test('doctor reports a healthy local provider as stable JSON without secrets', (
   assert.equal(report.support, 'stable')
   assert.equal(report.ok, true)
   assert.equal(report.checks.find(check => check.name === 'version').status, 'pass')
+  assert.equal(report.checks.find(check => check.name === 'credentials').detail, 'login verified')
+
+  const loggedOut = spawnSync(process.execPath, ['dist/src/cli.js', 'doctor', '--provider', 'codex-cli', '--json'], {
+    cwd: root,
+    encoding: 'utf8',
+    env: { ...process.env, CODEX_FIXTURE_LOGGED_OUT: '1', PATH: `${fixtureBin}:${process.env.PATH ?? ''}` },
+  })
+  assert.equal(loggedOut.status, 1)
+  assert.equal(JSON.parse(loggedOut.stdout).checks.find(check => check.name === 'credentials').detail, 'login unavailable')
 })
 
 test('doctor catches missing binaries and unsupported versions offline', () => {

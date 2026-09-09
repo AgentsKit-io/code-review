@@ -113,6 +113,22 @@ crash-safe full batching, consolidation, memory checks, a live labelled quality
 evaluation, and an immutable quality matrix. It never creates a target worktree.
 Posting and merging are opt-in and remain forbidden unless the final matrix passes.
 
+Before scheduling live work, sweep every open pull request from the typed project
+configuration with one provider-free command:
+
+```sh
+npx --yes --package=@agentskit/code-review@latest agentskit-review-campaign \
+  --config /absolute/path/code-review.config.ts \
+  --output /absolute/path/campaign-preflight.json
+```
+
+The report includes every discovered pull request in numeric order. Dependabot,
+configured author exclusions, drafts, forks, wrong base branches, and previously
+reviewed SHA/policy pairs are skipped explicitly. Eligible requests receive a
+complete source and call-budget plan. Only entries marked `ready` set
+`worktreeAllowed: true`; the sweep itself makes zero model calls and creates zero
+worktrees.
+
 ![AgentsKit Code Review showing an APPROVE result after seven review lenses complete](https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/assets/code-review-terminal.png)
 
 The current command runs directly from GitHub. After the first npm release, the shorter form will be:
@@ -670,6 +686,14 @@ the requested event.
 
 ## Deterministic scheduled cycle
 
+Run `agentskit-review-campaign --config /absolute/path/code-review.config.ts
+--output /private/path/campaign-preflight.json` before live campaign execution.
+It validates the one project configuration, checks static provider health, discovers
+all open change requests through the SCM adapter, and gives every discovered request
+an explicit `ready`, `skipped`, or `blocked` outcome. The command performs no model
+analysis and creates no worktree. Downstream execution may create a worktree only
+when the immutable report entry has `worktreeAllowed: true`.
+
 `agentskit-review-cycle` is the supported Orca entrypoint. Give it one PR, one
 validated config, and a private run directory. The command collects all static
 blockers before provider execution, locks the PR SHA and policy fingerprints,
@@ -942,6 +966,7 @@ Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and
 
 - `src/cli.ts`: public flags, source selection, provider selection, exit policy.
 - `src/campaign-reducer.ts` and `src/campaign-store.ts`: deterministic lifecycle, atomic checkpoints, leases, replay, and resume.
+- `src/campaign-preflight.ts` and `scripts/review-campaign.mjs`: provider-free campaign discovery, eligibility, source planning, budget checks, and worktree gating.
 - `src/<provider>-adapter.ts`: logged-in local CLI adapters.
 - `src/provider-registry.ts`: validated provider capabilities and conservative execution policy around AgentsKit adapters.
 - `src/provider-execution.ts`: typed provider failures, bounded retry delay, adaptive concurrency, and cancellation-aware queueing.

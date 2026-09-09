@@ -72,6 +72,7 @@ export interface ProviderEntry {
   readonly dataBoundary: 'local' | 'remote' | 'unknown'
   readonly credentialEnv: readonly string[]
   readonly credentialMode: 'api-key' | 'login' | 'none'
+  readonly credentialStatus?: { readonly args: readonly string[]; readonly includes: string }
   readonly capabilities: ProviderCapabilities
 }
 
@@ -88,7 +89,7 @@ const API_METADATA: Record<string, Omit<ProviderEntry, 'id' | 'aliases' | 'facto
 }
 
 const LOCAL_PROVIDERS: readonly ProviderEntry[] = [
-  cli('codex-cli', 'OpenAI Codex CLI', 'codex', 'stable', { tokenAccounting: 'reported', requestTimeoutMs: DEFAULT_CODEX_CLI_TIMEOUT_MS }),
+  { ...cli('codex-cli', 'OpenAI Codex CLI', 'codex', 'stable', { tokenAccounting: 'reported', requestTimeoutMs: DEFAULT_CODEX_CLI_TIMEOUT_MS }), credentialStatus: { args: ['login', 'status'], includes: 'logged in' } },
   cli('claude-cli', 'Claude Code CLI', 'claude', 'stable'),
   {
     ...cli('grok-cli', 'Grok Build CLI', 'grok', 'stable'),
@@ -251,10 +252,10 @@ export async function diagnoseProvider(options: DoctorOptions): Promise<DoctorRe
   checks.push({ name: 'configuration', status: mode === 'trusted-local' && (ci || entry.kind === 'api') ? 'fail' : ['isolated', 'trusted-local'].includes(mode) ? 'pass' : 'fail', detail: mode })
 
   const credentialPresent = Boolean(options.apiKey || env.LLM_API_KEY || entry.credentialEnv.some((name) => Boolean(env[name])))
-  checks.push({
+  if (entry.credentialMode !== 'login' || !entry.credentialStatus) checks.push({
     name: 'credentials',
     status: entry.credentialMode === 'api-key' ? (credentialPresent ? 'pass' : 'fail') : 'pass',
-    detail: entry.credentialMode === 'api-key' ? (credentialPresent ? 'configured' : 'missing') : entry.credentialMode === 'login' ? 'login-managed (not inspected offline)' : 'not required',
+    detail: entry.credentialMode === 'api-key' ? (credentialPresent ? 'configured' : 'missing') : entry.credentialMode === 'login' ? 'login-managed (not inspectable)' : 'not required',
   })
 
   if (entry.executable) {
@@ -262,6 +263,13 @@ export async function diagnoseProvider(options: DoctorOptions): Promise<DoctorRe
       const result = await runLocalCli(entry.executable, [...(entry.versionArgs ?? ['--version'])], { timeoutMs: VERSION_CHECK_TIMEOUT_MS })
       checks.push({ name: 'executable', status: 'pass', detail: entry.executable })
       checks.push(checkVersion(entry, `${result.stdout}\n${result.stderr}`, ci))
+      if (entry.credentialStatus) {
+        try {
+          const credential = await runLocalCli(entry.executable, [...entry.credentialStatus.args], { timeoutMs: VERSION_CHECK_TIMEOUT_MS, mode: mode as 'isolated' | 'trusted-local' })
+          const authenticated = `${credential.stdout}\n${credential.stderr}`.toLowerCase().includes(entry.credentialStatus.includes.toLowerCase())
+          checks.push({ name: 'credentials', status: authenticated ? 'pass' : 'fail', detail: authenticated ? 'login verified' : 'login unavailable' })
+        } catch { checks.push({ name: 'credentials', status: 'fail', detail: 'login unavailable' }) }
+      }
     } catch (error) {
       const e = error as { code?: string; message?: string }
       checks.push({ name: 'executable', status: 'fail', detail: e.code === 'ENOENT' ? 'not found' : e.code === 'ETIMEDOUT' ? 'timed out' : 'unavailable' })

@@ -3,6 +3,10 @@ import { closeSync, openSync, readFileSync, writeFileSync } from 'node:fs'
 
 const prompt = process.argv.at(-1) ?? ''
 const healthProbe = prompt.includes('Reply with exactly OK.')
+if (process.argv[2] === 'login' && process.argv[3] === 'status') {
+  process.stdout.write(process.env.CODEX_FIXTURE_LOGGED_OUT === '1' ? 'Not logged in\n' : 'Logged in\n')
+  process.exit(process.env.CODEX_FIXTURE_LOGGED_OUT === '1' ? 1 : 0)
+}
 if (process.argv.includes('--version')) {
   process.stdout.write(process.env.CODEX_FIXTURE_VERSION ?? 'codex-cli 1.0.0\n')
   process.exit(0)
