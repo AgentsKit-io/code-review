@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.14.0
+
+### Minor Changes
+
+- [#174](https://github.com/AgentsKit-io/code-review/pull/174) [`6155fec`](https://github.com/AgentsKit-io/code-review/commit/6155fec7486b9bdc26be17430f13878f49849a44) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Add typed provider failures, bounded jittered retries, adaptive concurrency, cancellation-aware backoff, and controlled circuit recovery.
+
 ## 0.13.0
 
 ### Minor Changes
