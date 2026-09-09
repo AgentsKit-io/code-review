@@ -194,6 +194,13 @@ with mode `0700`, writes the memory file with mode `0600`, and fails closed on
 malformed records. The memory path is repository-relative. This is runtime
 conversation memory; it is not automatic rule promotion or an approval signal.
 
+Feedback reconciliation is separate from runtime memory. The cycle records
+accepted, fixed, rejected, unresolved, obsolete, and pending outcomes in its
+feedback store, then writes a resumable reconciliation checkpoint. Repeated
+compatible accepted/fixed outcomes produce inactive candidate rules with
+pull-request and commit provenance; candidates require explicit approval before
+they can enter permanent knowledge.
+
 The `comments` policy is applied by the GitHub reporter. It controls inline
 emission, summary emission, renderer detail level, section inclusion, and
 English/Portuguese section labels. Findings remain line-anchored and the

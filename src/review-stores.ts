@@ -6,10 +6,11 @@ import { writeAtomicJson } from './campaign-store.js'
 import { stableFingerprint } from './stable-fingerprint.js'
 
 const fingerprint = z.string().regex(/^[a-f0-9]{64}$/)
-const safeText = z.string().trim().min(1).max(1_000).refine(
+export const ReviewSafeTextSchema = z.string().trim().min(1).max(1_000).refine(
   (value) => !/(?:-----BEGIN [^-]+ PRIVATE KEY-----|(?:gh[pousr]_|github_pat_|npm_[A-Za-z0-9]+|sk-[A-Za-z0-9]+|AKIA[0-9A-Z]{16}))/i.test(value),
   'must not contain a credential or private key',
 )
+const safeText = ReviewSafeTextSchema
 const date = z.string().datetime()
 
 export const ReviewStoreLayoutSchema = z.object({
@@ -34,7 +35,7 @@ export const ReviewFeedbackSchema = z.object({
     file: z.string().min(1).max(500),
     line: z.number().int().positive(),
     title: safeText,
-    status: z.enum(['accepted', 'rejected', 'fixed', 'pending']),
+    status: z.enum(['accepted', 'rejected', 'fixed', 'unresolved', 'obsolete', 'pending']),
   }).strict(),
   createdAt: date,
 }).strict().readonly()
