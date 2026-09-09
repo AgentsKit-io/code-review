@@ -3,15 +3,15 @@ import { promisify } from 'node:util'
 import {
   ChangeRequestDiffSchema, ChangeRequestMetadataSchema, ChangeRequestQuerySchema, ChangeRequestRefSchema,
   ScmCapabilitiesSchema, ScmFileContentSchema, ScmMergeReadinessSchema, ScmMergeReceiptSchema,
-  ScmMergeRequestSchema, ScmPublicationReceiptSchema, ScmReviewPublicationSchema, ScmReviewStateSchema,
+  ScmCheckPolicySchema, ScmMergeRequestSchema, ScmPublicationReceiptSchema, ScmReviewPublicationSchema, ScmReviewStateSchema,
   requireScmCapability,
-  type ChangeRequestDiff, type ChangeRequestMetadata, type ChangeRequestQuery, type ChangeRequestRef,
+  type ChangeRequestDiff, type ChangeRequestMetadata, type ChangeRequestQuery, type ChangeRequestRef, type ScmCheckPolicy,
   type ScmAdapter, type ScmFileContent, type ScmMergeReadiness, type ScmMergeReceipt, type ScmMergeRequest,
   type ScmPublicationReceipt, type ScmReviewPublication, type ScmReviewState,
 } from './scm-contract.js'
 import {
   GITHUB_REQUEST_TIMEOUT_MS, GithubResponseLimitError, githubFetch, githubGet, githubIssueComments,
-  getGithubReviewState, readGithubResponseText, reviewMarker,
+  githubPullReviews, getGithubReviewState, readGithubResponseText, reviewMarker,
 } from './github-review-state.js'
 
 const run = promisify(execFile)
@@ -94,12 +94,13 @@ export function createGithubScmAdapter(options: GithubScmAdapterOptions): ScmAda
       requireScmCapability(adapter, 'metadata')
       const { owner, repo, number } = coordinates(ref)
       const pull = await api<{
-        title: string; state: 'open' | 'closed'; draft?: boolean; updated_at: string; user?: { login?: string }; labels?: Array<{ name?: string }>
+        title: string; state: 'open' | 'closed'; draft?: boolean; updated_at: string; additions?: number; deletions?: number; user?: { login?: string }; labels?: Array<{ name?: string }>
         head: { sha: string; ref: string; repo?: { full_name?: string } }; base: { sha: string; ref: string; repo?: { full_name?: string } }
       }>(options.token, `/repos/${owner}/${repo}/pulls/${number}`)
       return ChangeRequestMetadataSchema.parse({
         ref, title: pull.title, state: pull.state, author: pull.user?.login ?? 'unknown', sourceRevision: pull.head.sha,
         targetRevision: pull.base.sha, sourceBranch: pull.head.ref, targetBranch: pull.base.ref,
+        additions: pull.additions ?? 0, deletions: pull.deletions ?? 0,
         isDraft: Boolean(pull.draft), isFork: pull.head.repo?.full_name !== undefined && pull.head.repo.full_name !== pull.base.repo?.full_name,
         labels: (pull.labels ?? []).map((label) => label.name).filter((label): label is string => Boolean(label)), updatedAt: pull.updated_at,
       })
@@ -182,6 +183,12 @@ export function createGithubScmAdapter(options: GithubScmAdapterOptions): ScmAda
       }
       const body = `${marker ? `${marker}\n` : ''}${review.summary}`
       const payload = { body, commit_id: review.headRevision, ...(review.annotations.length ? { comments: review.annotations.map((annotation) => ({ path: annotation.path, line: annotation.endLine ?? annotation.line, body: annotation.body })) } : {}) }
+      if (marker) {
+        const history = await githubPullReviews(options.token, owner, repo, number, fetcher)
+        if (history.truncated) throw new Error('GitHub review history is too large to update safely')
+        const existing = history.reviews.find((item) => item.id !== undefined && item.body?.includes(marker))
+        if (existing?.id !== undefined) return ScmPublicationReceiptSchema.parse({ id: String(existing.id), ...(existing.html_url ? { url: existing.html_url } : {}) })
+      }
       const event = review.verdict === 'REQUEST_CHANGES' ? 'REQUEST_CHANGES' : 'COMMENT'
       let posted: { id?: number; html_url?: string }
       try { posted = await mutate('POST', `/repos/${owner}/${repo}/pulls/${number}/reviews`, { event, ...payload }) }
@@ -192,8 +199,9 @@ export function createGithubScmAdapter(options: GithubScmAdapterOptions): ScmAda
       return ScmPublicationReceiptSchema.parse({ id: String(posted.id ?? 'review'), ...(posted.html_url ? { url: posted.html_url } : {}) })
     },
 
-    async mergeReadiness(ref: ChangeRequestRef): Promise<ScmMergeReadiness> {
+    async mergeReadiness(ref: ChangeRequestRef, inputPolicy?: ScmCheckPolicy): Promise<ScmMergeReadiness> {
       requireScmCapability(adapter, 'merge-readiness')
+      const policy = ScmCheckPolicySchema.parse(inputPolicy ?? {})
       const { owner, repo, number } = coordinates(ref)
       const pull = await api<{ draft?: boolean; mergeable?: boolean | null; mergeable_state?: string; head: { sha: string } }>(options.token, `/repos/${owner}/${repo}/pulls/${number}`)
       const checks = await api<{ total_count?: number; check_runs?: Array<{ name?: string; status?: string; conclusion?: string | null }> }>(options.token, `/repos/${owner}/${repo}/commits/${pull.head.sha}/check-runs?per_page=100`)
@@ -202,9 +210,18 @@ export function createGithubScmAdapter(options: GithubScmAdapterOptions): ScmAda
       if (pull.draft) blockers.push('change request is draft')
       if (pull.mergeable !== true) blockers.push(`mergeable=${String(pull.mergeable)}`)
       if (!['clean', 'has_hooks'].includes(pull.mergeable_state ?? 'unknown')) blockers.push(`merge state=${pull.mergeable_state ?? 'unknown'}`)
+      if (policy.mode === 'disabled') blockers.push('check policy=disabled')
       if (!Array.isArray(checks.check_runs) || !Number.isSafeInteger(checks.total_count)) blockers.push('check-run readiness response is incomplete')
       if ((checks.total_count ?? 0) > (checks.check_runs?.length ?? 0)) blockers.push('check runs exceed bounded readiness response')
-      for (const check of checks.check_runs ?? []) {
+      const reportedChecks = checks.check_runs ?? []
+      if (policy.mode === 'required' && reportedChecks.length === 0) blockers.push('required check policy has no reported checks')
+      const checksToValidate = policy.mode === 'named'
+        ? reportedChecks.filter((check) => policy.names.includes(check.name ?? ''))
+        : reportedChecks
+      if (policy.mode === 'named') {
+        for (const name of policy.names) if (!reportedChecks.some((check) => check.name === name)) blockers.push(`required check ${name}=missing`)
+      }
+      for (const check of checksToValidate) {
         if (check.status !== 'completed' || !['success', 'neutral', 'skipped'].includes(check.conclusion ?? '')) blockers.push(`check ${check.name ?? 'unknown'}=${check.status}/${check.conclusion ?? 'pending'}`)
       }
       if (!Array.isArray(statuses.statuses) || !Number.isSafeInteger(statuses.total_count)) blockers.push('commit-status readiness response is incomplete')

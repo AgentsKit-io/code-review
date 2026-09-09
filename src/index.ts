@@ -86,13 +86,13 @@ export { CampaignPreflightEntrySchema, CampaignPreflightReportSchema, blockedCam
 export type { CampaignPreflightEntry, CampaignPreflightReport } from './campaign-preflight.js'
 export {
   ChangeRequestDiffSchema, ChangeRequestMetadataSchema, ChangeRequestQuerySchema, ChangeRequestRefSchema,
-  ScmCapabilitiesSchema, ScmCapabilitySchema, ScmFileContentSchema, ScmMergeReadinessSchema, ScmMergeReceiptSchema,
+  ScmCapabilitiesSchema, ScmCapabilitySchema, ScmCheckPolicySchema, ScmFileContentSchema, ScmMergeReadinessSchema, ScmMergeReceiptSchema,
   ScmMergeRequestSchema, ScmPublicationReceiptSchema, ScmReviewPublicationSchema, ScmReviewStateSchema,
   UnsupportedScmCapabilityError, requireScmCapability,
 } from './scm-contract.js'
 export type {
   ChangeRequestDiff, ChangeRequestMetadata, ChangeRequestQuery, ChangeRequestRef, ScmAdapter, ScmCapabilities,
-  ScmCapability, ScmFileContent, ScmMergeReadiness, ScmMergeReceipt, ScmMergeRequest, ScmPublicationReceipt,
+  ScmCapability, ScmCheckPolicy, ScmFileContent, ScmMergeReadiness, ScmMergeReceipt, ScmMergeRequest, ScmPublicationReceipt,
   ScmReviewPublication, ScmReviewState,
 } from './scm-contract.js'
 export type { ConfigInput, ReviewProjectConfig } from './public-config.js'

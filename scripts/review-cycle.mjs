@@ -150,7 +150,7 @@ async function main() {
     const npmVersion = safeExec('npm', ['view', `@agentskit/code-review@${pkg.version}`, 'version'])
     checks.push(check('package.version', npmVersion.ok && npmVersion.stdout === pkg.version, `published package: ${npmVersion.stdout || 'unavailable'}, runner: ${pkg.version}`, 'publish and pin the exact runner version', npmVersion.ok ? npmVersion.stdout : npmVersion.stderr))
     const release = safeExec('gh', ['release', 'view', `v${pkg.version}`, '-R', 'AgentsKit-io/code-review', '--json', 'tagName', '--jq', '.tagName'], { env: childEnv })
-    const releasePass = !sourceCheckout && npmVersion.ok && npmVersion.stdout === pkg.version && release.ok && release.stdout === `v${pkg.version}`
+    const releasePass = !has('merge') || (!sourceCheckout && npmVersion.ok && npmVersion.stdout === pkg.version && release.ok && release.stdout === `v${pkg.version}`)
     const providerArgs = [...(model ? ['--model', model] : []), ...(transport ? ['--transport', transport] : [])]
     const doctor = safeExec(process.execPath, [cli, 'doctor', '--provider', provider, '--mode', mode, ...providerArgs, '--json'], { env: childEnv })
     let doctorData
@@ -311,7 +311,7 @@ async function main() {
     state.stage = 'full-review'; atomicJson(stateFile, { ...state, updatedAt: new Date().toISOString() })
     summary.artifacts.canary = canary.artifact
     if (!corpus) throw new Error('validated quality corpus unavailable')
-    const evaluation = await runQualityCorpus(corpus, { cli, configFile, provider, mode, providerArgs, maxCalls, concurrency, deadlineMs, runDir, stateRoot, childEnv, remainingCycleMs })
+    const evaluation = await runQualityCorpus(corpus, { cli, configFile, provider, mode, providerArgs, qualityVotes: projectConfig.review.votes, maxCalls, concurrency, deadlineMs, runDir, stateRoot, childEnv, remainingCycleMs })
     summary.artifacts.qualityEvaluation = evaluation.file
     if (!learningCorpus) throw new Error('validated learning corpus unavailable')
     const learning = await runLearningEvaluation(learningCorpus, projectConfig, { cli, provider, mode, providerArgs, maxCalls, concurrency, deadlineMs, runDir, childEnv, remainingCycleMs })
@@ -386,7 +386,7 @@ async function main() {
       if (consolidated.review.verdict !== 'APPROVE') summary.artifacts.merge = 'skipped:review-findings'
       else {
         if (!github) throw new Error('merge blocked: GitHub SCM adapter unavailable')
-        const readiness = await github.mergeReadiness(scmRef)
+        const readiness = await github.mergeReadiness(scmRef, projectConfig.checks)
         if (!readiness.ready || readiness.headRevision !== manifest.headSha) throw new Error(`merge gate blocked: sha=${readiness.headRevision}; blockers=${readiness.blockers.join(', ')}`)
         await github.merge(scmRef, { expectedHeadRevision: manifest.headSha, method: projectConfig.merge.method, admin: has('admin') })
         summary.artifacts.merge = 'github'
@@ -483,7 +483,7 @@ async function validateMemory(config, runDir, stateRoot, consolidated, contract,
     persistencePass: existsSync(memoryFile) && knowledge.length >= 1 && (!previous || knowledge.length >= previous.messageCount),
     loadPass,
     malformedRejected,
-    feedbackRecorded: !config.feedback.enabled || feedback.some((entry) => entry.runId === contract.runId),
+    feedbackRecorded: !config.feedback.enabled || consolidated.review.findings.length === 0 || feedback.some((entry) => entry.runId === contract.runId),
     rulesApproved: config.feedback.requireApprovalForRules && config.memory.autoPromoteRules === false && learning.approvedRuleApplied,
     learningEvaluationPass: learning.pass,
     learningDetectionLift: learning.detectionLift,
@@ -570,7 +570,7 @@ async function runQualityCorpus(corpus, options) {
     mkdirSync(dirname(resultFile), { recursive: true })
     const remaining = options.remainingCycleMs()
     if (remaining <= 0) throw new Error(`global cycle deadline exceeded before quality case ${testCase.id}`)
-    const run = await processResult(process.execPath, [options.cli, '--config', options.configFile, '--provider', options.provider, '--mode', options.mode, ...options.providerArgs, '--profile', 'fast', '--stdin', '--lang', testCase.language ?? 'ts', '--max-findings-per-file', '1', '--max-calls', String(options.maxCalls), '--concurrency', String(options.concurrency), '--deadline-ms', String(options.deadlineMs), '--health-check', 'off', '--no-fail', '--result', resultFile], { cwd: options.stateRoot, env: options.childEnv, timeout: Math.min(options.deadlineMs + 60_000, remaining), input: testCase.source })
+    const run = await processResult(process.execPath, [options.cli, '--config', options.configFile, '--provider', options.provider, '--mode', options.mode, ...options.providerArgs, '--profile', 'fast', ...(options.qualityVotes ? ['--votes', String(options.qualityVotes)] : []), '--stdin', '--lang', testCase.language ?? 'ts', '--max-findings-per-file', '1', '--max-calls', String(options.maxCalls), '--concurrency', String(options.concurrency), '--deadline-ms', String(options.deadlineMs), '--health-check', 'off', '--no-fail', '--result', resultFile], { cwd: options.stateRoot, env: options.childEnv, timeout: Math.min(options.deadlineMs + 60_000, remaining), input: testCase.source })
     if (run.code !== 0 || !existsSync(resultFile)) throw new Error(`quality corpus ${testCase.id} failed: ${run.stderr || run.stdout}`)
     const review = readJson(resultFile)
     if (review.incomplete || review.evidence?.deadlineExceeded || review.execution?.failed) throw new Error(`quality corpus ${testCase.id} returned incomplete evidence`)

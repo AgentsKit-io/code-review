@@ -4,6 +4,7 @@ import { dirname, isAbsolute, join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { z } from 'zod'
 import { zodToJsonSchema } from 'zod-to-json-schema'
+import { ScmCheckPolicySchema } from './scm-contract.js'
 
 const authors = z.string().min(1).max(100)
 const repository = z.string().regex(/^[^/\s]+\/[^#\s]+$/, 'must be owner/repository')
@@ -83,6 +84,7 @@ export const ReviewConfigSchema = z.object({
     includeInstructions: z.boolean().default(true),
     includeEvidence: z.boolean().default(true),
   }).strict().default({}),
+  checks: ScmCheckPolicySchema.default({ mode: 'required', names: [] }),
   batches: z.object({
     enabled: z.boolean().default(true),
     size: z.number().int().min(1).max(100).default(10),
@@ -177,6 +179,7 @@ export function toReviewConfig(config: ReviewProjectConfig): Record<string, unkn
     batching: config.batches,
     memory: config.memory,
     comments: config.comments,
+    checks: config.checks,
   }
 }
 

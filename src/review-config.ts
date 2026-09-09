@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { z } from 'zod'
+import { ScmCheckPolicySchema, type ScmCheckPolicy } from './scm-contract.js'
 import type { Category, Severity } from '../agents/code-review/agent.js'
 import { ABSOLUTE_LOCAL_CLI_OUTPUT_BYTES, ABSOLUTE_LOCAL_CLI_TIMEOUT_MS, DEFAULT_LOCAL_CLI_OUTPUT_BYTES } from './local-cli-process.js'
 import { localCliTimeoutMs } from './local-cli-timeout.js'
@@ -76,6 +77,7 @@ const ReviewConfigSchema = z.object({
     collapsibleDetails: z.boolean().default(true), includeReason: z.boolean().default(true), includeImpact: z.boolean().default(true),
     includeInstructions: z.boolean().default(true), includeEvidence: z.boolean().default(true),
   }).strict().optional(),
+  checks: ScmCheckPolicySchema.optional(),
   batching: z.object({
     enabled: z.boolean().default(false),
     size: positiveInt.max(100).default(10),
@@ -113,6 +115,7 @@ export interface ResolvedReviewConfig {
   batching: { enabled: boolean; size: number; requireCompleteCoverage: boolean; failOnUnreviewableFiles: boolean }
   memory: { enabled: boolean; provider: 'self-hosted' | 'agentskit'; path: string; retentionDays: number; learnFromFeedback: boolean; autoPromoteRules: boolean }
   comments: { renderer: 'github-inline' | 'coderabbit-inspired' | 'compact' | 'detailed'; language: string; inline: boolean; summary: boolean; collapsibleDetails: boolean; includeReason: boolean; includeImpact: boolean; includeInstructions: boolean; includeEvidence: boolean }
+  checks: ScmCheckPolicy
 }
 
 export class ReviewConfigError extends Error {
@@ -198,6 +201,7 @@ export function resolveReviewConfig(
     batching: { enabled: file?.batching?.enabled ?? false, size: file?.batching?.size ?? 10, requireCompleteCoverage: file?.batching?.requireCompleteCoverage ?? true, failOnUnreviewableFiles: file?.batching?.failOnUnreviewableFiles ?? true },
     memory: { enabled: file?.memory?.enabled ?? false, provider: file?.memory?.provider ?? 'self-hosted', path: file?.memory?.path ?? '.agentskit/review-memory/messages.json', retentionDays: file?.memory?.retentionDays ?? 365, learnFromFeedback: file?.memory?.learnFromFeedback ?? true, autoPromoteRules: file?.memory?.autoPromoteRules ?? false },
     comments: { renderer: file?.comments?.renderer ?? 'coderabbit-inspired', language: file?.comments?.language ?? 'en', inline: file?.comments?.inline ?? true, summary: file?.comments?.summary ?? true, collapsibleDetails: file?.comments?.collapsibleDetails ?? true, includeReason: file?.comments?.includeReason ?? true, includeImpact: file?.comments?.includeImpact ?? true, includeInstructions: file?.comments?.includeInstructions ?? true, includeEvidence: file?.comments?.includeEvidence ?? true },
+    checks: file?.checks ?? ScmCheckPolicySchema.parse({}),
   }
   const hierarchyInput = (effective.budget as typeof effective.budget & { hierarchy?: ReviewBudgetHierarchyInput }).hierarchy
   let hierarchicalBudget: HierarchicalReviewBudget

@@ -357,12 +357,21 @@ export default defineConfig({
     context: { adjacentLines: 40, maxRelatedFiles: 1, maxTokens: 16000, reserveForOutput: 2000 },
   },
   comments: { renderer: "coderabbit-inspired", language: "en", inline: true },
+  // `required` blocks a merge with no reported checks; `named` requires the listed checks.
+  checks: { mode: "required" },
 });
 ```
 
 Run it with `agentskit-review --config code-review.config.ts --provider codex-cli`.
 Credentials and trusted execution settings remain in the environment or
 explicit CLI flags; they are never accepted from the project config.
+
+Merge checks are fail-closed and deterministic. `required` requires at least one
+reported check and requires every reported check to finish successfully;
+`reported` validates every reported check but permits repositories with none;
+`named` requires each listed check by exact name; and `disabled` is an explicit
+non-mergeable policy. A check policy is locked into the review identity, so a
+policy change invalidates prior publication evidence.
 
 The repository may contain one strict `.agentskit-review.json` file. It must use
 `configVersion: 1`; unknown fields, secrets, unsupported values, and unsafe lens

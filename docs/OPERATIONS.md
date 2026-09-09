@@ -150,8 +150,24 @@ export default defineConfig({
   },
   memory: { enabled: true, provider: "self-hosted" },
   comments: { renderer: "coderabbit-inspired", language: "en" },
+  checks: { mode: "required" },
 });
 ```
+
+The `checks` policy is evaluated by the SCM adapter immediately before merge:
+`required` requires at least one reported check and all reported checks to be
+completed successfully (neutral and skipped are accepted); `reported` applies
+the same result validation but allows zero checks; `named` requires every exact
+name in `names` and ignores unrelated runs; and `disabled` always blocks merge.
+The policy is part of the immutable configuration fingerprint, so changing it
+requires a fresh review and publication. This keeps check behavior explicit
+without coupling the review engine to GitHub payloads.
+
+Publication is marker-idempotent for both summary comments and pull-request
+reviews. On retry or resume, the adapter searches bounded review history for
+the current SHA and policy fingerprint before posting; a matching review is
+reused, while truncated history blocks publication because duplicate prevention
+cannot be proven.
 
 Use a strict `.agentskit-review.json` at the repository root for review policy.
 It requires `configVersion: 1` and supports a `full` or `fast` profile. Both use

@@ -161,6 +161,19 @@ test('public batch policy is carried into the executable review config', () => {
   assert.equal(resolved.memory.enabled, true)
   assert.equal(resolved.memory.path, '.agentskit/review-memory')
   assert.equal(resolved.comments.language, 'en')
+  assert.deepEqual(resolved.checks, { mode: 'required', names: [] })
+})
+
+test('public check policy is validated and carried into the executable config', () => {
+  const config = defineConfig({
+    target: { repository: 'AgentsKit-io/agentskit-os' },
+    review: {},
+    checks: { mode: 'named', names: ['CI', 'Security'] },
+  })
+  assert.deepEqual(config.checks, { mode: 'named', names: ['CI', 'Security'] })
+  assert.deepEqual(resolveReviewConfig(toReviewConfig(config)).checks, config.checks)
+  assert.throws(() => defineConfig({ target: { repository: 'AgentsKit-io/agentskit-os' }, review: {}, checks: { mode: 'named', names: [] } }), /at least one check name/)
+  assert.throws(() => defineConfig({ target: { repository: 'AgentsKit-io/agentskit-os' }, review: {}, checks: { mode: 'required', names: ['CI'] } }), /only valid with the named policy/)
 })
 
 test('public config loader imports JavaScript and TypeScript config modules', async () => {

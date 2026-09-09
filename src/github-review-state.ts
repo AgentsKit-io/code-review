@@ -6,6 +6,8 @@ export const MAX_GITHUB_RESPONSE_BYTES = 25 * 1024 * 1024
 const MARKER_PREFIX = '<!-- agentskit-code-review:v1'
 const COMMENT_PAGE_SIZE = 100
 const MAX_COMMENT_PAGES = 10
+const REVIEW_PAGE_SIZE = 100
+const MAX_REVIEW_PAGES = 10
 
 export class GithubResponseLimitError extends Error {
   constructor(readonly maxBytes: number) {
@@ -109,6 +111,12 @@ export interface GithubIssueComment {
   body?: string
 }
 
+export interface GithubPullReview {
+  id?: number
+  html_url?: string
+  body?: string
+}
+
 export async function githubIssueComments(token: string, owner: string, repo: string, number: number, fetcher: typeof fetch = fetch): Promise<{ comments: GithubIssueComment[]; truncated: boolean }> {
   const comments: GithubIssueComment[] = []
   for (let page = 1; page <= MAX_COMMENT_PAGES; page++) {
@@ -117,6 +125,16 @@ export async function githubIssueComments(token: string, owner: string, repo: st
     if (batch.length < COMMENT_PAGE_SIZE) return { comments, truncated: false }
   }
   return { comments, truncated: true }
+}
+
+export async function githubPullReviews(token: string, owner: string, repo: string, number: number, fetcher: typeof fetch = fetch): Promise<{ reviews: GithubPullReview[]; truncated: boolean }> {
+  const reviews: GithubPullReview[] = []
+  for (let page = 1; page <= MAX_REVIEW_PAGES; page++) {
+    const batch = await githubGet<GithubPullReview[]>(token, `/repos/${owner}/${repo}/pulls/${number}/reviews?per_page=${REVIEW_PAGE_SIZE}&page=${page}`, fetcher)
+    reviews.push(...batch)
+    if (batch.length < REVIEW_PAGE_SIZE) return { reviews, truncated: false }
+  }
+  return { reviews, truncated: true }
 }
 
 export function markerIn(body: string | undefined, marker: string): boolean {
