@@ -52,7 +52,7 @@ test('a clean local Codex CLI fixture completes an offline stdin review', () => 
   assert.equal(run.status, 0, run.stderr)
   assert.match(run.stdout, /Code review — APPROVE/)
   assert.match(run.stdout, /No findings above threshold/)
-  assert.match(run.stdout, /7\/7 lens executions succeeded/)
+  assert.match(run.stdout, /1\/1 lens executions succeeded/)
   const evidence = JSON.parse(readFileSync(result, 'utf8')).evidence
   assert.ok(evidence.tokensUsed > 0)
   rmSync(directory, { recursive: true, force: true })
@@ -69,7 +69,7 @@ test('normal Codex review probes provider health once before fan-out', () => {
       env: { ...process.env, CODEX_FIXTURE_COUNT_FILE: countFile, PATH: `${fixtureBin}:${process.env.PATH ?? ''}` },
     })
     assert.equal(run.status, 0, run.stderr)
-    assert.equal(Number(readFileSync(countFile, 'utf8')), 22)
+    assert.equal(Number(readFileSync(countFile, 'utf8')), 2)
   } finally { rmSync(countFile.replace(/\/count$/, ''), { recursive: true, force: true }) }
 })
 
@@ -90,7 +90,7 @@ test('Codex adapter accepts a fenced JSON fallback', () => {
   })
 
   assert.equal(run.status, 0, run.stderr)
-  assert.match(run.stdout, /7\/7 lens executions succeeded/)
+  assert.match(run.stdout, /1\/1 lens executions succeeded/)
 })
 
 test('Codex adapter falls back when output schemas are unsupported', () => {
@@ -109,7 +109,7 @@ test('Codex adapter falls back when output schemas are unsupported', () => {
   })
 
   assert.equal(run.status, 0, run.stderr)
-  assert.match(run.stdout, /7\/7 lens executions succeeded/)
+  assert.match(run.stdout, /1\/1 lens executions succeeded/)
 })
 
 test('Codex adapter falls back when the provider rejects the output schema', () => {
@@ -128,7 +128,7 @@ test('Codex adapter falls back when the provider rejects the output schema', () 
   })
 
   assert.equal(run.status, 0, run.stderr)
-  assert.match(run.stdout, /7\/7 lens executions succeeded/)
+  assert.match(run.stdout, /1\/1 lens executions succeeded/)
 })
 
 test('Codex adapter stops after a terminal provider authentication failure', () => {
@@ -171,7 +171,7 @@ test('Codex adapter rejects ambiguous multiple fenced JSON outputs', () => {
   })
 
   assert.equal(run.status, 2)
-  assert.match(`${run.stdout}\n${run.stderr}`, /0 of 7 lens executions succeeded/)
+  assert.match(`${run.stdout}\n${run.stderr}`, /0 of 1 lens executions succeeded/)
 })
 
 test('advisory mode fails closed when every lens execution fails', () => {
@@ -191,7 +191,7 @@ test('advisory mode fails closed when every lens execution fails', () => {
   })
 
   assert.equal(run.status, 2, `stdout:\n${run.stdout}\nstderr:\n${run.stderr}`)
-  assert.match(run.stderr, /review execution failed: 0 of 7 lens executions succeeded/i)
+  assert.match(run.stderr, /review execution failed: 0 of 1 lens executions succeeded/i)
   assert.doesNotMatch(run.stdout, /Code review — APPROVE/)
 })
 
@@ -220,7 +220,7 @@ test('a local Codex subprocess timeout fails fast instead of hanging the review'
 
   assert.equal(run.status, 2, `stdout:\n${run.stdout}\nstderr:\n${run.stderr}`)
   assert.match(`${run.stdout}\n${run.stderr}`, /codex timed out after 50ms/i)
-  assert.match(run.stderr, /review execution failed: 0 of 7 lens executions succeeded/i)
+  assert.match(run.stderr, /review execution failed: 0 of 1 lens executions succeeded/i)
 })
 
 test('direct Codex adapter honors the subprocess timeout override', async () => {
@@ -256,11 +256,11 @@ test('a required-lens failure is incomplete even in advisory mode', () => {
     cwd: root,
     input: 'export const answer = 42\n',
     encoding: 'utf8',
-    env: { ...process.env, CODEX_FIXTURE_FAIL_CATEGORY: 'security', PATH: `${fixtureBin}:${process.env.PATH ?? ''}` },
+    env: { ...process.env, CODEX_FIXTURE_OMIT_CATEGORY: 'security', PATH: `${fixtureBin}:${process.env.PATH ?? ''}` },
   })
 
   assert.equal(run.status, 2, run.stderr)
-  assert.match(run.stdout, /6\/7 lens executions succeeded; 1 failed/)
+  assert.match(run.stdout, /1\/1 lens executions succeeded/)
   assert.match(run.stdout, /Code review — COMMENT/)
   assert.match(run.stdout, /INCOMPLETE/)
 })
@@ -296,7 +296,7 @@ test('plan treats verification demand as best-effort even with a findings-per-fi
   assert.equal(run.status, 0, run.stderr)
   const plan = JSON.parse(run.stdout)
   assert.equal(plan.providerCallEstimate, 'best-effort')
-  assert.equal(plan.estimatedProviderCalls, 15)
+  assert.equal(plan.estimatedProviderCalls, 3)
 })
 
 test('fast profile batches required lenses and stays within a small call budget', () => {
@@ -375,7 +375,7 @@ test('retries one invalid structured response but not provider failures', () => 
       env: { ...process.env, CODEX_FIXTURE_INVALID_ONCE_FILE: stateFile, PATH: `${fixtureBin}:${process.env.PATH ?? ''}` },
     })
     assert.equal(run.status, 0, run.stderr)
-    assert.match(run.stdout, /7\/7 lens executions succeeded/)
+    assert.match(run.stdout, /1\/1 lens executions succeeded/)
   } finally { rmSync(cwd, { recursive: true, force: true }) }
 })
 

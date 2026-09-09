@@ -170,7 +170,7 @@ export function resolveReviewConfig(
   const defaultConcurrency = Math.min(profile === 'fast' ? 2 : 4, providerPolicy.safeConcurrency)
   const defaultDeadlineMs = profile === 'fast' ? 120_000 : 10 * 60 * 1000
   const effective = {
-    configVersion: 1 as const, profile, batchLenses: profile === 'fast', lenses, incompleteProfile,
+    configVersion: 1 as const, profile, batchLenses: true, lenses, incompleteProfile,
     votes: overrides.votes ?? file?.votes ?? (profile === 'fast' ? 1 : 3), retries: overrides.retries ?? file?.retries ?? (profile === 'fast' ? 0 : 1),
     thresholds, budget: { ...budget, concurrency: budget.concurrency ?? defaultConcurrency, maxCalls: budget.maxCalls ?? 1000, deadlineMs: budget.deadlineMs ?? defaultDeadlineMs },
     worker: { timeoutMs: file?.worker?.timeoutMs ?? localCliTimeoutMs(providerPolicy.requestTimeoutMs), maxOutputBytes: file?.worker?.maxOutputBytes ?? DEFAULT_LOCAL_CLI_OUTPUT_BYTES },

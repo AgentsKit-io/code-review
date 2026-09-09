@@ -63,7 +63,7 @@ The CLI reviews the current repository's diff against `origin/main` and prints t
 
 For the Grok Build ACP worker, use `XAI_API_KEY` (or `--api-key`) in the default isolated mode. To reuse `grok login`, opt in explicitly with `--mode trusted-local`.
 
-Local `codex-cli` subprocesses have a 300-second deadline per model call; `claude-cli` and the other local workers use 120 seconds. Every run also has a global deadline (10 minutes for full, 2 minutes for `fast`) and a bounded Codex smoke check before fan-out. Set `--deadline-ms` for a smaller explicit budget; timed-out calls fail explicitly and cannot turn an unreviewed file into an approval.
+Local `codex-cli` subprocesses have a 300-second deadline per model call; `claude-cli` and the other local workers use 120 seconds. Every run also has a global deadline (10 minutes for full, 2 minutes for `fast`) and a bounded Codex smoke check before analysis. Set `--deadline-ms` for a smaller explicit budget; timed-out calls fail explicitly and cannot turn an unreviewed file into an approval.
 
 Terminal provider authentication failures stop the remaining lenses immediately; the review still exits incomplete and never converts a credential failure into approval.
 
@@ -113,7 +113,7 @@ resume interrupted requests, completed work is not repeated, and one failed PR d
 not stop independent work by default. The final JSON contains every discovered PR
 exactly once with a deterministic terminal outcome.
 
-![AgentsKit Code Review showing an APPROVE result after seven review lenses complete](docs/assets/code-review-terminal.png)
+![AgentsKit Code Review showing an APPROVE result after all configured review dimensions complete](docs/assets/code-review-terminal.png)
 
 The current command runs directly from GitHub. After the first npm release, the shorter form will be:
 
@@ -191,7 +191,7 @@ jobs:
           # max-files: '17'
           # max-calls: '1000'
           # max-findings-per-file: '7'
-          # profile: 'full' # or fast for a bounded required-lens batch
+          # profile: 'full' # or fast for required dimensions only
           # deadline-ms: '600000'
           # fail-on-block: 'true' # advisory by default
           # block: high
@@ -232,7 +232,7 @@ Secrets passed to the GitHub Action are forwarded through the environment, not i
 ```mermaid
 flowchart LR
   A["Diff · PR · paths · stdin"] --> B["Normalize targets"]
-  B --> C["7 focused lenses"]
+  B --> C["1 structured pass · 7 dimensions"]
   C --> D["Adversarial verification"]
   D --> E["Thresholds + CI policy"]
   E --> F["Markdown · GitHub · SARIF"]
@@ -312,7 +312,7 @@ In shortened examples, replace `...` with `npx --yes github:AgentsKit-io/code-re
 | `--post` | Post a batched review when the source is a PR |
 | `--sarif <file>` | Also write SARIF |
 | `--votes <n>` | Adversarial verification votes; default `3` |
-| `--profile <full\|fast>` | Full review or one bounded required-lens batch |
+| `--profile <full\|fast>` | All dimensions, or required dimensions only |
 | `--min-severity <level>` | Minimum reported severity |
 | `--min-confidence <n>` | Minimum reported confidence |
 | `--max-files <n>` | Positive file budget; over-budget runs are refused before the provider |
@@ -320,7 +320,7 @@ In shortened examples, replace `...` with `npx --yes github:AgentsKit-io/code-re
 | `--max-findings-per-file <n>` | Maximum verified findings per file; bounds adversarial verification calls |
 | `--concurrency <n>` | Parallel model calls; default `1` for CLI providers, `4` for API providers |
 | `--deadline-ms <n>` | Global run deadline; defaults to `600000` (`120000` for `fast`) |
-| `--health-check <auto\|off>` | Bounded provider smoke check before model fan-out |
+| `--health-check <auto\|off>` | Bounded provider smoke check before analysis |
 | `--plan`, `--dry-run` | Print provider-free preflight; add `--json` for machine output |
 | `--validate-patch` | Run `git apply --check` on suggested patches |
 | `--block <severity>` | CI gate floor; default `blocker` |
@@ -407,7 +407,7 @@ pull request. `loadCampaignCheckpoint()` rejects changed identities, while
 
 ### Doctor
 
-Run `doctor` before a review to check a registered provider’s executable, version, transport, model requirement, configuration mode, and credential presence. It is offline by default; `doctor --live` and normal Codex reviews use a bounded smoke check to catch authentication or hangs before fan-out. API credentials are checked only for presence and values are never printed. Unknown local CLI versions warn locally and fail when `CI=true`. Exit `0` means healthy, `1` means a failed diagnostic, and `2` means invalid CLI usage.
+Run `doctor` before a review to check a registered provider’s executable, version, transport, model requirement, configuration mode, and credential presence. It is offline by default; `doctor --live` and normal Codex reviews use a bounded smoke check to catch authentication or hangs before analysis. API credentials are checked only for presence and values are never printed. Unknown local CLI versions warn locally and fail when `CI=true`. Exit `0` means healthy, `1` means a failed diagnostic, and `2` means invalid CLI usage.
 
 ```sh
 npx --yes github:AgentsKit-io/code-review doctor --provider codex-cli
@@ -416,7 +416,7 @@ npx --yes github:AgentsKit-io/code-review doctor --provider openai --model gpt-4
 
 ## Cost and privacy
 
-A full review runs seven lenses across selected files and then verifies candidate findings. Control usage with `--profile fast`, `--max-files`, `--max-calls`, `--votes`, `--deadline-ms`, `--concurrency`, paths, and workflow triggers. For sensitive code, use a local model or an approved private gateway; provider data policies still apply to hosted APIs.
+A normal context pack uses one structured analysis call covering every enabled review dimension, then independently verifies candidate findings. Results explicitly report enabled, completed, and missing required dimensions. This replaces seven repeated source prompts and terminates immediately after the structured tool result. Control usage with `--profile fast`, `--max-files`, `--max-calls`, `--votes`, `--deadline-ms`, `--concurrency`, paths, and workflow triggers. For sensitive code, use a local model or an approved private gateway; provider data policies still apply to hosted APIs.
 
 ## Operations and machine-readable docs
 

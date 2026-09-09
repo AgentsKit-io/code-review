@@ -28,7 +28,7 @@ function runCase(id, options = {}) {
     id, exitCode: run.status, elapsedMs: Date.now() - startedAt,
     artifact: artifact && {
       verdict: artifact.verdict, blocking: artifact.blocking, incomplete: artifact.incomplete,
-      execution: artifact.execution, evidence: artifact.evidence,
+      execution: artifact.execution, evidence: artifact.evidence, missingRequiredLenses: artifact.missingRequiredLenses,
     },
     stderr: run.stderr.trim(),
     artifactError,
@@ -42,7 +42,7 @@ function requireCase(condition, message) {
 try {
   const cases = [
     runCase('clean'),
-    runCase('required-lens-failure', { env: { CODEX_FIXTURE_FAIL_CATEGORY: 'security' } }),
+    runCase('required-lens-failure', { env: { CODEX_FIXTURE_OMIT_CATEGORY: 'security' } }),
     runCase('deadline', { profile: 'fast', deadlineMs: '50', env: { CODEX_FIXTURE_HANG: '1' } }),
   ]
   const [clean, lensFailure, deadline] = cases
@@ -55,7 +55,7 @@ try {
     'clean review must retain complete execution evidence',
   )
   requireCase(lensFailure.exitCode === 2 && lensFailure.artifact?.incomplete === true, 'required lens failure must fail closed with an artifact')
-  requireCase((lensFailure.artifact?.execution?.failed ?? 0) > 0, 'required lens failure must retain failed-call evidence')
+  requireCase(lensFailure.artifact?.missingRequiredLenses?.includes('security'), 'required lens failure must retain missing-category evidence')
   requireCase(deadline.exitCode === 2 && deadline.artifact?.incomplete === true && deadline.artifact?.blocking === true, 'deadline must create a blocking incomplete artifact')
   requireCase(deadline.artifact?.evidence?.deadlineExceeded === true, 'deadline must retain deadline evidence')
   process.stdout.write(`${JSON.stringify({ version: 1, cases }, null, 2)}\n`)

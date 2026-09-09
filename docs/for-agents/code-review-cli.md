@@ -43,7 +43,7 @@ Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and
 
 - CLI flag/provider behavior: start at `src/cli.ts`, then update README, operations docs, and tests.
 - Local CLI subprocess behavior: start at the matching `src/<provider>-adapter.ts` and add an offline fixture.
-- Review logic or noise reduction: start at `agents/code-review/agent.ts` and the relevant lens; prove both survival and rejection behavior.
+- Review logic or noise reduction: start at `agents/code-review/agent.ts` and the relevant dimension prompt; preserve the one structured analysis per normal context pack and prove both survival and rejection behavior.
 - Campaign lifecycle or resume behavior: update the reducer/store together and run their focused crash/replay tests.
 - GitHub comments/SARIF: start at `agents/code-review/reporters.ts` and verify permissions/failure docs.
 - Action input: update `action.yml`, `examples/pull-request.yml`, README, and contract tests together.

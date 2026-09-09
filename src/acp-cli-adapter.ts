@@ -8,7 +8,11 @@ const FindingSchema = z.object({
   category: z.enum(['correctness', 'security', 'performance', 'maintainability', 'design', 'tests', 'conventions']),
   confidence: z.number().min(0).max(1), title: z.string(), rationale: z.string(), suggestion: z.string(), suggestedPatch: z.string().optional(),
 })
-const ReviewEnvelope = z.object({ schemaVersion: z.literal(1), findings: z.array(FindingSchema) }).strict()
+const ReviewEnvelope = z.object({
+  schemaVersion: z.literal(1),
+  completedCategories: z.array(z.enum(['correctness', 'security', 'performance', 'maintainability', 'design', 'tests', 'conventions'])).optional(),
+  findings: z.array(FindingSchema),
+}).strict()
 export class InvalidReviewOutputError extends Error {}
 export class InvalidAcpOutputError extends InvalidReviewOutputError {}
 
@@ -25,7 +29,10 @@ export function buildReviewPrompt(request: AdapterRequest): string {
   const system = request.messages.find((message) => message.role === 'system')?.content ?? request.context?.systemPrompt ?? ''
   const convo = request.messages.filter((message) => message.role !== 'system').map((message) => `${message.role.toUpperCase()}: ${message.content}`).join('\n\n')
   const tool = request.context?.tools?.[0]
-  return `${system}\n\n${convo}\n\nYou are one isolated code-review lens. Review only the supplied source and do not delegate, execute tools, edit files, use MCP, or use a terminal. Return ONLY JSON matching this envelope: {"schemaVersion":1,"findings":[]} . Each finding must match this schema: ${JSON.stringify(tool?.schema ?? {})}`
+  const envelope = tool?.schema && typeof tool.schema === 'object' && 'properties' in tool.schema && tool.schema.properties && typeof tool.schema.properties === 'object' && 'completedCategories' in tool.schema.properties
+    ? '{"schemaVersion":1,"completedCategories":[],"findings":[]}'
+    : '{"schemaVersion":1,"findings":[]}'
+  return `${system}\n\n${convo}\n\nYou are one isolated code-review worker. Review only the supplied source and do not delegate, execute tools, edit files, use MCP, or use a terminal. Return ONLY JSON matching this envelope: ${envelope} . The tool arguments must match this schema: ${JSON.stringify(tool?.schema ?? {})}`
 }
 
 export function parseReviewEnvelope(text: string, label: string): string {
@@ -33,7 +40,8 @@ export function parseReviewEnvelope(text: string, label: string): string {
   try { value = JSON.parse(extractJson(text)) as unknown } catch { throw new InvalidReviewOutputError(`${label} returned malformed JSON`) }
   const parsed = ReviewEnvelope.safeParse(value)
   if (!parsed.success) throw new InvalidReviewOutputError(`${label} returned an invalid schemaVersion: 1 envelope`)
-  return JSON.stringify({ findings: parsed.data.findings })
+  const { schemaVersion: _schemaVersion, ...arguments_ } = parsed.data
+  return JSON.stringify(arguments_)
 }
 
 async function rpcRequest(channel: { readonly readLine: () => Promise<string>; readonly send: (message: unknown) => void }, method: string, params: unknown, text: { value: string }): Promise<unknown> {

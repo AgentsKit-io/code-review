@@ -68,14 +68,24 @@ if (invalidOnceFile) {
     if (error?.code !== 'EEXIST') throw error
   }
 }
+const multidimensional = prompt.includes('MULTIDIMENSIONAL REVIEW') || prompt.includes('BATCHED FAST REVIEW')
+const enabledCategories = prompt.match(/same pass: ([^.]+)\./)?.[1]?.split(', ') ?? ['correctness', 'security', 'tests']
+const completedCategories = enabledCategories.filter((category) => category !== process.env.CODEX_FIXTURE_OMIT_CATEGORY)
+const seededFinding = process.env.CODEX_FIXTURE_QUALITY_CORPUS === '1' && prompt.includes('canDeleteAccount') && (multidimensional || prompt.includes('SINGLE dimension: security'))
+  ? { file: 'snippet.ts', line: 6, endLine: null, severity: 'blocker', category: 'security', confidence: 0.99, title: 'Missing authorization check', rationale: 'The token presence check does not enforce account authorization.', suggestion: 'Authorize the caller for the target account before deletion.', suggestedPatch: null }
+  : process.env.CODEX_FIXTURE_QUALITY_CORPUS === '1' && prompt.includes('deleteAccount') && prompt.includes('store.remove') && (multidimensional || prompt.includes('SINGLE dimension: correctness'))
+    ? { file: 'snippet.ts', line: 5, endLine: null, severity: 'high', category: 'correctness', confidence: 0.99, title: 'Ignore delete result', rationale: 'The function reports success even when removal returns false.', suggestion: 'Return or handle the store removal result.', suggestedPatch: null }
+    : undefined
+const structured = JSON.stringify({ completedCategories, findings: seededFinding ? [seededFinding] : [] })
+const fallback = multidimensional ? structured : JSON.stringify({ findings: seededFinding ? [seededFinding] : [] })
 const output = healthProbe
   ? 'OK'
-  : prompt.includes('BATCHED FAST REVIEW')
-  ? JSON.stringify({ completedCategories: ['correctness', 'security', 'tests'], findings: [] })
+  : prompt.includes('Call `submit_verdict` EXACTLY ONCE')
+  ? JSON.stringify({ refuted: false, reason: 'The seeded defect is concrete.' })
   : process.env.CODEX_FIXTURE_MULTIPLE_FENCED_OUTPUT === '1'
-  ? 'First result:\n```json\n{"findings":[]}\n```\nSecond result:\n```json\n{"findings":[]}\n```\n'
+  ? `First result:\n\`\`\`json\n${fallback}\n\`\`\`\nSecond result:\n\`\`\`json\n${fallback}\n\`\`\`\n`
   : process.env.CODEX_FIXTURE_FENCED_OUTPUT === '1'
-  ? 'Here is the requested result:\n```json\n{"findings":[]}\n```\n'
-  : JSON.stringify({ findings: [] })
+  ? `Here is the requested result:\n\`\`\`json\n${fallback}\n\`\`\`\n`
+  : multidimensional ? structured : fallback
 writeFileSync(process.argv[outputIndex + 1], output)
 if (process.argv.includes('--json')) process.stdout.write(`${JSON.stringify({ type: 'turn.completed', usage: { input_tokens: 100, cached_input_tokens: 20, output_tokens: 10, reasoning_output_tokens: 0 } })}\n`)

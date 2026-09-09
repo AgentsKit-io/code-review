@@ -112,7 +112,7 @@ test('CLI applies project lens policy and flags override configuration', () => {
       env: { ...process.env, CI: '', PATH: `${fixtureBin}:${process.env.PATH ?? ''}` },
     })
     assert.equal(run.status, 0, run.stderr)
-    assert.match(run.stdout, /6\/6 lens executions succeeded/)
+    assert.match(run.stdout, /1\/1 lens executions succeeded/)
   } finally { rmSync(cwd, { recursive: true, force: true }) }
 })
 

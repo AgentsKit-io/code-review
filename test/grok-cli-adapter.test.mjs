@@ -71,7 +71,7 @@ test('the review agent retries one invalid Grok envelope and then completes', ()
       env: { ...process.env, PATH: `${join(root, 'test/fixtures/bin')}:${process.env.PATH ?? ''}`, CODEX_FIXTURE_GROK_INVALID_ONCE_FILE: join(stateDir, 'used') },
     })
     assert.equal(run.status, 0, `${run.stdout}\n${run.stderr}`)
-    assert.match(run.stdout, /7\/7 lens executions succeeded/)
+    assert.match(run.stdout, /1\/1 lens executions succeeded/)
   } finally { rmSync(stateDir, { recursive: true, force: true }) }
 })
 

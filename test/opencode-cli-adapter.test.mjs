@@ -66,7 +66,7 @@ test('OpenCode ACP validates findings, malformed output, and one retry', async (
       env: { ...process.env, PATH: `${fixturePath}:${process.env.PATH ?? ''}`, CODEX_FIXTURE_OPENCODE_INVALID_ONCE_FILE: join(stateDir, 'used') },
     })
     assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`)
-    assert.match(result.stdout, /7\/7 lens executions succeeded/)
+    assert.match(result.stdout, /1\/1 lens executions succeeded/)
   } finally { rmSync(stateDir, { recursive: true, force: true }) }
 })
 
