@@ -367,6 +367,15 @@ Remote and unknown provider boundaries redact high-confidence credential
 patterns before the model sees source. Unsafe, oversized, binary, or excluded
 paths are reported as `UNREVIEWED`; content is never silently truncated.
 
+### Programmatic campaign contracts
+
+The package root exports version-1 Zod schemas and inferred types for campaign,
+pull-request run, review-unit, event, budget, immutable review identity, terminal
+outcome, and typed failure records. `reviewIdentityFingerprint()` binds both
+source SHAs plus policy, prompt, configuration, model, and package identity.
+These contracts are provider-free; execution and persistence are added by later
+engine phases.
+
 ### Doctor
 
 Run `doctor` before a review to check a registered provider’s executable, version, transport, model requirement, configuration mode, and credential presence. It is offline by default; `doctor --live` and normal Codex reviews use a bounded smoke check to catch authentication or hangs before fan-out. API credentials are checked only for presence and values are never printed. Unknown local CLI versions warn locally and fail when `CI=true`. Exit `0` means healthy, `1` means a failed diagnostic, and `2` means invalid CLI usage.

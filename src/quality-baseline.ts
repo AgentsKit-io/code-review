@@ -1,6 +1,6 @@
-import { createHash } from 'node:crypto'
 import { isAbsolute, relative, resolve } from 'node:path'
 import { z } from 'zod'
+import { stableFingerprint } from './stable-fingerprint.js'
 
 const nonNegative = z.number().finite().nonnegative()
 const measured = nonNegative.nullable()
@@ -112,16 +112,8 @@ export type QualityTokenBreakdown = z.infer<typeof QualityTokenBreakdownSchema>
 export type QualityDurationBreakdown = z.infer<typeof QualityDurationBreakdownSchema>
 export type QualityBaseline = z.infer<typeof QualityBaselineSchema>
 
-function canonical(value: unknown): string {
-  if (Array.isArray(value)) return `[${value.map(canonical).join(',')}]`
-  if (value && typeof value === 'object') {
-    return `{${Object.entries(value as Record<string, unknown>).sort(([left], [right]) => left.localeCompare(right)).map(([key, child]) => `${JSON.stringify(key)}:${canonical(child)}`).join(',')}}`
-  }
-  return JSON.stringify(value)
-}
-
 export function qualityBaselineIdentity(input: QualityBaselineIdentity): string {
-  return createHash('sha256').update(canonical(QualityBaselineIdentitySchema.parse(input))).digest('hex')
+  return stableFingerprint(QualityBaselineIdentitySchema.parse(input))
 }
 
 export function parseQualityBaseline(input: unknown): QualityBaseline {
