@@ -48,7 +48,7 @@ export function transitionCampaign(input: CampaignEngineState, rawEvent: Campaig
   if (event.sequence !== state.lastSequence + 1) throw new Error(`expected event sequence ${state.lastSequence + 1}`)
 
   const payload = event.payload
-  let next = state
+  let next: CampaignEngineState
   switch (payload.type) {
     case 'CAMPAIGN_STARTED':
       if (state.campaign.state !== 'PLANNED') throw new Error('campaign can start only once')
