@@ -1,5 +1,5 @@
-import { closeSync, existsSync, fsyncSync, mkdirSync, openSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs'
-import { dirname, join } from 'node:path'
+import { closeSync, existsSync, fsyncSync, mkdirSync, openSync, readFileSync, renameSync, rmSync, statSync, unlinkSync, writeFileSync } from 'node:fs'
+import { dirname, join, resolve, sep } from 'node:path'
 import { randomUUID } from 'node:crypto'
 import { z } from 'zod'
 import { CampaignContractSchema, CampaignEventSchema, type CampaignContract, type CampaignEvent, type ReviewIdentity } from './domain-contracts.js'
@@ -48,7 +48,7 @@ function parseCheckpoint(raw: unknown): CampaignCheckpoint {
   return checkpoint
 }
 
-function atomicJson(file: string, value: unknown, beforeRename?: () => void): void {
+export function writeAtomicJson(file: string, value: unknown, beforeRename?: () => void): void {
   mkdirSync(dirname(file), { recursive: true, mode: 0o700 })
   const temporary = `${file}.${process.pid}.${randomUUID()}.tmp`
   const body = `${JSON.stringify(value, null, 2)}\n`
@@ -86,7 +86,39 @@ function acquireGuards(root: string, keys: readonly string[]): string[] {
   try {
     for (const key of keys) {
       const guard = guardPath(leasePath(root, key))
-      mkdirSync(guard)
+      try { mkdirSync(guard); writeAtomicJson(join(guard, 'owner.json'), { pid: process.pid }) }
+      catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error
+        const observedGuard = statSync(guard)
+        let abandoned = false
+        try {
+          const owner = JSON.parse(readFileSync(join(guard, 'owner.json'), 'utf8')) as { pid?: unknown }
+          if (typeof owner.pid !== 'number' || !Number.isInteger(owner.pid)) throw new Error('invalid guard owner')
+          try { process.kill(owner.pid, 0) } catch (killError) { abandoned = (killError as NodeJS.ErrnoException).code === 'ESRCH' }
+        } catch (readError) {
+          if ((readError as NodeJS.ErrnoException).code === 'ENOENT') abandoned = Date.now() - statSync(guard).mtimeMs > 30_000
+          else if (!(readError instanceof SyntaxError) && !(readError instanceof Error && readError.message === 'invalid guard owner')) throw readError
+          else abandoned = Date.now() - statSync(guard).mtimeMs > 30_000
+        }
+        if (!abandoned) throw error
+        let reclaim: number | undefined
+        try { reclaim = openSync(join(guard, '.reclaim'), 'wx', 0o600) }
+        catch (claimError) {
+          if ((claimError as NodeJS.ErrnoException).code === 'EEXIST' || (claimError as NodeJS.ErrnoException).code === 'ENOENT') throw new Error('lease operation already in progress')
+          throw claimError
+        }
+        closeSync(reclaim)
+        const claimedGuard = statSync(guard)
+        if (claimedGuard.dev !== observedGuard.dev || claimedGuard.ino !== observedGuard.ino) {
+          unlinkSync(join(guard, '.reclaim'))
+          throw new Error('lease operation already in progress')
+        }
+        const stale = `${guard}.stale.${randomUUID()}`
+        renameSync(guard, stale)
+        rmSync(stale, { recursive: true, force: true })
+        mkdirSync(guard)
+        writeAtomicJson(join(guard, 'owner.json'), { pid: process.pid })
+      }
       acquired.push(guard)
     }
     return acquired
@@ -105,13 +137,16 @@ export function acquireCampaignLease(input: {
   root: string
   campaignId: string
   identities: readonly ReviewIdentity[]
+  pullRequests?: readonly { repository: string; id: string }[]
+  includeCampaign?: boolean
   ownerId: string
   ttlMs: number
   now?: number
 }): CampaignLease {
   if (!Number.isInteger(input.ttlMs) || input.ttlMs <= 0) throw new Error('lease ttlMs must be a positive integer')
   const now = input.now ?? Date.now()
-  const keys = [...new Set([`campaign:${input.campaignId}`, ...input.identities.map(prKey)])].sort()
+  const keys = [...new Set([...(input.includeCampaign === false ? [] : [`campaign:${input.campaignId}`]), ...input.identities.map(prKey), ...(input.pullRequests ?? []).map((ref) => `pr:${ref.repository}#${ref.id}`)])].sort()
+  if (!keys.length) throw new Error('lease requires at least one campaign or pull-request key')
   const lease = leaseSchema.parse({ version: 1, ownerId: input.ownerId, token: randomUUID(), keys, expiresAt: new Date(now + input.ttlMs).toISOString() })
   const acquired: string[] = []
   try {
@@ -122,15 +157,17 @@ export function acquireCampaignLease(input: {
         try {
           mkdirSync(directory, { mode: 0o700 })
           mkdirSync(guardPath(directory))
-          try { atomicJson(join(directory, 'lease.json'), lease) } finally { rmSync(guardPath(directory), { recursive: true, force: true }) }
+          try { writeAtomicJson(join(directory, 'lease.json'), lease) } finally { rmSync(guardPath(directory), { recursive: true, force: true }) }
           acquired.push(key)
           break
         } catch (error) {
           if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error
           const guards = acquireGuards(input.root, [key])
           try {
-            const current = readLease(input.root, key)
-            if (Date.parse(current.expiresAt) > now) throw new Error(`lease already held for ${key}`)
+            let current: CampaignLease | undefined
+            try { current = readLease(input.root, key) }
+            catch (readError) { if ((readError as NodeJS.ErrnoException).code !== 'ENOENT') throw readError }
+            if (current && Date.parse(current.expiresAt) > now) throw new Error(`lease already held for ${key}`)
             const stale = `${directory}.stale.${randomUUID()}`
             renameSync(directory, stale)
             rmSync(stale, { recursive: true, force: true })
@@ -162,6 +199,26 @@ export function releaseCampaignLease(root: string, lease: CampaignLease): void {
   }
 }
 
+export function renewCampaignLease(root: string, lease: CampaignLease, ttlMs: number, now = Date.now()): CampaignLease {
+  if (!Number.isInteger(ttlMs) || ttlMs <= 0) throw new Error('lease ttlMs must be a positive integer')
+  const renewed = leaseSchema.parse({ ...lease, expiresAt: new Date(now + ttlMs).toISOString() })
+  const guards = acquireGuards(root, lease.keys)
+  try {
+    assertLease(root, lease, now)
+    for (const key of lease.keys) writeAtomicJson(join(leasePath(root, key), 'lease.json'), renewed)
+    return renewed
+  } finally { releaseGuards(guards) }
+}
+
+export function writeLeasedJson(root: string, lease: CampaignLease, file: string, value: unknown): void {
+  const rootPath = resolve(root)
+  const target = resolve(file)
+  if (target !== rootPath && !target.startsWith(`${rootPath}${sep}`)) throw new Error('leased file must be inside the campaign state root')
+  const guards = acquireGuards(root, lease.keys)
+  try { assertLease(root, lease); writeAtomicJson(target, value) }
+  finally { releaseGuards(guards) }
+}
+
 export function createCampaignCheckpoint(campaign: CampaignContract, identityFingerprint: string, now = new Date().toISOString()): CampaignCheckpoint {
   return parseCheckpoint({ version: 1, identityFingerprint, campaign, events: [], state: createCampaignEngineState(campaign), externalEffects: {}, updatedAt: now })
 }
@@ -181,7 +238,7 @@ export function saveCampaignCheckpoint(root: string, checkpoint: CampaignCheckpo
   const guards = acquireGuards(root, lease.keys)
   try {
     assertLease(root, lease)
-    atomicJson(checkpointPath(root, parsed.campaign.campaignId), parsed, options.beforeRename)
+    writeAtomicJson(checkpointPath(root, parsed.campaign.campaignId), parsed, options.beforeRename)
   } finally { releaseGuards(guards) }
 }
 

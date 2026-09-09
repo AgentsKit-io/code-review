@@ -15,6 +15,10 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const cli = join(root, 'dist/src/cli.js')
 const harness = join(root, 'scripts/review-harness.mjs')
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
+const shutdown = new AbortController()
+const requestShutdown = () => shutdown.abort(new Error('review cycle interrupted'))
+process.once('SIGINT', requestShutdown)
+process.once('SIGTERM', requestShutdown)
 const arg = (name) => { const index = process.argv.indexOf(`--${name}`); return index < 0 ? undefined : process.argv[index + 1] }
 const has = (name) => process.argv.includes(`--${name}`)
 const required = (name) => { const value = arg(name); if (!value) throw new Error(`missing --${name}`); return value }
@@ -34,14 +38,22 @@ const check = (id, ok, message, remediation, evidence) => ({ id, severity: ok ? 
 const processResult = (command, args, options = {}) => new Promise((resolveRun) => {
   const child = spawn(command, args, { cwd: options.cwd ?? root, env: options.env ?? process.env, stdio: [options.input === undefined ? 'ignore' : 'pipe', 'pipe', 'pipe'], detached: process.platform !== 'win32' })
   let stdout = ''; let stderr = ''; let timedOut = false
+  let settled = false; let killTimer
+  const kill = () => {
+    try { process.kill(-child.pid, 'SIGTERM') } catch { child.kill('SIGTERM') }
+    killTimer = setTimeout(() => { try { process.kill(-child.pid, 'SIGKILL') } catch { child.kill('SIGKILL') } }, 5_000)
+  }
+  const finish = (result) => { if (settled) return; settled = true; clearTimeout(timer); clearTimeout(killTimer); shutdown.signal.removeEventListener('abort', kill); resolveRun(result) }
   const timer = setTimeout(() => {
     timedOut = true
     try { process.kill(-child.pid, 'SIGKILL') } catch { child.kill('SIGKILL') }
   }, options.timeout ?? 660_000)
+  shutdown.signal.addEventListener('abort', kill, { once: true })
+  if (shutdown.signal.aborted) kill()
   child.stdout.on('data', (chunk) => { stdout = (stdout + chunk).slice(-200_000) })
   child.stderr.on('data', (chunk) => { stderr = (stderr + chunk).slice(-200_000) })
-  child.once('close', (code, signal) => { clearTimeout(timer); resolveRun({ code, signal, timedOut, stdout, stderr }) })
-  child.once('error', (error) => { clearTimeout(timer); resolveRun({ code: null, timedOut, stdout, stderr: `${stderr}\n${error.message}` }) })
+  child.once('close', (code, signal) => finish({ code, signal, timedOut, stdout, stderr }))
+  child.once('error', (error) => finish({ code: null, timedOut, stdout, stderr: `${stderr}\n${error.message}` }))
   if (options.input !== undefined) child.stdin.end(options.input)
 })
 
@@ -75,7 +87,6 @@ async function main() {
   const remainingCycleMs = () => Math.max(0, globalDeadlineMs - (Date.now() - cycleStartedAt))
   mkdirSync(artifactsDir, { recursive: true })
   mkdirSync(stateRoot, { recursive: true })
-
   try {
     const gitRoot = safeExec('git', ['-C', root, 'rev-parse', '--show-toplevel']).stdout
     const sourceCheckout = gitRoot && resolve(gitRoot) === root
@@ -192,6 +203,7 @@ async function main() {
         }
       }
     }
+    shutdown.signal.throwIfAborted()
     const blockers = checks.filter((item) => !item.ok)
     const preflight = { status: blockers.length ? 'blocked' : 'ready', canStartLiveReview: blockers.length === 0, blockers, checks, contract: { runId, libraryVersion: pkg.version, sourceRevision, pr: `${repository}#${pullNumber}`, headSha: firstSha ?? null } }
     atomicJson(preflightFile, preflight)
@@ -533,4 +545,7 @@ function validateOrcaEvidence(file, expected) {
   } catch { return false }
 }
 
-main().catch((error) => { console.error(error); process.exit(2) })
+main().catch((error) => { console.error(error); process.exitCode = 2 }).finally(() => {
+  process.removeListener('SIGINT', requestShutdown)
+  process.removeListener('SIGTERM', requestShutdown)
+})

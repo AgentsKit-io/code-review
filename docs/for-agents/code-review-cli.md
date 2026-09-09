@@ -15,7 +15,8 @@ Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and
 
 - `src/cli.ts`: public flags, source selection, provider selection, exit policy.
 - `src/campaign-reducer.ts` and `src/campaign-store.ts`: deterministic lifecycle, atomic checkpoints, leases, replay, and resume.
-- `src/campaign-preflight.ts` and `scripts/review-campaign.mjs`: provider-free campaign discovery, eligibility, source planning, budget checks, and worktree gating.
+- `src/campaign-preflight.ts`: provider-free campaign discovery, eligibility, source planning, budget checks, and worktree gating.
+- `src/campaign-runner.ts` and `scripts/review-campaign.mjs`: bounded multi-PR execution, leased atomic checkpoints, resume, per-PR isolation, and deterministic terminal reporting.
 - `src/<provider>-adapter.ts`: logged-in local CLI adapters.
 - `src/provider-registry.ts`: validated provider capabilities and conservative execution policy around AgentsKit adapters.
 - `src/provider-execution.ts`: typed provider failures, bounded retry delay, adaptive concurrency, and cancellation-aware queueing.
