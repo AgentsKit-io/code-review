@@ -4,7 +4,7 @@ import { createHash, randomUUID } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, renameSync, statfsSync, unlinkSync, writeFileSync } from 'node:fs'
 import { dirname, extname, isAbsolute, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { compareQuality, evaluateQuality } from '../dist/src/quality-matrix.js'
+import { compareQuality, evaluateQuality, evaluateQualityAgainstBaseline } from '../dist/src/quality-matrix.js'
 import { validateCanary } from '../dist/src/harness.js'
 import { createReviewFeedbackStore, createReviewKnowledgeStore } from '../dist/src/review-stores.js'
 import { createReviewReconciliationStore, reconcileReviewFeedback } from '../dist/src/review-feedback.js'
@@ -317,7 +317,7 @@ async function main() {
     const learning = await runLearningEvaluation(learningCorpus, projectConfig, { cli, provider, mode, providerArgs, maxCalls, concurrency, deadlineMs, runDir, childEnv, remainingCycleMs })
     summary.artifacts.learningEvaluation = learning.file
     const changedLines = Number(prData.additions ?? 0) + Number(prData.deletions ?? 0)
-    const pilotInput = qualityInput({ runId, version: pkg.version, sourceRevision, manifest, artifacts: [readJson(canary.artifact)], changedLines, elapsedBaseline: undefined, baselineTokensPerChangedLine: undefined, memory: { enabled: projectConfig.memory.enabled, persistencePass: false, loadPass: false, malformedRejected: false, feedbackRecorded: false, rulesApproved: false, learningEvaluationPass: false, learningDetectionLift: false, learningPrecisionPass: false, learningTokenPass: false }, evaluation, integration: { githubPass: true, orcaPass: false, releasePass: false, mergeSafetyPass: true } })
+    const pilotInput = qualityInput({ runId, version: pkg.version, sourceRevision, repository, pullNumber, manifest, artifacts: [readJson(canary.artifact)], changedLines, elapsedBaseline: undefined, baselineTokensPerChangedLine: undefined, memory: { enabled: projectConfig.memory.enabled, persistencePass: false, loadPass: false, malformedRejected: false, feedbackRecorded: false, rulesApproved: false, learningEvaluationPass: false, learningDetectionLift: false, learningPrecisionPass: false, learningTokenPass: false }, evaluation, integration: { githubPass: true, orcaPass: false, releasePass: false, mergeSafetyPass: true } })
     const pilotReport = evaluateQuality(pilotInput)
     atomicJson(join(runDir, 'quality-pilot.json'), { ...pilotReport, target: `${repository}#${pullNumber}`, headSha: manifest.headSha, configFingerprint: contract.configFingerprint, manifestFingerprint, evidencePaths: [canary.artifact, evaluation.file] })
     summary.artifacts.qualityPilot = join(runDir, 'quality-pilot.json')
@@ -361,11 +361,11 @@ async function main() {
     const artifactMetaValid = artifactFiles.every((file, index) => {
       try { const metadata = readJson(join(artifactsDir, `batch-${index}.meta.json`)); return metadata.sourceRevision === sourceRevision && metadata.artifactHash === sha256(readFileSync(file)) } catch { return false }
     })
-    const input = qualityInput({ runId, version: pkg.version, sourceRevision, manifest, artifacts: reviews, changedLines, elapsedBaseline: baselineInput?.performance?.p95Ms ?? baselineArea('speed')?.p95Ms, baselineTokensPerChangedLine, memory, evaluation, cache: summary.cache, evidence: { checks, replay: readJson(summary.artifacts.replay), state, artifactMetaValid, secretLeaks: ghToken && serializedArtifacts.includes(ghToken) ? 1 : 0, maxCalls, maxTokens }, integration: { githubPass: true, orcaPass, releasePass, mergeSafetyPass } })
+    const input = qualityInput({ runId, version: pkg.version, sourceRevision, repository, pullNumber, manifest, artifacts: reviews, changedLines, elapsedBaseline: baselineInput?.performance?.p95Ms ?? baselineArea('speed')?.p95Ms, baselineTokensPerChangedLine, memory, evaluation, cache: summary.cache, evidence: { checks, replay: readJson(summary.artifacts.replay), state, artifactMetaValid, secretLeaks: ghToken && serializedArtifacts.includes(ghToken) ? 1 : 0, maxCalls, maxTokens }, integration: { githubPass: true, orcaPass, releasePass, mergeSafetyPass } })
     atomicJson(join(runDir, 'quality-input.json'), input)
-    const quality = evaluateQuality(input)
     const baselineReport = baselineArtifact?.areas ? baselineArtifact : baselineInput ? evaluateQuality(baselineInput) : undefined
-    const comparison = baselineReport ? compareQuality(quality, baselineReport) : { regressions: [], improved: [] }
+    const quality = baselineReport ? evaluateQualityAgainstBaseline(input, baselineReport) : evaluateQuality(input)
+    const comparison = baselineReport ? compareQuality(quality, baselineReport) : { regressions: [], materialRegressions: [], improved: [] }
     const unresolvedGaps = quality.areas.filter((area) => area.status !== 'passed').map((area) => area.area)
     const matrix = { ...quality, target: `${repository}#${pullNumber}`, headSha: manifest.headSha, configFingerprint: contract.configFingerprint, manifestFingerprint, evidencePaths: [...artifactFiles, evaluation.file, memory.evidenceFile].filter(Boolean), rawInput: input, baseline: baselineFile ? { path: resolve(baselineFile), runId: baselineArtifact?.runId ?? null, version: baselineArtifact?.libraryVersion ?? baselineArtifact?.version ?? null } : null, comparison, regressions: comparison.regressions, improvements: comparison.improved, unresolvedGaps }
     atomicJson(join(runDir, 'quality-report.json'), matrix)
@@ -495,7 +495,7 @@ async function validateMemory(config, runDir, stateRoot, consolidated, contract,
   return evidence
 }
 
-function qualityInput({ runId, version, sourceRevision, manifest, artifacts, changedLines, elapsedBaseline, baselineTokensPerChangedLine, memory, evaluation, cache, evidence = {}, integration }) {
+function qualityInput({ runId, version, sourceRevision, repository, pullNumber, manifest, artifacts, changedLines, elapsedBaseline, baselineTokensPerChangedLine, memory, evaluation, cache, evidence = {}, integration }) {
   const reviews = artifacts.map((artifact) => artifact.review)
   const files = manifest.batches.reduce((count, batch) => count + batch.files.length, 0)
   const requiredLenses = 3
@@ -509,6 +509,7 @@ function qualityInput({ runId, version, sourceRevision, manifest, artifacts, cha
   const schemaCheck = evidence.checks?.find((item) => item.id === 'config.schema')
   const retries = Object.values(evidence.state?.attempts ?? {}).reduce((total, attempts) => total + Math.max(0, Number(attempts) - 1), 0)
   const providerCalls = reviews.reduce((total, review) => total + review.evidence.providerCalls, 0) + evaluation.cases.reduce((total, item) => total + item.review.evidence.providerCalls, 0)
+  const wastedCalls = reviews.reduce((total, review) => total + review.evidence.failedProviderCalls + review.evidence.skippedProviderCalls, 0) + evaluation.cases.reduce((total, item) => total + item.review.evidence.failedProviderCalls + item.review.evidence.skippedProviderCalls, 0)
   const accountingFields = ['inputTokens', 'cachedInputTokens', 'outputTokens', 'reasoningOutputTokens', 'memoryTokens', 'retryTokens', 'providerCalls', 'wallClockMs']
   const accounting = Object.fromEntries(accountingFields.flatMap((field) => {
     const values = reviews.map((review) => review.evidence.usage?.[field])
@@ -521,13 +522,14 @@ function qualityInput({ runId, version, sourceRevision, manifest, artifacts, cha
     comments: evaluation.comments,
     security: { secretLeaks: evidence.secretLeaks ?? 0, unsafeActions: 0, failClosedViolations: replayPass ? 0 : 1 },
     reliability: { runs: 1, completeRuns: complete ? 1 : 0, incompleteAccepted: complete ? 0 : 1, staleArtifactsAccepted: evidence.artifactMetaValid === false ? 1 : 0, silentFailures: reviews.some((review) => review.execution.failed > 0 && !review.incomplete) ? 1 : 0 },
-    performance: { p95Ms: elapsed, ...(elapsedBaseline ? { baselineP95Ms: elapsedBaseline } : {}) },
+    performance: { p95Ms: elapsed, wallClockMs: reviews.reduce((total, review) => total + review.evidence.elapsedMs, 0), ...(elapsedBaseline ? { baselineP95Ms: elapsedBaseline } : {}) },
     tokens: { ...(tokensUsed === undefined ? {} : { tokensUsed }), changedLines, validFindings: evaluation.metrics.detectedExpected, ...(baselineTokensPerChangedLine ? { baselineTokensPerChangedLine } : {}), ...(Object.keys(accounting).length ? { accounting } : {}) },
-    batches: { planned: manifest.batches.length, completed: artifacts.length, retried: retries, overBudget: providerCalls > (evidence.maxCalls ?? Infinity) || (tokensUsed ?? Infinity) + evaluation.tokensUsed > (evidence.maxTokens ?? Infinity) ? 1 : 0 },
+    batches: { planned: manifest.batches.length, completed: artifacts.length, retried: retries, wastedCalls, providerCalls, overBudget: providerCalls > (evidence.maxCalls ?? Infinity) || (tokensUsed ?? Infinity) + evaluation.tokensUsed > (evidence.maxTokens ?? Infinity) ? 1 : 0 },
     ...(cache ? { cache } : {}),
     memory: { enabled: memory.enabled, persistencePass: memory.persistencePass, loadPass: memory.loadPass, malformedRejected: memory.malformedRejected, feedbackRecorded: memory.feedbackRecorded, rulesApproved: memory.rulesApproved, learningEvaluationPass: memory.learningEvaluationPass, learningDetectionLift: memory.learningDetectionLift, learningPrecisionPass: memory.learningPrecisionPass, learningTokenPass: memory.learningTokenPass },
     configuration: { validAccepted: configCheck?.ok === true, invalidRejected: replayPass, schemaAvailable: schemaCheck?.ok === true },
     integration,
+    evidence: { kind: 'real-run', repository, pullNumber, headSha: manifest.headSha },
   }
 }
 

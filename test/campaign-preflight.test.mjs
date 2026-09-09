@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
@@ -123,5 +123,9 @@ test('packaged campaign command turns provider-free blockers into a terminal cam
     const report = CampaignExecutionReportSchema.parse(JSON.parse(run.stdout))
     assert.equal(report.outcome, 'BLOCKED')
     assert.deepEqual(report.pullRequests, [])
+    const matrix = JSON.parse(readFileSync(join(directory, 'state', 'campaigns', report.campaignId, 'quality-matrix.json'), 'utf8'))
+    assert.equal(existsSync(join(directory, 'state', 'campaigns', report.campaignId, 'quality-matrix.json')), true)
+    assert.equal(matrix.evidence.kind, 'real-campaign')
+    assert.equal(matrix.decision, 'BLOCKED')
   } finally { rmSync(directory, { recursive: true, force: true }) }
 })

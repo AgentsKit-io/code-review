@@ -6,19 +6,40 @@ export const QUALITY_AREAS = [
 
 export type QualityArea = typeof QUALITY_AREAS[number]
 export type QualityStatus = 'passed' | 'failed' | 'not-measured' | 'not-applicable'
+export type QualityEvidence =
+  | { kind: 'synthetic'; fixtureId: string }
+  | { kind: 'real-run'; repository: string; pullNumber: number; headSha: string }
+  | { kind: 'real-campaign'; campaignId: string }
+
+export interface QualityCampaignSummary {
+  discovered: number
+  terminal: number
+  completed: number
+  partial: number
+  blocked: number
+  skipped: number
+  cancelled: number
+  qualityReports: number
+  retries: number
+  wastedCalls: number
+  wallClockMs: number
+  baselineWallClockMs?: number
+}
 
 export interface QualityInput {
   runId?: string
   version?: string
   sourceRevision?: string
+  evidence: QualityEvidence
+  campaign?: QualityCampaignSummary
   coverage: { eligibleFiles: number; reviewedFiles: number; unreviewedFiles: number; requiredLensRuns: number; completedRequiredLensRuns: number }
   findings: { expected: number; detectedExpected: number; falsePositives: number; duplicates: number; severityMatches: number; severityWithinOne?: number; severityTotal: number; actionable: number; detected: number }
   comments: { inlineExpected: number; inlineValid: number; actionable: number; total: number }
   security: { secretLeaks: number; unsafeActions: number; failClosedViolations: number }
   reliability: { runs: number; completeRuns: number; incompleteAccepted: number; staleArtifactsAccepted: number; silentFailures: number }
-  performance: { p95Ms: number; baselineP95Ms?: number }
-  tokens: { tokensUsed?: number; changedLines: number; validFindings: number; baselineTokensPerChangedLine?: number; accounting?: { inputTokens?: number; cachedInputTokens?: number; outputTokens?: number; reasoningOutputTokens?: number; memoryTokens?: number; retryTokens?: number; providerCalls?: number; wallClockMs?: number } }
-  batches: { planned: number; completed: number; retried: number; overBudget: number }
+  performance: { p95Ms: number; baselineP95Ms?: number; wallClockMs?: number; baselineWallClockMs?: number }
+  tokens: { tokensUsed?: number; changedLines: number; validFindings: number; baselineTokensPerChangedLine?: number; accounting?: { inputTokens?: number; cachedInputTokens?: number; outputTokens?: number; reasoningOutputTokens?: number; memoryTokens?: number; retryTokens?: number; total?: number; providerCalls?: number; wallClockMs?: number } }
+  batches: { planned: number; completed: number; retried: number; overBudget: number; wastedCalls?: number; providerCalls?: number; baselineProviderCalls?: number }
   cache?: { hits: number; misses: number; corruptMisses: number; staleMisses: number; unvalidatedMisses: number; savedTokens: number }
   memory: { enabled: boolean; persistencePass: boolean; loadPass: boolean; malformedRejected: boolean; feedbackRecorded: boolean; rulesApproved: boolean; learningEvaluationPass: boolean; learningDetectionLift: boolean; learningPrecisionPass: boolean; learningTokenPass: boolean }
   configuration: { validAccepted: boolean; invalidRejected: boolean; schemaAvailable: boolean; requiredFlags?: number }
@@ -38,11 +59,24 @@ export interface QualityReport {
   runId?: string
   libraryVersion?: string
   sourceRevision?: string
+  evidence?: QualityEvidence
+  campaign?: QualityCampaignSummary
   minimumScore: 3
   decision: 'PASS' | 'BLOCKED'
   areas: QualityAreaResult[]
   absoluteGates: { name: string; passed: boolean; detail: string }[]
   inputError?: string
+}
+
+export interface QualityRegressionPolicy {
+  maxScoreDrop?: number
+  blockNewlyUnmeasured?: boolean
+}
+
+export interface QualityCampaignInput {
+  evidence: Extract<QualityEvidence, { kind: 'real-campaign' }>
+  campaign: QualityCampaignSummary
+  pullRequestReports: QualityReport[]
 }
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -76,6 +110,11 @@ const requireBooleans = (value: unknown, path: string, keys: readonly string[]):
 /** Validate and narrow JSON received from an external runner before scoring it. */
 export function parseQualityInput(value: unknown): QualityInput {
   const input = requireRecord(value, 'input')
+  const evidence = requireRecord(input.evidence, 'evidence')
+  if (!['synthetic', 'real-run', 'real-campaign'].includes(String(evidence.kind))) throw new Error('evidence.kind must be synthetic, real-run, or real-campaign')
+  if (evidence.kind === 'synthetic' && typeof evidence.fixtureId !== 'string') throw new Error('evidence.fixtureId must be a string')
+  if (evidence.kind === 'real-run' && (typeof evidence.repository !== 'string' || typeof evidence.pullNumber !== 'number' || typeof evidence.headSha !== 'string')) throw new Error('real-run evidence requires repository, pullNumber, and headSha')
+  if (evidence.kind === 'real-campaign' && (typeof evidence.campaignId !== 'string' || !input.campaign)) throw new Error('real-campaign evidence requires campaignId and campaign')
   requireNumbers(input.coverage, 'coverage', ['eligibleFiles', 'reviewedFiles', 'unreviewedFiles', 'requiredLensRuns', 'completedRequiredLensRuns'])
   requireNumbers(input.findings, 'findings', ['expected', 'detectedExpected', 'falsePositives', 'duplicates', 'severityMatches', 'severityTotal', 'actionable', 'detected'])
   if (requireRecord(input.findings, 'findings').severityWithinOne !== undefined) requireNumber(requireRecord(input.findings, 'findings').severityWithinOne, 'findings.severityWithinOne')
@@ -87,9 +126,14 @@ export function parseQualityInput(value: unknown): QualityInput {
   if (requireRecord(input.tokens, 'tokens').accounting !== undefined) {
     const accounting = requireRecord(input.tokens, 'tokens').accounting
     const accountingRecord = requireRecord(accounting, 'tokens.accounting')
-    for (const key of ['inputTokens', 'cachedInputTokens', 'outputTokens', 'reasoningOutputTokens', 'memoryTokens', 'retryTokens', 'providerCalls', 'wallClockMs']) if (accountingRecord[key] !== undefined) requireNumber(accountingRecord[key], `tokens.accounting.${key}`)
+    for (const key of ['inputTokens', 'cachedInputTokens', 'outputTokens', 'reasoningOutputTokens', 'memoryTokens', 'retryTokens', 'total', 'providerCalls', 'wallClockMs']) if (accountingRecord[key] !== undefined) requireNumber(accountingRecord[key], `tokens.accounting.${key}`)
   }
   requireNumbers(input.batches, 'batches', ['planned', 'completed', 'retried', 'overBudget'])
+  for (const key of ['wastedCalls', 'providerCalls', 'baselineProviderCalls']) if (requireRecord(input.batches, 'batches')[key] !== undefined) requireNumber(requireRecord(input.batches, 'batches')[key], `batches.${key}`)
+  const performance = requireRecord(input.performance, 'performance')
+  if (performance.wallClockMs !== undefined) requireNumber(performance.wallClockMs, 'performance.wallClockMs')
+  if (performance.baselineWallClockMs !== undefined) requireNumber(performance.baselineWallClockMs, 'performance.baselineWallClockMs')
+  if (input.campaign !== undefined) requireNumbers(input.campaign, 'campaign', ['discovered', 'terminal', 'completed', 'partial', 'blocked', 'skipped', 'cancelled', 'qualityReports', 'retries', 'wastedCalls', 'wallClockMs'])
   if (input.cache !== undefined) requireNumbers(input.cache, 'cache', ['hits', 'misses', 'corruptMisses', 'staleMisses', 'unvalidatedMisses', 'savedTokens'])
   requireBooleans(input.memory, 'memory', ['enabled', 'persistencePass', 'loadPass', 'malformedRejected', 'feedbackRecorded', 'rulesApproved', 'learningEvaluationPass', 'learningDetectionLift', 'learningPrecisionPass', 'learningTokenPass'])
   requireBooleans(input.configuration, 'configuration', ['validAccepted', 'invalidRejected', 'schemaAvailable'])
@@ -120,6 +164,11 @@ function ratioScore(numerator: number, denominator: number): number | null {
 
 function zeroScore(value: number): number { return value === 0 ? 4 : 1 }
 function booleanScore(value: boolean): number { return value ? 4 : 1 }
+function overheadScore(value: number, denominator: number): number | null {
+  if (denominator === 0) return value === 0 ? 4 : 1
+  const ratio = value / denominator
+  return ratio === 0 ? 4 : ratio <= 0.1 ? 3 : ratio <= 0.25 ? 2 : 1
+}
 function minimum(values: Array<number | null>): number | null {
   const measured = values.filter((value): value is number => value !== null)
   return measured.length ? Math.min(...measured) : null
@@ -148,22 +197,42 @@ export function evaluateQuality(input: QualityInput): QualityReport {
     ratioScore(input.comments.actionable, input.comments.total),
   ])
   const security = minimum([zeroScore(input.security.secretLeaks), zeroScore(input.security.unsafeActions), zeroScore(input.security.failClosedViolations)])
+  const campaignReliability = input.campaign ? minimum([
+    ratioScore(input.campaign.terminal, input.campaign.discovered),
+    ratioScore(input.campaign.completed, input.campaign.terminal),
+    zeroScore(input.campaign.cancelled),
+  ]) : null
   const reliability = minimum([
     ratioScore(input.reliability.completeRuns, input.reliability.runs),
+    campaignReliability,
     zeroScore(input.reliability.incompleteAccepted),
     zeroScore(input.reliability.staleArtifactsAccepted),
     zeroScore(input.reliability.silentFailures),
   ])
-  const speed = input.performance.baselineP95Ms === undefined || input.performance.baselineP95Ms <= 0
+  const p95Score = input.performance.baselineP95Ms === undefined || input.performance.baselineP95Ms <= 0
     ? null
     : input.performance.p95Ms <= input.performance.baselineP95Ms ? 4 : input.performance.p95Ms <= input.performance.baselineP95Ms * 1.25 ? 3 : input.performance.p95Ms <= input.performance.baselineP95Ms * 1.5 ? 2 : 1
-  const tokensPerChangedLine = input.tokens.tokensUsed === undefined || input.tokens.changedLines === 0 ? null : input.tokens.tokensUsed / input.tokens.changedLines
+  const wallClockScore = input.performance.wallClockMs === undefined || input.performance.baselineWallClockMs === undefined || input.performance.baselineWallClockMs <= 0
+    ? null
+    : input.performance.wallClockMs <= input.performance.baselineWallClockMs ? 4 : input.performance.wallClockMs <= input.performance.baselineWallClockMs * 1.25 ? 3 : input.performance.wallClockMs <= input.performance.baselineWallClockMs * 1.5 ? 2 : 1
+  const speed = minimum([p95Score, wallClockScore])
+  const tokenDimensions = ['inputTokens', 'cachedInputTokens', 'outputTokens', 'reasoningOutputTokens', 'memoryTokens', 'retryTokens'] as const
+  const accounting = input.tokens.accounting
+  const accountedTokens = accounting && tokenDimensions.every((dimension) => accounting[dimension] !== undefined)
+    ? accounting.total ?? tokenDimensions.reduce((total, dimension) => total + accounting[dimension]!, 0)
+    : input.tokens.tokensUsed
+  const tokensPerChangedLine = accountedTokens === undefined || input.tokens.changedLines === 0 ? null : accountedTokens / input.tokens.changedLines
   const tokenEfficiency = input.tokens.baselineTokensPerChangedLine === undefined || tokensPerChangedLine === null
     ? null
     : tokensPerChangedLine <= input.tokens.baselineTokensPerChangedLine ? 4 : tokensPerChangedLine <= input.tokens.baselineTokensPerChangedLine * 1.1 ? 3 : input.tokens.baselineTokensPerChangedLine * 1.25 >= tokensPerChangedLine ? 2 : 1
+  const batchWastedCalls = input.batches.wastedCalls ?? input.campaign?.wastedCalls ?? 0
   const batchEfficiency = minimum([
     ratioScore(input.batches.completed, input.batches.planned),
     zeroScore(input.batches.overBudget),
+    overheadScore(input.batches.retried + batchWastedCalls, input.batches.planned + input.batches.retried + batchWastedCalls),
+    input.batches.providerCalls !== undefined && input.batches.baselineProviderCalls !== undefined && input.batches.baselineProviderCalls > 0
+      ? input.batches.providerCalls <= input.batches.baselineProviderCalls ? 4 : input.batches.providerCalls <= input.batches.baselineProviderCalls * 1.25 ? 3 : input.batches.providerCalls <= input.batches.baselineProviderCalls * 1.5 ? 2 : 1
+      : null,
   ])
   const memoryLearning = input.memory.enabled
     ? minimum([booleanScore(input.memory.persistencePass), booleanScore(input.memory.loadPass), booleanScore(input.memory.malformedRejected), booleanScore(input.memory.feedbackRecorded), booleanScore(input.memory.rulesApproved), booleanScore(input.memory.learningEvaluationPass), booleanScore(input.memory.learningDetectionLift), booleanScore(input.memory.learningPrecisionPass), booleanScore(input.memory.learningTokenPass)])
@@ -182,9 +251,9 @@ export function evaluateQuality(input: QualityInput): QualityReport {
     result('comments', comments, { inlineValid: input.comments.inlineValid, inlineExpected: input.comments.inlineExpected }, 'Inline locations and actionable comment structure must remain valid.'),
     result('security', security, { secretLeaks: input.security.secretLeaks, unsafeActions: input.security.unsafeActions, failClosedViolations: input.security.failClosedViolations }, 'Security and fail-closed violations are absolute defects.'),
     result('reliability', reliability, { completeRuns: input.reliability.completeRuns, runs: input.reliability.runs, staleArtifactsAccepted: input.reliability.staleArtifactsAccepted }, 'Incomplete, stale, or silently failed work cannot be accepted.'),
-    result('speed', speed, { p95Ms: input.performance.p95Ms, baselineP95Ms: input.performance.baselineP95Ms ?? 'missing' }, 'Speed is relative to a measured baseline.'),
-    result('token-efficiency', tokenEfficiency, { tokensUsed: input.tokens.tokensUsed ?? 'missing', changedLines: input.tokens.changedLines, tokensPerChangedLine: tokensPerChangedLine ?? 'missing', baselineTokensPerChangedLine: input.tokens.baselineTokensPerChangedLine ?? 'missing', accounting: input.tokens.accounting ? 'reported' : 'missing' }, 'Token efficiency is relative to a measured baseline; detailed accounting is retained when the provider reports it.'),
-    result('batch-efficiency', batchEfficiency, { planned: input.batches.planned, completed: input.batches.completed, overBudget: input.batches.overBudget }, 'Batches must complete within budget without avoidable retries.'),
+    result('speed', speed, { p95Ms: input.performance.p95Ms, baselineP95Ms: input.performance.baselineP95Ms ?? 'missing', wallClockMs: input.performance.wallClockMs ?? 'missing', baselineWallClockMs: input.performance.baselineWallClockMs ?? 'missing' }, 'Speed is relative to measured p95 and complete wall-clock baselines.'),
+    result('token-efficiency', tokenEfficiency, { tokensUsed: accountedTokens ?? 'missing', changedLines: input.tokens.changedLines, tokensPerChangedLine: tokensPerChangedLine ?? 'missing', baselineTokensPerChangedLine: input.tokens.baselineTokensPerChangedLine ?? 'missing', accounting: accounting ? (tokenDimensions.every((dimension) => accounting[dimension] !== undefined) ? 'complete' : 'partial') : 'missing' }, 'Token efficiency includes every reported token class and remains unmeasured when no comparable baseline exists.'),
+    result('batch-efficiency', batchEfficiency, { planned: input.batches.planned, completed: input.batches.completed, retried: input.batches.retried, wastedCalls: batchWastedCalls, overBudget: input.batches.overBudget, providerCalls: input.batches.providerCalls ?? 'missing' }, 'Batches must complete within budget without avoidable retries, wasted calls, or provider-call regressions.'),
     memoryResult,
     result('configuration', configuration, { validAccepted: input.configuration.validAccepted, invalidRejected: input.configuration.invalidRejected, schemaAvailable: input.configuration.schemaAvailable }, 'The public configuration must validate before execution.'),
     result('integration', integration, { githubPass: input.integration.githubPass, orcaPass: input.integration.orcaPass, releasePass: input.integration.releasePass, mergeSafetyPass: input.integration.mergeSafetyPass }, 'External integration evidence must be explicit.'),
@@ -197,17 +266,56 @@ export function evaluateQuality(input: QualityInput): QualityReport {
     { name: 'no-incomplete-acceptance', passed: input.reliability.incompleteAccepted === 0, detail: `${input.reliability.incompleteAccepted} incomplete run(s) accepted` },
     { name: 'no-invalid-inline-comments', passed: input.comments.inlineValid === input.comments.inlineExpected, detail: `${input.comments.inlineExpected - input.comments.inlineValid} invalid inline comment(s)` },
     { name: 'no-silent-failures', passed: input.reliability.silentFailures === 0, detail: `${input.reliability.silentFailures} silent failure(s)` },
+    ...(input.campaign ? [{ name: 'campaign-terminal-coverage', passed: input.campaign.terminal === input.campaign.discovered && input.campaign.completed + input.campaign.partial + input.campaign.blocked + input.campaign.skipped + input.campaign.cancelled === input.campaign.terminal, detail: `${input.campaign.terminal}/${input.campaign.discovered} discovered pull requests reached terminal outcome` }, { name: 'campaign-quality-report-coverage', passed: input.campaign.qualityReports === input.campaign.completed, detail: `${input.campaign.qualityReports}/${input.campaign.completed} completed pull requests have quality matrices` }] : []),
   ]
-  return { version: 1, runId: input.runId, libraryVersion: input.version, sourceRevision: input.sourceRevision, minimumScore: 3, decision: areas.every((area) => area.status === 'passed' || area.status === 'not-applicable') && absoluteGates.every((gate) => gate.passed) ? 'PASS' : 'BLOCKED', areas, absoluteGates }
+  return { version: 1, runId: input.runId, libraryVersion: input.version, sourceRevision: input.sourceRevision, evidence: input.evidence, campaign: input.campaign, minimumScore: 3, decision: areas.every((area) => area.status === 'passed' || area.status === 'not-applicable') && absoluteGates.every((gate) => gate.passed) ? 'PASS' : 'BLOCKED', areas, absoluteGates }
 }
 
-export function compareQuality(current: QualityReport, baseline: QualityReport): { regressions: { area: QualityArea; from: number | null; to: number | null }[]; improved: QualityArea[] } {
+export function evaluateCampaignQuality(input: QualityCampaignInput): QualityReport {
+  const reports = input.pullRequestReports
+  if (!reports.length) {
+    const blocked = blockedQualityReport('campaign has no pull-request quality reports')
+    return { ...blocked, evidence: input.evidence, campaign: input.campaign }
+  }
+  const campaignReliability = minimum([
+    ratioScore(input.campaign.terminal, input.campaign.discovered),
+    ratioScore(input.campaign.completed, input.campaign.terminal),
+    zeroScore(input.campaign.cancelled),
+  ])
+  const areas = QUALITY_AREAS.map((area) => {
+    const entries = reports.map((report) => report.areas.find((candidate) => candidate.area === area)).filter((entry): entry is QualityAreaResult => Boolean(entry))
+    const score = minimum(entries.map((entry) => entry.score))
+    return result(area, area === 'reliability' ? minimum([score, campaignReliability]) : score, { reports: reports.length, passingReports: entries.filter((entry) => entry.status === 'passed').length, discovered: input.campaign.discovered, terminal: input.campaign.terminal }, area === 'reliability' ? 'Campaign reliability includes every discovered pull request and its terminal outcome.' : `Campaign score is bounded by the lowest pull-request result for ${area}.`)
+  })
+  const terminalCoverage = input.campaign.terminal === input.campaign.discovered && input.campaign.completed + input.campaign.partial + input.campaign.blocked + input.campaign.skipped + input.campaign.cancelled === input.campaign.terminal && input.campaign.qualityReports === input.campaign.completed
+  const absoluteGates = [
+    ...reports.flatMap((report, index) => report.absoluteGates.filter((gate) => !gate.passed).map((gate) => ({ ...gate, name: `pull-request-${index + 1}:${gate.name}` }))),
+    { name: 'campaign-terminal-coverage', passed: terminalCoverage, detail: `${input.campaign.terminal}/${input.campaign.discovered} discovered pull requests reached terminal outcome` },
+    { name: 'campaign-quality-report-coverage', passed: input.campaign.qualityReports === input.campaign.completed, detail: `${input.campaign.qualityReports}/${input.campaign.completed} completed pull requests have quality matrices` },
+  ]
+  const decision = areas.every((area) => area.status === 'passed' || area.status === 'not-applicable') && absoluteGates.every((gate) => gate.passed) ? 'PASS' : 'BLOCKED'
+  return { version: 1, runId: input.evidence.campaignId, libraryVersion: reports[0].libraryVersion, sourceRevision: reports[0].sourceRevision, evidence: input.evidence, campaign: input.campaign, minimumScore: 3, decision, areas, absoluteGates }
+}
+
+export function compareQuality(current: QualityReport, baseline: QualityReport, policy: QualityRegressionPolicy = {}): { regressions: { area: QualityArea; from: number | null; to: number | null }[]; materialRegressions: { area: QualityArea; from: number | null; to: number | null }[]; improved: QualityArea[] } {
   const regressions: { area: QualityArea; from: number | null; to: number | null }[] = []
+  const materialRegressions: { area: QualityArea; from: number | null; to: number | null }[] = []
   const improved: QualityArea[] = []
+  const maxScoreDrop = policy.maxScoreDrop ?? 1
+  const blockNewlyUnmeasured = policy.blockNewlyUnmeasured ?? true
   for (const area of current.areas) {
     const before = baseline.areas.find((candidate) => candidate.area === area.area)?.score ?? null
     if (before !== null && area.score !== null && area.score < before) regressions.push({ area: area.area, from: before, to: area.score })
+    if ((maxScoreDrop > 0 && before !== null && area.score !== null && before - area.score >= maxScoreDrop) || (blockNewlyUnmeasured && before !== null && area.score === null)) materialRegressions.push({ area: area.area, from: before, to: area.score })
     if (before !== null && area.score !== null && area.score > before) improved.push(area.area)
   }
-  return { regressions, improved }
+  return { regressions, materialRegressions, improved }
+}
+
+export function evaluateQualityAgainstBaseline(input: QualityInput, baseline: QualityReport, policy: QualityRegressionPolicy = {}): QualityReport {
+  const report = evaluateQuality(input)
+  const comparison = compareQuality(report, baseline, policy)
+  const passed = comparison.materialRegressions.length === 0
+  const absoluteGates = [...report.absoluteGates, { name: 'no-material-regressions', passed, detail: passed ? 'no configured material quality regression' : `${comparison.materialRegressions.length} material regression(s)` }]
+  return { ...report, decision: report.decision === 'PASS' && passed ? 'PASS' : 'BLOCKED', absoluteGates }
 }

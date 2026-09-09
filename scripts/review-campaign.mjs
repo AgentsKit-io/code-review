@@ -2,7 +2,7 @@
 import { spawn, spawnSync } from 'node:child_process'
 import { mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
-import { dirname, resolve } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { campaignReportDeliveryFailed, executeCampaign } from '../dist/src/campaign-runner.js'
 import { redactDiagnostic } from '../dist/src/local-cli-process.js'
@@ -11,6 +11,7 @@ import { blockedCampaignPreflightReport, preflightCampaign } from '../dist/src/c
 import { configFingerprint, loadProjectConfig } from '../dist/src/public-config.js'
 import { diagnoseProvider } from '../dist/src/provider-registry.js'
 import { packageVersion } from '../dist/src/review-policy.js'
+import { evaluateCampaignQuality } from '../dist/src/quality-matrix.js'
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const hash = (value) => createHash('sha256').update(value).digest('hex')
@@ -43,6 +44,8 @@ const run = (command, args, options) => new Promise((done) => {
 
 let report
 let outputFailed = false
+let campaignStateRoot
+let campaignConfig
 const campaignAbort = new AbortController()
 const cancel = () => campaignAbort.abort(new Error('campaign interrupted'))
 process.once('SIGINT', cancel)
@@ -52,6 +55,7 @@ try {
   if (!configFile) throw new Error('missing --config <path>')
   const loaded = await loadProjectConfig(process.cwd(), configFile)
   const config = loaded.config
+  campaignConfig = config
   const providerHealth = await diagnoseProvider({ provider: config.review.provider, model: config.review.model, mode: config.review.mode, live: false })
   const token = process.env.GITHUB_TOKEN || String(spawnSync('gh', ['auth', 'token'], { encoding: 'utf8', timeout: 10_000 }).stdout ?? '').trim()
   const blockers = [
@@ -62,6 +66,7 @@ try {
     ? blockedCampaignPreflightReport({ repository: config.target.repository, configFingerprint: configFingerprint(config), checks: [...blockers, ...providerHealth.checks.filter((check) => check.status === 'fail').map((check) => ({ id: `provider.${check.name}`, ok: false, detail: check.detail }))] })
     : await preflightCampaign({ config, adapter: createGithubScmAdapter({ token }), providerHealth, signal: campaignAbort.signal })
   const stateRoot = resolve(dirname(loaded.path ?? resolve(configFile)), config.execution.statePath)
+  campaignStateRoot = stateRoot
   const workerTimeoutMs = Math.min(7_260_000, Math.max(config.review.deadlineMs + 60_000, config.review.deadlineMs * 2 + 60_000))
   report = await executeCampaign({
     preflight, stateRoot, concurrency: config.execution.maxConcurrentPullRequests,
@@ -85,6 +90,33 @@ try {
 } catch (error) {
   report = blockedCampaignPreflightReport({ checks: [{ id: 'command', ok: false, detail: error instanceof Error ? error.message : String(error) }] })
 } finally { process.removeListener('SIGINT', cancel); process.removeListener('SIGTERM', cancel) }
+if ('outcome' in report) {
+  const entries = report.pullRequests
+  const qualityReports = []
+  for (const entry of entries) {
+    const runId = hash(JSON.stringify({ packageVersion: packageVersion(), repository: entry.ref.repository, pull: entry.ref.id, headRevision: entry.headRevision, configFingerprint: configFingerprint(campaignConfig) }))
+    const file = resolve(campaignStateRoot, 'runs', `${entry.ref.repository.replace('/', '-')}-${entry.ref.id}-${runId.slice(0, 16)}`, 'quality-report.json')
+    try { qualityReports.push(JSON.parse(readFileSync(file, 'utf8'))) } catch { /* missing reports are represented by the campaign coverage gate */ }
+  }
+  const counts = (outcome) => entries.filter((entry) => entry.outcome === outcome).length
+  const started = Date.parse(report.startedAt)
+  const finished = Date.parse(report.finishedAt ?? report.updatedAt)
+  const campaign = {
+    discovered: entries.length,
+    terminal: entries.filter((entry) => entry.outcome !== null).length,
+    completed: counts('APPROVED') + counts('CHANGES_REQUESTED'),
+    partial: report.outcome === 'PARTIAL' ? 1 : 0,
+    blocked: counts('BLOCKED'),
+    skipped: counts('SKIPPED'),
+    cancelled: counts('CANCELLED'),
+    qualityReports: qualityReports.length,
+    retries: entries.reduce((total, entry) => total + Math.max(0, entry.attempts - 1), 0),
+    wastedCalls: qualityReports.reduce((total, matrix) => total + Number(matrix.rawInput?.batches?.wastedCalls ?? 0), 0),
+    wallClockMs: Number.isFinite(started) && Number.isFinite(finished) ? Math.max(0, finished - started) : 0,
+  }
+  const qualityMatrix = evaluateCampaignQuality({ evidence: { kind: 'real-campaign', campaignId: report.campaignId }, campaign, pullRequestReports: qualityReports })
+  write(value('quality-output') ?? join(campaignStateRoot, 'campaigns', report.campaignId, 'quality-matrix.json'), qualityMatrix)
+}
 try { write(value('output'), report) }
 catch (error) {
   outputFailed = true

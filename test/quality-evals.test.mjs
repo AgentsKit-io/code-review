@@ -67,6 +67,7 @@ test('fixture semantic evals preserve expected detections and clean precision', 
   }
   const report = evaluateQuality({
     runId: 'fixture-semantic-evals', version: '0.21.0', sourceRevision: 'fixture',
+    evidence: { kind: 'synthetic', fixtureId: 'default-quality-evals' },
     coverage: { eligibleFiles: corpus.cases.length, reviewedFiles: corpus.cases.length, unreviewedFiles: 0, requiredLensRuns: corpus.cases.length * 3, completedRequiredLensRuns: corpus.cases.length * 3 },
     findings: { expected: 2, detectedExpected, falsePositives, duplicates: 0, severityMatches, severityWithinOne, severityTotal: 2, actionable, detected },
     comments: { inlineExpected: 2, inlineValid: 2, actionable, total: 2 },
@@ -87,6 +88,7 @@ test('fixture semantic evals preserve expected detections and clean precision', 
 
 test('quality matrix blocks a run with missing required lens evidence', () => {
   const input = {
+    evidence: { kind: 'synthetic', fixtureId: 'missing-lens' },
     coverage: { eligibleFiles: 1, reviewedFiles: 1, unreviewedFiles: 0, requiredLensRuns: 3, completedRequiredLensRuns: 2 },
     findings: { expected: 1, detectedExpected: 1, falsePositives: 0, duplicates: 0, severityMatches: 1, severityTotal: 1, actionable: 1, detected: 1 },
     comments: { inlineExpected: 1, inlineValid: 1, actionable: 1, total: 1 },
