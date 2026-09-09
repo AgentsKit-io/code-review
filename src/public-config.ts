@@ -39,6 +39,12 @@ export const ReviewConfigSchema = z.object({
     deadlineMs: z.number().int().min(1).max(30 * 60 * 1000).default(600_000),
     healthCheck: z.enum(['auto', 'off']).default('auto'),
     conventions: relativePath.optional(),
+    context: z.object({
+      adjacentLines: z.number().int().min(0).max(200).default(40),
+      maxRelatedFiles: z.number().int().min(0).max(8).default(1),
+      maxTokens: z.number().int().min(1).max(1_000_000).default(16_000),
+      reserveForOutput: z.number().int().min(0).max(100_000).default(2_000),
+    }).strict().refine((value) => value.maxTokens > value.reserveForOutput, 'maxTokens must exceed reserveForOutput').default({}),
   }).strict(),
   memory: z.object({
     enabled: z.boolean().default(true),
@@ -156,6 +162,7 @@ export function toReviewConfig(config: ReviewProjectConfig): Record<string, unkn
     thresholds: { minSeverity: config.review.minSeverity, minConfidence: config.review.minConfidence, maxPerFile: config.review.maxFindingsPerFile },
     budget: { maxCalls: config.review.maxCalls, deadlineMs: config.review.deadlineMs, concurrency: config.execution.maxConcurrentPullRequests },
     conventions: config.review.conventions,
+    context: { mode: 'prompt', patterns: [], ...config.review.context },
     batching: config.batches,
     memory: config.memory,
     comments: config.comments,

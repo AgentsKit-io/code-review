@@ -136,7 +136,7 @@ function memoryFilePath(cwd: string, configuredPath: string): string {
 
 async function resolveSource(reviewConfig: ResolvedReviewConfig): Promise<SourceConfig> {
   const redact = shouldRedact(reviewConfig)
-  const limits = { maxFiles: reviewConfig.budget.maxFiles, maxBytes: reviewConfig.budget.maxBytes }
+  const limits = { maxFiles: reviewConfig.budget.maxFiles, maxBytes: reviewConfig.budget.maxBytes, contextLines: reviewConfig.context.adjacentLines }
   // Planning a batch must widen the PR source limit too. Without this, the
   // manifest is created from the default single-run cap and silently omits
   // files before partitioning can cover them.
@@ -324,6 +324,7 @@ async function main() {
     conventions: reviewConfig.conventions ? { path: reviewConfig.conventions } : autoConventions(),
     thresholds: reviewConfig.thresholds,
     memory: configuredMemory,
+    context: reviewConfig.context,
   }
 
   let agent = createCodeReviewAgent(config)

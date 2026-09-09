@@ -2,6 +2,7 @@
 import { closeSync, openSync, readFileSync, writeFileSync } from 'node:fs'
 
 const prompt = process.argv.at(-1) ?? ''
+if (process.env.CODEX_FIXTURE_CAPTURE_PROMPT) writeFileSync(process.env.CODEX_FIXTURE_CAPTURE_PROMPT, prompt)
 const healthProbe = prompt.includes('Reply with exactly OK.')
 if (process.argv[2] === 'login' && process.argv[3] === 'status') {
   process.stdout.write(process.env.CODEX_FIXTURE_LOGGED_OUT === '1' ? 'Not logged in\n' : 'Logged in\n')

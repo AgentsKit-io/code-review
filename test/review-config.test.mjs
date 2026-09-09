@@ -22,6 +22,7 @@ test('defaults enable every lens and require correctness, security, and tests', 
     correctness: true, security: true, performance: true, maintainability: true, design: true, tests: true, conventions: true,
   })
   assert.deepEqual(Object.entries(config.lenses).filter(([, value]) => value.required).map(([key]) => key), ['correctness', 'security', 'tests'])
+  assert.deepEqual(config.context, { mode: 'prompt', patterns: [], adjacentLines: 40, maxRelatedFiles: 1, maxTokens: 16000, reserveForOutput: 2000 })
 })
 
 test('CLI overrides max findings per file without changing project config', () => {
@@ -72,6 +73,7 @@ test('rejects unknown fields, unsupported versions, and impossible required lens
     { configVersion: 1, lenses: { security: { enabled: false, required: true } } },
   ]) assert.throws(() => resolveReviewConfig(config), ReviewConfigError)
   assert.throws(() => resolveReviewConfig({ configVersion: 1, budget: { maxCalls: 1001 } }), ReviewConfigError)
+  assert.throws(() => resolveReviewConfig({ configVersion: 1, context: { mode: 'prompt', maxTokens: 1000, reserveForOutput: 1000 } }), ReviewConfigError)
 })
 
 test('requires an explicit local exception for an incomplete profile and rejects it in CI', () => {
