@@ -1167,6 +1167,12 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.21.1
+
+### Patch Changes
+
+- [#190](https://github.com/AgentsKit-io/code-review/pull/190) [`e132ecb`](https://github.com/AgentsKit-io/code-review/commit/e132ecbba0f28d5a84e89dbc51f2b90312468bfc) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Add a versioned semantic evaluation corpus and fail-closed quality-matrix coverage gates. Disabled memory is now reported as not applicable instead of being treated as missing evidence.
+
 ## 0.21.0
 
 ### Minor Changes
