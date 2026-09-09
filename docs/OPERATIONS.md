@@ -201,6 +201,13 @@ compatible accepted/fixed outcomes produce inactive candidate rules with
 pull-request and commit provenance; candidates require explicit approval before
 they can enter permanent knowledge.
 
+Approved knowledge is retrieved through the AgentsKit `Retriever` contract, not
+by injecting the whole store. Each context pack supplies its repository, paths,
+languages, and enabled review categories; only matching rules are returned,
+with global rules allowed, a maximum of 20 rules, and a default approximate
+2,000-token rule budget. If repository scope is absent, repository-specific
+rules are excluded. Rules are deduplicated and ranked by scope specificity.
+
 The `comments` policy is applied by the GitHub reporter. It controls inline
 emission, summary emission, renderer detail level, section inclusion, and
 English/Portuguese section labels. Findings remain line-anchored and the

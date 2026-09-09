@@ -324,6 +324,7 @@ async function main() {
     conventions: reviewConfig.conventions ? { path: reviewConfig.conventions } : autoConventions(),
     thresholds: reviewConfig.thresholds,
     knowledge: configuredKnowledge,
+    knowledgeScope: { repository: source.kind === 'github-pr' ? `${source.owner}/${source.repo}` : undefined },
     context: reviewConfig.context,
   }
 

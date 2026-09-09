@@ -24,7 +24,7 @@ import { markdownReporter } from './reporters.js'
 import { ProviderCircuitBreaker, ProviderCircuitOpenError } from '../../src/provider-circuit-breaker.js'
 import { AdaptiveConcurrencyGate, normalizeProviderFailure, providerRetryDelay, waitForProviderRetry } from '../../src/provider-execution.js'
 import { loadApprovedReviewRules } from '../../src/review-learning.js'
-import type { ReviewKnowledgeStore } from '../../src/review-stores.js'
+import type { ReviewKnowledgeScopeInput, ReviewKnowledgeStore } from '../../src/review-stores.js'
 import { classifyContextPack, type RiskAssessment } from './risk.js'
 import { createReviewBudgetLedger, defaultReviewBudget, emptyReviewUsage, ReviewBudgetExceededError, type HierarchicalReviewBudget, type ReviewUsage } from '../../src/budget.js'
 
@@ -284,6 +284,8 @@ export interface CodeReviewConfig {
   memory?: ChatMemory
   /** Read-only approved knowledge; review runtimes never persist transcripts. */
   knowledge?: ReviewKnowledgeStore
+  /** Scope used to isolate approved knowledge before it enters a context pack. */
+  knowledgeScope?: Omit<ReviewKnowledgeScopeInput, 'paths' | 'languages' | 'categories'>
   observers?: Observer[]
   onConfirm?: (toolCall: ToolCall) => boolean | Promise<boolean>
   maxSteps?: number
@@ -582,7 +584,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
     }
   }
 
-  async function resolveConventions(): Promise<string> {
+  async function resolveConventions(scope?: ReviewKnowledgeScopeInput): Promise<string> {
     let conventions = '(none provided)'
     if (typeof config.conventions === 'string') conventions = config.conventions
     else if (config.conventions) {
@@ -590,7 +592,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
       try { conventions = readFileSync(config.conventions.path, 'utf8').slice(0, 6000) }
       catch { conventions = '(conventions file not found)' }
     }
-    const approvedRules = await loadApprovedReviewRules(config.memory, config.knowledge)
+    const approvedRules = await loadApprovedReviewRules(config.memory, config.knowledge, scope)
     return approvedRules.length
       ? `${conventions}\n\nAPPROVED REVIEW RULES:\n${approvedRules.map((rule) => `- ${rule}`).join('\n')}`
       : conventions
@@ -612,7 +614,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
       ? false
       : target.changedRanges.some((r) => line >= r.start && line <= r.end)
 
-  type PreparedPack = { id: string; targets: ReviewTarget[]; task: string; evidence: ContextPackEvidence; fits: boolean }
+  type PreparedPack = { id: string; targets: ReviewTarget[]; task: string; conventions: string; evidence: ContextPackEvidence; fits: boolean }
 
   function relationKey(file: string): string {
     return posix.basename(file).replace(/\.[^.]+$/, '').replace(/\.(?:test|spec)$/i, '').toLowerCase()
@@ -687,7 +689,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
       }
     }
     return {
-      id, targets, task, fits,
+      id, targets, task, conventions, fits,
       evidence: {
         id, files: targets.map((target) => target.file), estimatedTokens, tokenBudget,
         reserveForOutput: contextPolicy.reserveForOutput,
@@ -1090,15 +1092,21 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
       const source = { ...config.source, limits: { ...config.source.limits, contextLines: contextPolicy.adjacentLines } } as SourceConfig
       const all = await loadTargets(source)
       const targets = rankTargets(all)
-      const conventions = await resolveConventions()
       const packs: PreparedPack[] = []
       for (const [index, group] of groupTargets(targets).entries()) {
+        const scope: ReviewKnowledgeScopeInput = {
+          ...config.knowledgeScope,
+          paths: group.map((target) => target.file),
+          languages: [...new Set(group.map((target) => target.language))],
+          categories: lenses.map((lens) => lens.key),
+        }
+        const conventions = await resolveConventions(scope)
         const combined = await measurePack(group, conventions, `pack-${index + 1}`)
         if (combined.fits || group.length === 1) packs.push(combined)
         else for (const [part, target] of group.entries()) packs.push(await measurePack([target], conventions, `pack-${index + 1}.${part + 1}`))
       }
       contextPackEvidence = packs.map((pack) => pack.evidence)
-      return { all, targets, packs, conventions, plan: makePlan(all, packs) }
+      return { all, targets, packs, conventions: packs.map((pack) => pack.conventions).join('\n\n'), plan: makePlan(all, packs) }
     })()
     return cachedPreparation
   }
