@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.18.0
+
+### Minor Changes
+
+- [#182](https://github.com/AgentsKit-io/code-review/pull/182) [`d0bab4f`](https://github.com/AgentsKit-io/code-review/commit/d0bab4f0238f11d723a71e37514fc4fbfc0996aa) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Execute preflighted pull requests through a bounded, resumable, failure-isolated campaign queue with deterministic terminal reporting.
+
 ## 0.17.0
 
 ### Minor Changes
