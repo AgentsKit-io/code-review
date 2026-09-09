@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "project": "agentskit-code-review-prd-137-issue-139",
+  "project": "agentskit-code-review-prd-137-issue-140",
   "root": "..",
   "profile": "custom",
   "exemptions": [
     "This repository is a CLI/library; endpoint, database, MCP, and UI product surfaces are out of scope for this fix."
   ],
   "contract": {
-    "intent": "Define the versioned, provider-free domain contracts required by issue #139 while preserving existing public review behavior.",
+    "intent": "Implement the pure deterministic lifecycle reducer and route a complete offline review through events for issue #140 without changing live provider or SCM behavior.",
     "outcomes": [
       { "id": "batch-manifest", "statement": "The CLI exposes a deterministic reviewable-file manifest, batch plan, and private SHA/policy-bound manifest without model execution.", "checks": ["batch-regression", "repo-check"] },
       { "id": "batch-artifact", "statement": "A partial batch writes a private artifact bound to the exact PR SHA, policy fingerprint, index, and file manifest; it cannot post to GitHub.", "checks": ["batch-regression", "repo-check"] },
@@ -44,6 +44,10 @@
       ,{ "id": "domain-failures", "statement": "Typed failure contracts distinguish terminal, retryable, replannable, and cancelled dispositions with disposition-specific metadata.", "checks": ["domain-contracts", "repo-check", "package"] }
       ,{ "id": "immutable-review-identity", "statement": "The immutable review identity binds source SHAs, policy, prompt, model, configuration, and package version to a stable fingerprint.", "checks": ["domain-contracts", "repo-check", "package"] }
       ,{ "id": "offline-domain-roundtrip", "statement": "Campaign, pull-request run, review-unit, event, budget, failure, and identity contracts validate and JSON-roundtrip without provider or GitHub access.", "checks": ["domain-contracts", "repo-check", "package"] }
+      ,{ "id": "pure-lifecycle-reducer", "statement": "Every allowed campaign, pull-request, and review-unit transition is deterministic, immutable, and controlled by one reducer.", "checks": ["campaign-reducer", "repo-check", "package"] }
+      ,{ "id": "invalid-transition-safety", "statement": "Wrong sequence, wrong campaign, skipped stage, duplicate identity, premature completion, and post-terminal events fail closed.", "checks": ["campaign-reducer", "repo-check", "package"] }
+      ,{ "id": "offline-event-flow", "statement": "A complete offline review reaches approval and campaign completion through ordered events only.", "checks": ["campaign-reducer", "repo-check", "package"] }
+      ,{ "id": "deterministic-replay", "statement": "Replaying the same event log from the same contract produces the identical final state.", "checks": ["campaign-reducer", "repo-check", "package"] }
     ]
   },
   "surfaces": { "logic": true, "cli": true, "docs": true },
@@ -62,6 +66,7 @@
     ,{ "id": "baseline-command", "category": "cli", "execution": "real", "command": "npm run benchmark:baseline -- --library-version 0.8.0", "timeoutMs": 60000 }
     ,{ "id": "architecture-docs", "category": "docs", "execution": "real", "command": "node --test --test-concurrency=1 test/architecture-baseline-docs.test.mjs", "timeoutMs": 60000 }
     ,{ "id": "domain-contracts", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/domain-contracts.test.mjs", "timeoutMs": 60000 }
+    ,{ "id": "campaign-reducer", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/campaign-reducer.test.mjs", "timeoutMs": 60000 }
   ],
   "tracking": { "required": false, "reason": "The human authorized a release PR; its URL will be recorded in the release report. Publication remains blocked until the PR is merged and a stable GitHub Release exists." },
   "cleanup": { "roots": [".codex/verification/tmp"] }

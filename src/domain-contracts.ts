@@ -86,7 +86,12 @@ export const ReviewUnitContractSchema = z.object({
 const eventPayload = z.discriminatedUnion('type', [
   z.object({ type: z.literal('CAMPAIGN_STARTED') }).strict(),
   z.object({ type: z.literal('PULL_REQUEST_REGISTERED'), run: PullRequestRunContractSchema }).strict(),
+  z.object({ type: z.literal('PULL_REQUEST_ELIGIBLE'), runId: identifier }).strict(),
+  z.object({ type: z.literal('PREFLIGHT_PASSED'), runId: identifier }).strict(),
+  z.object({ type: z.literal('REVIEW_PLANNED'), runId: identifier }).strict(),
+  z.object({ type: z.literal('REVIEW_STARTED'), runId: identifier }).strict(),
   z.object({ type: z.literal('REVIEW_UNIT_PLANNED'), unit: ReviewUnitContractSchema }).strict(),
+  z.object({ type: z.literal('REVIEW_UNIT_STARTED'), unitId: identifier }).strict(),
   z.object({ type: z.literal('REVIEW_UNIT_COMPLETED'), unitId: identifier, evidenceFingerprint: fingerprint }).strict(),
   z.object({ type: z.literal('REVIEW_UNIT_FAILED'), unitId: identifier, failure: DomainFailureSchema }).strict(),
   z.object({ type: z.literal('PULL_REQUEST_TERMINATED'), runId: identifier, outcome: PullRequestTerminalOutcomeSchema }).strict(),
