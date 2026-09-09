@@ -7,7 +7,7 @@
     "This repository is a CLI/library; endpoint, database, MCP, and UI product surfaces are out of scope for this fix."
   ],
   "contract": {
-    "intent": "Validate the versioned semantic evaluation corpus and fail the quality matrix closed when required lens coverage is incomplete.",
+    "intent": "Validate the versioned semantic evaluation corpus and adaptive verification, failing closed when required evidence is incomplete.",
     "outcomes": [
       { "id": "batch-manifest", "statement": "The CLI exposes a deterministic reviewable-file manifest, batch plan, and private SHA/policy-bound manifest without model execution.", "checks": ["batch-regression", "repo-check"] },
       { "id": "batch-artifact", "statement": "A partial batch writes a private artifact bound to the exact PR SHA, policy fingerprint, index, and file manifest; it cannot post to GitHub.", "checks": ["batch-regression", "repo-check"] },
@@ -92,6 +92,10 @@
       ,{ "id": "risk-critical-quality", "statement": "Critical security defects preserve the approved fixed-corpus detection level under risk-based specialization.", "checks": ["risk-depth", "multidimensional-analysis", "repo-check"] }
       ,{ "id": "semantic-evals", "statement": "A versioned evaluation corpus exercises known-positive and clean cases and measures detection, precision, severity, actionability, and coverage against the current review engine.", "checks": ["quality-evals", "repo-check", "package"] }
       ,{ "id": "matrix-coverage-gate", "statement": "The quality matrix cannot pass when any required lens execution is missing, even if file coverage is complete.", "checks": ["quality-evals", "quality-matrix", "repo-check"] }
+      ,{ "id": "verification-batching", "statement": "Multiple findings share bounded skeptical-verification requests without duplicating source context.", "checks": ["adaptive-verification", "repo-check"] }
+      ,{ "id": "verification-adaptive-policy", "statement": "Medium, high, and blocker findings receive deterministic vote depth based on severity and confidence, with a third vote only after configured disagreement.", "checks": ["adaptive-verification", "repo-check"] }
+      ,{ "id": "verification-fail-closed", "statement": "Missing or malformed required verification evidence makes the review incomplete and cannot create an approved review or a verified finding.", "checks": ["adaptive-verification", "repo-check"] }
+      ,{ "id": "verification-efficiency", "statement": "The fixed quality corpus preserves expected findings while using fewer verification provider calls than one request per finding and vote.", "checks": ["adaptive-verification", "quality-evals", "repo-check"] }
     ]
   },
   "surfaces": { "logic": true, "cli": true, "docs": true },
@@ -122,6 +126,7 @@
     ,{ "id": "context-packs", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/context-packs.test.mjs test/sources.test.mjs test/review-config.test.mjs", "timeoutMs": 120000 }
     ,{ "id": "risk-depth", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/risk-depth.test.mjs test/multidimensional-analysis.test.mjs", "timeoutMs": 120000 }
     ,{ "id": "quality-evals", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/quality-evals.test.mjs", "timeoutMs": 120000 }
+    ,{ "id": "adaptive-verification", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/adaptive-verification.test.mjs test/multidimensional-analysis.test.mjs test/review-config.test.mjs", "timeoutMs": 120000 }
   ],
   "tracking": { "required": false, "reason": "The human authorized a release PR; its URL will be recorded in the release report. Publication remains blocked until the PR is merged and a stable GitHub Release exists." },
   "cleanup": { "roots": [".codex/verification/tmp"] }

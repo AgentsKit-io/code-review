@@ -73,15 +73,24 @@ if (invalidOnceFile) {
 const multidimensional = prompt.includes('MULTIDIMENSIONAL REVIEW') || prompt.includes('BATCHED FAST REVIEW') || prompt.includes('RISK-SPECIALIZED REVIEW')
 const enabledCategories = prompt.match(/same pass: ([^.]+)\./)?.[1]?.split(', ') ?? ['correctness', 'security', 'tests']
 const completedCategories = enabledCategories.filter((category) => category !== process.env.CODEX_FIXTURE_OMIT_CATEGORY)
-const seededFinding = process.env.CODEX_FIXTURE_QUALITY_CORPUS === '1' && prompt.includes('canDeleteAccount') && (multidimensional || prompt.includes('SINGLE dimension: security'))
-  ? { file: 'snippet.ts', line: 6, endLine: null, severity: 'blocker', category: 'security', confidence: 0.99, title: 'Missing authorization check', rationale: 'The token presence check does not enforce account authorization.', suggestion: 'Authorize the caller for the target account before deletion.', suggestedPatch: null }
-  : process.env.CODEX_FIXTURE_QUALITY_CORPUS === '1' && prompt.includes('deleteAccount') && prompt.includes('store.remove') && (multidimensional || prompt.includes('SINGLE dimension: correctness'))
-    ? { file: 'snippet.ts', line: 5, endLine: null, severity: 'high', category: 'correctness', confidence: 0.99, title: 'Ignore delete result', rationale: 'The function reports success even when removal returns false.', suggestion: 'Return or handle the store removal result.', suggestedPatch: null }
-    : undefined
-const structured = JSON.stringify({ completedCategories, findings: seededFinding ? [seededFinding] : [] })
-const fallback = multidimensional ? structured : JSON.stringify({ findings: seededFinding ? [seededFinding] : [] })
+const seededFindings = [
+  ...(process.env.CODEX_FIXTURE_QUALITY_CORPUS === '1' && prompt.includes('canDeleteAccount') && (multidimensional || prompt.includes('SINGLE dimension: security'))
+    ? [{ file: 'snippet.ts', line: 6, endLine: null, severity: 'blocker', category: 'security', confidence: 0.99, title: 'Missing authorization check', rationale: 'The token presence check does not enforce account authorization.', suggestion: 'Authorize the caller for the target account before deletion.', suggestedPatch: null }]
+    : []),
+  ...(process.env.CODEX_FIXTURE_QUALITY_CORPUS === '1' && prompt.includes('deleteAccount') && prompt.includes('store.remove') && (multidimensional || prompt.includes('SINGLE dimension: correctness'))
+    ? [{ file: 'snippet.ts', line: 5, endLine: null, severity: 'high', category: 'correctness', confidence: 0.99, title: 'Ignore delete result', rationale: 'The function reports success even when removal returns false.', suggestion: 'Return or handle the store removal result.', suggestedPatch: null }]
+    : []),
+]
+const structured = JSON.stringify({ completedCategories, findings: seededFindings })
+const fallback = multidimensional ? structured : JSON.stringify({ findings: seededFindings })
 const output = healthProbe
   ? 'OK'
+  : process.env.CODEX_FIXTURE_VERIFICATION_FAIL === '1' && prompt.includes('Call `submit_verdicts` EXACTLY ONCE')
+  ? (process.stderr.write('fixture skeptic failure\n'), process.exit(1), '')
+  : process.env.CODEX_FIXTURE_VERIFICATION_MALFORMED === '1' && prompt.includes('Call `submit_verdicts` EXACTLY ONCE')
+  ? JSON.stringify({ verdicts: [{ id: 999, refuted: false, reason: 'invalid fixture verdict' }] })
+  : prompt.includes('Call `submit_verdicts` EXACTLY ONCE')
+  ? JSON.stringify({ verdicts: [...prompt.matchAll(/FINDING \[(\d+)\]/g)].map((match, index) => ({ id: Number(match[1]), refuted: process.env.CODEX_FIXTURE_VERIFICATION_DISAGREE === '1' && prompt.includes('ROUND 2') ? true : false, reason: 'The seeded defect is concrete.' })).filter((verdict, index, all) => all.findIndex((candidate) => candidate.id === verdict.id) === index) })
   : prompt.includes('Call `submit_verdict` EXACTLY ONCE')
   ? JSON.stringify({ refuted: false, reason: 'The seeded defect is concrete.' })
   : process.env.CODEX_FIXTURE_MULTIPLE_FENCED_OUTPUT === '1'

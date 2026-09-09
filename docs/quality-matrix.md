@@ -54,3 +54,5 @@ node --test --test-concurrency=1 test/quality-evals.test.mjs
 ```
 
 The fixture proves the evaluator wiring, coverage accounting, expected detection, precision, severity, actionability, and fail-closed coverage gates. It does not claim that a fixture is equivalent to a live model. A production quality report must rerun the same corpus with the configured provider and retain its SHA, package, configuration, prompt, and model evidence outside the repository.
+
+Skeptical verification is deterministic and adaptive: candidates are sent in bounded batches; blocker/high findings and low-confidence medium findings receive a second vote; a third vote is requested only after disagreement. Missing, malformed, or failed batch evidence removes the affected findings and marks the review incomplete, so it cannot approve. `ReviewEvidence` records candidate, request, vote, failure, and unverified counts for the quality matrix.

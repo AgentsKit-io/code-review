@@ -110,13 +110,18 @@ export function consolidateBatchArtifacts(state: BatchCoverageState, artifacts: 
     providerCalls: total.providerCalls + review.evidence.providerCalls,
     failedProviderCalls: total.failedProviderCalls + review.evidence.failedProviderCalls,
     skippedProviderCalls: total.skippedProviderCalls + review.evidence.skippedProviderCalls,
+    verificationCandidates: total.verificationCandidates + review.evidence.verificationCandidates,
+    verificationRequests: total.verificationRequests + review.evidence.verificationRequests,
+    verificationVotes: total.verificationVotes + review.evidence.verificationVotes,
+    verificationFailedRequests: total.verificationFailedRequests + review.evidence.verificationFailedRequests,
+    verificationUnverifiedFindings: total.verificationUnverifiedFindings + review.evidence.verificationUnverifiedFindings,
     elapsedMs: total.elapsedMs + review.evidence.elapsedMs,
     deadlineMs: total.deadlineMs + review.evidence.deadlineMs,
     deadlineExceeded: total.deadlineExceeded || review.evidence.deadlineExceeded,
     circuitState: total.circuitState === 'open' || review.evidence.circuitState === 'open' ? 'open' : total.circuitState,
     ...(allReportTokens ? { tokensUsed: (total.tokensUsed ?? 0) + (review.evidence.tokensUsed ?? 0) } : {}),
     contextPacks,
-  }), { profile: reviews[0]!.evidence.profile, providerCalls: 0, failedProviderCalls: 0, skippedProviderCalls: 0, elapsedMs: 0, deadlineMs: 0, deadlineExceeded: false, circuitState: 'closed' })
+  }), { profile: reviews[0]!.evidence.profile, providerCalls: 0, failedProviderCalls: 0, skippedProviderCalls: 0, verificationCandidates: 0, verificationRequests: 0, verificationVotes: 0, verificationFailedRequests: 0, verificationUnverifiedFindings: 0, elapsedMs: 0, deadlineMs: 0, deadlineExceeded: false, circuitState: 'closed' })
   const severe = findings.some((finding) => finding.severity === 'blocker' || finding.severity === 'high')
   const enabledCategories = reviews[0]?.enabledCategories ?? []
   const completedCategories = enabledCategories.filter((category) => reviews.every((review) => review.completedCategories?.includes(category)))
