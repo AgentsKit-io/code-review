@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.15.0
+
+### Minor Changes
+
+- [#176](https://github.com/AgentsKit-io/code-review/pull/176) [`517779f`](https://github.com/AgentsKit-io/code-review/commit/517779fbadd6baad0dcfdec26c662a353a6ef6c6) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Add a provider-neutral SCM contract for change-request discovery, review publication, readiness, and revision-locked merge.
+
 ## 0.14.0
 
 ### Minor Changes
