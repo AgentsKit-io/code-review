@@ -20,7 +20,8 @@ import {
 } from './lenses.js'
 import { loadTargets, type SourceConfig } from './sources.js'
 import { markdownReporter } from './reporters.js'
-import { ProviderCircuitBreaker } from '../../src/provider-circuit-breaker.js'
+import { ProviderCircuitBreaker, ProviderCircuitOpenError } from '../../src/provider-circuit-breaker.js'
+import { AdaptiveConcurrencyGate, normalizeProviderFailure, providerRetryDelay, waitForProviderRetry } from '../../src/provider-execution.js'
 import { loadApprovedReviewRules } from '../../src/review-learning.js'
 
 /**
@@ -137,11 +138,6 @@ export class ReviewDeadlineError extends Error {
   }
 }
 
-function isTerminalProviderFailure(error: unknown): boolean {
-  const detail = error instanceof Error ? error.message : String(error)
-  return /(?:failed to authenticate|authentication failed|access token has been revoked|oauth[^\n]*(?:revoked|invalid|expired)|(?:invalid|missing) (?:api )?key|\b(?:401|403)\b[^\n]*(?:auth|token|credential))/i.test(detail)
-}
-
 /** A review had targets, but no lens produced a usable response. */
 export class ReviewExecutionError extends Error {
   readonly execution: LensExecutionStats
@@ -185,6 +181,8 @@ export interface ReviewEvidence {
   deadlineMs: number
   deadlineExceeded: boolean
   circuitState: 'closed' | 'open' | 'half-open'
+  initialConcurrency?: number
+  finalConcurrency?: number
   /** Provider-reported token usage. Omitted when the selected provider cannot report it. */
   tokensUsed?: number
 }
@@ -276,45 +274,6 @@ export function builtInLenses(enabled: readonly Category[]): Lens[] {
   return DEFAULT_LENSES.filter((lens) => selected.has(lens.key))
 }
 
-type Limiter = <T>(fn: () => Promise<T>, signal?: AbortSignal) => Promise<T>
-
-/**
- * A single global concurrency gate shared by EVERY model/subprocess call (lenses,
- * skeptic votes, patch checks). Phases use plain `Promise.all` for structure; the real
- * in-flight cap is enforced here, so nested fan-out (files × lenses × votes) can never
- * exceed `max` — the previous nested-mapLimit approach multiplied the budget.
- */
-function createLimiter(max: number): Limiter {
-  let active = 0
-  const queue: Array<{ run: () => void; reject: (error: Error) => void; signal?: AbortSignal }> = []
-  const next = () => {
-    if (active >= max || !queue.length) return
-    active++
-    const item = queue.shift()!
-    if (item.signal?.aborted) {
-      item.reject(new Error('review call aborted before start'))
-      active--
-      next()
-      return
-    }
-    item.run()
-  }
-  return <T>(fn: () => Promise<T>, signal?: AbortSignal) =>
-    new Promise<T>((resolve, reject) => {
-      if (signal?.aborted) { reject(new Error('review call aborted before start')); return }
-      const item = { signal, reject, run: () =>
-        fn()
-          .then(resolve, reject)
-          .finally(() => {
-            active--
-            next()
-          }),
-      }
-      queue.push(item)
-      next()
-    })
-}
-
 export function createCodeReviewAgent(config: CodeReviewConfig) {
   const lenses = config.lenses ?? DEFAULT_LENSES
   const profile = config.profile ?? 'full'
@@ -335,7 +294,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
   const minSeverity = config.thresholds?.minSeverity ?? 'nit'
   const minConfidence = config.thresholds?.minConfidence ?? 0.5
   const blockingSeverity = config.blockingSeverity ?? 'blocker'
-  const limit = createLimiter(concurrency)
+  const gate = new AdaptiveConcurrencyGate(concurrency)
   const circuit = new ProviderCircuitBreaker()
   const deadlineMs = config.budget?.deadlineMs ?? (profile === 'fast' ? 120_000 : 10 * 60 * 1000)
   let runStartedAt = 0
@@ -351,6 +310,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
     skippedProviderCalls = 0
     terminalProviderFailure = undefined
     circuit.reset()
+    gate.reset()
     deadlineExceeded = false
     runStartedAt = Date.now()
     const deadlineController = new AbortController()
@@ -375,6 +335,8 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
       deadlineMs,
       deadlineExceeded,
       circuitState: circuit.state,
+      initialConcurrency: concurrency,
+      finalConcurrency: gate.current,
     }
   }
 
@@ -425,7 +387,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
           }
         : activeAdapter
       const runtime = createRuntime({ adapter: scopedAdapter, tools: [tool], memory: config.memory, onConfirm: config.onConfirm, maxSteps })
-      const result = await limit(async () => {
+      return gate.run(async () => {
         if (deadlineExceeded) throw new ReviewDeadlineError(deadlineMs)
         // Auth failures are terminal for the whole run. Do not spend one call
         // per lens after the provider has already rejected the credential.
@@ -435,42 +397,48 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
           throw error
         }
         if (++providerCalls > maxCalls) throw new ReviewCallBudgetError(maxCalls)
+        const remainingMs = Math.max(1, deadlineMs - (Date.now() - runStartedAt))
+        const runtimeResult = runtime.run(task, { skill, signal })
+        let runtimeTimer: NodeJS.Timeout | undefined
         try {
-          const remainingMs = Math.max(1, deadlineMs - (Date.now() - runStartedAt))
-          const runtimeResult = runtime.run(task, { skill, signal })
-          let runtimeTimer: NodeJS.Timeout | undefined
-          try {
-            const deadlineResult = new Promise<never>((_, reject) => {
-              runtimeTimer = setTimeout(() => {
-                deadlineExceeded = true
-                reject(new ReviewDeadlineError(deadlineMs))
-              }, remainingMs)
-            })
-            const result = await Promise.race([runtimeResult, deadlineResult])
-            circuit.recordSuccess()
-            return result
-          } finally {
-            if (runtimeTimer) clearTimeout(runtimeTimer)
-          }
-        } catch (error) {
-          failedProviderCalls++
-          const terminal = isTerminalProviderFailure(error)
-          if (terminal) terminalProviderFailure = error instanceof Error ? error : new Error(String(error))
-          const detail = error instanceof Error ? error.message : String(error)
-          if (terminal || /timed out|aborted/i.test(detail)) circuit.recordFailure(true)
-          else if (/rate limit|\b(?:429|5\d\d)\b/i.test(detail)) circuit.recordFailure()
-          throw error
+          const deadlineResult = new Promise<never>((_, reject) => {
+            runtimeTimer = setTimeout(() => {
+              deadlineExceeded = true
+              reject(new ReviewDeadlineError(deadlineMs))
+            }, remainingMs)
+          })
+          const result = await Promise.race([runtimeResult, deadlineResult])
+          const call = result.toolCalls.find((candidate) => candidate.name === tool.name)
+          if (!call) throw new InvalidStructuredOutputError(`${skill.name} did not submit a result`)
+          let parsed: z.infer<T>
+          try { parsed = schema.parse(call.args) } catch { throw new InvalidStructuredOutputError(`${skill.name} returned invalid structured output`) }
+          circuit.recordSuccess()
+          gate.recordSuccess()
+          return parsed
+        } finally {
+          if (runtimeTimer) clearTimeout(runtimeTimer)
         }
       }, signal)
-      const call = result.toolCalls.find((c) => c.name === tool.name)
-      if (!call) throw new InvalidStructuredOutputError(`${skill.name} did not submit a result`)
-      try { return schema.parse(call.args) } catch { throw new InvalidStructuredOutputError(`${skill.name} returned invalid structured output`) }
     }
     for (let attempt = 0; ; attempt++) {
       try { return await invoke() }
       catch (error) {
         if (deadlineExceeded) throw new ReviewDeadlineError(deadlineMs)
-        if (!(error instanceof InvalidStructuredOutputError) || attempt >= retries) throw error
+        if (error instanceof ReviewCallBudgetError || error instanceof ProviderCircuitOpenError) throw error
+        const failure = normalizeProviderFailure(error, skill.name)
+        failedProviderCalls++
+        if (failure.code === 'PROVIDER_AUTHENTICATION_FAILED') {
+          terminalProviderFailure = error instanceof Error ? error : new Error(String(error))
+          circuit.recordFailure(true)
+          throw error
+        }
+        if (failure.disposition === 'RETRYABLE' && attempt < retries) {
+          gate.recordInstability()
+          await waitForProviderRetry(providerRetryDelay(failure, attempt), signal)
+          continue
+        }
+        if (failure.disposition === 'RETRYABLE') circuit.recordFailure()
+        throw error
       }
     }
   }
@@ -658,7 +626,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
       findings
         .filter((f) => f.suggestedPatch)
         .map((f) =>
-          limit(async () => {
+          gate.run(async () => {
             try {
               const proc = execFile('git', ['-C', cwd, 'apply', '--check', '-'], () => {})
               proc.stdin?.end(f.suggestedPatch)

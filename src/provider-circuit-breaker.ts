@@ -16,11 +16,11 @@ export class ProviderCircuitBreaker {
   private openedAt = 0
   private probing = false
 
-  constructor(private readonly threshold = 2, private readonly cooldownMs = 30_000) {}
+  constructor(private readonly threshold = 2, private readonly cooldownMs = 30_000, private readonly now = Date.now) {}
 
   get state(): ProviderCircuitState {
     if (!this.openedAt) return 'closed'
-    if (Date.now() - this.openedAt < this.cooldownMs) return 'open'
+    if (this.now() - this.openedAt < this.cooldownMs) return 'open'
     return 'half-open'
   }
 
@@ -45,6 +45,6 @@ export class ProviderCircuitBreaker {
   recordFailure(forceOpen = false): void {
     this.probing = false
     this.failures++
-    if (forceOpen || this.failures >= this.threshold) this.openedAt = Date.now()
+    if (forceOpen || this.failures >= this.threshold) this.openedAt = this.now()
   }
 }

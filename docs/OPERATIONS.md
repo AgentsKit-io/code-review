@@ -312,10 +312,14 @@ Seven lenses fan out over selected files; candidate findings then receive advers
 Start advisory with a small file budget, measure provider usage, and raise depth only where it improves signal. Never present an unmeasured cost estimate as a guaranteed price.
 
 Every completed report includes provider-call evidence: calls started, failed,
-skipped by the circuit/budget, elapsed time, deadline status, and circuit state.
-The circuit opens immediately for authentication, timeout, or cancellation
-failures and after repeated transient provider failures. Incomplete evidence is
-never an approval.
+skipped by the circuit/budget, elapsed time, deadline status, circuit state, and
+initial/final concurrency. Each review unit retries only normalized transient
+timeout, rate-limit, server, or malformed-output failures with bounded
+exponential backoff and jitter. Instability reduces live concurrency; sustained
+success restores it only up to the provider capability limit. Authentication
+and cancellation are never retried. Repeated exhausted transient failures open
+the circuit, and cooldown permits one recovery probe. Completed sibling units
+remain valid when another unit fails. Incomplete evidence is never an approval.
 
 ## SARIF
 
