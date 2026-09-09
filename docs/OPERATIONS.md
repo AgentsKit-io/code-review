@@ -169,6 +169,13 @@ are enabled by default; correctness, security, and tests are required.
 The shared local worker also accepts bounded `timeoutMs` and `maxOutputBytes`
 settings; absolute ceilings are always enforced.
 
+Risk classification is provider-free and records every contributing signal. Documentation and
+generated-only packs are `low`; ordinary source and tests are `normal`; public contracts, IO, and
+repository-control files are `high`; security, authorization, credential, and migration evidence is
+`critical`. High packs receive one specialized correctness analysis and critical packs one combined
+correctness/security analysis. Specialized analysis is included in call and token preflight. If a
+required specialized category fails, the result is incomplete and cannot approve or publish.
+
 Flags override file values. The file cannot contain credentials or executable
 plugins. Provider, model, transport, trust mode, redaction, permissions, and
 other execution inputs are rejected when supplied by the project config in CI.

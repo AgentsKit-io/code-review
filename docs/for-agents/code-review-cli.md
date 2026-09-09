@@ -23,6 +23,7 @@ Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and
 - `src/scm-contract.ts`: provider-neutral change-request, publication, readiness, and merge contracts plus explicit capability checks.
 - `src/github-scm-adapter.ts`: GitHub REST/CLI binding for the common SCM contract; the only migrated path allowed to contain GitHub payloads or merge commands.
 - `agents/code-review/`: review pipeline, lenses, input normalization, reporters.
+- `agents/code-review/risk.ts`: provider-free context-pack risk signals and specialized-depth selection.
 - `action.yml`: composite GitHub Action contract.
 - `.github/workflows/release.yml`: Changesets version-pull-request workflow.
 - `.github/workflows/publish.yml`: version-PR-gated npm Trusted Publishing and GitHub Release workflow.

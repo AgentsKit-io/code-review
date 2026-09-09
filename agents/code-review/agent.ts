@@ -24,6 +24,7 @@ import { markdownReporter } from './reporters.js'
 import { ProviderCircuitBreaker, ProviderCircuitOpenError } from '../../src/provider-circuit-breaker.js'
 import { AdaptiveConcurrencyGate, normalizeProviderFailure, providerRetryDelay, waitForProviderRetry } from '../../src/provider-execution.js'
 import { loadApprovedReviewRules } from '../../src/review-learning.js'
+import { classifyContextPack, type RiskAssessment } from './risk.js'
 
 /**
  * code-review — a deep, low-noise code-review agent. It evaluates the 7 logical review
@@ -131,6 +132,7 @@ export interface ContextPackEvidence {
   estimatedTokens: number
   tokenBudget: number
   reserveForOutput: number
+  risk: RiskAssessment
   expansion: Array<{
     file: string
     mode: 'whole-file' | 'changed-hunks' | 'patch-fallback'
@@ -583,9 +585,14 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
 
   async function measurePack(targets: ReviewTarget[], conventions: string, id: string): Promise<PreparedPack> {
     const task = taskFor(targets, conventions)
+    const risk = classifyContextPack(targets)
+    const specialized = risk.specializedCategories.filter((category) => lenses.some((lens) => lens.key === category))
     const requests = batched
-      ? [{ skill: multidimensionalLens(lenses.map((lens) => lens.key)), tool: submit('submit_batched_findings', BatchedSubmission) }]
-      : lenses.map((lens) => ({ skill: lens.skill, tool: submit('submit_findings', LensSubmission) }))
+      ? [
+          { skill: multidimensionalLens(lenses.map((lens) => lens.key)), tool: submit('submit_batched_findings', BatchedSubmission), task: `MULTIDIMENSIONAL REVIEW\n${task}` },
+          ...(specialized.length ? [{ skill: multidimensionalLens(specialized), tool: submit('submit_batched_findings', BatchedSubmission), task: `RISK-SPECIALIZED REVIEW (${risk.level})\n${task}` }] : []),
+        ]
+      : lenses.map((lens) => ({ skill: lens.skill, tool: submit('submit_findings', LensSubmission), task }))
     let estimatedTokens = 0
     let tokenBudget = contextPolicy.maxTokens - contextPolicy.reserveForOutput
     let fits = true
@@ -596,7 +603,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
           reserveForOutput: contextPolicy.reserveForOutput,
           systemPrompt: request.skill.systemPrompt,
           tools: [request.tool],
-          messages: [buildMessage({ role: 'user', content: batched ? `MULTIDIMENSIONAL REVIEW\n${task}` : task, status: 'complete' })],
+          messages: [buildMessage({ role: 'user', content: request.task, status: 'complete' })],
         })
         estimatedTokens = Math.max(estimatedTokens, compiled.tokens.total)
         tokenBudget = compiled.tokens.budget
@@ -611,6 +618,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
       evidence: {
         id, files: targets.map((target) => target.file), estimatedTokens, tokenBudget,
         reserveForOutput: contextPolicy.reserveForOutput,
+        risk,
         expansion: targets.map((target) => ({
           file: target.file,
           mode: target.contextProjection?.mode ?? 'whole-file',
@@ -643,12 +651,31 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
     if (batched) {
       try {
         const enabled = new Set(lenses.map((lens) => lens.key))
-        const submission = BatchedSubmission.superRefine((value, context) => {
-          value.completedCategories.forEach((category, index) => { if (!enabled.has(category)) context.addIssue({ code: z.ZodIssueCode.custom, message: 'completed category is not enabled', path: ['completedCategories', index] }) })
-          value.findings.forEach((finding, index) => { if (!enabled.has(finding.category)) context.addIssue({ code: z.ZodIssueCode.custom, message: 'finding category is not enabled', path: ['findings', index, 'category'] }) })
+        const analyze = async (categories: Category[], specialized = false) => {
+          const allowed = new Set(categories)
+          const submission = BatchedSubmission.superRefine((value, context) => {
+          value.completedCategories.forEach((category, index) => { if (!allowed.has(category)) context.addIssue({ code: z.ZodIssueCode.custom, message: 'completed category is not enabled', path: ['completedCategories', index] }) })
+          value.findings.forEach((finding, index) => { if (!allowed.has(finding.category)) context.addIssue({ code: z.ZodIssueCode.custom, message: 'finding category is not enabled', path: ['findings', index, 'category'] }) })
           value.findings.forEach((finding, index) => validateFindingContext(finding, index, context))
-        })
-        const sub = await runStructured(multidimensionalLens([...enabled]), `MULTIDIMENSIONAL REVIEW\n${pack.task}`, submit('submit_batched_findings', submission), submission)
+          })
+          const prefix = specialized ? `RISK-SPECIALIZED REVIEW (${pack.evidence.risk.level})` : 'MULTIDIMENSIONAL REVIEW'
+          return runStructured(multidimensionalLens(categories), `${prefix}\n${pack.task}`, submit('submit_batched_findings', submission), submission)
+        }
+        const sub = await analyze([...enabled])
+        const specializedCategories = pack.evidence.risk.specializedCategories.filter((candidate) => enabled.has(candidate))
+        const supplemental = []
+        if (specializedCategories.length) {
+          try { supplemental.push(await analyze(specializedCategories, true)) }
+          catch (error) {
+            if (error instanceof ReviewCallBudgetError || error instanceof ReviewTokenBudgetError) throw error
+            emit('risk:specialized', 'error', `${pack.id}: ${error instanceof Error ? error.message.split('\n')[0] : 'failed'}`)
+            sub.completedCategories = sub.completedCategories.filter((completed) => !specializedCategories.includes(completed))
+          }
+        }
+        for (const result of supplemental) {
+          sub.completedCategories.push(...result.completedCategories)
+          sub.findings.push(...result.findings)
+        }
         const completed = [...new Set(sub.completedCategories)]
         const findings = sub.findings.map((finding) => {
           const ceiling = lenses.find((lens) => lens.key === finding.category)?.severityCeiling
@@ -657,7 +684,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
         })
         return {
           findings,
-          execution: { attempted: 1, succeeded: 1, failed: 0 },
+          execution: { attempted: 1 + Number(specializedCategories.length > 0), succeeded: 1 + supplemental.length, failed: Number(specializedCategories.length > 0) - supplemental.length },
           succeededLenses: completed,
         }
       } catch (e) {
@@ -887,7 +914,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
     const bytes = ranked.reduce((total, target) => total + Buffer.byteLength(target.fullContent, 'utf8'), 0)
     const enabledLenses = lenses.map((lens) => lens.key)
     const required = [...requiredLenses]
-    const primaryCalls = packs.length * (batched ? 1 : enabledLenses.length) * (1 + retries)
+    const primaryCalls = packs.reduce((total, pack) => total + (batched ? 1 + Number(pack.evidence.risk.specializedCategories.some((category) => enabledLenses.includes(category))) : enabledLenses.length), 0) * (1 + retries)
     // Verification is demand-driven: reserve only the optional consolidation call here.
     // The runtime counter remains the hard ceiling and fails closed if candidates exhaust it.
     const consolidationReserve = files && enabledLenses.length ? 1 : 0
@@ -925,7 +952,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
       plan.suggestions.push(`reduce context.adjacentLines or raise context.maxTokens for ${pack.id}`)
     }
     if (estimatedProviderCalls > maxCalls) {
-      const perFile = Math.max(1, (batched ? 1 : enabledLenses.length) * (1 + retries))
+      const perFile = Math.max(1, (batched ? 2 : enabledLenses.length) * (1 + retries))
       plan.overBudget.push(`${estimatedProviderCalls} estimated provider calls exceed maxCalls ${maxCalls}`)
       plan.suggestions.push(`reduce scope to at most ${Math.max(1, Math.floor((maxCalls - 1) / perFile))} files`)
     }

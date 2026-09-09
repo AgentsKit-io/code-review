@@ -35,3 +35,15 @@ test('consolidation preserves provider token evidence only when every batch repo
   assert.equal(consolidateBatchArtifacts(state, [artifact(0, 10), artifact(1, 20)]).evidence.tokensUsed, 30)
   assert.equal(consolidateBatchArtifacts(state, [artifact(0, 10), artifact(1)]).evidence.tokensUsed, undefined)
 })
+
+test('consolidation preserves context-pack risk evidence from every batch', () => {
+  const state = createBatchCoverage({ repository: 'owner/repo', pullNumber: 1, headSha: 'a'.repeat(40), policyFingerprint: 'b'.repeat(64), batches: [{ index: 0, files: ['a.ts'] }, { index: 1, files: ['b.ts'] }] })
+  const risk = (level) => ({ id: `pack-${level}`, files: [`${level}.ts`], estimatedTokens: 10, tokenBudget: 100, reserveForOutput: 10, risk: { level, signals: [], specializedCategories: [] }, expansion: [] })
+  const evidence = { profile: 'full', providerCalls: 1, failedProviderCalls: 0, skippedProviderCalls: 0, elapsedMs: 1, deadlineMs: 10, deadlineExceeded: false, circuitState: 'closed' }
+  const artifacts = [0, 1].map((index) => ({
+    version: 1, repository: state.repository, pullNumber: 1, headSha: state.headSha, policyFingerprint: state.policyFingerprint,
+    batch: { index, files: [`${index ? 'b' : 'a'}.ts`] },
+    review: { verdict: 'APPROVE', blocking: false, incomplete: false, findings: [], dropped: [], execution: { attempted: 1, succeeded: 1, failed: 0 }, evidence: { ...evidence, contextPacks: [risk(index ? 'normal' : 'low')] }, summary: 'ok' },
+  }))
+  assert.deepEqual(consolidateBatchArtifacts(state, artifacts).evidence.contextPacks?.map((pack) => pack.risk.level), ['low', 'normal'])
+})

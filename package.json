@@ -61,6 +61,7 @@
     "test/harness.test.mjs",
     "test/batch-coverage.test.mjs",
     "test/quality-matrix.test.mjs",
+    "test/risk-depth.test.mjs",
     "test/quality-matrix-cli.test.mjs",
     "test/fixtures/bin/codex",
     "test/fixtures/review/good.ts",
