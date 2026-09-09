@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { MemoryError } from '@agentskit/core'
+import { MemoryError, type RetrievedDocument, type Retriever } from '@agentskit/core'
 import { z } from 'zod'
 import { writeAtomicJson } from './campaign-store.js'
 import { stableFingerprint } from './stable-fingerprint.js'
@@ -12,6 +12,23 @@ export const ReviewSafeTextSchema = z.string().trim().min(1).max(1_000).refine(
 )
 const safeText = ReviewSafeTextSchema
 const date = z.string().datetime()
+const reviewCategory = z.enum(['correctness', 'security', 'performance', 'maintainability', 'design', 'tests', 'conventions'])
+const relativePath = z.string().trim().min(1).max(500).refine(
+  (value) => !value.startsWith('/') && !value.startsWith('\\') && !/^[A-Za-z]:[\\/]/.test(value) && !value.split('/').includes('..') && !value.split('\\').includes('..'),
+  'must be repository-relative and cannot contain ..',
+)
+
+export const ReviewKnowledgeScopeSchema = z.object({
+  repository: z.string().trim().min(1).max(200).optional(),
+  paths: z.array(relativePath).max(100).optional(),
+  languages: z.array(z.string().trim().min(1).max(40)).max(20).optional(),
+  categories: z.array(reviewCategory).max(7).optional(),
+  maxRules: z.number().int().min(1).max(20).default(20),
+  maxTokens: z.number().int().min(1).max(8_000).default(2_000),
+}).strict().readonly()
+
+export type ReviewKnowledgeScope = z.infer<typeof ReviewKnowledgeScopeSchema>
+export type ReviewKnowledgeScopeInput = z.input<typeof ReviewKnowledgeScopeSchema>
 
 export const ReviewStoreLayoutSchema = z.object({
   version: z.literal(1),
@@ -53,7 +70,9 @@ export const ReviewKnowledgeSchema = z.object({
   kind: z.literal('approved-rule'),
   rule: safeText.refine((value) => value.length <= 500, 'must contain at most 500 characters'),
   repository: z.string().min(1).max(200).optional(),
-  category: z.string().min(1).max(100).optional(),
+  path: relativePath.optional(),
+  language: z.string().trim().min(1).max(40).optional(),
+  category: reviewCategory.optional(),
   createdAt: date,
 }).strict().readonly()
 
@@ -74,8 +93,8 @@ export type ReviewFeedbackStore = Readonly<{
 export type ReviewKnowledgeStore = Readonly<{
   path: string
   load: () => Promise<ReviewKnowledge[]>
-  approvedRules: () => Promise<string[]>
-  saveApprovedRule: (input: { rule: string; repository?: string; category?: string; createdAt?: string }) => Promise<ReviewKnowledge>
+  approvedRules: (scope?: ReviewKnowledgeScopeInput) => Promise<string[]>
+  saveApprovedRule: (input: { rule: string; repository?: string; path?: string; language?: string; category?: z.infer<typeof reviewCategory>; createdAt?: string }) => Promise<ReviewKnowledge>
 }>
 
 const locks = new Map<string, Promise<unknown>>()
@@ -143,8 +162,8 @@ export function createReviewKnowledgeStore(path: string, retentionDays = 365): R
   const cutoff = Date.now() - retentionDays * 24 * 60 * 60 * 1_000
   const empty = { version: 1 as const, entries: [] as ReviewKnowledge[] }
   const load = async (): Promise<ReviewKnowledge[]> => [...(await withPathLock(path, () => readFile(path, ReviewKnowledgeFileSchema, empty))).entries]
-  const approvedRules = async (): Promise<string[]> => [...new Set((await load()).map((entry) => entry.rule))].slice(-20)
-  const saveApprovedRule = async (input: { rule: string; repository?: string; category?: string; createdAt?: string }): Promise<ReviewKnowledge> => withPathLock(path, () => {
+  const approvedRules = async (scope?: ReviewKnowledgeScopeInput): Promise<string[]> => [...new Set(selectKnowledge(await load(), scope).map((entry) => entry.rule))]
+  const saveApprovedRule = async (input: { rule: string; repository?: string; path?: string; language?: string; category?: z.infer<typeof reviewCategory>; createdAt?: string }): Promise<ReviewKnowledge> => withPathLock(path, () => {
     const current = readFile(path, ReviewKnowledgeFileSchema, empty)
     const entry = ReviewKnowledgeSchema.parse({ version: 1, id: stableFingerprint(input), kind: 'approved-rule', ...input, createdAt: input.createdAt ?? new Date().toISOString() })
     const entries = [...current.entries.filter((item) => item.id !== entry.id), entry].filter((item) => Date.parse(item.createdAt) >= cutoff).slice(-200)
@@ -152,6 +171,51 @@ export function createReviewKnowledgeStore(path: string, retentionDays = 365): R
     return entry
   })
   return { path, load, approvedRules, saveApprovedRule }
+}
+
+function pathMatches(rulePath: string | undefined, requestedPaths: readonly string[] | undefined): boolean {
+  if (!rulePath || !requestedPaths?.length) return true
+  return requestedPaths.some((requested) => requested === rulePath || requested.startsWith(`${rulePath}/`) || rulePath.startsWith(`${requested}/`))
+}
+
+function matchesKnowledge(entry: ReviewKnowledge, scope: ReviewKnowledgeScope): boolean {
+  const repositoryMatches = scope.repository ? !entry.repository || entry.repository === scope.repository : !entry.repository
+  const languageMatches = scope.languages?.length ? !entry.language || scope.languages.some((language) => language.toLowerCase() === entry.language?.toLowerCase()) : true
+  const categoryMatches = scope.categories?.length ? !entry.category || scope.categories.includes(entry.category) : true
+  return repositoryMatches && pathMatches(entry.path, scope.paths) && languageMatches && categoryMatches
+}
+
+function selectKnowledge(entries: readonly ReviewKnowledge[], input?: ReviewKnowledgeScopeInput): ReviewKnowledge[] {
+  if (!input) return [...entries].sort((left, right) => left.createdAt.localeCompare(right.createdAt)).slice(-20)
+  const scope = ReviewKnowledgeScopeSchema.parse(input)
+  const characterBudget = scope.maxTokens * 4
+  let characters = 0
+  return [...entries]
+    .filter((entry) => matchesKnowledge(entry, scope))
+    .sort((left, right) => {
+      const specificity = (entry: ReviewKnowledge) => Number(Boolean(entry.repository)) + Number(Boolean(entry.path)) + Number(Boolean(entry.language)) + Number(Boolean(entry.category))
+      return specificity(right) - specificity(left) || right.createdAt.localeCompare(left.createdAt) || left.id.localeCompare(right.id)
+    })
+    .filter((entry, index, all) => all.findIndex((candidate) => candidate.rule === entry.rule) === index)
+    .filter((entry) => {
+      if (characters + entry.rule.length > characterBudget) return false
+      characters += entry.rule.length
+      return true
+    })
+    .slice(0, scope.maxRules)
+}
+
+export function createApprovedReviewRetriever(store: ReviewKnowledgeStore, input: ReviewKnowledgeScopeInput = {}): Retriever {
+  const scope = ReviewKnowledgeScopeSchema.parse(input)
+  return {
+    retrieve: async (): Promise<RetrievedDocument[]> => selectKnowledge(await store.load(), scope).map((entry, index) => ({
+      id: entry.id,
+      content: entry.rule,
+      source: 'approved-review-knowledge',
+      score: 1 - index / Math.max(scope.maxRules, 1),
+      metadata: { repository: entry.repository, path: entry.path, language: entry.language, category: entry.category },
+    })),
+  }
 }
 
 export function createReviewStores(root: string): {

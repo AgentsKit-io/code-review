@@ -460,6 +460,12 @@ A normal context pack contains bounded changed hunks plus adjacent lines and, wh
 The plan and result record pack membership, included ranges, expansion, risk signals and selected depth, estimated tokens, and output reserve. AgentsKit token budgeting includes the system prompt and tool schema and rejects oversized requests before provider execution. Hierarchical budgets reserve campaign capacity for the current PR, output, and critical verification; every provider request reserves its estimated input before entering the concurrency gate. `ReviewEvidence.usage` preserves input, cached-input, output, reasoning, memory, retry, call, and wall-clock dimensions when the provider reports them; unavailable dimensions remain absent. Results explicitly report enabled, completed, and missing required dimensions. This replaces repeated full-file prompts and never duplicates unified patches beside numbered source. Control usage with the typed `review.context` policy, `review.budget` hierarchy, `--profile fast`, `--max-files`, `--max-calls`, `--votes`, `--deadline-ms`, `--concurrency`, paths, and workflow triggers. For sensitive code, use a local model or an approved private gateway; provider data policies still apply to hosted APIs.
 
 Self-hosted memory is split by lifecycle: campaign state and review cache remain operational stores, feedback is retained separately, and permanent knowledge contains only bounded, explicitly approved rules. Review runtimes do not write provider transcripts, prompts, complete source, or secrets into knowledge storage; malformed stores fail closed and concurrent local writes are serialized before atomic replacement.
+
+Approved rules enter review context through the AgentsKit `Retriever` contract.
+Each context pack filters them by repository, path, language, and category, then
+applies deterministic specificity ordering, deduplication, and a strict default
+rule/token bound. Repository-specific rules are excluded when the caller cannot
+provide repository scope.
 Feedback reconciliation is deterministic and resumable: it represents every supported outcome, deduplicates feedback, emits provenance-backed inactive candidates only after repeated accepted/fixed evidence, and never promotes a rule automatically.
 
 ## Operations and machine-readable docs
@@ -726,6 +732,13 @@ feedback store, then writes a resumable reconciliation checkpoint. Repeated
 compatible accepted/fixed outcomes produce inactive candidate rules with
 pull-request and commit provenance; candidates require explicit approval before
 they can enter permanent knowledge.
+
+Approved knowledge is retrieved through the AgentsKit `Retriever` contract, not
+by injecting the whole store. Each context pack supplies its repository, paths,
+languages, and enabled review categories; only matching rules are returned,
+with global rules allowed, a maximum of 20 rules, and a default approximate
+2,000-token rule budget. If repository scope is absent, repository-specific
+rules are excluded. Rules are deduplicated and ranked by scope specificity.
 
 The `comments` policy is applied by the GitHub reporter. It controls inline
 emission, summary emission, renderer detail level, section inclusion, and
@@ -1028,7 +1041,7 @@ Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and
 - `src/campaign-reducer.ts` and `src/campaign-store.ts`: deterministic lifecycle, atomic checkpoints, leases, replay, and resume.
 - `src/campaign-preflight.ts`: provider-free campaign discovery, eligibility, source planning, budget checks, and worktree gating.
 - `src/budget.ts`: provider-free hierarchical budget compilation, reservations, and dimension-aware usage accounting.
-- `src/review-stores.ts`: separate self-hosted feedback and approved-knowledge stores with bounded schemas, atomic writes, retention, and concurrent-write serialization.
+- `src/review-stores.ts`: separate self-hosted feedback and approved-knowledge stores with bounded schemas, atomic writes, retention, concurrent-write serialization, and the scoped AgentsKit `Retriever`.
 - `src/review-feedback.ts`: deterministic feedback reconciliation, resumable checkpoints, metrics, and inactive candidate-rule evidence.
 - `src/campaign-runner.ts` and `scripts/review-campaign.mjs`: bounded multi-PR execution, leased atomic checkpoints, resume, per-PR isolation, and deterministic terminal reporting.
 - `src/<provider>-adapter.ts`: logged-in local CLI adapters.

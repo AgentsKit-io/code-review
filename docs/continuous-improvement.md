@@ -28,6 +28,11 @@ Enabled learning also requires a live A/B canary. The memory-on arm must apply a
 
 Feedback reconciliation is deterministic and resumable. It represents accepted, fixed, rejected, unresolved, obsolete, and pending outcomes, deduplicates by stable feedback identity, and emits provenance-backed candidate rules only after repeated compatible accepted/fixed evidence. Candidates are always inactive and require explicit approval before entering permanent knowledge; pull-request content alone cannot promote a rule.
 
+Permanent rules are injected through the AgentsKit `Retriever` contract with a
+bounded scope for repository, path, language, and review category. Context packs
+receive only matching, deduplicated rules within the configured rule/token
+limits; an absent repository scope fails closed for repository-specific rules.
+
 Completed review units are also cached locally by an immutable fingerprint over the source, diff, base revision, policy, prompt, model, and relevant knowledge identities. Only schema-valid, passed records are reusable; corruption, stale identity, and unvalidated records fail closed. Cycle summaries and quality inputs report cache hits, misses, and saved tokens so reuse is measurable rather than assumed.
 
 Every live cycle also compiles a hierarchical budget before execution. Campaign and pull-request scopes retain capacity for output and critical verification; context-pack, analysis, and verification calls reserve their estimated input before concurrent execution. Provider usage is copied into the evidence and quality matrix by dimension when available, while missing dimensions stay explicitly unavailable.

@@ -17,7 +17,7 @@ Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and
 - `src/campaign-reducer.ts` and `src/campaign-store.ts`: deterministic lifecycle, atomic checkpoints, leases, replay, and resume.
 - `src/campaign-preflight.ts`: provider-free campaign discovery, eligibility, source planning, budget checks, and worktree gating.
 - `src/budget.ts`: provider-free hierarchical budget compilation, reservations, and dimension-aware usage accounting.
-- `src/review-stores.ts`: separate self-hosted feedback and approved-knowledge stores with bounded schemas, atomic writes, retention, and concurrent-write serialization.
+- `src/review-stores.ts`: separate self-hosted feedback and approved-knowledge stores with bounded schemas, atomic writes, retention, concurrent-write serialization, and the scoped AgentsKit `Retriever`.
 - `src/review-feedback.ts`: deterministic feedback reconciliation, resumable checkpoints, metrics, and inactive candidate-rule evidence.
 - `src/campaign-runner.ts` and `scripts/review-campaign.mjs`: bounded multi-PR execution, leased atomic checkpoints, resume, per-PR isolation, and deterministic terminal reporting.
 - `src/<provider>-adapter.ts`: logged-in local CLI adapters.
