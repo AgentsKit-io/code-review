@@ -57,4 +57,17 @@ export type {
 } from './domain-contracts.js'
 export { CampaignEngineStateSchema, createCampaignEngineState, replayCampaign, transitionCampaign } from './campaign-reducer.js'
 export type { CampaignEngineState } from './campaign-reducer.js'
+export {
+  CampaignCheckpointSchema,
+  acquireCampaignLease,
+  appendCampaignEvent,
+  createCampaignCheckpoint,
+  loadCampaignCheckpoint,
+  pendingReviewUnitIds,
+  recordExternalEffect,
+  releaseCampaignLease,
+  saveCampaignCheckpoint,
+  shouldApplyExternalEffect,
+} from './campaign-store.js'
+export type { CampaignCheckpoint, CampaignLease } from './campaign-store.js'
 export type { ConfigInput, ReviewProjectConfig } from './public-config.js'
