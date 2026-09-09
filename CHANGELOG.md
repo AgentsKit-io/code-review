@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.24.0
+
+### Minor Changes
+
+- [#200](https://github.com/AgentsKit-io/code-review/pull/200) [`99b27b9`](https://github.com/AgentsKit-io/code-review/commit/99b27b96d2a0d537475152e05513d32e9ae28870) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Reconcile review feedback deterministically into resumable, provenance-backed inactive candidate rules without automatically promoting knowledge.
+
 ## 0.23.0
 
 ### Minor Changes
