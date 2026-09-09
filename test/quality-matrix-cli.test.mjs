@@ -66,3 +66,11 @@ test('quality matrix CLI returns structured blocked evidence for malformed runne
     rmSync(directory, { recursive: true, force: true })
   }
 })
+
+test('quality matrix CLI fails closed with structured evidence when input is missing', () => {
+  const result = spawnSync(process.execPath, ['scripts/evaluate-quality.mjs'], { cwd: root, encoding: 'utf8' })
+  assert.equal(result.status, 2)
+  const report = JSON.parse(result.stdout)
+  assert.equal(report.decision, 'BLOCKED')
+  assert.match(report.inputError, /quality-input\.json/)
+})

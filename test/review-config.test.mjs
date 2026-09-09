@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
@@ -174,7 +174,7 @@ test('public config loader imports JavaScript and TypeScript config modules', as
   } finally { rmSync(cwd, { recursive: true, force: true }) }
 })
 
-test('CLI persists a final memory record when project memory is enabled', () => {
+test('CLI keeps review knowledge separate from provider conversations', () => {
   const cwd = tempRepo(undefined)
   const configPath = join(cwd, 'code-review.config.mjs')
   writeFileSync(configPath, `import { defineConfig } from ${JSON.stringify(join(root, 'dist/src/index.js'))}\nexport default defineConfig({ target: { repository: 'AgentsKit-io/agentskit-os' }, review: { provider: 'codex-cli' }, memory: { enabled: true, path: '.agentskit/review-memory/messages.json' }, batches: { enabled: false } })\n`)
@@ -186,8 +186,6 @@ test('CLI persists a final memory record when project memory is enabled', () => 
     })
     assert.equal(run.status, 0, run.stderr)
     const memoryPath = join(cwd, '.agentskit/review-memory/messages.json')
-    const record = JSON.parse(readFileSync(memoryPath, 'utf8'))
-    assert.equal(record.version, 1)
-    assert.ok(record.messages.length >= 2)
+    assert.equal(existsSync(memoryPath), false)
   } finally { rmSync(cwd, { recursive: true, force: true }) }
 })

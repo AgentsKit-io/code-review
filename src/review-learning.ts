@@ -1,4 +1,5 @@
 import { buildMessage, type ChatMemory, type Message } from '@agentskit/core'
+import type { ReviewKnowledgeStore } from './review-stores.js'
 
 const APPROVED_RULE_PREFIX = '[agentskit-code-review:approved-rule:v1] '
 const MAX_RULES = 20
@@ -10,7 +11,8 @@ export function createApprovedReviewRule(rule: string): Message {
   return buildMessage({ role: 'user', content: `${APPROVED_RULE_PREFIX}${normalized}`, status: 'complete' })
 }
 
-export async function loadApprovedReviewRules(memory?: ChatMemory): Promise<string[]> {
+export async function loadApprovedReviewRules(memory?: ChatMemory, knowledge?: ReviewKnowledgeStore): Promise<string[]> {
+  if (knowledge) return knowledge.approvedRules()
   if (!memory) return []
   const messages = await memory.load()
   return messages

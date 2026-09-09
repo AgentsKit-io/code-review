@@ -8,13 +8,15 @@ const value = (name) => {
   return index === -1 ? undefined : process.argv[index + 1]
 }
 const inputPath = value('input')
-if (!inputPath) throw new Error('--input <quality-input.json> is required')
 let report
-try {
-  const input = JSON.parse(readFileSync(resolve(inputPath), 'utf8'))
-  report = evaluateQuality(parseQualityInput(input))
-} catch (error) {
-  report = blockedQualityReport(error instanceof Error ? error.message : String(error))
+if (!inputPath) report = blockedQualityReport('--input <quality-input.json> is required; use a real runner artifact')
+else {
+  try {
+    const input = JSON.parse(readFileSync(resolve(inputPath), 'utf8'))
+    report = evaluateQuality(parseQualityInput(input))
+  } catch (error) {
+    report = blockedQualityReport(error instanceof Error ? error.message : String(error))
+  }
 }
 const baselinePath = value('baseline')
 const output = baselinePath

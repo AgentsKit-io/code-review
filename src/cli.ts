@@ -13,7 +13,7 @@
  *
  * Exit code: 1 when a finding at/above --block survives (unless --no-fail) — wire to CI.
  */
-import { buildMessage, type AdapterFactory } from '@agentskit/core'
+import type { AdapterFactory } from '@agentskit/core'
 import { createProgressObserver } from '@agentskit/ink'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { extname, join } from 'node:path'
@@ -32,7 +32,7 @@ import { createGithubScmAdapter } from './github-scm-adapter.js'
 import { consolidateToArtifact, createBatchCoverage, partitionReviewableFiles, type BatchCoverageState, type BatchReviewArtifact, type ConsolidatedReviewArtifact } from './batch-coverage.js'
 import { assertBatchManifestComplete, batchPlanOverBudget, batchSourceRequested } from './batch-mode.js'
 import { generateConfigSchema, loadProjectConfig, toReviewConfig } from './public-config.js'
-import { createFileMemory } from './file-memory.js'
+import { createReviewKnowledgeStore } from './review-stores.js'
 import { reviewPolicyFingerprint } from './review-policy.js'
 
 function loadReviewConfigFromProject(config: Parameters<typeof toReviewConfig>[0], options: Parameters<typeof resolveReviewConfig>[1]): ResolvedReviewConfig {
@@ -304,8 +304,8 @@ async function main() {
     )
   }
 
-  const configuredMemory = projectConfig?.config.memory.enabled && projectConfig.config.memory.provider === 'self-hosted'
-    ? createFileMemory(memoryFilePath(process.cwd(), projectConfig.config.memory.path), projectConfig.config.memory.retentionDays)
+  const configuredKnowledge = projectConfig?.config.memory.enabled && projectConfig.config.memory.provider === 'self-hosted'
+    ? createReviewKnowledgeStore(memoryFilePath(process.cwd(), projectConfig.config.memory.path), projectConfig.config.memory.retentionDays)
     : undefined
   const config: CodeReviewConfig = {
     source,
@@ -323,7 +323,7 @@ async function main() {
     batchLenses: reviewConfig.batchLenses,
     conventions: reviewConfig.conventions ? { path: reviewConfig.conventions } : autoConventions(),
     thresholds: reviewConfig.thresholds,
-    memory: configuredMemory,
+    knowledge: configuredKnowledge,
     context: reviewConfig.context,
   }
 
@@ -366,12 +366,6 @@ async function main() {
   agent.setAdapter(buildAdapter(reviewConfig, (tokens) => { providerTokens += tokens; hasProviderTokens = true }))
   const review = await agent.run()
   if (hasProviderTokens) review.evidence.tokensUsed = providerTokens
-  if (configuredMemory) {
-    await configuredMemory.save([
-      buildMessage({ role: 'user', content: `Review run for ${source.kind} (${review.evidence.profile})`, status: 'complete' }),
-      buildMessage({ role: 'assistant', content: renderMarkdown(review), status: 'complete' }),
-    ])
-  }
   if (resultFile) {
     if (requestedBatch !== undefined) {
       if (source.kind !== 'github-pr' || !githubState) throw new Error('--batch-index result needs a GitHub PR identity')

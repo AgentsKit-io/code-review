@@ -6,8 +6,7 @@ import { dirname, extname, isAbsolute, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { compareQuality, evaluateQuality } from '../dist/src/quality-matrix.js'
 import { validateCanary } from '../dist/src/harness.js'
-import { createFileMemory } from '../dist/src/file-memory.js'
-import { createApprovedReviewRule } from '../dist/src/review-learning.js'
+import { createReviewFeedbackStore, createReviewKnowledgeStore } from '../dist/src/review-stores.js'
 import { loadProjectConfig } from '../dist/src/public-config.js'
 import { createGithubScmAdapter } from '../dist/src/github-scm-adapter.js'
 import { createReviewCache } from '../dist/src/review-cache.js'
@@ -417,7 +416,7 @@ async function runLearningEvaluation(corpus, projectConfig, options) {
   const withoutMemoryConfig = join(directory, 'without-memory.json')
   atomicJson(withMemoryConfig, { ...projectConfig, memory: { ...projectConfig.memory, enabled: true, provider: 'self-hosted', path: memoryPath, autoPromoteRules: false } })
   atomicJson(withoutMemoryConfig, { ...projectConfig, memory: { ...projectConfig.memory, enabled: false, autoPromoteRules: false } })
-  await createFileMemory(join(directory, memoryPath), projectConfig.memory.retentionDays).save([createApprovedReviewRule(corpus.rule)])
+  await createReviewKnowledgeStore(join(directory, memoryPath), projectConfig.memory.retentionDays).saveApprovedRule({ rule: corpus.rule })
   const fixture = { version: 1, cases: [corpus.case] }
   const common = { cli: options.cli, provider: options.provider, mode: options.mode, providerArgs: options.providerArgs, maxCalls: options.maxCalls, concurrency: options.concurrency, deadlineMs: options.deadlineMs, stateRoot: directory, childEnv: options.childEnv, remainingCycleMs: options.remainingCycleMs }
   const withMemory = await runQualityCorpus(fixture, { ...common, configFile: withMemoryConfig, runDir: join(directory, 'with-memory') })
@@ -451,36 +450,36 @@ async function validateMemory(config, runDir, stateRoot, consolidated, contract,
   if (!config.memory.enabled || config.memory.provider !== 'self-hosted') return disabled
   const configured = join(stateRoot, config.memory.path)
   const memoryFile = extname(configured).toLowerCase() === '.json' ? configured : join(configured, 'messages.json')
-  const store = createFileMemory(memoryFile, config.memory.retentionDays)
-  let messages = []
+  const store = createReviewKnowledgeStore(memoryFile, config.memory.retentionDays)
+  let knowledge = []
   let loadPass = false
-  try { messages = await store.load(); loadPass = true } catch { /* reported below */ }
+  try { knowledge = await store.load(); loadPass = true } catch { /* reported below */ }
   const malformed = join(runDir, '.agentskit', 'malformed-memory.json')
   atomicJson(malformed, { version: 999, messages: [] })
   let malformedRejected = false
-  try { await createFileMemory(malformed).load() } catch { malformedRejected = true }
+  try { await createReviewKnowledgeStore(malformed).load() } catch { malformedRejected = true }
   unlinkSync(malformed)
   const feedbackFile = join(dirname(memoryFile), 'feedback.json')
-  let feedback = { version: 1, runs: [] }
-  if (existsSync(feedbackFile)) feedback = readJson(feedbackFile)
-  if (feedback.version !== 1 || !Array.isArray(feedback.runs)) throw new Error('feedback memory has an unsupported format')
-  if (config.feedback.enabled && config.memory.learnFromFeedback && !feedback.runs.some((run) => run.runId === contract.runId)) {
-    feedback.runs.push({ runId: contract.runId, headSha: contract.headSha, policyFingerprint: contract.policyFingerprint, findings: consolidated.review.findings.map((finding) => ({ file: finding.file, line: finding.line, title: finding.title, status: 'pending' })) })
-    atomicJson(feedbackFile, feedback)
+  const feedbackStore = createReviewFeedbackStore(feedbackFile, config.memory.retentionDays)
+  let feedback = []
+  try { feedback = await feedbackStore.load() } catch (error) { throw new Error(`feedback store is malformed: ${error instanceof Error ? error.message : String(error)}`) }
+  if (config.feedback.enabled && config.memory.learnFromFeedback && !feedback.some((entry) => entry.runId === contract.runId)) {
+    for (const finding of consolidated.review.findings) await feedbackStore.append({ runId: contract.runId, repository: contract.repository, pullNumber: contract.pullNumber, headSha: contract.headSha, finding: { file: finding.file, line: finding.line, title: finding.title, status: 'pending' } })
+    feedback = await feedbackStore.load()
   }
   const historyFile = join(dirname(memoryFile), 'validation-history.json')
   let history = { version: 1, runs: [] }
   if (existsSync(historyFile)) history = readJson(historyFile)
   if (history.version !== 1 || !Array.isArray(history.runs)) throw new Error('memory validation history has an unsupported format')
   const previous = history.runs.at(-1)
-  history.runs.push({ runId: contract.runId, messageCount: messages.length })
+  history.runs.push({ runId: contract.runId, messageCount: knowledge.length })
   atomicJson(historyFile, { ...history, runs: history.runs.slice(-50) })
   const evidence = {
     enabled: true,
-    persistencePass: existsSync(memoryFile) && messages.length >= 2 && (!previous || messages.length >= previous.messageCount),
+    persistencePass: existsSync(memoryFile) && knowledge.length >= 1 && (!previous || knowledge.length >= previous.messageCount),
     loadPass,
     malformedRejected,
-    feedbackRecorded: !config.feedback.enabled || feedback.runs.some((run) => run.runId === contract.runId),
+    feedbackRecorded: !config.feedback.enabled || feedback.some((entry) => entry.runId === contract.runId),
     rulesApproved: config.feedback.requireApprovalForRules && config.memory.autoPromoteRules === false && learning.approvedRuleApplied,
     learningEvaluationPass: learning.pass,
     learningDetectionLift: learning.detectionLift,
@@ -488,7 +487,7 @@ async function validateMemory(config, runDir, stateRoot, consolidated, contract,
     learningTokenPass: learning.tokenPass,
     evidenceFile: join(runDir, 'memory-evidence.json'),
   }
-  atomicJson(evidence.evidenceFile, { ...evidence, memoryFile, messageCount: messages.length, feedbackFile, feedbackRuns: feedback.runs.length, previousRun: previous?.runId ?? null, historyFile, learningEvaluation: learning.file })
+  atomicJson(evidence.evidenceFile, { ...evidence, memoryFile, knowledgeCount: knowledge.length, feedbackFile, feedbackEntries: feedback.length, previousRun: previous?.runId ?? null, historyFile, learningEvaluation: learning.file })
   return evidence
 }
 
