@@ -43,3 +43,14 @@ Memory and feedback are measured only when enabled. If memory is enabled, persis
 Use the same labelled corpus and comparable PR shape when creating a baseline. Token efficiency is measured per changed line so clean reviews remain measurable. `compareQuality()` reports score regressions and improvements by area; it does not override an absolute gate. A regression to 2 or a newly missing area blocks publication even if the aggregate result looks better.
 
 The deterministic `npm run benchmark:cycle` remains a process-safety benchmark. It is complementary to this matrix and cannot provide the semantic ground truth needed for detection or precision.
+
+## Versioned semantic evals
+
+`quality/evals/default.json` is the small labelled corpus used by the credential-free eval test. It contains both known-positive defects and clean cases, and is intentionally separate from local real-provider artifacts. Run the packaged checks with:
+
+```sh
+npm run build
+node --test --test-concurrency=1 test/quality-evals.test.mjs
+```
+
+The fixture proves the evaluator wiring, coverage accounting, expected detection, precision, severity, actionability, and fail-closed coverage gates. It does not claim that a fixture is equivalent to a live model. A production quality report must rerun the same corpus with the configured provider and retain its SHA, package, configuration, prompt, and model evidence outside the repository.

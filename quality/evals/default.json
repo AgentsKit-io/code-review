@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "name": "core-review-semantic-evals",
+  "description": "Small labelled corpus for credential-free regression tests. Live provider runs must use the same cases and record their own evidence.",
+  "cases": [
+    {
+      "id": "auth-bypass",
+      "kind": "positive",
+      "language": "ts",
+      "source": "type Request = { headers: Record<string, string | undefined>; user?: { role: string } }\n\nexport function canDeleteAccount(request: Request, accountId: string): boolean {\n  const token = request.headers.authorization\n  if (!token) return false\n  return Boolean(accountId)\n}\n",
+      "expected": { "line": 6, "lineTolerance": 2, "severity": "blocker", "titleIncludes": ["author", "permission", "access", "role"] }
+    },
+    {
+      "id": "ignored-delete-result",
+      "kind": "positive",
+      "language": "ts",
+      "source": "type AccountStore = { remove(accountId: string): Promise<boolean> }\n\nexport async function deleteAccount(store: AccountStore, accountId: string): Promise<boolean> {\n  await store.remove(accountId)\n  return true\n}\n",
+      "expected": { "line": 5, "lineTolerance": 2, "severity": "high", "titleIncludes": ["result", "failure", "success", "return"] }
+    },
+    {
+      "id": "safe-value-helper",
+      "kind": "clean",
+      "language": "ts",
+      "source": "export function add(left: number, right: number): number {\n  return left + right\n}\n"
+    },
+    {
+      "id": "safe-documentation",
+      "kind": "clean",
+      "language": "md",
+      "source": "# Review guide\n\nRun the checks before opening a pull request.\n"
+    }
+  ]
+}
