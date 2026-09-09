@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url'
 import { compareQuality, evaluateQuality } from '../dist/src/quality-matrix.js'
 import { validateCanary } from '../dist/src/harness.js'
 import { createReviewFeedbackStore, createReviewKnowledgeStore } from '../dist/src/review-stores.js'
+import { createReviewReconciliationStore, reconcileReviewFeedback } from '../dist/src/review-feedback.js'
 import { loadProjectConfig } from '../dist/src/public-config.js'
 import { createGithubScmAdapter } from '../dist/src/github-scm-adapter.js'
 import { createReviewCache } from '../dist/src/review-cache.js'
@@ -467,6 +468,9 @@ async function validateMemory(config, runDir, stateRoot, consolidated, contract,
     for (const finding of consolidated.review.findings) await feedbackStore.append({ runId: contract.runId, repository: contract.repository, pullNumber: contract.pullNumber, headSha: contract.headSha, finding: { file: finding.file, line: finding.line, title: finding.title, status: 'pending' } })
     feedback = await feedbackStore.load()
   }
+  const reconciliationStore = createReviewReconciliationStore(join(dirname(memoryFile), 'reconciliation.json'))
+  const reconciliation = reconcileReviewFeedback(feedback, await reconciliationStore.load())
+  await reconciliationStore.save(reconciliation)
   const historyFile = join(dirname(memoryFile), 'validation-history.json')
   let history = { version: 1, runs: [] }
   if (existsSync(historyFile)) history = readJson(historyFile)
@@ -487,7 +491,7 @@ async function validateMemory(config, runDir, stateRoot, consolidated, contract,
     learningTokenPass: learning.tokenPass,
     evidenceFile: join(runDir, 'memory-evidence.json'),
   }
-  atomicJson(evidence.evidenceFile, { ...evidence, memoryFile, knowledgeCount: knowledge.length, feedbackFile, feedbackEntries: feedback.length, previousRun: previous?.runId ?? null, historyFile, learningEvaluation: learning.file })
+  atomicJson(evidence.evidenceFile, { ...evidence, memoryFile, knowledgeCount: knowledge.length, feedbackFile, feedbackEntries: feedback.length, previousRun: previous?.runId ?? null, historyFile, learningEvaluation: learning.file, reconciliation: { metrics: reconciliation.metrics, candidateIds: reconciliation.candidates.map((candidate) => candidate.id) }, reconciliationFile: reconciliationStore.path })
   return evidence
 }
 

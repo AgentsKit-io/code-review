@@ -66,6 +66,7 @@
     "test/review-cache.test.mjs",
     "test/budget.test.mjs",
     "test/review-stores.test.mjs",
+    "test/review-feedback.test.mjs",
     "test/quality-evals.test.mjs",
     "test/risk-depth.test.mjs",
     "test/quality-matrix-cli.test.mjs",
