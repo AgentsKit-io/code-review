@@ -1125,6 +1125,12 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.17.0
+
+### Minor Changes
+
+- [#180](https://github.com/AgentsKit-io/code-review/pull/180) [`0ba0311`](https://github.com/AgentsKit-io/code-review/commit/0ba031130fba88752586e063b6c26f553809f46e) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Add a deterministic provider-free campaign command that discovers every configured pull request, reports eligibility and complete preflight outcomes, and permits worktree creation only for ready entries.
+
 ## 0.16.0
 
 ### Minor Changes
