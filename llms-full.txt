@@ -1204,6 +1204,12 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.26.0
+
+### Minor Changes
+
+- [#204](https://github.com/AgentsKit-io/code-review/pull/204) [`10b67fb`](https://github.com/AgentsKit-io/code-review/commit/10b67fb82762dd6e3f4e3ec6e2f200c2cfed3e8d) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Produce SHA-bound run and campaign quality matrices with separated evidence classes, complete campaign terminal coverage, measured retry/wasted-call/time/token accounting, and configurable baseline regression gates.
+
 ## 0.25.0
 
 ### Minor Changes
