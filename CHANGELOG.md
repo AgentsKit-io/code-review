@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.22.0
+
+### Minor Changes
+
+- [#196](https://github.com/AgentsKit-io/code-review/pull/196) [`d437efc`](https://github.com/AgentsKit-io/code-review/commit/d437efc80dc2d7575beef3399640de5442eb722a) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Add validated hierarchical campaign, pull-request, context-pack, analysis, and verification budgets with explicit output and critical-verification reserves. Review evidence now retains provider token dimensions and pre-execution budget reservations.
+
 ## 0.21.3
 
 ### Patch Changes
