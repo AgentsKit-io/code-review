@@ -1229,6 +1229,12 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.27.0
+
+### Minor Changes
+
+- [#206](https://github.com/AgentsKit-io/code-review/pull/206) [`af04b40`](https://github.com/AgentsKit-io/code-review/commit/af04b400d75a67d0c9b761e710c751493cfccf3f) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Enforce configurable GitHub check policies and make pull-request review publication idempotent across retries and resume.
+
 ## 0.26.0
 
 ### Minor Changes
