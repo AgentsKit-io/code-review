@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { mkdtempSync, rmSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, rmSync, utimesSync } from 'node:fs'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import test from 'node:test'
@@ -16,6 +16,7 @@ import {
   shouldApplyExternalEffect,
   transitionCampaign,
 } from '../dist/src/index.js'
+import { stableFingerprint } from '../dist/src/stable-fingerprint.js'
 
 const hash = (value) => value.repeat(64)
 const budget = { maxTokens: 100, maxCalls: 2, deadlineMs: 1_000 }
@@ -137,4 +138,15 @@ test('a checkpoint lease must cover every registered pull request', () => {
     releaseCampaignLease(root, lease)
     rmSync(root, { recursive: true, force: true })
   }
+})
+
+test('an abandoned guard and incomplete lease directory are reclaimable', () => {
+  const root = mkdtempSync(join(tmpdir(), 'campaign-stale-guard-'))
+  const directory = join(root, 'leases', stableFingerprint('campaign:stale-guard'))
+  const guard = join(directory, '.guard')
+  mkdirSync(guard, { recursive: true })
+  utimesSync(guard, 0, 0)
+  const lease = acquireCampaignLease({ root, campaignId: 'stale-guard', identities: [], ownerId: 'worker', ttlMs: 60_000 })
+  releaseCampaignLease(root, lease)
+  rmSync(root, { recursive: true, force: true })
 })

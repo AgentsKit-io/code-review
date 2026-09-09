@@ -66,10 +66,15 @@ export {
   pendingReviewUnitIds,
   recordExternalEffect,
   releaseCampaignLease,
+  renewCampaignLease,
+  writeLeasedJson,
   saveCampaignCheckpoint,
   shouldApplyExternalEffect,
+  writeAtomicJson,
 } from './campaign-store.js'
 export type { CampaignCheckpoint, CampaignLease } from './campaign-store.js'
+export { CampaignExecutionReportSchema, campaignReportDeliveryFailed, executeCampaign } from './campaign-runner.js'
+export type { CampaignExecutionEntry, CampaignExecutionReport, CampaignPullRequestResult } from './campaign-runner.js'
 export { PROVIDER_REGISTRY_VERSION, ProviderCapabilitiesSchema, providerEntry, providerExecutionPolicy, providerRegistry, resolveProviderId } from './provider-registry.js'
 export type { ProviderCapabilities, ProviderEntry, ProviderExecutionPolicy } from './provider-registry.js'
 export { AdaptiveConcurrencyGate, normalizeProviderFailure, providerRetryDelay, waitForProviderRetry } from './provider-execution.js'

@@ -38,7 +38,9 @@ export async function preflightCampaign(input: {
   adapter: ScmAdapter
   providerHealth: Pick<DoctorReport, 'ok' | 'provider' | 'checks'>
   now?: () => Date
+  signal?: AbortSignal
 }): Promise<CampaignPreflightReport> {
+  input.signal?.throwIfAborted()
   const config = ReviewConfigSchema.parse(input.config)
   const fingerprint = configFingerprint(config)
   const checks = [
@@ -61,6 +63,7 @@ export async function preflightCampaign(input: {
   const policyFingerprint = reviewPolicyFingerprint(resolved)
   const pullRequests: CampaignPreflightEntry[] = []
   for (const ref of [...unique.values()].sort((left, right) => Number(left.id) - Number(right.id) || left.id.localeCompare(right.id))) {
+    input.signal?.throwIfAborted()
     let metadata: ChangeRequestMetadata
     try { metadata = await input.adapter.metadata(ref) }
     catch (error) {

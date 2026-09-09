@@ -189,14 +189,22 @@ the requested event.
 ## Deterministic scheduled cycle
 
 Run `agentskit-review-campaign --config /absolute/path/code-review.config.ts
---output /private/path/campaign-preflight.json` before live campaign execution.
+--output /private/path/campaign-report.json` as the complete scheduled campaign.
 It validates the one project configuration, checks static provider health, discovers
-all open change requests through the SCM adapter, and gives every discovered request
-an explicit `ready`, `skipped`, or `blocked` outcome. The command performs no model
-analysis and creates no worktree. Downstream execution may create a worktree only
-when the immutable report entry has `worktreeAllowed: true`.
+all open change requests through the SCM adapter, and completes the provider-free
+eligibility, source, and budget sweep before model execution. Only entries with
+`worktreeAllowed: true` enter the bounded queue. The command persists atomic state
+under `execution.statePath`, safely requeues an interrupted in-flight request, never
+repeats terminal work, and reports every discovered request exactly once as skipped,
+blocked, approved, changes requested, merge blocked, merged, or cancelled.
 
-`agentskit-review-cycle` is the supported Orca entrypoint. Give it one PR, one
+`execution.maxConcurrentPullRequests` bounds queue concurrency,
+`execution.continueAfterPerPrFailure` controls fail-fast behavior, and
+`execution.resumeIncompleteRuns` controls checkpoint reuse. Campaign outcome is
+derived deterministically as complete, partial, blocked, or cancelled; an LLM is
+never asked to choose orchestration state.
+
+`agentskit-review-cycle` is the single-PR worker used by the campaign. Give it one PR, one
 validated config, and a private run directory. The command collects all static
 blockers before provider execution, locks the PR SHA and policy fingerprints,
 runs replay and one canary, resumes only missing valid batches, consolidates the
@@ -205,7 +213,7 @@ complete result, validates self-hosted memory/feedback, and writes
 with the package and prevents a clean PR from turning detection, precision,
 severity, and actionability into guessed scores.
 
-Orca should supervise this one process and independently require its exit code,
+For direct single-PR operation, supervise this process and independently require its exit code,
 summary identity, complete batch state, and quality decision. It must not create
 an ad-hoc batch script or accept a missing artifact as an empty review. Use a
 unique run directory for a changed SHA or policy; reuse the same directory and

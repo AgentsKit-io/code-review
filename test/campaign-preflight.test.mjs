@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
 import { CampaignPreflightReportSchema, preflightCampaign } from '../dist/src/campaign-preflight.js'
+import { CampaignExecutionReportSchema } from '../dist/src/campaign-runner.js'
 import { defineConfig, toReviewConfig } from '../dist/src/public-config.js'
 import { resolveReviewConfig } from '../dist/src/review-config.js'
 import { reviewPolicyFingerprint } from '../dist/src/review-policy.js'
@@ -105,5 +106,22 @@ test('packaged campaign command keeps stdout machine-readable when output cannot
     assert.equal(run.status, 2)
     const report = CampaignPreflightReportSchema.parse(JSON.parse(run.stdout))
     assert.equal(report.checks.at(-1).id, 'output.write')
+  } finally { rmSync(directory, { recursive: true, force: true }) }
+})
+
+test('packaged campaign command turns provider-free blockers into a terminal campaign report', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'agentskit-campaign-valid-'))
+  try {
+    const config = join(directory, 'code-review.config.json')
+    const bin = join(directory, 'bin')
+    mkdirSync(bin)
+    writeFileSync(join(bin, 'gh'), '#!/bin/sh\nexit 1\n', { mode: 0o755 })
+    writeFileSync(join(bin, 'codex'), '#!/bin/sh\nprintf "Logged in\n"\n', { mode: 0o755 })
+    writeFileSync(config, JSON.stringify({ target: { repository: 'AgentsKit-io/example' }, review: { mode: 'trusted-local' }, execution: { statePath: 'state' } }))
+    const run = spawnSync(process.execPath, ['scripts/review-campaign.mjs', '--config', config], { encoding: 'utf8', env: { PATH: bin } })
+    assert.equal(run.status, 2, run.stderr)
+    const report = CampaignExecutionReportSchema.parse(JSON.parse(run.stdout))
+    assert.equal(report.outcome, 'BLOCKED')
+    assert.deepEqual(report.pullRequests, [])
   } finally { rmSync(directory, { recursive: true, force: true }) }
 })
