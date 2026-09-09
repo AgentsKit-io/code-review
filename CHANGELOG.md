@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.10.0
+
+### Minor Changes
+
+- [#164](https://github.com/AgentsKit-io/code-review/pull/164) [`ce41c10`](https://github.com/AgentsKit-io/code-review/commit/ce41c108484c61f7a443231f77c2d23a158f7362) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Add versioned campaign, pull-request run, review-unit, event, budget, immutable identity, terminal outcome, and typed failure contracts.
+
 ## 0.9.0
 
 ### Minor Changes
