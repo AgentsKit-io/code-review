@@ -39,13 +39,17 @@ test('the built CLI completes a structured local Ollama review', async () => {
     request.on('end', () => {
       const body = JSON.parse(raw)
       requests.push(body)
+      const tool = body.tools[0].function.name
+      const arguments_ = tool === 'submit_batched_findings'
+        ? { completedCategories: ['correctness', 'security', 'performance', 'maintainability', 'design', 'tests', 'conventions'], findings: [] }
+        : { findings: [] }
       response.writeHead(200, { 'content-type': 'application/x-ndjson' })
       response.end([
         JSON.stringify({
           message: {
             role: 'assistant',
             content: '',
-            tool_calls: [{ function: { name: 'submit_findings', arguments: { findings: [] } } }],
+            tool_calls: [{ function: { name: tool, arguments: arguments_ } }],
           },
           done: false,
         }),
@@ -68,15 +72,14 @@ test('the built CLI completes a structured local Ollama review', async () => {
     ], 'export const answer = 42\n')
 
     assert.equal(run.status, 0, `stdout:\n${run.stdout}\nstderr:\n${run.stderr}`)
-    assert.ok(requests.length >= 7 && requests.length <= 21, `unexpected Ollama request count: ${requests.length}`)
+    assert.equal(requests.length, 1, `unexpected Ollama request count: ${requests.length}`)
     assert.ok(requests.every(body => body.model === 'fixture-model'))
     assert.ok(requests.every(body => body.messages[0].role === 'system'))
     assert.ok(requests.every(body => /untrusted/i.test(body.messages[0].content)))
-    assert.ok(requests.every(body => body.tools[0].function.name === 'submit_findings'))
-    assert.ok(requests.some(body => body.messages.some(message => message.role === 'assistant' && message.tool_calls?.length)))
-    assert.ok(requests.some(body => body.messages.some(message => message.role === 'tool' && message.tool_name === 'submit_findings')))
+    assert.ok(requests.every(body => body.tools[0].function.name === 'submit_batched_findings'))
+    assert.equal(requests.some(body => body.messages.some(message => message.role === 'assistant' || message.role === 'tool')), false)
     assert.match(run.stdout, /Code review — APPROVE/)
-    assert.match(run.stdout, /7\/7 lens executions succeeded/)
+    assert.match(run.stdout, /1\/1 lens executions succeeded/)
   } finally {
     await close(server)
   }

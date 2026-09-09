@@ -62,7 +62,7 @@ Sources:
 
 Review options:
   --votes <n>             Adversarial verification votes (default: 3)
-  --profile <full|fast>   Full review, or one bounded required-lens batch (fast)
+  --profile <full|fast>   All dimensions, or required dimensions only (fast)
   --min-severity <level>  Minimum finding severity
   --min-confidence <n>    Minimum finding confidence
   --block <level>         CI gate floor (default: blocker)

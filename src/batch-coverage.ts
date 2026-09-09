@@ -116,6 +116,8 @@ export function consolidateBatchArtifacts(state: BatchCoverageState, artifacts: 
     ...(allReportTokens ? { tokensUsed: (total.tokensUsed ?? 0) + (review.evidence.tokensUsed ?? 0) } : {}),
   }), { profile: reviews[0]!.evidence.profile, providerCalls: 0, failedProviderCalls: 0, skippedProviderCalls: 0, elapsedMs: 0, deadlineMs: 0, deadlineExceeded: false, circuitState: 'closed' })
   const severe = findings.some((finding) => finding.severity === 'blocker' || finding.severity === 'high')
+  const enabledCategories = reviews[0]?.enabledCategories ?? []
+  const completedCategories = enabledCategories.filter((category) => reviews.every((review) => review.completedCategories?.includes(category)))
   return {
     verdict: !findings.length ? 'APPROVE' : severe ? 'REQUEST CHANGES' : 'COMMENT',
     blocking: reviews.some((review) => review.blocking),
@@ -124,6 +126,8 @@ export function consolidateBatchArtifacts(state: BatchCoverageState, artifacts: 
     dropped,
     execution,
     evidence,
+    enabledCategories,
+    completedCategories,
     summary: `Complete batch review: ${reviews.length} batch(es), ${state.batches.reduce((total, batch) => total + batch.files.length, 0)} file(s), ${findings.length} verified finding(s).`,
   }
 }

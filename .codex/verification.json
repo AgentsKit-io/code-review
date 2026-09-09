@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "project": "agentskit-code-review-prd-137-issue-147",
+  "project": "agentskit-code-review-prd-137-issue-148",
   "root": "..",
   "profile": "custom",
   "exemptions": [
     "This repository is a CLI/library; endpoint, database, MCP, and UI product surfaces are out of scope for this fix."
   ],
   "contract": {
-    "intent": "Execute every discovered change request through a bounded, resumable, failure-isolated queue and emit deterministic terminal outcomes for issue #147.",
+    "intent": "Analyze every normal context pack once across all enabled review dimensions while preserving explicit fail-closed category coverage and measurable quality for issue #148.",
     "outcomes": [
       { "id": "batch-manifest", "statement": "The CLI exposes a deterministic reviewable-file manifest, batch plan, and private SHA/policy-bound manifest without model execution.", "checks": ["batch-regression", "repo-check"] },
       { "id": "batch-artifact", "statement": "A partial batch writes a private artifact bound to the exact PR SHA, policy fingerprint, index, and file manifest; it cannot post to GitHub.", "checks": ["batch-regression", "repo-check"] },
@@ -76,6 +76,10 @@
       ,{ "id": "campaign-bounded-isolation", "statement": "Campaign execution never exceeds configured concurrency and one pull-request failure does not prevent independent work from reaching a terminal outcome by default.", "checks": ["campaign-runner", "repo-check"] }
       ,{ "id": "campaign-resume", "statement": "Atomic leased campaign checkpoints reuse terminal work and safely requeue an interrupted in-flight pull request without duplicate completion.", "checks": ["campaign-runner", "campaign-store", "repo-check"] }
       ,{ "id": "campaign-deterministic-outcome", "statement": "Complete, partial, blocked, and cancelled campaign outcomes are derived by deterministic code without an LLM orchestration decision.", "checks": ["campaign-runner", "repo-check", "package"] }
+      ,{ "id": "multidimensional-single-call", "statement": "One normal context pack uses one initial structured provider call across every enabled review dimension.", "checks": ["multidimensional-analysis", "repo-check"] }
+      ,{ "id": "multidimensional-evidence", "statement": "Review results explicitly report enabled and completed categories, and a missing required category makes the result incomplete and non-approving.", "checks": ["multidimensional-analysis", "repo-check", "package"] }
+      ,{ "id": "multidimensional-quality", "statement": "The fixed quality corpus preserves every expected detection through multidimensional analysis.", "checks": ["multidimensional-analysis", "repo-check"] }
+      ,{ "id": "multidimensional-efficiency", "statement": "Automated evidence shows fewer provider calls and tokens than the equivalent seven-lens baseline.", "checks": ["multidimensional-analysis", "repo-check"] }
     ]
   },
   "surfaces": { "logic": true, "cli": true, "docs": true },
@@ -102,6 +106,7 @@
     ,{ "id": "github-scm", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/github-scm-adapter.test.mjs test/github-review-state.test.mjs test/sources.test.mjs test/reporters.test.mjs test/review-cycle.test.mjs", "timeoutMs": 120000 }
     ,{ "id": "campaign-preflight", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/campaign-preflight.test.mjs", "timeoutMs": 120000 }
     ,{ "id": "campaign-runner", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/campaign-runner.test.mjs test/campaign-preflight.test.mjs test/campaign-store.test.mjs", "timeoutMs": 120000 }
+    ,{ "id": "multidimensional-analysis", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/multidimensional-analysis.test.mjs test/cli-smoke.test.mjs", "timeoutMs": 120000 }
   ],
   "tracking": { "required": false, "reason": "The human authorized a release PR; its URL will be recorded in the release report. Publication remains blocked until the PR is merged and a stable GitHub Release exists." },
   "cleanup": { "roots": [".codex/verification/tmp"] }

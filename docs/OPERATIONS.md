@@ -34,7 +34,7 @@ npx --yes github:AgentsKit-io/code-review doctor --provider codex-cli
 npx --yes github:AgentsKit-io/code-review doctor --provider openai --model gpt-4o --json
 ```
 
-It checks the named executable and version, transport, model requirement, configuration mode, and credential presence without making a model request. API keys are represented only as `configured` or `missing`; they are never printed. Local CLI credentials are represented as login-managed because login storage is provider-specific. `doctor --live` is the explicit provider smoke-test path; normal Codex reviews run the same bounded smoke check before fan-out. Unknown local CLI versions warn during local runs and fail in CI. Doctor exits `0` when checks pass, `1` when a provider check fails, and `2` for invalid usage.
+It checks the named executable and version, transport, model requirement, configuration mode, and credential presence without making a model request. API keys are represented only as `configured` or `missing`; they are never printed. Local CLI credentials are represented as login-managed because login storage is provider-specific. `doctor --live` is the explicit provider smoke-test path; normal Codex reviews run the same bounded smoke check before analysis. Unknown local CLI versions warn during local runs and fail in CI. Doctor exits `0` when checks pass, `1` when a provider check fails, and `2` for invalid usage.
 
 ## SCM boundary
 
@@ -153,9 +153,11 @@ export default defineConfig({
 ```
 
 Use a strict `.agentskit-review.json` at the repository root for review policy.
-It requires `configVersion: 1` and supports a `full` or `fast` profile. The
-fast profile reviews correctness, security, and tests in one bounded batch with
-one vote and no retry. The config also supports lens policy (`enabled` and
+It requires `configVersion: 1` and supports a `full` or `fast` profile. Both use
+one structured analysis per normal context pack: full covers every enabled dimension,
+while fast limits the pass to required correctness, security, and tests with one vote
+and no retry. Every result records enabled and completed categories; a missing required
+category is incomplete and cannot approve. The config also supports lens policy (`enabled` and
 `required` per built-in lens), votes, retries, thresholds, file/byte/call,
 concurrency and global-deadline budgets, conventions, and context selection. All built-in lenses
 are enabled by default; correctness, security, and tests are required.
@@ -333,7 +335,7 @@ Seven lenses fan out over selected files; candidate findings then receive advers
 - `--concurrency`: simultaneous model/subprocess calls (default 1 for CLI providers, 4 for API providers);
 - `--profile fast`: one bounded correctness/security/tests batch per file, one vote, and no retry;
 - `--deadline-ms`: hard global deadline; active local workers receive the abort signal and queued calls do not start;
-- `--health-check`: bounded provider smoke check before fan-out (`auto` or `off`);
+- `--health-check`: bounded provider smoke check before analysis (`auto` or `off`);
 - `--paths` or workflow path filters: narrow scope;
 - `--min-severity` and `--min-confidence`: output noise, not input-token cost.
 

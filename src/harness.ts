@@ -98,10 +98,10 @@ function canaryChecks(state: BatchCoverageState, artifact: BatchReviewArtifact):
     { id: 'identity.sha', ok: artifact.headSha === state.headSha, detail: 'artifact SHA matches the locked source SHA', remediation: 'discard the artifact and rerun against the locked SHA' },
     { id: 'identity.policy', ok: artifact.policyFingerprint === state.policyFingerprint, detail: 'artifact policy fingerprint matches the locked manifest', remediation: 'use one immutable configuration for planning and execution' },
     { id: 'manifest.files', ok: Boolean(expected && expected.files.join('\0') === artifact.batch.files.join('\0')), detail: 'artifact files match the planned batch', remediation: 'regenerate the batch from the immutable manifest' },
-    { id: 'execution.complete', ok: execution.failed === 0 && execution.succeeded === execution.attempted, detail: `${execution.succeeded}/${execution.attempted} executions succeeded`, remediation: 'fix provider or budget failures before fan-out' },
+    { id: 'execution.complete', ok: execution.failed === 0 && execution.succeeded === execution.attempted, detail: `${execution.succeeded}/${execution.attempted} executions succeeded`, remediation: 'fix provider or budget failures before analysis' },
     { id: 'execution.complete-review', ok: artifact.review.incomplete === false && (artifact.review.unreviewed?.length ?? 0) === 0, detail: 'review has complete coverage for the batch', remediation: 'do not accept incomplete evidence' },
     { id: 'review.profile', ok: evidence.profile === 'full', detail: `review profile is ${evidence.profile}`, remediation: 'run the canary with the full required review policy' },
-    { id: 'review.lenses', ok: (artifact.review.missingRequiredLenses?.length ?? 0) === 0, detail: 'all required lenses produced evidence', remediation: 'fix missing required lenses before fan-out' },
+    { id: 'review.lenses', ok: (artifact.review.missingRequiredLenses?.length ?? 0) === 0, detail: 'all required dimensions produced evidence', remediation: 'fix missing required dimensions before analysis' },
     { id: 'execution.deadline', ok: evidence.deadlineExceeded === false, detail: 'batch completed before its deadline', remediation: 'reduce scope or increase bounded capacity' },
   ]
 }
