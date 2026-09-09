@@ -1157,6 +1157,12 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.20.0
+
+### Minor Changes
+
+- [#186](https://github.com/AgentsKit-io/code-review/pull/186) [`5d41dfd`](https://github.com/AgentsKit-io/code-review/commit/5d41dfd4f6d79dcb456119324f3fbc961b629533) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Build auditable diff-first context packs with bounded adjacent and related-file context, exact changed-line anchors including deletions, and AgentsKit token-budget enforcement before every provider request.
+
 ## 0.19.0
 
 ### Minor Changes
