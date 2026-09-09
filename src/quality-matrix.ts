@@ -19,6 +19,7 @@ export interface QualityInput {
   performance: { p95Ms: number; baselineP95Ms?: number }
   tokens: { tokensUsed?: number; changedLines: number; validFindings: number; baselineTokensPerChangedLine?: number }
   batches: { planned: number; completed: number; retried: number; overBudget: number }
+  cache?: { hits: number; misses: number; corruptMisses: number; staleMisses: number; unvalidatedMisses: number; savedTokens: number }
   memory: { enabled: boolean; persistencePass: boolean; loadPass: boolean; malformedRejected: boolean; feedbackRecorded: boolean; rulesApproved: boolean; learningEvaluationPass: boolean; learningDetectionLift: boolean; learningPrecisionPass: boolean; learningTokenPass: boolean }
   configuration: { validAccepted: boolean; invalidRejected: boolean; schemaAvailable: boolean; requiredFlags?: number }
   integration: { githubPass: boolean; orcaPass: boolean; releasePass: boolean; mergeSafetyPass: boolean }
@@ -84,6 +85,7 @@ export function parseQualityInput(value: unknown): QualityInput {
   requireNumbers(input.performance, 'performance', ['p95Ms'])
   requireNumbers(input.tokens, 'tokens', ['changedLines', 'validFindings'])
   requireNumbers(input.batches, 'batches', ['planned', 'completed', 'retried', 'overBudget'])
+  if (input.cache !== undefined) requireNumbers(input.cache, 'cache', ['hits', 'misses', 'corruptMisses', 'staleMisses', 'unvalidatedMisses', 'savedTokens'])
   requireBooleans(input.memory, 'memory', ['enabled', 'persistencePass', 'loadPass', 'malformedRejected', 'feedbackRecorded', 'rulesApproved', 'learningEvaluationPass', 'learningDetectionLift', 'learningPrecisionPass', 'learningTokenPass'])
   requireBooleans(input.configuration, 'configuration', ['validAccepted', 'invalidRejected', 'schemaAvailable'])
   requireBooleans(input.integration, 'integration', ['githubPass', 'orcaPass', 'releasePass', 'mergeSafetyPass'])

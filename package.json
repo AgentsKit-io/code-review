@@ -63,6 +63,7 @@
     "test/batch-coverage.test.mjs",
     "test/quality-matrix.test.mjs",
     "test/adaptive-verification.test.mjs",
+    "test/review-cache.test.mjs",
     "test/quality-evals.test.mjs",
     "test/risk-depth.test.mjs",
     "test/quality-matrix-cli.test.mjs",

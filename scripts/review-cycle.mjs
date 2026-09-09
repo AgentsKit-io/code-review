@@ -10,6 +10,7 @@ import { createFileMemory } from '../dist/src/file-memory.js'
 import { createApprovedReviewRule } from '../dist/src/review-learning.js'
 import { loadProjectConfig } from '../dist/src/public-config.js'
 import { createGithubScmAdapter } from '../dist/src/github-scm-adapter.js'
+import { createReviewCache } from '../dist/src/review-cache.js'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const cli = join(root, 'dist/src/cli.js')
@@ -82,7 +83,7 @@ async function main() {
   const stateFile = join(runDir, 'state.json')
   const summaryFile = join(runDir, 'cycle-summary.json')
   const artifactsDir = join(runDir, 'batches')
-  const summary = { version: 1, runId, decision: 'BLOCKED', phase: 'contract', libraryVersion: pkg.version, sourceRevision: 'unknown', repository, pullNumber, artifacts: {}, blockers: [], problems: [], fixes: [], startedAt: new Date().toISOString() }
+  const summary = { version: 1, runId, decision: 'BLOCKED', phase: 'contract', libraryVersion: pkg.version, sourceRevision: 'unknown', repository, pullNumber, artifacts: {}, blockers: [], problems: [], fixes: [], cache: { hits: 0, misses: 0, corruptMisses: 0, staleMisses: 0, unvalidatedMisses: 0, savedTokens: 0 }, startedAt: new Date().toISOString() }
   const cycleStartedAt = Date.now()
   const remainingCycleMs = () => Math.max(0, globalDeadlineMs - (Date.now() - cycleStartedAt))
   mkdirSync(artifactsDir, { recursive: true })
@@ -220,6 +221,17 @@ async function main() {
     if (!existsSync(contractFile)) atomicJson(contractFile, contract)
     summary.artifacts.contract = contractFile
     summary.artifacts.manifest = manifestFile
+    const reviewCache = createReviewCache(join(stateRoot, 'review-cache'))
+    summary.artifacts.reviewCache = join(stateRoot, 'review-cache')
+    const cacheIdentity = (batch) => ({
+      sourceFingerprint: sha256(JSON.stringify({ headSha: manifest.headSha, files: batch.files })),
+      diffFingerprint: sha256(JSON.stringify({ baseSha: prData.targetRevision, headSha: manifest.headSha, files: batch.files, manifestFingerprint })),
+      baseFingerprint: sha256(prData.targetRevision),
+      policyFingerprint: manifest.policyFingerprint,
+      promptFingerprint: sha256(JSON.stringify({ config: contract.configFingerprint, packageVersion: pkg.version, profile: 'full', files: batch.files })),
+      modelFingerprint: sha256(JSON.stringify({ provider, model: model ?? null, transport: transport ?? null })),
+      knowledgeFingerprint: sha256(JSON.stringify({ learningCorpus: readFileSync(learningCorpusFile, 'utf8'), memory: projectConfig.memory })),
+    })
 
     summary.phase = 'replay'
     const replay = safeExec(process.execPath, [harness, '--replay', '--report', join(runDir, 'replay.json')], { env: childEnv, timeout: Math.min(120_000, remainingCycleMs()) })
@@ -239,6 +251,26 @@ async function main() {
     const runBatch = async (index, canary = false) => {
       const artifact = join(artifactsDir, `batch-${index}.json`)
       const metadataFile = join(artifactsDir, `batch-${index}.meta.json`)
+      const batch = manifest.batches.find((candidate) => candidate.index === index)
+      if (!batch) throw new Error(`batch ${index} is not present in the manifest`)
+      const identity = cacheIdentity(batch)
+      const cached = reviewCache.get(identity)
+      if (cached.hit) {
+        atomicJson(artifact, cached.record.value)
+        const cachedValidation = validateArtifact(artifact)
+        if (cachedValidation.ready) {
+          summary.cache.hits += 1
+          summary.cache.savedTokens += cached.record.tokenUsage.totalTokens
+          return { index, artifact, reused: true, cacheHit: true, attempts: 0, savedTokens: cached.record.tokenUsage.totalTokens, validation: cachedValidation }
+        }
+        summary.cache.misses += 1
+        summary.cache.corruptMisses += 1
+      } else {
+        summary.cache.misses += 1
+        if (cached.reason === 'corrupt') summary.cache.corruptMisses += 1
+        if (cached.reason === 'stale') summary.cache.staleMisses += 1
+        if (cached.reason === 'unvalidated') summary.cache.unvalidatedMisses += 1
+      }
       const existing = validateArtifact(artifact)
       let metadata
       try { metadata = readJson(metadataFile) } catch { /* invalid metadata forces a safe rerun */ }
@@ -258,6 +290,13 @@ async function main() {
         atomicJson(join(runDir, `batch-${index}-attempt-${attempt}.json`), last)
         if (validation.ready) {
           atomicJson(metadataFile, { version: 1, runId, sourceRevision, artifactHash: sha256(readFileSync(artifact)) })
+          const review = readJson(artifact).review
+          reviewCache.set(identity, {
+            provenance: { repository, pullNumber, unitId: `batch-${index}`, sourceFiles: batch.files, sourceRevision: manifest.headSha, createdAt: new Date().toISOString() },
+            tokenUsage: { totalTokens: Number(review?.evidence?.tokensUsed ?? 0), providerCalls: Number(review?.evidence?.providerCalls ?? 0) },
+            validation: { status: 'passed', checkedAt: new Date().toISOString(), evidenceFingerprint: sha256(JSON.stringify(review?.evidence ?? {})) },
+            value: readJson(artifact),
+          })
           return last
         }
         const transient = run.timedOut || /(?:timeout|timed out|ECONNRESET|429|5\d\d|temporar|rate limit)/i.test(run.stderr)
@@ -322,7 +361,7 @@ async function main() {
     const artifactMetaValid = artifactFiles.every((file, index) => {
       try { const metadata = readJson(join(artifactsDir, `batch-${index}.meta.json`)); return metadata.sourceRevision === sourceRevision && metadata.artifactHash === sha256(readFileSync(file)) } catch { return false }
     })
-    const input = qualityInput({ runId, version: pkg.version, sourceRevision, manifest, artifacts: reviews, changedLines, elapsedBaseline: baselineInput?.performance?.p95Ms ?? baselineArea('speed')?.p95Ms, baselineTokensPerChangedLine, memory, evaluation, evidence: { checks, replay: readJson(summary.artifacts.replay), state, artifactMetaValid, secretLeaks: ghToken && serializedArtifacts.includes(ghToken) ? 1 : 0, maxCalls, maxTokens }, integration: { githubPass: true, orcaPass, releasePass, mergeSafetyPass } })
+    const input = qualityInput({ runId, version: pkg.version, sourceRevision, manifest, artifacts: reviews, changedLines, elapsedBaseline: baselineInput?.performance?.p95Ms ?? baselineArea('speed')?.p95Ms, baselineTokensPerChangedLine, memory, evaluation, cache: summary.cache, evidence: { checks, replay: readJson(summary.artifacts.replay), state, artifactMetaValid, secretLeaks: ghToken && serializedArtifacts.includes(ghToken) ? 1 : 0, maxCalls, maxTokens }, integration: { githubPass: true, orcaPass, releasePass, mergeSafetyPass } })
     atomicJson(join(runDir, 'quality-input.json'), input)
     const quality = evaluateQuality(input)
     const baselineReport = baselineArtifact?.areas ? baselineArtifact : baselineInput ? evaluateQuality(baselineInput) : undefined
@@ -357,7 +396,7 @@ async function main() {
     summary.decision = quality.decision === 'PASS' ? 'COMPLETE' : 'BLOCKED'
     summary.phase = quality.decision === 'PASS' ? 'complete' : 'quality'
     summary.qualityDecision = quality.decision
-    summary.fullReview = { batches: manifest.batches.length, completed: state.completedBatches.length, files: manifest.batches.reduce((count, batch) => count + batch.files.length, 0), verdict: consolidated.review.verdict, findings: consolidated.review.findings.length, tokensUsed: consolidated.review.evidence.tokensUsed }
+    summary.fullReview = { batches: manifest.batches.length, completed: state.completedBatches.length, files: manifest.batches.reduce((count, batch) => count + batch.files.length, 0), verdict: consolidated.review.verdict, findings: consolidated.review.findings.length, tokensUsed: consolidated.review.evidence.tokensUsed, cache: summary.cache }
     if (quality.decision !== 'PASS') summary.blockers = quality.areas.filter((area) => area.status !== 'passed').map((area) => ({ id: `quality.${area.area}`, message: area.reason, evidence: area.metrics }))
   } catch (error) {
     summary.problems.push(error instanceof Error ? error.message : String(error))
@@ -453,7 +492,7 @@ async function validateMemory(config, runDir, stateRoot, consolidated, contract,
   return evidence
 }
 
-function qualityInput({ runId, version, sourceRevision, manifest, artifacts, changedLines, elapsedBaseline, baselineTokensPerChangedLine, memory, evaluation, evidence = {}, integration }) {
+function qualityInput({ runId, version, sourceRevision, manifest, artifacts, changedLines, elapsedBaseline, baselineTokensPerChangedLine, memory, evaluation, cache, evidence = {}, integration }) {
   const reviews = artifacts.map((artifact) => artifact.review)
   const files = manifest.batches.reduce((count, batch) => count + batch.files.length, 0)
   const requiredLenses = 3
@@ -477,6 +516,7 @@ function qualityInput({ runId, version, sourceRevision, manifest, artifacts, cha
     performance: { p95Ms: elapsed, ...(elapsedBaseline ? { baselineP95Ms: elapsedBaseline } : {}) },
     tokens: { ...(tokensUsed === undefined ? {} : { tokensUsed }), changedLines, validFindings: evaluation.metrics.detectedExpected, ...(baselineTokensPerChangedLine ? { baselineTokensPerChangedLine } : {}) },
     batches: { planned: manifest.batches.length, completed: artifacts.length, retried: retries, overBudget: providerCalls > (evidence.maxCalls ?? Infinity) || (tokensUsed ?? Infinity) + evaluation.tokensUsed > (evidence.maxTokens ?? Infinity) ? 1 : 0 },
+    ...(cache ? { cache } : {}),
     memory: { enabled: memory.enabled, persistencePass: memory.persistencePass, loadPass: memory.loadPass, malformedRejected: memory.malformedRejected, feedbackRecorded: memory.feedbackRecorded, rulesApproved: memory.rulesApproved, learningEvaluationPass: memory.learningEvaluationPass, learningDetectionLift: memory.learningDetectionLift, learningPrecisionPass: memory.learningPrecisionPass, learningTokenPass: memory.learningTokenPass },
     configuration: { validAccepted: configCheck?.ok === true, invalidRejected: replayPass, schemaAvailable: schemaCheck?.ok === true },
     integration,
