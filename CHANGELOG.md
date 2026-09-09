@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.12.0
+
+### Minor Changes
+
+- [#168](https://github.com/AgentsKit-io/code-review/pull/168) [`4f85ef0`](https://github.com/AgentsKit-io/code-review/commit/4f85ef08468fb779263b57ae84f0f6f44c03c35c) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Add crash-safe campaign checkpoints, exclusive campaign and pull-request leases, deterministic resume, and persisted external-effect idempotency keys.
+
 ## 0.11.0
 
 ### Minor Changes
