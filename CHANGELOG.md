@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.16.0
+
+### Minor Changes
+
+- [#178](https://github.com/AgentsKit-io/code-review/pull/178) [`14187ac`](https://github.com/AgentsKit-io/code-review/commit/14187ac04eeca95d4b4fba47fcf0cdb6564456a4) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Route GitHub ingestion, review state, publication, merge readiness, and revision-locked merge through the common SCM adapter.
+
 ## 0.15.0
 
 ### Minor Changes
