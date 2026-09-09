@@ -73,4 +73,15 @@ export type { CampaignCheckpoint, CampaignLease } from './campaign-store.js'
 export { PROVIDER_REGISTRY_VERSION, ProviderCapabilitiesSchema, providerEntry, providerExecutionPolicy, providerRegistry, resolveProviderId } from './provider-registry.js'
 export type { ProviderCapabilities, ProviderEntry, ProviderExecutionPolicy } from './provider-registry.js'
 export { AdaptiveConcurrencyGate, normalizeProviderFailure, providerRetryDelay, waitForProviderRetry } from './provider-execution.js'
+export {
+  ChangeRequestDiffSchema, ChangeRequestMetadataSchema, ChangeRequestQuerySchema, ChangeRequestRefSchema,
+  ScmCapabilitiesSchema, ScmCapabilitySchema, ScmMergeReadinessSchema, ScmMergeReceiptSchema,
+  ScmMergeRequestSchema, ScmPublicationReceiptSchema, ScmReviewPublicationSchema, ScmReviewStateSchema,
+  UnsupportedScmCapabilityError, requireScmCapability,
+} from './scm-contract.js'
+export type {
+  ChangeRequestDiff, ChangeRequestMetadata, ChangeRequestQuery, ChangeRequestRef, ScmAdapter, ScmCapabilities,
+  ScmCapability, ScmMergeReadiness, ScmMergeReceipt, ScmMergeRequest, ScmPublicationReceipt,
+  ScmReviewPublication, ScmReviewState,
+} from './scm-contract.js'
 export type { ConfigInput, ReviewProjectConfig } from './public-config.js'

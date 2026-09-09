@@ -36,6 +36,16 @@ npx --yes github:AgentsKit-io/code-review doctor --provider openai --model gpt-4
 
 It checks the named executable and version, transport, model requirement, configuration mode, and credential presence without making a model request. API keys are represented only as `configured` or `missing`; they are never printed. Local CLI credentials are represented as login-managed because login storage is provider-specific. `doctor --live` is the explicit provider smoke-test path; normal Codex reviews run the same bounded smoke check before fan-out. Unknown local CLI versions warn during local runs and fail in CI. Doctor exits `0` when checks pass, `1` when a provider check fails, and `2` for invalid usage.
 
+## SCM boundary
+
+The public internal contract normalizes change-request discovery, metadata,
+complete diffs, review state, inline/summary publication, merge readiness, and
+revision-locked merge. Adapters declare every capability; requesting an
+unsupported operation throws `UnsupportedScmCapabilityError`. Platform payloads
+and credentials stay inside adapters rather than entering deterministic core
+contracts. GitHub is the first implementation target. GitLab is future work and
+is not supported until an adapter passes the same contract suite.
+
 ## First local setup
 
 ```sh

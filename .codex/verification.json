@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "project": "agentskit-code-review-prd-137-issue-143",
+  "project": "agentskit-code-review-prd-137-issue-144",
   "root": "..",
   "profile": "custom",
   "exemptions": [
     "This repository is a CLI/library; endpoint, database, MCP, and UI product surfaces are out of scope for this fix."
   ],
   "contract": {
-    "intent": "Add safe per-unit provider retries, adaptive concurrency, cancellation, and controlled circuit recovery without losing successful sibling work for issue #143.",
+    "intent": "Define and validate the provider-neutral SCM contract required for discovery, review, readiness, and merge without adding a speculative production provider for issue #144.",
     "outcomes": [
       { "id": "batch-manifest", "statement": "The CLI exposes a deterministic reviewable-file manifest, batch plan, and private SHA/policy-bound manifest without model execution.", "checks": ["batch-regression", "repo-check"] },
       { "id": "batch-artifact", "statement": "A partial batch writes a private artifact bound to the exact PR SHA, policy fingerprint, index, and file manifest; it cannot post to GitHub.", "checks": ["batch-regression", "repo-check"] },
@@ -61,6 +61,9 @@
       ,{ "id": "adaptive-provider-concurrency", "statement": "Provider instability lowers live concurrency without exceeding capability-derived maximums, and sustained success cautiously restores capacity.", "checks": ["provider-execution", "provider-capabilities", "repo-check"] }
       ,{ "id": "provider-circuit-recovery", "statement": "Repeated provider instability stops fan-out and, after cooldown, admits exactly one controlled recovery probe.", "checks": ["provider-execution", "repo-check"] }
       ,{ "id": "provider-unit-isolation", "statement": "A failed review unit does not discard successful sibling evidence, and queued work cancels immediately without starting provider execution.", "checks": ["provider-execution", "regression", "repo-check"] }
+      ,{ "id": "scm-contract-coverage", "statement": "Normalized SCM contracts cover change-request discovery, metadata, complete diffs, review state, inline and summary publication, merge readiness, and revision-locked merge without platform payloads.", "checks": ["scm-contract", "repo-check", "package"] }
+      ,{ "id": "scm-complete-fake-flow", "statement": "A deterministic in-memory SCM fake executes one complete discover-to-merge lifecycle through the public contract.", "checks": ["scm-contract", "repo-check"] }
+      ,{ "id": "scm-unsupported-explicit", "statement": "An adapter lacking a requested capability fails with an explicit typed error, and GitLab remains documented as future work.", "checks": ["scm-contract", "docs-gate", "repo-check"] }
     ]
   },
   "surfaces": { "logic": true, "cli": true, "docs": true },
@@ -83,6 +86,7 @@
     ,{ "id": "campaign-store", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/campaign-store.test.mjs", "timeoutMs": 60000 }
     ,{ "id": "provider-capabilities", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/provider-registry.test.mjs test/review-config.test.mjs", "timeoutMs": 120000 }
     ,{ "id": "provider-execution", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/provider-execution.test.mjs test/provider-circuit-breaker.test.mjs test/cli-smoke.test.mjs", "timeoutMs": 180000 }
+    ,{ "id": "scm-contract", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/scm-contract.test.mjs", "timeoutMs": 60000 }
   ],
   "tracking": { "required": false, "reason": "The human authorized a release PR; its URL will be recorded in the release report. Publication remains blocked until the PR is merged and a stable GitHub Release exists." },
   "cleanup": { "roots": [".codex/verification/tmp"] }
