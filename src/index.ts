@@ -98,3 +98,5 @@ export { createReviewCache, reviewCacheKey, ReviewCacheIdentitySchema, ReviewCac
 export type { ReviewCache, ReviewCacheIdentity, ReviewCacheLookup, ReviewCacheMissReason, ReviewCacheRecord, ReviewCacheWrite } from './review-cache.js'
 export { HierarchicalReviewBudgetSchema, ReviewBudgetScopeSchema, addReviewUsage, compileReviewBudget, createReviewBudgetLedger, defaultReviewBudget, emptyReviewUsage, ReviewBudgetExceededError } from './budget.js'
 export type { HierarchicalReviewBudget, ReviewBudgetHierarchyInput, ReviewBudgetScope, ReviewUsage } from './budget.js'
+export { ReviewFeedbackFileSchema, ReviewFeedbackSchema, ReviewKnowledgeFileSchema, ReviewKnowledgeSchema, ReviewStoreLayoutSchema, createReviewFeedbackStore, createReviewKnowledgeStore, createReviewStoreLayout, createReviewStores } from './review-stores.js'
+export type { ReviewFeedback, ReviewFeedbackStore, ReviewKnowledge, ReviewKnowledgeStore, ReviewStoreLayout } from './review-stores.js'

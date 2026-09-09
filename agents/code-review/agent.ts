@@ -24,6 +24,7 @@ import { markdownReporter } from './reporters.js'
 import { ProviderCircuitBreaker, ProviderCircuitOpenError } from '../../src/provider-circuit-breaker.js'
 import { AdaptiveConcurrencyGate, normalizeProviderFailure, providerRetryDelay, waitForProviderRetry } from '../../src/provider-execution.js'
 import { loadApprovedReviewRules } from '../../src/review-learning.js'
+import type { ReviewKnowledgeStore } from '../../src/review-stores.js'
 import { classifyContextPack, type RiskAssessment } from './risk.js'
 import { createReviewBudgetLedger, defaultReviewBudget, emptyReviewUsage, ReviewBudgetExceededError, type HierarchicalReviewBudget, type ReviewUsage } from '../../src/budget.js'
 
@@ -281,6 +282,8 @@ export interface CodeReviewConfig {
   /** CI gate floor: a surviving finding at/above this severity sets `blocking`. Default 'blocker'. */
   blockingSeverity?: Severity
   memory?: ChatMemory
+  /** Read-only approved knowledge; review runtimes never persist transcripts. */
+  knowledge?: ReviewKnowledgeStore
   observers?: Observer[]
   onConfirm?: (toolCall: ToolCall) => boolean | Promise<boolean>
   maxSteps?: number
@@ -533,7 +536,9 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
               }
             },
           }
-          const runtimeResult = createRuntime({ adapter: usageAdapter, tools: [tool], memory: config.memory, onConfirm: config.onConfirm, maxSteps }).run(task, { skill, signal })
+          // Provider conversations are operational input, not permanent knowledge.
+          // Approved rules are loaded separately through `knowledge` below.
+          const runtimeResult = createRuntime({ adapter: usageAdapter, tools: [tool], memory: undefined, onConfirm: config.onConfirm, maxSteps }).run(task, { skill, signal })
           const deadlineResult = new Promise<never>((_, reject) => {
             runtimeTimer = setTimeout(() => {
               deadlineExceeded = true
@@ -585,7 +590,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
       try { conventions = readFileSync(config.conventions.path, 'utf8').slice(0, 6000) }
       catch { conventions = '(conventions file not found)' }
     }
-    const approvedRules = await loadApprovedReviewRules(config.memory)
+    const approvedRules = await loadApprovedReviewRules(config.memory, config.knowledge)
     return approvedRules.length
       ? `${conventions}\n\nAPPROVED REVIEW RULES:\n${approvedRules.map((rule) => `- ${rule}`).join('\n')}`
       : conventions
