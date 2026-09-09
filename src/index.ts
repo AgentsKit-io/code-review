@@ -94,3 +94,5 @@ export type {
   ScmReviewPublication, ScmReviewState,
 } from './scm-contract.js'
 export type { ConfigInput, ReviewProjectConfig } from './public-config.js'
+export { createReviewCache, reviewCacheKey, ReviewCacheIdentitySchema, ReviewCacheRecordSchema } from './review-cache.js'
+export type { ReviewCache, ReviewCacheIdentity, ReviewCacheLookup, ReviewCacheMissReason, ReviewCacheRecord, ReviewCacheWrite } from './review-cache.js'

@@ -26,6 +26,8 @@ The benchmark proves process safety; it does not prove that model findings are c
 
 Enabled learning also requires a live A/B canary. The memory-on arm must apply an explicitly approved rule and detect the labelled policy violation; the memory-off arm must not invent that project policy. Precision and bounded token overhead remain gates. Persisting transcripts or pending feedback alone is not evidence of learning.
 
+Completed review units are also cached locally by an immutable fingerprint over the source, diff, base revision, policy, prompt, model, and relevant knowledge identities. Only schema-valid, passed records are reusable; corruption, stale identity, and unvalidated records fail closed. Cycle summaries and quality inputs report cache hits, misses, and saved tokens so reuse is measurable rather than assumed.
+
 ## Closed cycle
 
 1. Run and store the baseline benchmark.
