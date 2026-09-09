@@ -1181,6 +1181,12 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.23.0
+
+### Minor Changes
+
+- [#198](https://github.com/AgentsKit-io/code-review/pull/198) [`f764acc`](https://github.com/AgentsKit-io/code-review/commit/f764accca72777d83cbdd2878a8d0d1f109174ae) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Separate operational state, review cache, feedback, and approved knowledge storage; prevent provider transcripts, prompts, source, and secrets from entering permanent knowledge.
+
 ## 0.22.0
 
 ### Minor Changes
