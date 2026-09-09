@@ -506,6 +506,11 @@ function qualityInput({ runId, version, sourceRevision, manifest, artifacts, cha
   const schemaCheck = evidence.checks?.find((item) => item.id === 'config.schema')
   const retries = Object.values(evidence.state?.attempts ?? {}).reduce((total, attempts) => total + Math.max(0, Number(attempts) - 1), 0)
   const providerCalls = reviews.reduce((total, review) => total + review.evidence.providerCalls, 0) + evaluation.cases.reduce((total, item) => total + item.review.evidence.providerCalls, 0)
+  const accountingFields = ['inputTokens', 'cachedInputTokens', 'outputTokens', 'reasoningOutputTokens', 'memoryTokens', 'retryTokens', 'providerCalls', 'wallClockMs']
+  const accounting = Object.fromEntries(accountingFields.flatMap((field) => {
+    const values = reviews.map((review) => review.evidence.usage?.[field])
+    return values.length && values.every((value) => Number.isFinite(value)) ? [[field, values.reduce((total, value) => total + value, 0)]] : []
+  }))
   return {
     runId, version, sourceRevision,
     coverage: { eligibleFiles: files, reviewedFiles: complete ? files - unreviewedFiles : 0, unreviewedFiles, requiredLensRuns: files * requiredLenses, completedRequiredLensRuns: complete ? files * requiredLenses : 0 },
@@ -514,7 +519,7 @@ function qualityInput({ runId, version, sourceRevision, manifest, artifacts, cha
     security: { secretLeaks: evidence.secretLeaks ?? 0, unsafeActions: 0, failClosedViolations: replayPass ? 0 : 1 },
     reliability: { runs: 1, completeRuns: complete ? 1 : 0, incompleteAccepted: complete ? 0 : 1, staleArtifactsAccepted: evidence.artifactMetaValid === false ? 1 : 0, silentFailures: reviews.some((review) => review.execution.failed > 0 && !review.incomplete) ? 1 : 0 },
     performance: { p95Ms: elapsed, ...(elapsedBaseline ? { baselineP95Ms: elapsedBaseline } : {}) },
-    tokens: { ...(tokensUsed === undefined ? {} : { tokensUsed }), changedLines, validFindings: evaluation.metrics.detectedExpected, ...(baselineTokensPerChangedLine ? { baselineTokensPerChangedLine } : {}) },
+    tokens: { ...(tokensUsed === undefined ? {} : { tokensUsed }), changedLines, validFindings: evaluation.metrics.detectedExpected, ...(baselineTokensPerChangedLine ? { baselineTokensPerChangedLine } : {}), ...(Object.keys(accounting).length ? { accounting } : {}) },
     batches: { planned: manifest.batches.length, completed: artifacts.length, retried: retries, overBudget: providerCalls > (evidence.maxCalls ?? Infinity) || (tokensUsed ?? Infinity) + evaluation.tokensUsed > (evidence.maxTokens ?? Infinity) ? 1 : 0 },
     ...(cache ? { cache } : {}),
     memory: { enabled: memory.enabled, persistencePass: memory.persistencePass, loadPass: memory.loadPass, malformedRejected: memory.malformedRejected, feedbackRecorded: memory.feedbackRecorded, rulesApproved: memory.rulesApproved, learningEvaluationPass: memory.learningEvaluationPass, learningDetectionLift: memory.learningDetectionLift, learningPrecisionPass: memory.learningPrecisionPass, learningTokenPass: memory.learningTokenPass },

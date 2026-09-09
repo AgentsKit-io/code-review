@@ -5,6 +5,7 @@ import type { Category, Severity } from '../agents/code-review/agent.js'
 import { ABSOLUTE_LOCAL_CLI_OUTPUT_BYTES, ABSOLUTE_LOCAL_CLI_TIMEOUT_MS, DEFAULT_LOCAL_CLI_OUTPUT_BYTES } from './local-cli-process.js'
 import { localCliTimeoutMs } from './local-cli-timeout.js'
 import { providerExecutionPolicy, resolveProviderId } from './provider-registry.js'
+import { defaultReviewBudget, type HierarchicalReviewBudget, type ReviewBudgetHierarchyInput } from './budget.js'
 
 export const BUILTIN_LENS_KEYS = [
   'correctness', 'security', 'performance', 'maintainability', 'design', 'tests', 'conventions',
@@ -41,7 +42,9 @@ const ReviewConfigSchema = z.object({
   }).strict().optional(),
   budget: z.object({
     maxFiles: positiveInt.max(500).optional(), maxBytes: positiveInt.max(25 * 1024 * 1024).optional(),
-    maxCalls: positiveInt.max(1000).optional(), concurrency: positiveInt.max(32).optional(), deadlineMs: positiveInt.max(30 * 60 * 1000).optional(),
+    maxTokens: positiveInt.max(1_000_000).optional(), maxCalls: positiveInt.max(1000).optional(), concurrency: positiveInt.max(32).optional(), deadlineMs: positiveInt.max(30 * 60 * 1000).optional(),
+    reserveForOutput: nonNegativeInt.max(100_000).optional(), reserveForVerification: nonNegativeInt.max(100_000).optional(),
+    hierarchy: z.object({ campaign: z.record(z.unknown()).optional(), pullRequest: z.record(z.unknown()).optional(), contextPack: z.record(z.unknown()).optional(), analysis: z.record(z.unknown()).optional(), verification: z.record(z.unknown()).optional() }).strict().optional(),
   }).strict().optional(),
   worker: z.object({
     timeoutMs: positiveInt.max(ABSOLUTE_LOCAL_CLI_TIMEOUT_MS).optional(),
@@ -98,7 +101,7 @@ export interface ResolvedReviewConfig {
   votes: number
   retries: number
   thresholds: { minSeverity?: Severity; minConfidence?: number; maxPerFile?: number; suppressNits?: boolean }
-  budget: { maxFiles?: number; maxBytes?: number; maxCalls?: number; concurrency: number; deadlineMs: number }
+  budget: { maxFiles?: number; maxBytes?: number; maxTokens: number; maxCalls: number; concurrency: number; deadlineMs: number; reserveForOutput: number; reserveForVerification: number; hierarchy: HierarchicalReviewBudget }
   worker: { timeoutMs: number; maxOutputBytes: number }
   conventions?: string
   context: { mode: 'prompt' | 'isolated-snapshot'; patterns: string[]; adjacentLines: number; maxRelatedFiles: number; maxTokens: number; reserveForOutput: number }
@@ -179,7 +182,7 @@ export function resolveReviewConfig(
   const effective = {
     configVersion: 1 as const, profile, batchLenses: true, lenses, incompleteProfile,
     votes: overrides.votes ?? file?.votes ?? (profile === 'fast' ? 1 : 3), retries: overrides.retries ?? file?.retries ?? (profile === 'fast' ? 0 : 1),
-    thresholds, budget: { ...budget, concurrency: budget.concurrency ?? defaultConcurrency, maxCalls: budget.maxCalls ?? 1000, deadlineMs: budget.deadlineMs ?? defaultDeadlineMs },
+    thresholds, budget: { ...budget, concurrency: budget.concurrency ?? defaultConcurrency, maxTokens: budget.maxTokens ?? 100_000, maxCalls: budget.maxCalls ?? 1000, deadlineMs: budget.deadlineMs ?? defaultDeadlineMs, reserveForOutput: budget.reserveForOutput ?? 2_000, reserveForVerification: budget.reserveForVerification ?? 2_000, hierarchy: {} as HierarchicalReviewBudget },
     worker: { timeoutMs: file?.worker?.timeoutMs ?? localCliTimeoutMs(providerPolicy.requestTimeoutMs), maxOutputBytes: file?.worker?.maxOutputBytes ?? DEFAULT_LOCAL_CLI_OUTPUT_BYTES },
     conventions: overrides.conventions ?? file?.conventions,
     context: {
@@ -196,11 +199,28 @@ export function resolveReviewConfig(
     memory: { enabled: file?.memory?.enabled ?? false, provider: file?.memory?.provider ?? 'self-hosted', path: file?.memory?.path ?? '.agentskit/review-memory/messages.json', retentionDays: file?.memory?.retentionDays ?? 365, learnFromFeedback: file?.memory?.learnFromFeedback ?? true, autoPromoteRules: file?.memory?.autoPromoteRules ?? false },
     comments: { renderer: file?.comments?.renderer ?? 'coderabbit-inspired', language: file?.comments?.language ?? 'en', inline: file?.comments?.inline ?? true, summary: file?.comments?.summary ?? true, collapsibleDetails: file?.comments?.collapsibleDetails ?? true, includeReason: file?.comments?.includeReason ?? true, includeImpact: file?.comments?.includeImpact ?? true, includeInstructions: file?.comments?.includeInstructions ?? true, includeEvidence: file?.comments?.includeEvidence ?? true },
   }
+  const hierarchyInput = (effective.budget as typeof effective.budget & { hierarchy?: ReviewBudgetHierarchyInput }).hierarchy
+  let hierarchicalBudget: HierarchicalReviewBudget
+  try {
+    hierarchicalBudget = defaultReviewBudget({
+      maxTokens: effective.budget.maxTokens,
+      maxCalls: effective.budget.maxCalls,
+      deadlineMs: effective.budget.deadlineMs,
+      reserveForOutput: effective.budget.reserveForOutput,
+      reserveForVerification: effective.budget.reserveForVerification,
+      contextMaxTokens: effective.context.maxTokens,
+      contextReserveForOutput: effective.context.reserveForOutput,
+      hierarchy: hierarchyInput,
+    })
+  } catch (error) {
+    throw new ReviewConfigError(error instanceof Error ? error.message : String(error))
+  }
+  effective.budget.hierarchy = hierarchicalBudget
   const validation = z.object({
     profile: z.enum(['full', 'fast']), healthCheck: z.enum(['auto', 'off']),
     votes: positiveInt.max(25), retries: nonNegativeInt.max(1),
     thresholds: z.object({ minSeverity: z.enum(['blocker', 'high', 'med', 'nit']).optional(), minConfidence: z.number().min(0).max(1).optional(), maxPerFile: positiveInt.optional() }),
-    budget: z.object({ maxFiles: positiveInt.max(500).optional(), maxBytes: positiveInt.max(25 * 1024 * 1024).optional(), maxCalls: positiveInt.max(1000), concurrency: positiveInt.max(32), deadlineMs: positiveInt.max(30 * 60 * 1000) }),
+    budget: z.object({ maxFiles: positiveInt.max(500).optional(), maxBytes: positiveInt.max(25 * 1024 * 1024).optional(), maxTokens: positiveInt.max(1_000_000), maxCalls: positiveInt.max(1000), concurrency: positiveInt.max(32), deadlineMs: positiveInt.max(30 * 60 * 1000), reserveForOutput: nonNegativeInt.max(100_000), reserveForVerification: nonNegativeInt.max(100_000), hierarchy: z.any() }),
     context: z.object({ mode: z.enum(['prompt', 'isolated-snapshot']), patterns: z.array(z.string()), adjacentLines: nonNegativeInt.max(200), maxRelatedFiles: nonNegativeInt.max(8), maxTokens: positiveInt.max(1_000_000), reserveForOutput: nonNegativeInt.max(100_000) }).refine((value) => value.maxTokens > value.reserveForOutput, 'maxTokens must exceed reserveForOutput'),
   }).safeParse(effective)
   if (!validation.success) throw new ReviewConfigError(`invalid effective review config: ${diagnostic(validation.error)}`)

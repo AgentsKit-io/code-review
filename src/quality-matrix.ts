@@ -17,7 +17,7 @@ export interface QualityInput {
   security: { secretLeaks: number; unsafeActions: number; failClosedViolations: number }
   reliability: { runs: number; completeRuns: number; incompleteAccepted: number; staleArtifactsAccepted: number; silentFailures: number }
   performance: { p95Ms: number; baselineP95Ms?: number }
-  tokens: { tokensUsed?: number; changedLines: number; validFindings: number; baselineTokensPerChangedLine?: number }
+  tokens: { tokensUsed?: number; changedLines: number; validFindings: number; baselineTokensPerChangedLine?: number; accounting?: { inputTokens?: number; cachedInputTokens?: number; outputTokens?: number; reasoningOutputTokens?: number; memoryTokens?: number; retryTokens?: number; providerCalls?: number; wallClockMs?: number } }
   batches: { planned: number; completed: number; retried: number; overBudget: number }
   cache?: { hits: number; misses: number; corruptMisses: number; staleMisses: number; unvalidatedMisses: number; savedTokens: number }
   memory: { enabled: boolean; persistencePass: boolean; loadPass: boolean; malformedRejected: boolean; feedbackRecorded: boolean; rulesApproved: boolean; learningEvaluationPass: boolean; learningDetectionLift: boolean; learningPrecisionPass: boolean; learningTokenPass: boolean }
@@ -84,6 +84,11 @@ export function parseQualityInput(value: unknown): QualityInput {
   requireNumbers(input.reliability, 'reliability', ['runs', 'completeRuns', 'incompleteAccepted', 'staleArtifactsAccepted', 'silentFailures'])
   requireNumbers(input.performance, 'performance', ['p95Ms'])
   requireNumbers(input.tokens, 'tokens', ['changedLines', 'validFindings'])
+  if (requireRecord(input.tokens, 'tokens').accounting !== undefined) {
+    const accounting = requireRecord(input.tokens, 'tokens').accounting
+    const accountingRecord = requireRecord(accounting, 'tokens.accounting')
+    for (const key of ['inputTokens', 'cachedInputTokens', 'outputTokens', 'reasoningOutputTokens', 'memoryTokens', 'retryTokens', 'providerCalls', 'wallClockMs']) if (accountingRecord[key] !== undefined) requireNumber(accountingRecord[key], `tokens.accounting.${key}`)
+  }
   requireNumbers(input.batches, 'batches', ['planned', 'completed', 'retried', 'overBudget'])
   if (input.cache !== undefined) requireNumbers(input.cache, 'cache', ['hits', 'misses', 'corruptMisses', 'staleMisses', 'unvalidatedMisses', 'savedTokens'])
   requireBooleans(input.memory, 'memory', ['enabled', 'persistencePass', 'loadPass', 'malformedRejected', 'feedbackRecorded', 'rulesApproved', 'learningEvaluationPass', 'learningDetectionLift', 'learningPrecisionPass', 'learningTokenPass'])
@@ -178,7 +183,7 @@ export function evaluateQuality(input: QualityInput): QualityReport {
     result('security', security, { secretLeaks: input.security.secretLeaks, unsafeActions: input.security.unsafeActions, failClosedViolations: input.security.failClosedViolations }, 'Security and fail-closed violations are absolute defects.'),
     result('reliability', reliability, { completeRuns: input.reliability.completeRuns, runs: input.reliability.runs, staleArtifactsAccepted: input.reliability.staleArtifactsAccepted }, 'Incomplete, stale, or silently failed work cannot be accepted.'),
     result('speed', speed, { p95Ms: input.performance.p95Ms, baselineP95Ms: input.performance.baselineP95Ms ?? 'missing' }, 'Speed is relative to a measured baseline.'),
-    result('token-efficiency', tokenEfficiency, { tokensUsed: input.tokens.tokensUsed ?? 'missing', changedLines: input.tokens.changedLines, tokensPerChangedLine: tokensPerChangedLine ?? 'missing', baselineTokensPerChangedLine: input.tokens.baselineTokensPerChangedLine ?? 'missing' }, 'Token efficiency is relative to a measured baseline.'),
+    result('token-efficiency', tokenEfficiency, { tokensUsed: input.tokens.tokensUsed ?? 'missing', changedLines: input.tokens.changedLines, tokensPerChangedLine: tokensPerChangedLine ?? 'missing', baselineTokensPerChangedLine: input.tokens.baselineTokensPerChangedLine ?? 'missing', accounting: input.tokens.accounting ? 'reported' : 'missing' }, 'Token efficiency is relative to a measured baseline; detailed accounting is retained when the provider reports it.'),
     result('batch-efficiency', batchEfficiency, { planned: input.batches.planned, completed: input.batches.completed, overBudget: input.batches.overBudget }, 'Batches must complete within budget without avoidable retries.'),
     memoryResult,
     result('configuration', configuration, { validAccepted: input.configuration.validAccepted, invalidRejected: input.configuration.invalidRejected, schemaAvailable: input.configuration.schemaAvailable }, 'The public configuration must validate before execution.'),

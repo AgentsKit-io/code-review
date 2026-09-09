@@ -380,7 +380,17 @@ never accepted in CI.
     "performance": { "enabled": false, "required": false }
   },
   "votes": 3,
-  "budget": { "maxFiles": 20, "maxCalls": 200, "concurrency": 1, "deadlineMs": 600000 },
+  "budget": {
+    "maxFiles": 20, "maxTokens": 100000, "maxCalls": 200, "concurrency": 1,
+    "deadlineMs": 600000, "reserveForOutput": 2000, "reserveForVerification": 2000,
+    "hierarchy": {
+      "campaign": { "maxTokens": 100000, "maxCalls": 200, "deadlineMs": 600000 },
+      "pullRequest": { "maxTokens": 76000, "maxCalls": 199, "deadlineMs": 600000 },
+      "contextPack": { "maxTokens": 16000, "maxCalls": 50, "deadlineMs": 600000 },
+      "analysis": { "maxTokens": 16000, "maxCalls": 50, "deadlineMs": 600000 },
+      "verification": { "maxTokens": 16000, "maxCalls": 50, "deadlineMs": 600000 }
+    }
+  },
   "worker": { "timeoutMs": 120000, "maxOutputBytes": 20971520 },
   "thresholds": { "minSeverity": "med", "minConfidence": 0.7 },
   "context": {
@@ -429,7 +439,7 @@ npx --yes github:AgentsKit-io/code-review doctor --provider openai --model gpt-4
 
 A normal context pack contains bounded changed hunks plus adjacent lines and, when configured, directly related source/test files. It uses one structured analysis call covering every enabled review dimension, then independently verifies candidate findings. Before any model call, deterministic path and source evidence classifies each pack as `low`, `normal`, `high`, or `critical`. High-risk changes receive one additional specialized correctness pass; critical security, credential, authorization, or migration changes receive one combined correctness/security pass. Documentation and generated-only packs remain on the single-analysis low-cost path. A failed required specialized pass makes the review incomplete rather than clean.
 
-The plan and result record pack membership, included ranges, expansion, risk signals and selected depth, estimated tokens, and output reserve. AgentsKit token budgeting includes the system prompt and tool schema and rejects oversized requests before provider execution. Results explicitly report enabled, completed, and missing required dimensions. This replaces repeated full-file prompts and never duplicates unified patches beside numbered source. Control usage with the typed `review.context` policy, `--profile fast`, `--max-files`, `--max-calls`, `--votes`, `--deadline-ms`, `--concurrency`, paths, and workflow triggers. For sensitive code, use a local model or an approved private gateway; provider data policies still apply to hosted APIs.
+The plan and result record pack membership, included ranges, expansion, risk signals and selected depth, estimated tokens, and output reserve. AgentsKit token budgeting includes the system prompt and tool schema and rejects oversized requests before provider execution. Hierarchical budgets reserve campaign capacity for the current PR, output, and critical verification; every provider request reserves its estimated input before entering the concurrency gate. `ReviewEvidence.usage` preserves input, cached-input, output, reasoning, memory, retry, call, and wall-clock dimensions when the provider reports them; unavailable dimensions remain absent. Results explicitly report enabled, completed, and missing required dimensions. This replaces repeated full-file prompts and never duplicates unified patches beside numbered source. Control usage with the typed `review.context` policy, `review.budget` hierarchy, `--profile fast`, `--max-files`, `--max-calls`, `--votes`, `--deadline-ms`, `--concurrency`, paths, and workflow triggers. For sensitive code, use a local model or an approved private gateway; provider data policies still apply to hosted APIs.
 
 ## Operations and machine-readable docs
 

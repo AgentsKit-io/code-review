@@ -318,7 +318,7 @@ async function main() {
     blockingSeverity: (flag('block') as Severity) ?? 'blocker',
     requiredLenses: Object.entries(reviewConfig.lenses).filter(([, policy]) => policy.required).map(([key]) => key as Category),
     retries: reviewConfig.retries,
-    budget: { maxFiles: reviewConfig.budget.maxFiles, maxBytes: reviewConfig.budget.maxBytes, maxCalls: reviewConfig.budget.maxCalls, concurrency: reviewConfig.budget.concurrency, deadlineMs: reviewConfig.budget.deadlineMs },
+    budget: { maxFiles: reviewConfig.budget.maxFiles, maxBytes: reviewConfig.budget.maxBytes, maxTokens: reviewConfig.budget.maxTokens, maxCalls: reviewConfig.budget.maxCalls, concurrency: reviewConfig.budget.concurrency, deadlineMs: reviewConfig.budget.deadlineMs, reserveForOutput: reviewConfig.budget.reserveForOutput, reserveForVerification: reviewConfig.budget.reserveForVerification, hierarchy: reviewConfig.budget.hierarchy },
     profile: reviewConfig.profile,
     batchLenses: reviewConfig.batchLenses,
     conventions: reviewConfig.conventions ? { path: reviewConfig.conventions } : autoConventions(),

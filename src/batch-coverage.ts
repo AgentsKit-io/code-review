@@ -1,4 +1,5 @@
 import type { ReviewEvidence, ReviewResult } from '../agents/code-review/agent.js'
+import { addReviewUsage, emptyReviewUsage } from './budget.js'
 
 export type BatchCoverageState = {
   version: 1
@@ -104,6 +105,7 @@ export function consolidateBatchArtifacts(state: BatchCoverageState, artifacts: 
     failed: total.failed + review.execution.failed,
   }), { attempted: 0, succeeded: 0, failed: 0 })
   const allReportTokens = reviews.every((review) => review.evidence.tokensUsed !== undefined)
+  const allUsage = reviews.every((review) => review.evidence.usage !== undefined)
   const contextPacks = reviews.flatMap((review) => review.evidence.contextPacks ?? [])
   const evidence = reviews.reduce<ReviewEvidence>((total, review) => ({
     profile: total.profile,
@@ -120,8 +122,9 @@ export function consolidateBatchArtifacts(state: BatchCoverageState, artifacts: 
     deadlineExceeded: total.deadlineExceeded || review.evidence.deadlineExceeded,
     circuitState: total.circuitState === 'open' || review.evidence.circuitState === 'open' ? 'open' : total.circuitState,
     ...(allReportTokens ? { tokensUsed: (total.tokensUsed ?? 0) + (review.evidence.tokensUsed ?? 0) } : {}),
+    ...(allUsage ? { usage: addReviewUsage(total.usage ?? emptyReviewUsage(), review.evidence.usage!) } : {}),
     contextPacks,
-  }), { profile: reviews[0]!.evidence.profile, providerCalls: 0, failedProviderCalls: 0, skippedProviderCalls: 0, verificationCandidates: 0, verificationRequests: 0, verificationVotes: 0, verificationFailedRequests: 0, verificationUnverifiedFindings: 0, elapsedMs: 0, deadlineMs: 0, deadlineExceeded: false, circuitState: 'closed' })
+  }), { profile: reviews[0]!.evidence.profile, providerCalls: 0, failedProviderCalls: 0, skippedProviderCalls: 0, verificationCandidates: 0, verificationRequests: 0, verificationVotes: 0, verificationFailedRequests: 0, verificationUnverifiedFindings: 0, elapsedMs: 0, deadlineMs: 0, deadlineExceeded: false, circuitState: 'closed', usage: emptyReviewUsage() })
   const severe = findings.some((finding) => finding.severity === 'blocker' || finding.severity === 'high')
   const enabledCategories = reviews[0]?.enabledCategories ?? []
   const completedCategories = enabledCategories.filter((category) => reviews.every((review) => review.completedCategories?.includes(category)))

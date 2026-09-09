@@ -11,6 +11,13 @@ const relativePath = z.string().min(1).refine(
   (value) => !isAbsolute(value) && !value.split('/').includes('..') && !value.split('\\').includes('..'),
   'must be repository-relative and cannot contain ..',
 )
+const budgetScope = z.object({
+  maxTokens: z.number().int().min(1).max(1_000_000).optional(),
+  maxCalls: z.number().int().min(1).max(1000).optional(),
+  deadlineMs: z.number().int().min(1).max(30 * 60 * 1000).optional(),
+  reserveForOutput: z.number().int().min(0).max(100_000).optional(),
+  reserveForVerification: z.number().int().min(0).max(100_000).optional(),
+}).strict()
 
 export const ReviewConfigSchema = z.object({
   version: z.literal(1),
@@ -35,8 +42,12 @@ export const ReviewConfigSchema = z.object({
     minSeverity: z.enum(['blocker', 'high', 'med', 'nit']).default('nit'),
     minConfidence: z.number().min(0).max(1).optional(),
     maxFindingsPerFile: z.number().int().min(1).max(100).default(7),
-    maxCalls: z.number().int().min(1).max(1000).default(1000),
-    deadlineMs: z.number().int().min(1).max(30 * 60 * 1000).default(600_000),
+      maxTokens: z.number().int().min(1).max(1_000_000).default(100_000),
+      maxCalls: z.number().int().min(1).max(1000).default(1000),
+      deadlineMs: z.number().int().min(1).max(30 * 60 * 1000).default(600_000),
+      reserveForOutput: z.number().int().min(0).max(100_000).default(2_000),
+      reserveForVerification: z.number().int().min(0).max(100_000).default(2_000),
+      hierarchy: z.object({ campaign: budgetScope.optional(), pullRequest: budgetScope.optional(), contextPack: budgetScope.optional(), analysis: budgetScope.optional(), verification: budgetScope.optional() }).strict().optional(),
     healthCheck: z.enum(['auto', 'off']).default('auto'),
     conventions: relativePath.optional(),
     context: z.object({
@@ -160,7 +171,7 @@ export function toReviewConfig(config: ReviewProjectConfig): Record<string, unkn
     healthCheck: config.review.healthCheck,
     votes: config.review.votes,
     thresholds: { minSeverity: config.review.minSeverity, minConfidence: config.review.minConfidence, maxPerFile: config.review.maxFindingsPerFile },
-    budget: { maxCalls: config.review.maxCalls, deadlineMs: config.review.deadlineMs, concurrency: config.execution.maxConcurrentPullRequests },
+    budget: { maxTokens: config.review.maxTokens, maxCalls: config.review.maxCalls, deadlineMs: config.review.deadlineMs, reserveForOutput: config.review.reserveForOutput, reserveForVerification: config.review.reserveForVerification, hierarchy: config.review.hierarchy },
     conventions: config.review.conventions,
     context: { mode: 'prompt', patterns: [], ...config.review.context },
     batching: config.batches,

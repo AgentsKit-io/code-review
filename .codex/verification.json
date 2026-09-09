@@ -100,6 +100,11 @@
       ,{ "id": "review-cache-reuse", "statement": "An identical second execution reuses validated cache entries without provider calls and emits cache-hit and saved-token metrics.", "checks": ["review-cache", "repo-check"] }
       ,{ "id": "review-cache-fail-closed", "statement": "Relevant identity changes, corrupt records, stale records, and unvalidated records cannot be reused as review evidence.", "checks": ["review-cache", "repo-check", "package"] }
       ,{ "id": "review-cache-provenance", "statement": "Cache records preserve source provenance, token usage, validation status, and are replaced atomically without raw source content.", "checks": ["review-cache", "repo-check", "package"] }
+      ,{ "id": "hierarchical-budget-contract", "statement": "Campaign, pull-request, context-pack, analysis, and verification budgets are schema-validated with explicit output and critical-verification reserves.", "checks": ["budgeting", "repo-check", "package"] }
+      ,{ "id": "budgeted-provider-requests", "statement": "Every provider request reserves its estimated input and output capacity before execution, including concurrent and retry attempts.", "checks": ["budgeting", "regression", "repo-check"] }
+      ,{ "id": "budget-isolation", "statement": "A pull-request budget cannot consume the campaign reserve, and child scope call/token limits cannot exceed their parent capacity.", "checks": ["budgeting", "repo-check"] }
+      ,{ "id": "budget-accounting", "statement": "Review evidence and quality inputs preserve input, cached-input, output, reasoning, memory, retry, provider-call, and wall-clock dimensions, leaving unsupported dimensions explicitly unavailable.", "checks": ["budgeting", "quality-matrix", "repo-check", "package"] }
+      ,{ "id": "budget-provider-free-blockers", "statement": "Impossible minimum budgets fail during provider-free planning without creating a worktree or starting a provider request.", "checks": ["budgeting", "campaign-preflight", "repo-check"] }
     ]
   },
   "surfaces": { "logic": true, "cli": true, "docs": true },
@@ -132,6 +137,7 @@
     ,{ "id": "quality-evals", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/quality-evals.test.mjs", "timeoutMs": 120000 }
     ,{ "id": "adaptive-verification", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/adaptive-verification.test.mjs test/multidimensional-analysis.test.mjs test/review-config.test.mjs", "timeoutMs": 120000 }
     ,{ "id": "review-cache", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/review-cache.test.mjs", "timeoutMs": 60000 }
+    ,{ "id": "budgeting", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/budget.test.mjs", "timeoutMs": 60000 }
   ],
   "tracking": { "required": false, "reason": "The human authorized a release PR; its URL will be recorded in the release report. Publication remains blocked until the PR is merged and a stable GitHub Release exists." },
   "cleanup": { "roots": [".codex/verification/tmp"] }

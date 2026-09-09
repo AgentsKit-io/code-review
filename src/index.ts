@@ -96,3 +96,5 @@ export type {
 export type { ConfigInput, ReviewProjectConfig } from './public-config.js'
 export { createReviewCache, reviewCacheKey, ReviewCacheIdentitySchema, ReviewCacheRecordSchema } from './review-cache.js'
 export type { ReviewCache, ReviewCacheIdentity, ReviewCacheLookup, ReviewCacheMissReason, ReviewCacheRecord, ReviewCacheWrite } from './review-cache.js'
+export { HierarchicalReviewBudgetSchema, ReviewBudgetScopeSchema, addReviewUsage, compileReviewBudget, createReviewBudgetLedger, defaultReviewBudget, emptyReviewUsage, ReviewBudgetExceededError } from './budget.js'
+export type { HierarchicalReviewBudget, ReviewBudgetHierarchyInput, ReviewBudgetScope, ReviewUsage } from './budget.js'
