@@ -48,7 +48,14 @@ const ReviewConfigSchema = z.object({
     maxOutputBytes: positiveInt.max(ABSOLUTE_LOCAL_CLI_OUTPUT_BYTES).optional(),
   }).strict().optional(),
   conventions: relativePattern.optional(),
-  context: z.object({ mode: z.enum(['prompt', 'isolated-snapshot']), patterns: z.array(relativePattern).max(100).optional() }).strict().optional(),
+  context: z.object({
+    mode: z.enum(['prompt', 'isolated-snapshot']),
+    patterns: z.array(relativePattern).max(100).optional(),
+    adjacentLines: nonNegativeInt.max(200).optional(),
+    maxRelatedFiles: nonNegativeInt.max(8).optional(),
+    maxTokens: positiveInt.max(1_000_000).optional(),
+    reserveForOutput: nonNegativeInt.max(100_000).optional(),
+  }).strict().optional(),
   provider: z.string().min(1).max(100).optional(), model: z.string().min(1).max(200).optional(),
   transport: z.enum(['api', 'acp', 'headless', 'auto', 'http']).optional(),
   healthCheck: z.enum(['auto', 'off']).optional(),
@@ -94,7 +101,7 @@ export interface ResolvedReviewConfig {
   budget: { maxFiles?: number; maxBytes?: number; maxCalls?: number; concurrency: number; deadlineMs: number }
   worker: { timeoutMs: number; maxOutputBytes: number }
   conventions?: string
-  context: { mode: 'prompt' | 'isolated-snapshot'; patterns: string[] }
+  context: { mode: 'prompt' | 'isolated-snapshot'; patterns: string[]; adjacentLines: number; maxRelatedFiles: number; maxTokens: number; reserveForOutput: number }
   allowUnredacted: boolean
   provider?: string; model?: string; transport?: 'api' | 'acp' | 'headless' | 'auto' | 'http'
   healthCheck: 'auto' | 'off'
@@ -175,7 +182,11 @@ export function resolveReviewConfig(
     thresholds, budget: { ...budget, concurrency: budget.concurrency ?? defaultConcurrency, maxCalls: budget.maxCalls ?? 1000, deadlineMs: budget.deadlineMs ?? defaultDeadlineMs },
     worker: { timeoutMs: file?.worker?.timeoutMs ?? localCliTimeoutMs(providerPolicy.requestTimeoutMs), maxOutputBytes: file?.worker?.maxOutputBytes ?? DEFAULT_LOCAL_CLI_OUTPUT_BYTES },
     conventions: overrides.conventions ?? file?.conventions,
-    context: { mode: file?.context?.mode ?? 'prompt', patterns: file?.context?.patterns ?? [] },
+    context: {
+      mode: file?.context?.mode ?? 'prompt', patterns: file?.context?.patterns ?? [],
+      adjacentLines: file?.context?.adjacentLines ?? 40, maxRelatedFiles: file?.context?.maxRelatedFiles ?? 1,
+      maxTokens: file?.context?.maxTokens ?? 16_000, reserveForOutput: file?.context?.reserveForOutput ?? 2_000,
+    },
     allowUnredacted: Boolean(options.allowUnredacted),
     provider: overrides.provider ?? file?.provider, model: overrides.model ?? file?.model,
     transport: (overrides.transport ?? file?.transport) as ResolvedReviewConfig['transport'],
@@ -190,6 +201,7 @@ export function resolveReviewConfig(
     votes: positiveInt.max(25), retries: nonNegativeInt.max(1),
     thresholds: z.object({ minSeverity: z.enum(['blocker', 'high', 'med', 'nit']).optional(), minConfidence: z.number().min(0).max(1).optional(), maxPerFile: positiveInt.optional() }),
     budget: z.object({ maxFiles: positiveInt.max(500).optional(), maxBytes: positiveInt.max(25 * 1024 * 1024).optional(), maxCalls: positiveInt.max(1000), concurrency: positiveInt.max(32), deadlineMs: positiveInt.max(30 * 60 * 1000) }),
+    context: z.object({ mode: z.enum(['prompt', 'isolated-snapshot']), patterns: z.array(z.string()), adjacentLines: nonNegativeInt.max(200), maxRelatedFiles: nonNegativeInt.max(8), maxTokens: positiveInt.max(1_000_000), reserveForOutput: nonNegativeInt.max(100_000) }).refine((value) => value.maxTokens > value.reserveForOutput, 'maxTokens must exceed reserveForOutput'),
   }).safeParse(effective)
   if (!validation.success) throw new ReviewConfigError(`invalid effective review config: ${diagnostic(validation.error)}`)
   return effective

@@ -22,6 +22,7 @@ export interface SourceLimits {
   readonly maxFiles?: number
   readonly maxBytes?: number
   readonly maxFileBytes?: number
+  readonly contextLines?: number
 }
 
 export type SourceConfig =
@@ -72,13 +73,115 @@ function isReviewableName(file: string): boolean {
   return SPECIAL_FILES.has(base) || SPECIAL_FILES.has(base.replace(/^\./, '')) || CODE_EXT.has(extname(file).toLowerCase()) || normalize(file).startsWith('.github/workflows/')
 }
 
-function changedRanges(patch: string): Array<{ start: number; end: number }> {
+type PatchRecord = { line: number; kind: 'context' | 'added' | 'removed'; content: string }
+type PatchInfo = { records: PatchRecord[]; changedRanges: Array<{ start: number; end: number }> }
+
+function rangesFromLines(lines: readonly number[]): Array<{ start: number; end: number }> {
   const ranges: Array<{ start: number; end: number }> = []
-  for (const m of patch.matchAll(/^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@/gm)) {
-    const start = Number(m[1]); const count = m[2] === undefined ? 1 : Number(m[2])
-    if (count > 0) ranges.push({ start, end: start + count - 1 })
+  for (const line of [...new Set(lines)].sort((a, b) => a - b)) {
+    const previous = ranges.at(-1)
+    if (previous && line === previous.end + 1) previous.end = line
+    else ranges.push({ start: line, end: line })
   }
   return ranges
+}
+
+function parsePatch(patch: string): PatchInfo {
+  const records: PatchRecord[] = []
+  const changedLines: number[] = []
+  let line = 0
+  let inHunk = false
+  for (const value of patch.split('\n')) {
+    const header = value.match(/^@@ -\d+(?:,\d+)? \+(\d+)(?:,\d+)? @@/)
+    if (header) { line = Number(header[1]); inHunk = true; continue }
+    if (!inHunk || value.startsWith('\\ No newline')) continue
+    if (value.startsWith('+')) {
+      records.push({ line, kind: 'added', content: value.slice(1) })
+      changedLines.push(line++)
+    } else if (value.startsWith('-')) {
+      const anchor = Math.max(1, line)
+      records.push({ line: anchor, kind: 'removed', content: value.slice(1) })
+      changedLines.push(anchor)
+    } else if (value.startsWith(' ')) {
+      records.push({ line, kind: 'context', content: value.slice(1) })
+      line += 1
+    }
+  }
+  return { records, changedRanges: rangesFromLines(changedLines) }
+}
+
+function changedRanges(patch: string): Array<{ start: number; end: number }> {
+  return parsePatch(patch).changedRanges
+}
+
+function mergeRanges(ranges: readonly { start: number; end: number }[], maxLine: number, adjacentLines: number): Array<{ start: number; end: number }> {
+  const expanded = ranges
+    .map(({ start, end }) => ({ start: Math.max(1, start - adjacentLines), end: Math.min(maxLine, end + adjacentLines) }))
+    .sort((a, b) => a.start - b.start || a.end - b.end)
+  const merged: Array<{ start: number; end: number }> = []
+  for (const range of expanded) {
+    const previous = merged.at(-1)
+    if (previous && range.start <= previous.end + 1) previous.end = Math.max(previous.end, range.end)
+    else merged.push({ ...range })
+  }
+  return merged
+}
+
+function actualAdjacentLines(lines: readonly number[], changed: readonly { start: number; end: number }[]): number {
+  return lines.reduce((maximum, line) => Math.max(maximum, Math.min(...changed.map((range) => line < range.start ? range.start - line : line > range.end ? line - range.end : 0))), 0)
+}
+
+type ProjectedSource = { fullContent: string; sourceLineNumbers?: number[]; contextProjection: NonNullable<ReviewTarget['contextProjection']> }
+
+function projectChangedContent(content: string, patch: PatchInfo, adjacentLines: number): ProjectedSource {
+  const lines = content.split('\n')
+  if (!patch.changedRanges.length) return {
+    fullContent: content,
+    contextProjection: {
+      mode: 'whole-file', originalBytes: Buffer.byteLength(content, 'utf8'), includedBytes: Buffer.byteLength(content, 'utf8'),
+      includedRanges: [{ start: 1, end: lines.length }], adjacentLines: 0, requestedAdjacentLines: adjacentLines,
+    },
+  }
+  const includedRanges = mergeRanges(patch.changedRanges, lines.length, adjacentLines)
+  const sourceLineNumbers: number[] = []
+  const selected: string[] = []
+  for (const range of includedRanges) for (let line = range.start; line <= range.end; line += 1) {
+    sourceLineNumbers.push(line)
+    selected.push(lines[line - 1] ?? '')
+  }
+  for (const removed of patch.records.filter((record) => record.kind === 'removed')) {
+    sourceLineNumbers.push(removed.line)
+    selected.push(`[removed before this line] ${removed.content}`)
+  }
+  const fullContent = selected.join('\n')
+  return {
+    fullContent,
+    sourceLineNumbers,
+    contextProjection: {
+      mode: 'changed-hunks', originalBytes: Buffer.byteLength(content, 'utf8'), includedBytes: Buffer.byteLength(fullContent, 'utf8'),
+      includedRanges, adjacentLines: actualAdjacentLines(sourceLineNumbers, patch.changedRanges), requestedAdjacentLines: adjacentLines,
+    },
+  }
+}
+
+function projectPatch(patch: string, adjacentLines: number): ProjectedSource | undefined {
+  const parsed = parsePatch(patch)
+  if (!parsed.records.length || !parsed.changedRanges.length) return undefined
+  const maxLine = Math.max(...parsed.records.map((record) => record.line))
+  const includedRanges = mergeRanges(parsed.changedRanges, maxLine, adjacentLines)
+  const included = parsed.records.filter((record) => record.kind === 'removed' || includedRanges.some((range) => record.line >= range.start && record.line <= range.end))
+  const selected = included.map((record) => record.kind === 'removed' ? `[removed before this line] ${record.content}` : record.content)
+  const sourceLineNumbers = included.map((record) => record.line)
+  const fullContent = selected.join('\n')
+  return {
+    fullContent,
+    sourceLineNumbers,
+    contextProjection: {
+      mode: 'patch-fallback', originalBytes: Buffer.byteLength(patch, 'utf8'), includedBytes: Buffer.byteLength(fullContent, 'utf8'),
+      includedRanges: rangesFromLines(sourceLineNumbers),
+      adjacentLines: actualAdjacentLines(sourceLineNumbers, parsed.changedRanges), requestedAdjacentLines: adjacentLines,
+    },
+  }
 }
 
 function unreviewed(file: string, reason: string): ReviewTarget {
@@ -123,10 +226,20 @@ function readTarget(file: string, cwd: string, limits: SourceLimits, redact: boo
   try {
     const size = fstatSync(fd).size
     const maxFileBytes = limits.maxFileBytes ?? DEFAULT_PROMPT_FILE_BYTES
-    if (size > maxFileBytes) return unreviewed(normalized, `file exceeds ${maxFileBytes} byte limit`)
+    if (size > (changed?.length ? ABSOLUTE_TOTAL_BYTES : maxFileBytes)) {
+      const projected = patch && changed?.length ? projectPatch(patch, limits.contextLines ?? 40) : undefined
+      return projected
+        ? { file: normalized, language: langOf(normalized), ...projected, changedRanges: changed, patch, isChanged: true }
+        : unreviewed(normalized, `file exceeds ${maxFileBytes} byte limit`)
+    }
     const fullContent = promptText(readFileSync(fd, 'utf8'))
     if (fullContent === undefined) return unreviewed(normalized, 'binary content')
-    return { file: normalized, language: langOf(normalized), fullContent: redact ? redactSecrets(fullContent) : fullContent, changedRanges: changed, patch, isChanged: Boolean(changed) }
+    const safe = redact ? redactSecrets(fullContent) : fullContent
+    const projected = changed?.length && patch ? projectChangedContent(safe, parsePatch(patch), limits.contextLines ?? 40) : {
+      fullContent: safe,
+      contextProjection: { mode: 'whole-file' as const, originalBytes: size, includedBytes: Buffer.byteLength(safe, 'utf8'), includedRanges: [{ start: 1, end: safe.split('\n').length }], adjacentLines: 0, requestedAdjacentLines: limits.contextLines ?? 40 },
+    }
+    return { file: normalized, language: langOf(normalized), ...projected, changedRanges: changed, patch, isChanged: Boolean(changed) }
   } catch { return unreviewed(normalized, 'file is not readable text')
   } finally { closeSync(fd) }
 }
@@ -191,7 +304,7 @@ async function fromGitDiff(c: Extract<SourceConfig, { kind: 'git-diff' }>): Prom
   for (const block of diff.split(/^diff --git /m).slice(1)) {
     const pathMatch = block.match(/^a\/(.+?) b\/(.+)$/m); const file = pathMatch?.[2]
     if (!file || block.includes('\ndeleted file mode')) continue
-    const target = readTarget(file, cwd, { maxFileBytes: c.limits?.maxFileBytes }, Boolean(c.redact), changedRanges(block), block)
+    const target = readTarget(file, cwd, { maxFileBytes: c.limits?.maxFileBytes, contextLines: c.limits?.contextLines }, Boolean(c.redact), changedRanges(block), block)
     targets.push(target)
   }
   return targets
@@ -230,21 +343,32 @@ export async function loadScmTargets(c: { adapter: ScmAdapter; ref: ChangeReques
       targets.push(unreviewed(f.path, `file content unavailable: ${error instanceof Error ? error.message : String(error)}`)); continue
     }
     if (content.truncated) {
-      targets.push(unreviewed(f.path, remainingBytes <= fileLimit ? `PR exceeds ${c.limits?.maxBytes} byte limit` : `file exceeds ${fileLimit} byte limit`))
-      if (remainingBytes <= fileLimit) byteBudgetHit = true
+      const patch = f.patch
+      const projected = patch ? projectPatch(patch, c.limits?.contextLines ?? 40) : undefined
+      if (!projected) {
+        targets.push(unreviewed(f.path, remainingBytes <= fileLimit ? `PR exceeds ${c.limits?.maxBytes} byte limit` : `file exceeds ${fileLimit} byte limit`))
+        if (remainingBytes <= fileLimit) byteBudgetHit = true
+        continue
+      }
+      const safe = c.redact ? redactSecrets(projected.fullContent) : projected.fullContent
+      const includedBytes = Buffer.byteLength(safe, 'utf8')
+      if (downloadedBytes + includedBytes > (c.limits?.maxBytes ?? Number.POSITIVE_INFINITY)) { targets.push(unreviewed(f.path, `PR exceeds ${c.limits?.maxBytes} byte limit`)); byteBudgetHit = true; continue }
+      downloadedBytes += includedBytes
+      targets.push({ file: f.path, language: langOf(f.path), ...projected, fullContent: safe, contextProjection: { ...projected.contextProjection, includedBytes }, changedRanges: changedRanges(patch!), patch, isChanged: true, commitId: sha })
       continue
     }
     const raw = promptText(content.content)
     if (raw === undefined) { targets.push(unreviewed(f.path, 'binary content')); continue }
-    const size = Buffer.byteLength(raw, 'utf8'); const limit = fileLimit
-    if (size > limit) { targets.push(unreviewed(f.path, `file exceeds ${limit} byte limit`)); continue }
+    const safe = c.redact ? redactSecrets(raw) : raw
+    const projected = f.patch ? projectChangedContent(safe, parsePatch(f.patch), c.limits?.contextLines ?? 40) : { fullContent: safe, contextProjection: { mode: 'whole-file' as const, originalBytes: Buffer.byteLength(raw, 'utf8'), includedBytes: Buffer.byteLength(safe, 'utf8'), includedRanges: [{ start: 1, end: safe.split('\n').length }], adjacentLines: 0, requestedAdjacentLines: c.limits?.contextLines ?? 40 } }
+    const size = Buffer.byteLength(projected.fullContent, 'utf8')
     if (downloadedBytes + size > (c.limits?.maxBytes ?? Number.POSITIVE_INFINITY)) {
       targets.push(unreviewed(f.path, `PR exceeds ${c.limits?.maxBytes} byte limit`))
       byteBudgetHit = true
       continue
     }
     downloadedBytes += size
-    targets.push({ file: f.path, language: langOf(f.path), fullContent: c.redact ? redactSecrets(raw) : raw, changedRanges: f.patch ? changedRanges(f.patch) : [], patch: f.patch, isChanged: true, commitId: sha })
+    targets.push({ file: f.path, language: langOf(f.path), ...projected, changedRanges: f.patch ? changedRanges(f.patch) : [], patch: f.patch, isChanged: true, commitId: sha })
   }
   if (!diff.complete) targets.push(unreviewed('[github-pr file list]', `PR file metadata truncated after ${MAX_GITHUB_PR_METADATA_FILES} files`))
   return applyLimits(targets, c.limits)

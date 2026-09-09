@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "project": "agentskit-code-review-prd-137-issue-148",
+  "project": "agentskit-code-review-prd-137-issue-149",
   "root": "..",
   "profile": "custom",
   "exemptions": [
     "This repository is a CLI/library; endpoint, database, MCP, and UI product surfaces are out of scope for this fix."
   ],
   "contract": {
-    "intent": "Analyze every normal context pack once across all enabled review dimensions while preserving explicit fail-closed category coverage and measurable quality for issue #148.",
+    "intent": "Build bounded diff-first context packs with related-file grouping, explicit expansion evidence, and pre-provider AgentsKit token-budget enforcement for issue #149.",
     "outcomes": [
       { "id": "batch-manifest", "statement": "The CLI exposes a deterministic reviewable-file manifest, batch plan, and private SHA/policy-bound manifest without model execution.", "checks": ["batch-regression", "repo-check"] },
       { "id": "batch-artifact", "statement": "A partial batch writes a private artifact bound to the exact PR SHA, policy fingerprint, index, and file manifest; it cannot post to GitHub.", "checks": ["batch-regression", "repo-check"] },
@@ -80,6 +80,11 @@
       ,{ "id": "multidimensional-evidence", "statement": "Review results explicitly report enabled and completed categories, and a missing required category makes the result incomplete and non-approving.", "checks": ["multidimensional-analysis", "repo-check", "package"] }
       ,{ "id": "multidimensional-quality", "statement": "The fixed quality corpus preserves every expected detection through multidimensional analysis.", "checks": ["multidimensional-analysis", "repo-check"] }
       ,{ "id": "multidimensional-efficiency", "statement": "Automated evidence shows fewer provider calls and tokens than the equivalent seven-lens baseline.", "checks": ["multidimensional-analysis", "repo-check"] }
+      ,{ "id": "diff-first-large-file", "statement": "Eligible changed hunks remain reviewable when the complete file exceeds the former per-file prompt limit.", "checks": ["context-packs", "repo-check"] }
+      ,{ "id": "diff-first-no-duplication", "statement": "A context pack contains one numbered changed-source projection and never repeats the unified patch beside it.", "checks": ["context-packs", "repo-check"] }
+      ,{ "id": "related-context-grouping", "statement": "Small directly related source and test files share one deterministic context pack without duplicate file coverage.", "checks": ["context-packs", "repo-check"] }
+      ,{ "id": "bounded-expansion-evidence", "statement": "Adjacent-line and related-file expansion is explicitly configured, bounded, and recorded in plan and review evidence.", "checks": ["context-packs", "repo-check", "package"] }
+      ,{ "id": "agentskit-token-budget", "statement": "AgentsKit compileBudget measures every context pack including system prompt and tool schema and rejects oversized packs before provider execution.", "checks": ["context-packs", "repo-check", "package"] }
     ]
   },
   "surfaces": { "logic": true, "cli": true, "docs": true },
@@ -107,6 +112,7 @@
     ,{ "id": "campaign-preflight", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/campaign-preflight.test.mjs", "timeoutMs": 120000 }
     ,{ "id": "campaign-runner", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/campaign-runner.test.mjs test/campaign-preflight.test.mjs test/campaign-store.test.mjs", "timeoutMs": 120000 }
     ,{ "id": "multidimensional-analysis", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/multidimensional-analysis.test.mjs test/cli-smoke.test.mjs", "timeoutMs": 120000 }
+    ,{ "id": "context-packs", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/context-packs.test.mjs test/sources.test.mjs test/review-config.test.mjs", "timeoutMs": 120000 }
   ],
   "tracking": { "required": false, "reason": "The human authorized a release PR; its URL will be recorded in the release report. Publication remains blocked until the PR is merged and a stable GitHub Release exists." },
   "cleanup": { "roots": [".codex/verification/tmp"] }

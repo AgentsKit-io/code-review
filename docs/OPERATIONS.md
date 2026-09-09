@@ -146,6 +146,7 @@ export default defineConfig({
   review: {
     provider: "codex-cli",
     lenses: { correctness: true, security: true, tests: true },
+    context: { adjacentLines: 40, maxRelatedFiles: 1, maxTokens: 16000, reserveForOutput: 2000 },
   },
   memory: { enabled: true, provider: "self-hosted" },
   comments: { renderer: "coderabbit-inspired", language: "en" },
@@ -159,7 +160,11 @@ while fast limits the pass to required correctness, security, and tests with one
 and no retry. Every result records enabled and completed categories; a missing required
 category is incomplete and cannot approve. The config also supports lens policy (`enabled` and
 `required` per built-in lens), votes, retries, thresholds, file/byte/call,
-concurrency and global-deadline budgets, conventions, and context selection. All built-in lenses
+concurrency and global-deadline budgets, conventions, and bounded context selection. Diff reviews
+project changed hunks with configured adjacent lines instead of sending complete files by default;
+small source/test pairs may share one pack. AgentsKit token budgeting covers the system prompt,
+tool schema, and exact request before provider execution. Plans and results retain pack membership,
+included ranges, expansion, estimated input tokens, and output reserve. All built-in lenses
 are enabled by default; correctness, security, and tests are required.
 The shared local worker also accepts bounded `timeoutMs` and `maxOutputBytes`
 settings; absolute ceilings are always enforced.
@@ -226,8 +231,10 @@ set `context.mode` to `isolated-snapshot` and provide repository-relative
 patterns such as `src/**` or `!src/generated/**`. Sensitive directories/files,
 symlink escapes, binaries, and over-limit inputs are excluded and shown as
 `UNREVIEWED`. The default snapshot ceiling is 100 files/5 MiB; the absolute
-ceiling is 500 files/25 MiB. Prompt files default to 256 KiB with a 1 MiB
-absolute per-file ceiling.
+ceiling is 500 files/25 MiB. Whole-file inputs default to 256 KiB with a 1 MiB
+absolute per-file ceiling. Changed files may exceed the old whole-file limit because only bounded
+hunks are projected; the absolute 25 MiB ingestion ceiling still applies. Removed lines are retained
+as anchored review evidence, while only actual additions or deletion anchors count as changed lines.
 
 Remote and unknown provider boundaries receive high-confidence credential
 redaction while preserving file and line context. `--allow-unredacted` is a
@@ -320,13 +327,13 @@ Then require the workflow check in branch protection. CLI exit codes are:
 
 A model response that is malformed may drop one lens while other lenses continue; progress output and the final summary report successful and failed primary-lens counts. If any reviewable file cannot be ingested or has zero successful primary lenses, the pipeline stops before reporters run and exits `2`, including in advisory mode. Treat missing output or exit `2` as unavailable review, not approval.
 
-Use `--plan --json` (or `--dry-run`) to run the source and budget preflight without a model request. The plan reports profile, batching, files, bytes, enabled and required lenses, votes, retries, concurrency, deadline, estimated provider calls, every `UNREVIEWED` path with its reason, and concrete reductions when a limit would be exceeded. Estimates are always `best-effort`: primary lens demand is predictable, but model output determines how many skeptical verification calls are needed. The runtime counter remains the hard ceiling and fails closed if demand exceeds it. The preflight refuses before the provider starts when the predictable primary demand already exceeds the budget; `maxCalls` is capped at 1000 and unlimited mode is not supported. A required-lens failure is `INCOMPLETE` and exits `2`, including with `--no-fail`.
+Use `--plan --json` (or `--dry-run`) to run the source and budget preflight without a model request. The plan reports profile, batching, files, bytes, context-pack membership and expansion, estimated input tokens and reserve, enabled and required lenses, votes, retries, concurrency, deadline, estimated provider calls, every `UNREVIEWED` path with its reason, and concrete reductions when a limit would be exceeded. Estimates are always `best-effort`: primary lens demand is predictable, but model output determines how many skeptical verification calls are needed. AgentsKit rechecks the exact budget before every analysis, verification, and consolidation call. The runtime call counter remains the hard ceiling and fails closed if demand exceeds it. The preflight refuses before the provider starts when predictable primary demand exceeds either budget; `maxCalls` is capped at 1000 and unlimited mode is not supported. A required-lens failure is `INCOMPLETE` and exits `2`, including with `--no-fail`.
 
 For a PR that exceeds one review budget, use deterministic coverage batches instead of accepting an incomplete review. Run `--plan --json --batch-size <n> --batch-manifest <private-file>` to create a private manifest keyed by repository, PR, head SHA, and policy fingerprint. Each `--batch-index <n> --result <private-file>` run is deliberately incomplete by itself and rejects `--post`; its result artifact carries the same identity plus its exact file manifest. `--consolidate-manifest <manifest> --artifacts <comma-list> --result <private-file>` rejects a missing, duplicate, stale, mismatched, failed, deadline-exceeded, or required-lens-incomplete artifact. Only that consolidated artifact is accepted by `--publish-result <file> --pr owner/repo#N --post`, which rechecks current SHA and policy before creating the one GitHub review. Delete or replace the private state when the PR SHA or policy changes; never upload it as a CI artifact or commit it.
 
 ## Cost and latency controls
 
-Seven lenses fan out over selected files; candidate findings then receive adversarial votes. The primary controls are:
+One multidimensional analysis runs per bounded context pack; candidate findings then receive adversarial votes. The primary controls are:
 
 - `--max-files`: positive hard file budget;
 - `--max-calls`: bounded provider-call budget (absolute ceiling 1000);
@@ -336,6 +343,7 @@ Seven lenses fan out over selected files; candidate findings then receive advers
 - `--profile fast`: one bounded correctness/security/tests batch per file, one vote, and no retry;
 - `--deadline-ms`: hard global deadline; active local workers receive the abort signal and queued calls do not start;
 - `--health-check`: bounded provider smoke check before analysis (`auto` or `off`);
+- `review.context`: adjacent lines, related files, total model tokens, and reserved output tokens;
 - `--paths` or workflow path filters: narrow scope;
 - `--min-severity` and `--min-confidence`: output noise, not input-token cost.
 

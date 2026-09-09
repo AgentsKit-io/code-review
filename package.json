@@ -46,6 +46,7 @@
     "docs/quality-matrix.md",
     "test/cli-smoke.test.mjs",
     "test/continuous-improvement.test.mjs",
+    "test/context-packs.test.mjs",
     "test/documentation.test.mjs",
     "test/release-workflow.test.mjs",
     "scripts/generate-llms-full.mjs",

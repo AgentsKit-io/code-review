@@ -351,7 +351,11 @@ import { defineConfig, presets } from "@agentskit/code-review";
 
 export default defineConfig({
   target: { repository: "owner/repository" },
-  review: { preset: presets.strict().review, lenses: { security: true, tests: true } },
+  review: {
+    preset: presets.strict().review,
+    lenses: { security: true, tests: true },
+    context: { adjacentLines: 40, maxRelatedFiles: 1, maxTokens: 16000, reserveForOutput: 2000 },
+  },
   comments: { renderer: "coderabbit-inspired", language: "en", inline: true },
 });
 ```
@@ -379,7 +383,14 @@ never accepted in CI.
   "budget": { "maxFiles": 20, "maxCalls": 200, "concurrency": 1, "deadlineMs": 600000 },
   "worker": { "timeoutMs": 120000, "maxOutputBytes": 20971520 },
   "thresholds": { "minSeverity": "med", "minConfidence": 0.7 },
-  "context": { "mode": "prompt", "patterns": ["src/**"] }
+  "context": {
+    "mode": "prompt",
+    "patterns": ["src/**"],
+    "adjacentLines": 40,
+    "maxRelatedFiles": 1,
+    "maxTokens": 16000,
+    "reserveForOutput": 2000
+  }
 }
 ```
 
@@ -416,7 +427,7 @@ npx --yes github:AgentsKit-io/code-review doctor --provider openai --model gpt-4
 
 ## Cost and privacy
 
-A normal context pack uses one structured analysis call covering every enabled review dimension, then independently verifies candidate findings. Results explicitly report enabled, completed, and missing required dimensions. This replaces seven repeated source prompts and terminates immediately after the structured tool result. Control usage with `--profile fast`, `--max-files`, `--max-calls`, `--votes`, `--deadline-ms`, `--concurrency`, paths, and workflow triggers. For sensitive code, use a local model or an approved private gateway; provider data policies still apply to hosted APIs.
+A normal context pack contains bounded changed hunks plus adjacent lines and, when configured, directly related source/test files. It uses one structured analysis call covering every enabled review dimension, then independently verifies candidate findings. The plan and result record pack membership, included ranges, expansion, estimated tokens, and output reserve. AgentsKit token budgeting includes the system prompt and tool schema and rejects oversized requests before provider execution. Results explicitly report enabled, completed, and missing required dimensions. This replaces repeated full-file prompts and never duplicates unified patches beside numbered source. Control usage with the typed `review.context` policy, `--profile fast`, `--max-files`, `--max-calls`, `--votes`, `--deadline-ms`, `--concurrency`, paths, and workflow triggers. For sensitive code, use a local model or an approved private gateway; provider data policies still apply to hosted APIs.
 
 ## Operations and machine-readable docs
 
