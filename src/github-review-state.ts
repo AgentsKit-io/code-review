@@ -41,8 +41,10 @@ export function reviewMarker(sha: string, fingerprint: string): string {
 
 function retryableGithubGet(error: unknown): boolean {
   const message = error instanceof Error ? error.message : String(error)
-  return /GitHub GET .* → (429|5\d\d)/.test(message)
-    || /(?:aborted|timed out|fetch failed|network)/i.test(message)
+  const marker = message.indexOf(' → ')
+  const status = marker < 0 ? Number.NaN : Number(message.slice(marker + 3, marker + 6))
+  return status === 429 || (status >= 500 && status < 600)
+    || ['aborted', 'timed out', 'fetch failed', 'network'].some((term) => message.toLowerCase().includes(term))
 }
 
 export async function readGithubResponseText(response: Response, maxBytes = MAX_GITHUB_RESPONSE_BYTES): Promise<string> {
