@@ -55,4 +55,6 @@ export type {
   ReviewIdentity,
   ReviewUnitContract,
 } from './domain-contracts.js'
+export { CampaignEngineStateSchema, createCampaignEngineState, replayCampaign, transitionCampaign } from './campaign-reducer.js'
+export type { CampaignEngineState } from './campaign-reducer.js'
 export type { ConfigInput, ReviewProjectConfig } from './public-config.js'

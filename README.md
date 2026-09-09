@@ -374,7 +374,8 @@ pull-request run, review-unit, event, budget, immutable review identity, termina
 outcome, and typed failure records. `reviewIdentityFingerprint()` binds both
 source SHAs plus policy, prompt, configuration, model, and package identity.
 These contracts are provider-free; execution and persistence are added by later
-engine phases.
+engine phases. `transitionCampaign()` is the pure lifecycle authority and
+`replayCampaign()` deterministically rebuilds state from an ordered event log.
 
 ### Doctor
 

@@ -22,7 +22,8 @@ async function run(provider, mode, options = {}) {
   else delete process.env[`CODEX_FIXTURE_${prefix}_MODE`]
   if (options.argsFile) process.env[`CODEX_FIXTURE_${prefix}_ARGS_FILE`] = options.argsFile
   try {
-    const factory = provider === 'grok' ? grokHeadless({ command: 'grok', model: 'grok-4.6', worker: { timeoutMs: 200 } }) : opencodeHeadless({ command: 'opencode', model: 'openai/gpt-4o', worker: { timeoutMs: 200 } })
+    const timeoutMs = options.timeoutMs ?? 1_000
+    const factory = provider === 'grok' ? grokHeadless({ command: 'grok', model: 'grok-4.6', worker: { timeoutMs } }) : opencodeHeadless({ command: 'opencode', model: 'openai/gpt-4o', worker: { timeoutMs } })
     const source = factory.createSource(request)
     const chunks = []
     for await (const chunk of source.stream()) chunks.push(chunk)
@@ -70,7 +71,7 @@ test('headless output is bounded, retries once, and preserves provider failures'
       if (previous === undefined) delete process.env[`CODEX_FIXTURE_${prefix}_INVALID_ONCE_FILE`]
       else process.env[`CODEX_FIXTURE_${prefix}_INVALID_ONCE_FILE`] = previous
     } finally { rmSync(stateDir, { recursive: true, force: true }) }
-    assert.match((await run(provider, 'timeout'))[0]?.content ?? '', /timed out after 200ms/)
+    assert.match((await run(provider, 'timeout', { timeoutMs: 200 }))[0]?.content ?? '', /timed out after 200ms/)
     assert.match((await run(provider, 'failure'))[0]?.content ?? '', /exited with code 7/)
   }
 })
