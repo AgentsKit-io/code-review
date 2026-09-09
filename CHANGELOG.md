@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.13.0
+
+### Minor Changes
+
+- [#170](https://github.com/AgentsKit-io/code-review/pull/170) [`d857a58`](https://github.com/AgentsKit-io/code-review/commit/d857a5856fc14026056e3bb1c2027527ef8e87d9) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Expose validated model-provider capability metadata and conservative execution policy through the existing AgentsKit adapter registry.
+
 ## 0.12.0
 
 ### Minor Changes
