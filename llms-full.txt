@@ -445,7 +445,9 @@ npx --yes github:AgentsKit-io/code-review doctor --provider openai --model gpt-4
 
 ## Cost and privacy
 
-A normal context pack contains bounded changed hunks plus adjacent lines and, when configured, directly related source/test files. It uses one structured analysis call covering every enabled review dimension, then independently verifies candidate findings. The plan and result record pack membership, included ranges, expansion, estimated tokens, and output reserve. AgentsKit token budgeting includes the system prompt and tool schema and rejects oversized requests before provider execution. Results explicitly report enabled, completed, and missing required dimensions. This replaces repeated full-file prompts and never duplicates unified patches beside numbered source. Control usage with the typed `review.context` policy, `--profile fast`, `--max-files`, `--max-calls`, `--votes`, `--deadline-ms`, `--concurrency`, paths, and workflow triggers. For sensitive code, use a local model or an approved private gateway; provider data policies still apply to hosted APIs.
+A normal context pack contains bounded changed hunks plus adjacent lines and, when configured, directly related source/test files. It uses one structured analysis call covering every enabled review dimension, then independently verifies candidate findings. Before any model call, deterministic path and source evidence classifies each pack as `low`, `normal`, `high`, or `critical`. High-risk changes receive one additional specialized correctness pass; critical security, credential, authorization, or migration changes receive one combined correctness/security pass. Documentation and generated-only packs remain on the single-analysis low-cost path. A failed required specialized pass makes the review incomplete rather than clean.
+
+The plan and result record pack membership, included ranges, expansion, risk signals and selected depth, estimated tokens, and output reserve. AgentsKit token budgeting includes the system prompt and tool schema and rejects oversized requests before provider execution. Results explicitly report enabled, completed, and missing required dimensions. This replaces repeated full-file prompts and never duplicates unified patches beside numbered source. Control usage with the typed `review.context` policy, `--profile fast`, `--max-files`, `--max-calls`, `--votes`, `--deadline-ms`, `--concurrency`, paths, and workflow triggers. For sensitive code, use a local model or an approved private gateway; provider data policies still apply to hosted APIs.
 
 ## Operations and machine-readable docs
 
@@ -679,6 +681,13 @@ included ranges, expansion, estimated input tokens, and output reserve. All buil
 are enabled by default; correctness, security, and tests are required.
 The shared local worker also accepts bounded `timeoutMs` and `maxOutputBytes`
 settings; absolute ceilings are always enforced.
+
+Risk classification is provider-free and records every contributing signal. Documentation and
+generated-only packs are `low`; ordinary source and tests are `normal`; public contracts, IO, and
+repository-control files are `high`; security, authorization, credential, and migration evidence is
+`critical`. High packs receive one specialized correctness analysis and critical packs one combined
+correctness/security analysis. Specialized analysis is included in call and token preflight. If a
+required specialized category fails, the result is incomplete and cannot approve or publish.
 
 Flags override file values. The file cannot contain credentials or executable
 plugins. Provider, model, transport, trust mode, redaction, permissions, and
@@ -1005,6 +1014,7 @@ Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and
 - `src/scm-contract.ts`: provider-neutral change-request, publication, readiness, and merge contracts plus explicit capability checks.
 - `src/github-scm-adapter.ts`: GitHub REST/CLI binding for the common SCM contract; the only migrated path allowed to contain GitHub payloads or merge commands.
 - `agents/code-review/`: review pipeline, lenses, input normalization, reporters.
+- `agents/code-review/risk.ts`: provider-free context-pack risk signals and specialized-depth selection.
 - `action.yml`: composite GitHub Action contract.
 - `.github/workflows/release.yml`: Changesets version-pull-request workflow.
 - `.github/workflows/publish.yml`: version-PR-gated npm Trusted Publishing and GitHub Release workflow.

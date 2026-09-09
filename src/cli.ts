@@ -494,6 +494,7 @@ function formatPlan(plan: ReviewPlan): string {
     `Required: ${plan.requiredLenses.join(', ') || 'none'}`,
     `Votes: ${plan.votes} · Retries: ${plan.retries} · Concurrency: ${plan.concurrency}`,
     `Estimated provider calls: ${plan.estimatedProviderCalls}/${plan.maxCalls} (${plan.providerCallEstimate})`,
+    `Risk depth: ${plan.contextPacks.map((pack) => `${pack.id}=${pack.risk.level}${pack.risk.specializedCategories.length ? `+${pack.risk.specializedCategories.join('/')}` : ''}`).join(', ') || 'none'}`,
     `Global deadline: ${plan.deadlineMs}ms`,
   ]
   for (const reason of plan.overBudget) lines.push(`Refusal: ${reason}`)

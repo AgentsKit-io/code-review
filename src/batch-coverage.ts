@@ -104,6 +104,7 @@ export function consolidateBatchArtifacts(state: BatchCoverageState, artifacts: 
     failed: total.failed + review.execution.failed,
   }), { attempted: 0, succeeded: 0, failed: 0 })
   const allReportTokens = reviews.every((review) => review.evidence.tokensUsed !== undefined)
+  const contextPacks = reviews.flatMap((review) => review.evidence.contextPacks ?? [])
   const evidence = reviews.reduce<ReviewEvidence>((total, review) => ({
     profile: total.profile,
     providerCalls: total.providerCalls + review.evidence.providerCalls,
@@ -114,6 +115,7 @@ export function consolidateBatchArtifacts(state: BatchCoverageState, artifacts: 
     deadlineExceeded: total.deadlineExceeded || review.evidence.deadlineExceeded,
     circuitState: total.circuitState === 'open' || review.evidence.circuitState === 'open' ? 'open' : total.circuitState,
     ...(allReportTokens ? { tokensUsed: (total.tokensUsed ?? 0) + (review.evidence.tokensUsed ?? 0) } : {}),
+    contextPacks,
   }), { profile: reviews[0]!.evidence.profile, providerCalls: 0, failedProviderCalls: 0, skippedProviderCalls: 0, elapsedMs: 0, deadlineMs: 0, deadlineExceeded: false, circuitState: 'closed' })
   const severe = findings.some((finding) => finding.severity === 'blocker' || finding.severity === 'high')
   const enabledCategories = reviews[0]?.enabledCategories ?? []

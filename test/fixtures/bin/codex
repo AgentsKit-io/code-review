@@ -26,6 +26,7 @@ if (process.env.CODEX_FIXTURE_FORBID_GITHUB_TOKEN === '1' && (process.env.GITHUB
 
 if (
   process.env.CODEX_FIXTURE_FAIL_ALL === '1' ||
+  (process.env.CODEX_FIXTURE_FAIL_SPECIALIZED === '1' && prompt.includes('RISK-SPECIALIZED REVIEW')) ||
   (process.env.CODEX_FIXTURE_FAIL_FILE && prompt.includes(`FILE: ${process.env.CODEX_FIXTURE_FAIL_FILE} `)) ||
   (process.env.CODEX_FIXTURE_FAIL_CATEGORY && prompt.includes(`SINGLE dimension: ${process.env.CODEX_FIXTURE_FAIL_CATEGORY}`))
 ) {
@@ -69,7 +70,7 @@ if (invalidOnceFile) {
     if (error?.code !== 'EEXIST') throw error
   }
 }
-const multidimensional = prompt.includes('MULTIDIMENSIONAL REVIEW') || prompt.includes('BATCHED FAST REVIEW')
+const multidimensional = prompt.includes('MULTIDIMENSIONAL REVIEW') || prompt.includes('BATCHED FAST REVIEW') || prompt.includes('RISK-SPECIALIZED REVIEW')
 const enabledCategories = prompt.match(/same pass: ([^.]+)\./)?.[1]?.split(', ') ?? ['correctness', 'security', 'tests']
 const completedCategories = enabledCategories.filter((category) => category !== process.env.CODEX_FIXTURE_OMIT_CATEGORY)
 const seededFinding = process.env.CODEX_FIXTURE_QUALITY_CORPUS === '1' && prompt.includes('canDeleteAccount') && (multidimensional || prompt.includes('SINGLE dimension: security'))

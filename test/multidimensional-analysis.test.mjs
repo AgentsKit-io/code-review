@@ -75,9 +75,9 @@ test('the fixed quality corpus preserves expected detections with measured call 
       assert.equal(result.review.findings[0].severity, expected.severity)
       assert.ok(expected.titleIncludes.some((word) => result.review.findings[0].title.toLowerCase().includes(word)))
     }
-    assert.equal(multidimensional.review.execution.attempted, 1)
+    assert.equal(multidimensional.review.execution.attempted, 2)
     assert.equal(baseline.review.execution.attempted, 7)
-    assert.ok(multidimensional.review.evidence.providerCalls <= baseline.review.evidence.providerCalls / 3)
-    assert.ok(multidimensional.tokensUsed <= baseline.tokensUsed / 3)
+    assert.ok(multidimensional.review.evidence.providerCalls <= baseline.review.evidence.providerCalls / 2)
+    assert.ok(multidimensional.tokensUsed <= baseline.tokensUsed / 2)
   }
 })
