@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.30.1
+
+### Patch Changes
+
+- [#215](https://github.com/AgentsKit-io/code-review/pull/215) [`294512f`](https://github.com/AgentsKit-io/code-review/commit/294512fea2de4989e453ebf3661c19126d4cf941) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Allow the campaign command to receive the trusted local provider mode explicitly from Orca without accepting trusted execution credentials in the project configuration.
+
 ## 0.30.0
 
 ### Minor Changes
