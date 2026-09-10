@@ -96,13 +96,21 @@ evaluation, and an immutable quality matrix. It never creates a target worktree.
 Posting and merging are opt-in and remain forbidden unless the final matrix passes.
 
 Run every open pull request from one typed project configuration with the packaged
-campaign command:
+campaign command. The command creates the SHA-bound Orca evidence for each worker
+run and forwards the explicit mutation flags; the automation does not need to
+write evidence or orchestrate individual PRs:
 
 ```sh
 npx --yes --package=@agentskit/code-review@latest agentskit-review-campaign \
   --config /absolute/path/code-review.config.ts \
-  --output /absolute/path/campaign-report.json
+  --output /absolute/path/campaign-report.json \
+  --automation-id my-orca-automation \
+  --post --merge
 ```
+
+Publication and merging are explicit command flags. Without `--post`, the
+campaign is read-only; `--merge` is accepted only when the validated project
+configuration enables safe merging and the cycle's quality and SCM gates pass.
 
 The command first performs a provider-free sweep. Dependabot,
 configured author exclusions, drafts, forks, wrong base branches, and previously

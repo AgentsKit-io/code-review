@@ -114,13 +114,21 @@ evaluation, and an immutable quality matrix. It never creates a target worktree.
 Posting and merging are opt-in and remain forbidden unless the final matrix passes.
 
 Run every open pull request from one typed project configuration with the packaged
-campaign command:
+campaign command. The command creates the SHA-bound Orca evidence for each worker
+run and forwards the explicit mutation flags; the automation does not need to
+write evidence or orchestrate individual PRs:
 
 ```sh
 npx --yes --package=@agentskit/code-review@latest agentskit-review-campaign \
   --config /absolute/path/code-review.config.ts \
-  --output /absolute/path/campaign-report.json
+  --output /absolute/path/campaign-report.json \
+  --automation-id my-orca-automation \
+  --post --merge
 ```
+
+Publication and merging are explicit command flags. Without `--post`, the
+campaign is read-only; `--merge` is accepted only when the validated project
+configuration enables safe merging and the cycle's quality and SCM gates pass.
 
 The command first performs a provider-free sweep. Dependabot,
 configured author exclusions, drafts, forks, wrong base branches, and previously
@@ -774,7 +782,9 @@ the requested event.
 ## Deterministic scheduled cycle
 
 Run `agentskit-review-campaign --config /absolute/path/code-review.config.ts
---output /private/path/campaign-report.json` as the complete scheduled campaign.
+--output /private/path/campaign-report.json --post --merge` as the complete
+scheduled campaign when the configuration explicitly enables safe merging.
+Omit `--post` and `--merge` for a read-only discovery/execution run.
 It validates the one project configuration, checks static provider health, discovers
 all open change requests through the SCM adapter, and completes the provider-free
 eligibility, source, and budget sweep before model execution. Only entries with
@@ -788,6 +798,14 @@ blocked, approved, changes requested, merge blocked, merged, or cancelled.
 `execution.resumeIncompleteRuns` controls checkpoint reuse. Campaign outcome is
 derived deterministically as complete, partial, blocked, or cancelled; an LLM is
 never asked to choose orchestration state.
+
+The campaign command generates the required SHA-bound Orca evidence for each
+candidate and passes it to the worker. `--automation-id` is optional and defaults
+to `agentskit-review-campaign`; an Orca automation should set its stable ID. The
+campaign command then passes `--post` and `--merge` explicitly to each single-PR
+worker. It never enables either mutation implicitly. The worker still requires
+the configured quality, current-SHA, and successful-check gates before posting
+or merging, and refuses merge when `merge.enabled` is false.
 
 `agentskit-review-cycle` is the single-PR worker used by the campaign. Give it one PR, one
 validated config, and a private run directory. The command collects all static

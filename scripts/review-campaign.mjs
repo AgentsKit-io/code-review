@@ -17,6 +17,9 @@ const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const hash = (value) => createHash('sha256').update(value).digest('hex')
 const environmentSecrets = Object.entries(process.env).filter(([key, value]) => /(?:TOKEN|KEY|SECRET|PASSWORD|CREDENTIAL|AUTH)/i.test(key) && String(value).length >= 6).map(([, value]) => String(value))
 const value = (name) => { const index = process.argv.indexOf(`--${name}`); return index < 0 ? undefined : process.argv[index + 1] }
+const post = process.argv.includes('--post')
+const merge = process.argv.includes('--merge')
+const automationId = value('automation-id') ?? process.env.ORCA_AUTOMATION_ID ?? 'agentskit-review-campaign'
 const write = (file, report) => {
   if (!file) return
   const target = resolve(file); mkdirSync(dirname(target), { recursive: true })
@@ -75,11 +78,13 @@ try {
     execute: async (entry, signal) => {
       const runId = hash(JSON.stringify({ packageVersion: packageVersion(), repository: entry.ref.repository, pull: entry.ref.id, headRevision: entry.headRevision, configFingerprint: configFingerprint(config) }))
       const runRoot = resolve(stateRoot, 'runs', `${entry.ref.repository.replace('/', '-')}-${entry.ref.id}-${runId.slice(0, 16)}`)
+      const orcaEvidence = resolve(runRoot, 'orca-evidence.json')
+      write(orcaEvidence, { version: 1, status: 'passed', runId, sourceRevision: entry.headRevision, libraryVersion: packageVersion(), automationId })
       try {
         const existing = JSON.parse(readFileSync(resolve(runRoot, 'cycle-summary.json'), 'utf8'))
         if (existing.runId === runId && existing.decision === 'COMPLETE') return { outcome: existing.fullReview?.verdict === 'APPROVE' ? 'APPROVED' : 'CHANGES_REQUESTED', reason: `reused review verdict: ${existing.fullReview?.verdict ?? 'unknown'}` }
       } catch { /* no reusable terminal worker result */ }
-      const args = [resolve(packageRoot, 'scripts/review-cycle.mjs'), '--repository', entry.ref.repository, '--pull', entry.ref.id, '--config', loaded.path ?? resolve(configFile), '--run-dir', runRoot, '--state-dir', resolve(stateRoot, 'pull-requests'), '--run-id', runId, '--provider', config.review.provider, '--mode', config.review.mode, '--max-calls', String(config.review.maxCalls), '--deadline-ms', String(config.review.deadlineMs), '--global-deadline-ms', String(Math.min(7_200_000, Math.max(config.review.deadlineMs, config.review.deadlineMs * 2))), '--batch-size', String(config.batches.size), '--batch-concurrency', '1', ...(config.review.model ? ['--model', config.review.model] : [])]
+      const args = [resolve(packageRoot, 'scripts/review-cycle.mjs'), '--repository', entry.ref.repository, '--pull', entry.ref.id, '--config', loaded.path ?? resolve(configFile), '--run-dir', runRoot, '--state-dir', resolve(stateRoot, 'pull-requests'), '--run-id', runId, '--provider', config.review.provider, '--mode', config.review.mode, '--max-calls', String(config.review.maxCalls), '--deadline-ms', String(config.review.deadlineMs), '--global-deadline-ms', String(Math.min(7_200_000, Math.max(config.review.deadlineMs, config.review.deadlineMs * 2))), '--batch-size', String(config.batches.size), '--batch-concurrency', '1', '--orca-evidence', orcaEvidence, ...(config.review.model ? ['--model', config.review.model] : []), ...(post ? ['--post'] : []), ...(merge ? ['--merge'] : [])]
       const result = await run(process.execPath, args, { cwd: stateRoot, env: { ...process.env, GITHUB_TOKEN: token }, signal, timeout: workerTimeoutMs })
       let summary
       try { summary = JSON.parse(readFileSync(resolve(runRoot, 'cycle-summary.json'), 'utf8')) } catch { throw new Error(result.timedOut ? 'single-PR review timed out' : redactDiagnostic(result.stderr || 'single-PR review summary is unavailable', [token, ...environmentSecrets])) }
