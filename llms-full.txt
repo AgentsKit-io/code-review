@@ -1290,6 +1290,12 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.30.15
+
+### Patch Changes
+
+- [#244](https://github.com/AgentsKit-io/code-review/pull/244) [`3e2ebf4`](https://github.com/AgentsKit-io/code-review/commit/3e2ebf4658d1d0758bf79015a9cff3c7988a00aa) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Require GitHub-confirmed release immutability after publication and on release retries. Document the repository setting prerequisite instead of treating an existing release as proof of protection.
+
 ## 0.30.14
 
 ### Patch Changes
