@@ -60,6 +60,7 @@ try {
   const loaded = await loadProjectConfig(process.cwd(), configFile)
   const config = loaded.config
   campaignConfig = config
+  const globalDeadlineMs = config.review.globalDeadlineMs
   const executionFingerprint = hash(JSON.stringify({ configFingerprint: configFingerprint(config), mode }))
   const providerHealth = await diagnoseProvider({ provider: config.review.provider, model: config.review.model, mode, live: false })
   const token = process.env.GITHUB_TOKEN || String(spawnSync('gh', ['auth', 'token'], { encoding: 'utf8', timeout: 10_000 }).stdout ?? '').trim()
@@ -72,7 +73,7 @@ try {
     : await preflightCampaign({ config, adapter: createGithubScmAdapter({ token }), providerHealth, signal: campaignAbort.signal })
   const stateRoot = resolve(dirname(loaded.path ?? resolve(configFile)), config.execution.statePath)
   campaignStateRoot = stateRoot
-  const workerTimeoutMs = Math.min(7_260_000, Math.max(config.review.deadlineMs + 60_000, config.review.deadlineMs * 2 + 60_000))
+  const workerTimeoutMs = Math.min(7_260_000, Math.max(config.review.deadlineMs + 60_000, globalDeadlineMs + 60_000))
   report = await executeCampaign({
     preflight, stateRoot, campaignId: `campaign-${executionFingerprint.slice(0, 16)}`, concurrency: config.execution.maxConcurrentPullRequests,
     continueAfterPerPrFailure: config.execution.continueAfterPerPrFailure, resume: config.execution.resumeIncompleteRuns,
@@ -86,7 +87,7 @@ try {
         const existing = JSON.parse(readFileSync(resolve(runRoot, 'cycle-summary.json'), 'utf8'))
         if (existing.runId === runId && existing.decision === 'COMPLETE') return { outcome: existing.fullReview?.verdict === 'APPROVE' ? 'APPROVED' : 'CHANGES_REQUESTED', reason: `reused review verdict: ${existing.fullReview?.verdict ?? 'unknown'}` }
       } catch { /* no reusable terminal worker result */ }
-      const args = [resolve(packageRoot, 'scripts/review-cycle.mjs'), '--repository', entry.ref.repository, '--pull', entry.ref.id, '--config', loaded.path ?? resolve(configFile), '--run-dir', runRoot, '--state-dir', resolve(stateRoot, 'pull-requests'), '--run-id', runId, '--provider', config.review.provider, '--mode', mode, '--max-calls', String(config.review.maxCalls), '--deadline-ms', String(config.review.deadlineMs), '--global-deadline-ms', String(Math.min(7_200_000, Math.max(config.review.deadlineMs, config.review.deadlineMs * 2))), '--batch-size', String(config.batches.size), '--batch-concurrency', '1', '--orca-evidence', orcaEvidence, ...(config.review.model ? ['--model', config.review.model] : []), ...(post ? ['--post'] : []), ...(merge ? ['--merge'] : [])]
+    const args = [resolve(packageRoot, 'scripts/review-cycle.mjs'), '--repository', entry.ref.repository, '--pull', entry.ref.id, '--config', loaded.path ?? resolve(configFile), '--run-dir', runRoot, '--state-dir', resolve(stateRoot, 'pull-requests'), '--run-id', runId, '--provider', config.review.provider, '--mode', mode, '--max-calls', String(config.review.maxCalls), '--deadline-ms', String(config.review.deadlineMs), '--global-deadline-ms', String(globalDeadlineMs), '--batch-size', String(config.batches.size), '--batch-concurrency', '1', '--orca-evidence', orcaEvidence, ...(config.review.model ? ['--model', config.review.model] : []), ...(post ? ['--post'] : []), ...(merge ? ['--merge'] : [])]
       const result = await run(process.execPath, args, { cwd: stateRoot, env: { ...process.env, GITHUB_TOKEN: token }, signal, timeout: workerTimeoutMs })
       let summary
       try { summary = JSON.parse(readFileSync(resolve(runRoot, 'cycle-summary.json'), 'utf8')) } catch { throw new Error(result.timedOut ? 'single-PR review timed out' : redactDiagnostic(result.stderr || 'single-PR review summary is unavailable', [token, ...environmentSecrets])) }
