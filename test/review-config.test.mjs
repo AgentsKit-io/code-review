@@ -54,6 +54,12 @@ test('merges independent lens policy and flags override file values', () => {
   assert.equal(resolveReviewConfig({ configVersion: 1, provider: 'openai' }).budget.concurrency, 4)
 })
 
+test('project config exposes a bounded global campaign deadline', () => {
+  const project = defineConfig({ target: { repository: 'AgentsKit-io/example' }, review: {} })
+  assert.equal(project.review.globalDeadlineMs, 7_200_000)
+  assert.throws(() => defineConfig({ target: { repository: 'AgentsKit-io/example' }, review: { globalDeadlineMs: 7_200_001 } }), /globalDeadlineMs/)
+})
+
 test('fast profile disables optional lenses, batches, and uses bounded defaults', () => {
   const config = resolveReviewConfig({ configVersion: 1, profile: 'fast' })
   assert.equal(config.profile, 'fast')
