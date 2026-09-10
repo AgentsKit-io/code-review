@@ -31,6 +31,21 @@ function fakeScm(observedFingerprints = []) {
   }
 }
 
+test('campaign skips a completed worker review regardless of execution concurrency', async () => {
+  const config = defineConfig({ target: { provider: 'github', repository: 'AgentsKit-io/example', authors: ['alice'] }, review: { provider: 'codex-cli', maxCalls: 1000 } })
+  const file = toReviewConfig(config)
+  const workerPolicy = reviewPolicyFingerprint(resolveReviewConfig(file, { overrides: { profile: 'full', concurrency: 8 } }))
+  const adapter = fakeScm()
+  adapter.discover = async () => [ref(1)]
+  adapter.reviewState = async (_ref, fingerprint) => ({ headRevision: sha('1'), fingerprint, alreadyPublished: fingerprint === workerPolicy, scope: 'full', baselineRevision: null })
+  adapter.diff = async () => { throw new Error('an already reviewed PR must not load its diff') }
+  const report = await preflightCampaign({ config, adapter, providerHealth })
+  assert.equal(report.pullRequests[0].status, 'skipped')
+  assert.equal(report.pullRequests[0].worktreeAllowed, false)
+  assert.match(report.pullRequests[0].reasons.join(' '), /already reviewed/)
+  assert.notEqual(workerPolicy, reviewPolicyFingerprint(resolveReviewConfig(file, { overrides: { minSeverity: 'high' } })), 'semantic policy changes still invalidate review identity')
+})
+
 const providerHealth = { ok: true, provider: 'codex-cli', checks: [{ name: 'executable', status: 'pass', detail: 'codex' }] }
 
 test('campaign preflight classifies every discovered PR and permits worktrees only for ready entries', async () => {

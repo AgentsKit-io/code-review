@@ -8,6 +8,8 @@ For a bounded production canary, run `agentskit-review-campaign --config /absolu
 
 Batch size is a maximum. Every batch is measured before execution, and a single oversized file can span multiple context-pack batches. Every pack must be present at consolidation. Impossible single packs remain blocked; source completeness and token gates are never suppressed. See [ADR-0006](adr/0006-measured-batch-completion.md).
 
+Review identity excludes execution concurrency: preflight and workers can schedule differently without creating a different semantic policy. Engine version, source SHA, review rules and substantive budgets still identify the review. Repeating a completed SHA/policy must skip before downloading source or calling a model.
+
 Codex inference runs in a temporary directory with focused review instructions, ambient skills/plugins disabled, and no shell, delegation or web search. Read-only sandboxing and structured output remain enabled. This reduces unrelated agent context; actual usage is still measured.
 
 For changed HTML, SCM ingestion can include up to four unchanged local linked stylesheets (64 KiB each, within the source budget) at the same head SHA. They are context for analysis and skepticism, not extra reviewed files. Remote/sensitive paths are excluded and unavailable context is explicit. This is one-hop context, not a complete dependency graph: quality corpus scores do not replace auditing real findings against the surrounding application.
