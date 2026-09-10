@@ -233,7 +233,9 @@ the requested event.
 ## Deterministic scheduled cycle
 
 Run `agentskit-review-campaign --config /absolute/path/code-review.config.ts
---output /private/path/campaign-report.json` as the complete scheduled campaign.
+--output /private/path/campaign-report.json --post --merge` as the complete
+scheduled campaign when the configuration explicitly enables safe merging.
+Omit `--post` and `--merge` for a read-only discovery/execution run.
 It validates the one project configuration, checks static provider health, discovers
 all open change requests through the SCM adapter, and completes the provider-free
 eligibility, source, and budget sweep before model execution. Only entries with
@@ -247,6 +249,14 @@ blocked, approved, changes requested, merge blocked, merged, or cancelled.
 `execution.resumeIncompleteRuns` controls checkpoint reuse. Campaign outcome is
 derived deterministically as complete, partial, blocked, or cancelled; an LLM is
 never asked to choose orchestration state.
+
+The campaign command generates the required SHA-bound Orca evidence for each
+candidate and passes it to the worker. `--automation-id` is optional and defaults
+to `agentskit-review-campaign`; an Orca automation should set its stable ID. The
+campaign command then passes `--post` and `--merge` explicitly to each single-PR
+worker. It never enables either mutation implicitly. The worker still requires
+the configured quality, current-SHA, and successful-check gates before posting
+or merging, and refuses merge when `merge.enabled` is false.
 
 `agentskit-review-cycle` is the single-PR worker used by the campaign. Give it one PR, one
 validated config, and a private run directory. The command collects all static

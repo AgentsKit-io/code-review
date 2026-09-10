@@ -129,3 +129,14 @@ test('packaged campaign command turns provider-free blockers into a terminal cam
     assert.equal(matrix.decision, 'BLOCKED')
   } finally { rmSync(directory, { recursive: true, force: true }) }
 })
+
+test('campaign mutations stay explicit and are forwarded to the single-PR worker', () => {
+  const source = readFileSync('scripts/review-campaign.mjs', 'utf8')
+  assert.match(source, /const automationId = value\('automation-id'\)/)
+  assert.match(source, /write\(orcaEvidence, \{ version: 1, status: 'passed'/)
+  assert.match(source, /'--orca-evidence', orcaEvidence/)
+  assert.match(source, /const post = process\.argv\.includes\('--post'\)/)
+  assert.match(source, /const merge = process\.argv\.includes\('--merge'\)/)
+  assert.match(source, /\.\.\.\(post \? \['--post'\] : \[\]\)/)
+  assert.match(source, /\.\.\.\(merge \? \['--merge'\] : \[\]\)/)
+})
