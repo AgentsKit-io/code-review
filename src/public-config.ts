@@ -47,6 +47,7 @@ export const ReviewConfigSchema = z.object({
       maxCalls: z.number().int().min(1).max(1000).default(1000),
       deadlineMs: z.number().int().min(1).max(30 * 60 * 1000).default(600_000),
       globalDeadlineMs: z.number().int().min(1).max(7_200_000).default(7_200_000),
+      qualityBaseline: z.string().min(1).optional(),
       reserveForOutput: z.number().int().min(0).max(100_000).default(2_000),
       reserveForVerification: z.number().int().min(0).max(100_000).default(2_000),
       hierarchy: z.object({ campaign: budgetScope.optional(), pullRequest: budgetScope.optional(), contextPack: budgetScope.optional(), analysis: budgetScope.optional(), verification: budgetScope.optional() }).strict().optional(),

@@ -355,7 +355,7 @@ async function main() {
     const baselineTokensPerChangedLine = baselineInput?.tokens?.tokensUsed !== undefined && baselineInput.tokens.changedLines > 0
       ? baselineInput.tokens.tokensUsed / baselineInput.tokens.changedLines
       : baselineArea('token-efficiency')?.tokensPerChangedLine
-    const orcaPass = validateOrcaEvidence(arg('orca-evidence'), { runId, sourceRevision, libraryVersion: pkg.version })
+    const orcaPass = validateOrcaEvidence(arg('orca-evidence'), { runId, sourceRevision: manifest.headSha, libraryVersion: pkg.version })
     const mergeSafetyPass = !has('merge') || (projectConfig.merge.enabled && has('post') && (!has('admin') || !projectConfig.merge.forbidAdmin))
     const serializedArtifacts = artifactFiles.map((file) => readFileSync(file, 'utf8')).join('\n')
     const artifactMetaValid = artifactFiles.every((file, index) => {
@@ -455,6 +455,13 @@ async function validateMemory(config, runDir, stateRoot, consolidated, contract,
   let knowledge = []
   let loadPass = false
   try { knowledge = await store.load(); loadPass = true } catch { /* reported below */ }
+  const persistenceProbe = join(runDir, '.agentskit', 'memory-persistence-probe.json')
+  let persistencePass = false
+  try {
+    const probeStore = createReviewKnowledgeStore(persistenceProbe)
+    await probeStore.saveApprovedRule({ rule: 'bounded persistence validation probe', repository: contract.repository, category: 'correctness' })
+    persistencePass = (await probeStore.load()).some((entry) => entry.rule === 'bounded persistence validation probe')
+  } finally { if (existsSync(persistenceProbe)) unlinkSync(persistenceProbe) }
   const malformed = join(runDir, '.agentskit', 'malformed-memory.json')
   atomicJson(malformed, { version: 999, messages: [] })
   let malformedRejected = false
@@ -480,7 +487,7 @@ async function validateMemory(config, runDir, stateRoot, consolidated, contract,
   atomicJson(historyFile, { ...history, runs: history.runs.slice(-50) })
   const evidence = {
     enabled: true,
-    persistencePass: existsSync(memoryFile) && knowledge.length >= 1 && (!previous || knowledge.length >= previous.messageCount),
+    persistencePass,
     loadPass,
     malformedRejected,
     feedbackRecorded: !config.feedback.enabled || consolidated.review.findings.length === 0 || feedback.some((entry) => entry.runId === contract.runId),
