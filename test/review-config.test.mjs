@@ -60,6 +60,11 @@ test('project config exposes a bounded global campaign deadline', () => {
   assert.throws(() => defineConfig({ target: { repository: 'AgentsKit-io/example' }, review: { globalDeadlineMs: 7_200_001 } }), /globalDeadlineMs/)
 })
 
+test('project config accepts an external quality baseline for real campaigns', () => {
+  const project = defineConfig({ target: { repository: 'AgentsKit-io/example' }, review: { qualityBaseline: '/tmp/quality-baseline.json' } })
+  assert.equal(project.review.qualityBaseline, '/tmp/quality-baseline.json')
+})
+
 test('fast profile disables optional lenses, batches, and uses bounded defaults', () => {
   const config = resolveReviewConfig({ configVersion: 1, profile: 'fast' })
   assert.equal(config.profile, 'fast')

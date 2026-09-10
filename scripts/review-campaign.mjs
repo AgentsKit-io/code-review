@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { spawn, spawnSync } from 'node:child_process'
-import { mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -61,12 +61,14 @@ try {
   const config = loaded.config
   campaignConfig = config
   const globalDeadlineMs = config.review.globalDeadlineMs
+  const qualityBaseline = config.review.qualityBaseline ? resolve(dirname(loaded.path ?? resolve(configFile)), config.review.qualityBaseline) : undefined
   const executionFingerprint = hash(JSON.stringify({ configFingerprint: configFingerprint(config), mode }))
   const providerHealth = await diagnoseProvider({ provider: config.review.provider, model: config.review.model, mode, live: false })
   const token = process.env.GITHUB_TOKEN || String(spawnSync('gh', ['auth', 'token'], { encoding: 'utf8', timeout: 10_000 }).stdout ?? '').trim()
   const blockers = [
     ...(config.target.provider === 'github' ? [] : [{ id: 'scm.provider', ok: false, detail: `SCM provider ${config.target.provider} is not implemented` }]),
     ...(token ? [] : [{ id: 'scm.credentials', ok: false, detail: 'GitHub credential unavailable; set GITHUB_TOKEN or run gh auth login' }]),
+    ...(qualityBaseline && !existsSync(qualityBaseline) ? [{ id: 'quality.baseline', ok: false, detail: `quality baseline unavailable: ${qualityBaseline}` }] : []),
   ]
   const preflight = blockers.length
     ? blockedCampaignPreflightReport({ repository: config.target.repository, configFingerprint: configFingerprint(config), checks: [...blockers, ...providerHealth.checks.filter((check) => check.status === 'fail').map((check) => ({ id: `provider.${check.name}`, ok: false, detail: check.detail }))] })
@@ -87,7 +89,7 @@ try {
         const existing = JSON.parse(readFileSync(resolve(runRoot, 'cycle-summary.json'), 'utf8'))
         if (existing.runId === runId && existing.decision === 'COMPLETE') return { outcome: existing.fullReview?.verdict === 'APPROVE' ? 'APPROVED' : 'CHANGES_REQUESTED', reason: `reused review verdict: ${existing.fullReview?.verdict ?? 'unknown'}` }
       } catch { /* no reusable terminal worker result */ }
-    const args = [resolve(packageRoot, 'scripts/review-cycle.mjs'), '--repository', entry.ref.repository, '--pull', entry.ref.id, '--config', loaded.path ?? resolve(configFile), '--run-dir', runRoot, '--state-dir', resolve(stateRoot, 'pull-requests'), '--run-id', runId, '--provider', config.review.provider, '--mode', mode, '--max-calls', String(config.review.maxCalls), '--deadline-ms', String(config.review.deadlineMs), '--global-deadline-ms', String(globalDeadlineMs), '--batch-size', String(config.batches.size), '--batch-concurrency', '1', '--orca-evidence', orcaEvidence, ...(config.review.model ? ['--model', config.review.model] : []), ...(post ? ['--post'] : []), ...(merge ? ['--merge'] : [])]
+    const args = [resolve(packageRoot, 'scripts/review-cycle.mjs'), '--repository', entry.ref.repository, '--pull', entry.ref.id, '--config', loaded.path ?? resolve(configFile), '--run-dir', runRoot, '--state-dir', resolve(stateRoot, 'pull-requests'), '--run-id', runId, '--provider', config.review.provider, '--mode', mode, '--max-calls', String(config.review.maxCalls), '--deadline-ms', String(config.review.deadlineMs), '--global-deadline-ms', String(globalDeadlineMs), '--batch-size', String(config.batches.size), '--batch-concurrency', '1', '--orca-evidence', orcaEvidence, ...(qualityBaseline ? ['--quality-baseline', qualityBaseline] : []), ...(config.review.model ? ['--model', config.review.model] : []), ...(post ? ['--post'] : []), ...(merge ? ['--merge'] : [])]
       const result = await run(process.execPath, args, { cwd: stateRoot, env: { ...process.env, GITHUB_TOKEN: token }, signal, timeout: workerTimeoutMs })
       let summary
       try { summary = JSON.parse(readFileSync(resolve(runRoot, 'cycle-summary.json'), 'utf8')) } catch { throw new Error(result.timedOut ? 'single-PR review timed out' : redactDiagnostic(result.stderr || 'single-PR review summary is unavailable', [token, ...environmentSecrets])) }
