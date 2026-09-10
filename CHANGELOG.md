@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.28.0
+
+### Minor Changes
+
+- [#208](https://github.com/AgentsKit-io/code-review/pull/208) [`8d3f98c`](https://github.com/AgentsKit-io/code-review/commit/8d3f98cdaf64e16e7ce46cd1b9b44ce79dc1fb93) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Add a credential-free deterministic fault-injection harness for provider, SCM, storage, clock, budget, publication, and merge recovery paths.
+
 ## 0.27.0
 
 ### Minor Changes
