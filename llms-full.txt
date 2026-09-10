@@ -1268,6 +1268,12 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.30.6
+
+### Patch Changes
+
+- [#225](https://github.com/AgentsKit-io/code-review/pull/225) [`5848b22`](https://github.com/AgentsKit-io/code-review/commit/5848b229c747437ee7965853a6e03bd8c27d632a) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Bind campaign checkpoints to the stable preflight manifest and package version so scheduled runs do not reject a prior terminal campaign as stale.
+
 ## 0.30.5
 
 ### Patch Changes
