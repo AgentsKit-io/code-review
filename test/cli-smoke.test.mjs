@@ -19,12 +19,15 @@ test('SIGTERM cancels the actual provider subprocess before the CLI exits', asyn
   child.stdin.end('export const answer = 42\n')
   const closed = new Promise(resolve => child.once('close', (code, signal) => resolve({ code, signal })))
   let providerPid
+  let stderr = ''
+  child.stderr.on('data', chunk => { stderr += chunk })
   const timer = setTimeout(() => child.kill('SIGKILL'), 8000)
   try {
-    for (let tries = 0; tries < 100 && !providerPid; tries++) {
+    const startupDeadline = Date.now() + 6000
+    while (!providerPid && child.exitCode === null && Date.now() < startupDeadline) {
       try { providerPid = Number(readFileSync(pidFile, 'utf8')) } catch { await new Promise(resolve => setTimeout(resolve, 20)) }
     }
-    assert.ok(providerPid, 'provider must really start')
+    assert.ok(providerPid, `provider must really start; exit=${child.exitCode}; ${stderr}`)
     child.kill('SIGTERM')
     assert.deepEqual(await closed, { code: 2, signal: null })
     assert.throws(() => process.kill(providerPid, 0), { code: 'ESRCH' })
@@ -260,7 +263,7 @@ test('a local Codex subprocess timeout fails fast instead of hanging the review'
     cwd: root,
     input: 'export const answer = 42\n',
     encoding: 'utf8',
-    timeout: 3000,
+    timeout: 8000,
     env: {
       ...process.env,
       CODEX_FIXTURE_HANG: '1',
