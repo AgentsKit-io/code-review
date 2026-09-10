@@ -560,6 +560,10 @@ Batch size is a maximum. Every batch is measured before execution, and a single 
 
 Review identity excludes execution concurrency: preflight and workers can schedule differently without creating a different semantic policy. Engine version, source SHA, review rules and substantive budgets still identify the review. Repeating a completed SHA/policy must skip before downloading source or calling a model.
 
+Publication failures do not invalidate completed analysis. The cycle retains its review and quality decision and reports the publication phase separately. After an uncertain GitHub write, the adapter checks bounded history for the exact marked body before accepting delivery; it never blindly repeats the POST. `--publish-result <consolidated.json> --post` validates the current SHA and complete policy before reconciling both configured channels, including a missing walkthrough. An unchanged repeat performs no POST or PATCH. Inline-only policies use review history for idempotency; disabling both channels produces no remote comments.
+
+On same-identity cycle resume, successful corpus and learning evaluations are reused only when their input/configuration, engine entry point, approved-rule context and artifact hashes match. Prior usage remains charged and the original cycle clock is not reset. Changed, missing or corrupt evidence is measured again within the remaining budget. Batched policy identity includes optional lenses, thresholds, comment settings and merge-check policy; changing any of these requires new evidence.
+
 Codex inference runs in a temporary directory with focused review instructions, ambient skills/plugins disabled, and no shell, delegation or web search. Read-only sandboxing and structured output remain enabled. This reduces unrelated agent context; actual usage is still measured.
 
 For changed HTML, SCM ingestion can include up to four unchanged local linked stylesheets (64 KiB each, within the source budget) at the same head SHA. They are context for analysis and skepticism, not extra reviewed files. Remote/sensitive paths are excluded and unavailable context is explicit. This is one-hop context, not a complete dependency graph: quality corpus scores do not replace auditing real findings against the surrounding application.
@@ -607,6 +611,8 @@ contracts. The GitHub adapter owns ingestion, bounded review-state inspection,
 inline and summary publication, conservative merge readiness, and
 revision-locked normal/admin merge. GitLab is future work and is not supported
 until an adapter passes the same contract suite.
+
+Merge readiness also reads bounded review history. An outstanding request for changes blocks merging even when checks pass or its reviewed SHA predates the current commit. Comments do not clear a request; a later approval by that reviewer or dismissal of that request does. Missing decision identity or truncated history fails closed.
 
 ## First local setup
 

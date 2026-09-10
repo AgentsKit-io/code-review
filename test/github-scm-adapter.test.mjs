@@ -73,12 +73,13 @@ test('administrative merge stays behind an injectable command boundary', async (
 })
 
 test('check policy deterministically gates reported, required, named, and disabled modes', async () => {
-  const readiness = async (policy, checkRuns) => {
+  const readiness = async (policy, checkRuns, reviews = []) => {
     const fakeFetch = async (url) => {
       const parsed = new URL(url)
       if (parsed.pathname.endsWith('/pulls/7')) return Response.json(pull)
       if (parsed.pathname.endsWith('/check-runs')) return Response.json({ total_count: checkRuns.length, check_runs: checkRuns })
       if (parsed.pathname.endsWith('/status')) return Response.json({ state: 'success', total_count: 0, statuses: [] })
+      if (parsed.pathname.endsWith('/reviews')) return Response.json(reviews)
       throw new Error(`unexpected fake GitHub request: ${parsed.pathname}`)
     }
     return createGithubScmAdapter({ token: 'secret', fetch: fakeFetch }).mergeReadiness({ repository: 'org/repo', id: '7' }, policy)
@@ -97,6 +98,12 @@ test('check policy deterministically gates reported, required, named, and disabl
   const disabled = await readiness({ mode: 'disabled' }, [])
   assert.equal(disabled.ready, false)
   assert.match(disabled.blockers.join('\n'), /check policy=disabled/)
+  const requested = { state: 'CHANGES_REQUESTED', user: { login: 'reviewer' } }
+  assert.equal((await readiness({ mode: 'reported' }, [], [requested])).ready, false)
+  assert.equal((await readiness({ mode: 'reported' }, [], [requested, { ...requested, state: 'COMMENT' }])).ready, false)
+  assert.equal((await readiness({ mode: 'reported' }, [], [requested, { ...requested, state: 'APPROVED' }])).ready, true)
+  assert.equal((await readiness({ mode: 'reported' }, [], [{ ...requested, state: 'DISMISSED' }])).ready, true)
+  assert.equal((await readiness({ mode: 'reported' }, [], [{ state: 'CHANGES_REQUESTED' }])).ready, false)
 })
 
 test('review publication is idempotent across retries when a marker already exists', async () => {
@@ -116,4 +123,38 @@ test('review publication is idempotent across retries when a marker already exis
   )
   assert.deepEqual(receipt, { id: '44', url: 'https://github.test/review/44' })
   assert.deepEqual(calls, ['GET /repos/org/repo/pulls/7/reviews'])
+})
+
+test('inline-only policy reads review history while default completion requires the final summary', async () => {
+  const marker = `<!-- agentskit-code-review:v1 sha=${pull.head.sha} fingerprint=stable -->`
+  const fetcher = async url => {
+    const path = new URL(url).pathname
+    if (path.endsWith('/pulls/7')) return Response.json(pull)
+    if (path.endsWith('/reviews')) return Response.json([{ id: 44, body: marker }])
+    if (path.endsWith('/comments')) return Response.json([])
+    throw new Error(`unexpected request ${path}`)
+  }
+  for (const channel of ['review', 'summary']) {
+    const scm = createGithubScmAdapter({ token: 'fixture', fetch: fetcher, reviewStateChannel: channel })
+    assert.equal((await scm.reviewState({ repository: 'org/repo', id: '7' }, 'stable')).alreadyPublished, channel === 'review')
+  }
+})
+
+test('lost POST acknowledgements are reconciled without duplicate review or summary writes', async () => {
+  for (const channel of ['review', 'summary']) for (const committed of [true, false]) {
+    const history = []
+    let writes = 0
+    const scm = createGithubScmAdapter({ token: 'fixture', fetch: async (_url, init = {}) => {
+      if ((init.method ?? 'GET') === 'GET') return Response.json(history)
+      writes++
+      if (committed) history.push({ id: 71, body: JSON.parse(init.body).body })
+      return Response.json({ message: 'Server Error' }, { status: 502 })
+    } })
+    const input = { channel, headRevision: pull.head.sha, fingerprint: 'lost-ack', verdict: 'COMMENT', summary: 'Measured result.', annotations: [] }
+    if (committed) {
+      assert.equal((await scm.publishReview({ repository: 'org/repo', id: '7' }, input)).id, '71')
+      assert.equal((await scm.publishReview({ repository: 'org/repo', id: '7' }, input)).id, '71')
+    } else await assert.rejects(scm.publishReview({ repository: 'org/repo', id: '7' }, input), /502/)
+    assert.equal(writes, 1, 'a missing acknowledgement must never cause a blind retry')
+  }
 })

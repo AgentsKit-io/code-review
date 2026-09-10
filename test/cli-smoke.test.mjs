@@ -1,13 +1,82 @@
 import assert from 'node:assert/strict'
 import { spawn, spawnSync } from 'node:child_process'
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join, resolve } from 'node:path'
 import { tmpdir } from 'node:os'
 import test from 'node:test'
 import { codexCli, hardenOutputSchema } from '../dist/src/codex-adapter.js'
+import { defineConfig, toReviewConfig } from '../dist/src/public-config.js'
+import { resolveReviewConfig } from '../dist/src/review-config.js'
+import { reviewPolicyFingerprint } from '../dist/src/review-policy.js'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+
+test('packaged CLI repairs partial publication, honors comment policy, and rejects stale replay without inference', () => {
+  for (const comments of [{ language: 'pt-BR' }, { summary: false }, { inline: false, summary: false }]) {
+    const directory = mkdtempSync(join(tmpdir(), 'review-publication-'))
+    try {
+      const config = defineConfig({ target: { repository: 'org/repo' }, review: {}, memory: { enabled: false }, comments })
+      const configFile = join(directory, 'config.json')
+      writeFileSync(configFile, JSON.stringify(config))
+      const head = 'a'.repeat(40)
+      const artifact = { version: 1, repository: 'org/repo', pullNumber: 7, headSha: head,
+        policyFingerprint: reviewPolicyFingerprint(resolveReviewConfig(toReviewConfig(config))),
+        review: { verdict: 'REQUEST CHANGES', blocking: true, incomplete: false, dropped: [],
+          findings: [{ file: 'a.ts', line: 1, severity: 'high', category: 'correctness', confidence: 0.95, title: 'Missing check', rationale: 'Unchecked input.', suggestion: 'Validate input.', inDiff: true }],
+          execution: { attempted: 1, succeeded: 1, failed: 0 }, summary: 'One finding.',
+          evidence: { profile: 'full', providerCalls: 1, failedProviderCalls: 0, skippedProviderCalls: 0, elapsedMs: 1, circuitState: 'closed', deadlineExceeded: false } } }
+      const artifactFile = join(directory, 'artifact.json')
+      writeFileSync(artifactFile, JSON.stringify(artifact))
+      const stateFile = join(directory, 'http.json')
+      writeFileSync(stateFile, JSON.stringify({ reviews: [], comments: [], writes: [], rejectSummary: config.comments.summary }))
+      const preload = join(directory, 'http.mjs')
+      writeFileSync(preload, `import { readFileSync, writeFileSync } from 'node:fs';
+const file = ${JSON.stringify(stateFile)};
+globalThis.fetch = async (url, init = {}) => {
+  const state = JSON.parse(readFileSync(file, 'utf8'));
+  const path = new URL(url).pathname;
+  const channel = path.endsWith('/reviews') ? 'reviews' : path.endsWith('/comments') ? 'comments' : null;
+  if ((init.method ?? 'GET') === 'GET') {
+    if (channel) return Response.json(state[channel]);
+    if (path.endsWith('/pulls/7')) return Response.json({ title: 'Fixture', state: 'open', updated_at: '2026-09-10T00:00:00.000Z', head: { sha: '${head}', ref: 'feature', repo: { full_name: 'org/repo' } }, base: { sha: '${'b'.repeat(40)}', ref: 'main', repo: { full_name: 'org/repo' } } });
+    throw Error('Unexpected GET ' + path);
+  }
+  if (!channel || init.method !== 'POST') throw Error('Unexpected mutation ' + path);
+  const payload = JSON.parse(init.body);
+  state.writes.push({ channel, payload });
+  const reject = channel === 'comments' && state.rejectSummary;
+  if (reject) state.rejectSummary = false;
+  else state[channel].push({ id: state.writes.length, body: payload.body });
+  writeFileSync(file, JSON.stringify(state));
+  return Response.json({ message: 'lost acknowledgement' }, { status: 502 });
+};`)
+      const invoke = () => spawnSync(process.execPath, ['--import', preload, 'dist/src/cli.js', '--config', configFile, '--pr', 'org/repo#7', '--publish-result', artifactFile, '--post', '--no-fail'], {
+        cwd: root, encoding: 'utf8', timeout: 10000,
+        env: { ...process.env, CI: 'false', GITHUB_TOKEN: 'fixture', CODEX_FIXTURE_COUNT_FILE: join(directory, 'model-calls'), PATH: `${join(root, 'test/fixtures/bin')}:${process.env.PATH ?? ''}` },
+      })
+      const first = invoke()
+      if (config.comments.summary) assert.notEqual(first.status, 0, 'the missing summary acknowledgement stays failed until reconciled')
+      else assert.equal(first.status, 0, first.stderr)
+      const recovered = invoke()
+      assert.equal(recovered.status, 0, recovered.stderr)
+      const saved = readFileSync(stateFile, 'utf8')
+      const state = JSON.parse(saved)
+      assert.equal(state.reviews.length, config.comments.inline || config.comments.summary ? 1 : 0)
+      assert.equal(state.comments.length, config.comments.summary ? 1 : 0)
+      if (comments.language) assert.match(state.writes[0].payload.comments[0].body, /Alteração necessária/)
+      assert.equal(invoke().status, 0)
+      assert.equal(readFileSync(stateFile, 'utf8'), saved, 'repeat performs no POST or PATCH')
+      artifact.headSha = 'c'.repeat(40)
+      writeFileSync(artifactFile, JSON.stringify(artifact))
+      const stale = invoke()
+      assert.notEqual(stale.status, 0)
+      assert.match(stale.stderr, /stale, mismatched, or not publishable/)
+      assert.equal(readFileSync(stateFile, 'utf8'), saved)
+      assert.throws(() => readFileSync(join(directory, 'model-calls')), /ENOENT/)
+    } finally { rmSync(directory, { recursive: true, force: true }) }
+  }
+})
 
 test('SIGTERM cancels the actual provider subprocess before the CLI exits', async () => {
   const directory = mkdtempSync(join(tmpdir(), 'codex-signal-'))
