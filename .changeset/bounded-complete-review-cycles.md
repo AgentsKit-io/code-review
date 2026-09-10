@@ -12,3 +12,6 @@ positive, clean, and false-positive regression cases in the default live corpus.
 
 Dispatch required CI checks natively for Changesets version PRs using GitHub's
 built-in workflow token, eliminating manual close/reopen release recovery.
+
+Synchronize the package lockfile's root version during native Changesets
+versioning and reject mismatched package/lock metadata in the release checks.

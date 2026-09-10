@@ -42,5 +42,9 @@ test('release workflows publish versioned main commits with OIDC and remain idem
 
 test('Changesets versioning refreshes generated documentation before release gates', () => {
   const packageJson = JSON.parse(read('package.json'))
-  assert.match(packageJson.scripts['version-packages'], /changeset version && npm run docs:full && npm run readme:standard:refresh/)
+  assert.match(packageJson.scripts['version-packages'], /changeset version && npm version --no-git-tag-version --ignore-scripts --allow-same-version/)
+  assert.match(packageJson.scripts['version-packages'], /npm run docs:full && npm run readme:standard:refresh/)
+  const lock = JSON.parse(read('package-lock.json'))
+  assert.equal(lock.version, packageJson.version)
+  assert.equal(lock.packages[''].version, packageJson.version)
 })
