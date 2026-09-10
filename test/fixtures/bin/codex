@@ -23,6 +23,7 @@ if (countFile) {
   try { count = Number(readFileSync(countFile, 'utf8')) } catch { /* first invocation */ }
   writeFileSync(countFile, String(count + 1))
 }
+if (process.env.CODEX_FIXTURE_PID_FILE) writeFileSync(process.env.CODEX_FIXTURE_PID_FILE, String(process.pid))
 if (process.env.CODEX_FIXTURE_HANG === '1') setInterval(() => {}, 1_000)
 if (process.env.CODEX_FIXTURE_FORBID_GITHUB_TOKEN === '1' && (process.env.GITHUB_TOKEN || process.env.GH_TOKEN)) {
   process.stderr.write('fixture provider inherited a GitHub credential\n')

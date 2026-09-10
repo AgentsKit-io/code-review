@@ -4,7 +4,26 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { spawnSync } from 'node:child_process'
 import test from 'node:test'
-import { scoreCorpusCases, createCycleMeter } from '../scripts/review-cycle.mjs'
+import { scoreCorpusCases, createCycleMeter, runCycleBatches } from '../scripts/review-cycle.mjs'
+
+test('a failed batch cancels and drains its peer before reporting, without starting queued work', async () => {
+  const controller = new AbortController()
+  const started = []
+  let peerSettled = false
+  const failure = new Error('batch token budget exceeded')
+  await assert.rejects(runCycleBatches([0, 1, 2, 3], 2, async index => {
+    started.push(index)
+    if (index === 1) { await Promise.resolve(); throw failure }
+    await new Promise(resolve => controller.signal.addEventListener('abort', () => setTimeout(resolve, 10), { once: true }))
+    peerSettled = true
+    throw new Error('peer was cancelled')
+  }, controller), error => error === failure)
+  assert.equal(controller.signal.aborted, true)
+  assert.equal(peerSettled, true)
+  assert.deepEqual(started, [0, 1])
+  await assert.rejects(runCycleBatches([4], 1, async index => started.push(index), controller), error => error === failure)
+  assert.deepEqual(started, [0, 1])
+})
 
 test('npm-style symlink invokes the cycle instead of silently succeeding', () => {
   const directory = mkdtempSync(join(tmpdir(), 'review-cycle-bin-'))

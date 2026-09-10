@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { spawnSync } from 'node:child_process'
+import { spawn, spawnSync } from 'node:child_process'
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join, resolve } from 'node:path'
@@ -8,6 +8,33 @@ import test from 'node:test'
 import { codexCli, hardenOutputSchema } from '../dist/src/codex-adapter.js'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+
+test('SIGTERM cancels the actual provider subprocess before the CLI exits', async () => {
+  const directory = mkdtempSync(join(tmpdir(), 'codex-signal-'))
+  const pidFile = join(directory, 'provider.pid')
+  const child = spawn(process.execPath, ['dist/src/cli.js', '--provider', 'codex-cli', '--stdin', '--health-check', 'off'], {
+    cwd: root, stdio: ['pipe', 'ignore', 'pipe'],
+    env: { ...process.env, CODEX_FIXTURE_HANG: '1', CODEX_FIXTURE_PID_FILE: pidFile, PATH: `${join(root, 'test/fixtures/bin')}:${process.env.PATH ?? ''}` },
+  })
+  child.stdin.end('export const answer = 42\n')
+  const closed = new Promise(resolve => child.once('close', (code, signal) => resolve({ code, signal })))
+  let providerPid
+  const timer = setTimeout(() => child.kill('SIGKILL'), 8000)
+  try {
+    for (let tries = 0; tries < 100 && !providerPid; tries++) {
+      try { providerPid = Number(readFileSync(pidFile, 'utf8')) } catch { await new Promise(resolve => setTimeout(resolve, 20)) }
+    }
+    assert.ok(providerPid, 'provider must really start')
+    child.kill('SIGTERM')
+    assert.deepEqual(await closed, { code: 2, signal: null })
+    assert.throws(() => process.kill(providerPid, 0), { code: 'ESRCH' })
+  } finally {
+    clearTimeout(timer)
+    child.kill('SIGKILL')
+    if (providerPid) { try { process.kill(providerPid, 'SIGKILL') } catch {} }
+    rmSync(directory, { recursive: true, force: true })
+  }
+})
 
 test('parent execution ceilings reject invalid or exhausted budgets before model calls', () => {
   for (const [flag, value] of [['--run-token-ceiling', '0'], ['--run-call-ceiling', '-1'], ['--run-token-ceiling', '1']]) {
