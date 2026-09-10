@@ -13,6 +13,8 @@ export function packageVersion(): string {
 }
 
 export function reviewPolicyFingerprint(config: ResolvedReviewConfig): string {
+  // Scheduling does not change review semantics; preflight and workers may use different limits.
+  const { concurrency: _concurrency, ...budget } = config.budget
   const lenses = config.batching.enabled
     ? Object.fromEntries(Object.entries(config.lenses).map(([key, policy]) => [key, { ...policy, enabled: policy.required }]))
     : config.lenses
@@ -22,7 +24,7 @@ export function reviewPolicyFingerprint(config: ResolvedReviewConfig): string {
     retries: config.batching.enabled ? 0 : config.retries,
     profile: config.batching.enabled ? 'batched-policy' : config.profile,
     thresholds: config.batching.enabled ? { ...config.thresholds, maxPerFile: 1 } : config.thresholds,
-    budget: config.budget, context: config.context, redaction: config.redaction,
+    budget, context: config.context, redaction: config.redaction,
     conventions: config.conventions ?? 'auto', batching: config.batching,
   })
 }
