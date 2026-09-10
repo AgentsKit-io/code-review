@@ -38,7 +38,7 @@ export interface QualityInput {
   security: { secretLeaks: number; unsafeActions: number; failClosedViolations: number }
   reliability: { runs: number; completeRuns: number; incompleteAccepted: number; staleArtifactsAccepted: number; silentFailures: number }
   performance: { p95Ms: number; baselineP95Ms?: number; wallClockMs?: number; baselineWallClockMs?: number }
-  tokens: { tokensUsed?: number; changedLines: number; validFindings: number; baselineTokensPerChangedLine?: number; accounting?: { inputTokens?: number; cachedInputTokens?: number; outputTokens?: number; reasoningOutputTokens?: number; memoryTokens?: number; retryTokens?: number; total?: number; providerCalls?: number; wallClockMs?: number } }
+  tokens: { tokensUsed?: number; changedLines: number; validFindings: number; baselineChangedLines?: number; baselineTokensPerChangedLine?: number; baselineTokensPerProviderCall?: number; accounting?: { inputTokens?: number; cachedInputTokens?: number; outputTokens?: number; reasoningOutputTokens?: number; memoryTokens?: number; retryTokens?: number; total?: number; providerCalls?: number; wallClockMs?: number } }
   batches: { planned: number; completed: number; retried: number; overBudget: number; wastedCalls?: number; providerCalls?: number; baselineProviderCalls?: number }
   cache?: { hits: number; misses: number; corruptMisses: number; staleMisses: number; unvalidatedMisses: number; savedTokens: number }
   memory: { enabled: boolean; persistencePass: boolean; loadPass: boolean; malformedRejected: boolean; feedbackRecorded: boolean; rulesApproved: boolean; learningEvaluationPass: boolean; learningDetectionLift: boolean; learningPrecisionPass: boolean; learningTokenPass: boolean }
@@ -123,6 +123,8 @@ export function parseQualityInput(value: unknown): QualityInput {
   requireNumbers(input.reliability, 'reliability', ['runs', 'completeRuns', 'incompleteAccepted', 'staleArtifactsAccepted', 'silentFailures'])
   requireNumbers(input.performance, 'performance', ['p95Ms'])
   requireNumbers(input.tokens, 'tokens', ['changedLines', 'validFindings'])
+  const tokensRecord = requireRecord(input.tokens, 'tokens')
+  for (const key of ['baselineChangedLines', 'baselineTokensPerChangedLine', 'baselineTokensPerProviderCall']) if (tokensRecord[key] !== undefined) requireNumber(tokensRecord[key], `tokens.${key}`)
   if (requireRecord(input.tokens, 'tokens').accounting !== undefined) {
     const accounting = requireRecord(input.tokens, 'tokens').accounting
     const accountingRecord = requireRecord(accounting, 'tokens.accounting')
@@ -222,9 +224,19 @@ export function evaluateQuality(input: QualityInput): QualityReport {
     ? accounting.total ?? tokenDimensions.reduce((total, dimension) => total + accounting[dimension]!, 0)
     : input.tokens.tokensUsed
   const tokensPerChangedLine = accountedTokens === undefined || input.tokens.changedLines === 0 ? null : accountedTokens / input.tokens.changedLines
-  const tokenEfficiency = input.tokens.baselineTokensPerChangedLine === undefined || tokensPerChangedLine === null
+  const providerCalls = accounting?.providerCalls ?? input.batches.providerCalls
+  const tokensPerProviderCall = accountedTokens === undefined || providerCalls === undefined || providerCalls === 0 ? null : accountedTokens / providerCalls
+  const comparableShape = input.tokens.baselineChangedLines === undefined || input.tokens.changedLines === 0
+    ? true
+    : input.tokens.changedLines >= input.tokens.baselineChangedLines / 2 && input.tokens.changedLines <= input.tokens.baselineChangedLines * 2
+  const lineTokenEfficiency = input.tokens.baselineTokensPerChangedLine === undefined || tokensPerChangedLine === null
     ? null
     : tokensPerChangedLine <= input.tokens.baselineTokensPerChangedLine ? 4 : tokensPerChangedLine <= input.tokens.baselineTokensPerChangedLine * 1.1 ? 3 : input.tokens.baselineTokensPerChangedLine * 1.25 >= tokensPerChangedLine ? 2 : 1
+  const callTokenEfficiency = input.tokens.baselineTokensPerProviderCall === undefined || tokensPerProviderCall === null
+    ? null
+    : tokensPerProviderCall <= input.tokens.baselineTokensPerProviderCall ? 4 : tokensPerProviderCall <= input.tokens.baselineTokensPerProviderCall * 1.1 ? 3 : input.tokens.baselineTokensPerProviderCall * 1.25 >= tokensPerProviderCall ? 2 : 1
+  const tokenEfficiency = comparableShape ? lineTokenEfficiency : callTokenEfficiency
+  const tokenComparisonBasis = comparableShape ? 'changed-line' : 'provider-call'
   const batchWastedCalls = input.batches.wastedCalls ?? input.campaign?.wastedCalls ?? 0
   const batchEfficiency = minimum([
     ratioScore(input.batches.completed, input.batches.planned),
@@ -252,7 +264,7 @@ export function evaluateQuality(input: QualityInput): QualityReport {
     result('security', security, { secretLeaks: input.security.secretLeaks, unsafeActions: input.security.unsafeActions, failClosedViolations: input.security.failClosedViolations }, 'Security and fail-closed violations are absolute defects.'),
     result('reliability', reliability, { completeRuns: input.reliability.completeRuns, runs: input.reliability.runs, staleArtifactsAccepted: input.reliability.staleArtifactsAccepted }, 'Incomplete, stale, or silently failed work cannot be accepted.'),
     result('speed', speed, { p95Ms: input.performance.p95Ms, baselineP95Ms: input.performance.baselineP95Ms ?? 'missing', wallClockMs: input.performance.wallClockMs ?? 'missing', baselineWallClockMs: input.performance.baselineWallClockMs ?? 'missing' }, 'Speed is relative to measured p95 and complete wall-clock baselines.'),
-    result('token-efficiency', tokenEfficiency, { tokensUsed: accountedTokens ?? 'missing', changedLines: input.tokens.changedLines, tokensPerChangedLine: tokensPerChangedLine ?? 'missing', baselineTokensPerChangedLine: input.tokens.baselineTokensPerChangedLine ?? 'missing', accounting: accounting ? (tokenDimensions.every((dimension) => accounting[dimension] !== undefined) ? 'complete' : 'partial') : 'missing' }, 'Token efficiency includes every reported token class and remains unmeasured when no comparable baseline exists.'),
+    result('token-efficiency', tokenEfficiency, { tokensUsed: accountedTokens ?? 'missing', changedLines: input.tokens.changedLines, baselineChangedLines: input.tokens.baselineChangedLines ?? 'missing', tokensPerChangedLine: tokensPerChangedLine ?? 'missing', baselineTokensPerChangedLine: input.tokens.baselineTokensPerChangedLine ?? 'missing', providerCalls: providerCalls ?? 'missing', tokensPerProviderCall: tokensPerProviderCall ?? 'missing', baselineTokensPerProviderCall: input.tokens.baselineTokensPerProviderCall ?? 'missing', comparisonBasis: tokenComparisonBasis, accounting: accounting ? (tokenDimensions.every((dimension) => accounting[dimension] !== undefined) ? 'complete' : 'partial') : 'missing' }, 'Token efficiency uses changed-line comparison for similarly sized PRs and provider-call comparison for materially different PR sizes.'),
     result('batch-efficiency', batchEfficiency, { planned: input.batches.planned, completed: input.batches.completed, retried: input.batches.retried, wastedCalls: batchWastedCalls, overBudget: input.batches.overBudget, providerCalls: input.batches.providerCalls ?? 'missing' }, 'Batches must complete within budget without avoidable retries, wasted calls, or provider-call regressions.'),
     memoryResult,
     result('configuration', configuration, { validAccepted: input.configuration.validAccepted, invalidRejected: input.configuration.invalidRejected, schemaAvailable: input.configuration.schemaAvailable }, 'The public configuration must validate before execution.'),

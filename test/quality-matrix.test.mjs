@@ -105,3 +105,13 @@ test('a one-point score jitter remains compatible with the minimum quality floor
     name: 'no-material-regressions', passed: true, detail: 'no configured material quality regression',
   })
 })
+
+test('small PRs use provider-call token efficiency when changed-line baselines are not comparable', () => {
+  const report = evaluateQuality(complete({
+    tokens: { tokensUsed: 67752, changedLines: 10, validFindings: 2, baselineChangedLines: 2825, baselineTokensPerChangedLine: 461.2959, baselineTokensPerProviderCall: 23693 },
+    batches: { planned: 2, completed: 2, retried: 0, overBudget: 0, providerCalls: 3 },
+  }))
+  const area = report.areas.find((candidate) => candidate.area === 'token-efficiency')
+  assert.equal(area?.score, 4)
+  assert.equal(area?.metrics.comparisonBasis, 'provider-call')
+})
