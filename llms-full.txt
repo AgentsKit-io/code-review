@@ -1268,6 +1268,16 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.30.8
+
+### Patch Changes
+
+- [#229](https://github.com/AgentsKit-io/code-review/pull/229) [`955953c`](https://github.com/AgentsKit-io/code-review/commit/955953c35118fd5ad25fff58749e90944e99ec51) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Bind campaign checkpoints to the stable preflight manifest and package version so scheduled runs do not reject a prior terminal campaign as stale.
+
+- [#229](https://github.com/AgentsKit-io/code-review/pull/229) [`955953c`](https://github.com/AgentsKit-io/code-review/commit/955953c35118fd5ad25fff58749e90944e99ec51) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Campaign workers now use a short recoverable pull-request lease with a parent heartbeat, preventing interrupted reviews from blocking the next campaign for hours.
+
+- [#229](https://github.com/AgentsKit-io/code-review/pull/229) [`955953c`](https://github.com/AgentsKit-io/code-review/commit/955953c35118fd5ad25fff58749e90944e99ec51) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Campaign preflight now respects enabled batch plans for aggregate budgets, and incomplete lens executions receive one bounded retry before failing closed.
+
 ## 0.30.7
 
 ### Patch Changes
