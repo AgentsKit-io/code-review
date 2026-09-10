@@ -236,6 +236,11 @@ Run `agentskit-review-campaign --config /absolute/path/code-review.config.ts
 --output /private/path/campaign-report.json --post --merge` as the complete
 scheduled campaign when the configuration explicitly enables safe merging.
 Omit `--post` and `--merge` for a read-only discovery/execution run.
+Provider trust mode is an execution input, not project configuration: pass
+`--mode trusted-local` only from a trusted, pre-authenticated local runner;
+otherwise the command defaults to isolated mode. The mode is included in the
+campaign and worker identities so isolated and trusted runs cannot reuse each
+other's checkpoints or review artifacts.
 It validates the one project configuration, checks static provider health, discovers
 all open change requests through the SCM adapter, and completes the provider-free
 eligibility, source, and budget sweep before model execution. Only entries with
