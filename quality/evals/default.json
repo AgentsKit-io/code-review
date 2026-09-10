@@ -38,8 +38,8 @@
     {
       "id": "generated-number-declaration",
       "kind": "clean",
-      "language": "ts",
-      "source": "// Generated public type surface. Runtime refinements are not represented in declarations.\nimport type { ZodNumber } from 'zod'\nexport declare const expiresInMinutes: ZodNumber\n"
+      "language": "md",
+      "source": "# API Report File for @example/contracts\n\n```ts\nimport { z } from 'zod';\nexport const ContentSchedulePlanParams: z.ZodObject<{ scheduleId: z.ZodString; campaignId: z.ZodString; cadence: z.ZodEnum<{ monthly: \"monthly\"; daily: \"daily\"; weekly: \"weekly\"; }>; bound: z.ZodDiscriminatedUnion<[z.ZodObject<{ kind: z.ZodLiteral<\"count\">; count: z.ZodNumber; }, z.core.$strict>, z.ZodObject<{ kind: z.ZodLiteral<\"until\">; endDate: z.ZodString; }, z.core.$strict>], \"kind\">; startDate: z.ZodString; }, z.core.$strict>\nexport const ContentVersion: z.ZodObject<{ id: z.ZodString; createdAt: z.ZodString; state: z.ZodEnum<{ approved: \"approved\"; awaiting_review: \"awaiting_review\"; changes_requested: \"changes_requested\"; }>; }, z.core.$strict>\n```\n"
     }
   ]
 }

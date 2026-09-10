@@ -18,6 +18,8 @@ Codex inference runs in a temporary directory with focused review instructions, 
 
 For changed HTML, SCM ingestion can include up to four unchanged local linked stylesheets (64 KiB each, within the source budget) at the same head SHA. They are context for analysis and skepticism, not extra reviewed files. Remote/sensitive paths are excluded and unavailable context is explicit. This is one-hop context, not a complete dependency graph: quality corpus scores do not replace auditing real findings against the surrounding application.
 
+Single-lens, multidimensional and skeptical review share the same evidence policy: generated API types do not prove missing runtime refinements or state-transition guards. Runtime findings need implementation evidence; generated files remain reviewable for actual type changes. The live corpus and memory A/B use the same full review profile as PR batches, including an unhinted dense API-report regression. These checks reduce known noise; they do not establish zero false positives in arbitrary PRs.
+
 | Provider class | Examples | Secret or login | Network boundary |
 |---|---|---|---|
 | Logged-in local CLI | `codex-cli`, `claude-cli`, `grok-cli`, `opencode-cli` | Existing local login | Provider CLI policy |

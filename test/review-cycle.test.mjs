@@ -13,7 +13,8 @@ test('resume reuses bound successful evals but remeasures changed or corrupted e
     writeFileSync(cli, 'fixture executable identity'); writeFileSync(configFile, '{}')
     let calls = 0
     const options = { cli, configFile, provider: 'fixture', mode: 'isolated', providerArgs: [], maxCalls: 10, concurrency: 1, deadlineMs: 1000, runDir: directory, stateRoot: directory, remainingCycleMs: () => 1000,
-      measuredRun: async (_kind, file) => {
+      measuredRun: async (_kind, file, args) => {
+        assert.equal(args[args.indexOf('--profile') + 1], 'full', 'evals must exercise the actual PR review profile')
         calls++
         writeFileSync(file, JSON.stringify({ findings: [], incomplete: false, execution: { attempted: 1, succeeded: 1, failed: 0 }, evidence: { tokensUsed: 5, providerCalls: 1, deadlineExceeded: false } }))
         return { code: 0 }
