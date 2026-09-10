@@ -1268,6 +1268,12 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.30.5
+
+### Patch Changes
+
+- [#223](https://github.com/AgentsKit-io/code-review/pull/223) [`4d67632`](https://github.com/AgentsKit-io/code-review/commit/4d6763215e1c56d5ecac17090e761045c30d8edd) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Use provider-call token efficiency for materially different pull-request sizes and record the comparison basis in quality matrices.
+
 ## 0.30.4
 
 ### Patch Changes
