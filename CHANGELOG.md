@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.30.2
+
+### Patch Changes
+
+- [#217](https://github.com/AgentsKit-io/code-review/pull/217) [`c158bdb`](https://github.com/AgentsKit-io/code-review/commit/c158bdb7a2ac3d45984ea2a7ed037ea40271e2fd) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Split large source projections with a provider-overhead safety margin before live execution, and give multi-pack reviews an aggregate analysis budget so generated files cannot fail after only a few safe packs. Plans now fail fast when aggregate analysis demand exceeds the declared budget.
+
 ## 0.30.1
 
 ### Patch Changes
