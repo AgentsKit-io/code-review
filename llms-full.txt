@@ -1255,6 +1255,12 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.29.0
+
+### Minor Changes
+
+- [#210](https://github.com/AgentsKit-io/code-review/pull/210) [`db8748a`](https://github.com/AgentsKit-io/code-review/commit/db8748a24653138f48e5dc51a1799e982081c325) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Make the packaged campaign command the explicit owner of scheduled review publication and safe merging, including deterministic SHA-bound Orca evidence for each worker run.
+
 ## 0.28.0
 
 ### Minor Changes
