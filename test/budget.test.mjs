@@ -5,7 +5,23 @@ import {
   compileReviewBudget,
   createReviewBudgetLedger,
   defaultReviewBudget,
+  tightenReviewBudget,
 } from '../dist/src/budget.js'
+
+test('resource ceilings never loosen a configured child scope', () => {
+  const tightened = tightenReviewBudget(budget, { maxTokens: 8000, maxCalls: 4 })
+  assert.equal(tightened.campaign.maxCalls, 4)
+  assert.equal(tightened.pullRequest.maxCalls, 3)
+  assert.equal(tightened.contextPack.maxTokens, budget.contextPack.maxTokens)
+  assert.ok(tightened.analysis.maxTokens <= budget.analysis.maxTokens)
+})
+
+test('known usage enforces tokens despite unavailable optional fields without double counting subsets', () => {
+  const ledger = createReviewBudgetLedger(budget)
+  ledger.begin('analysis', 100).finish({ inputTokens: 6000, outputTokens: 500, cachedInputTokens: 5000, reasoningOutputTokens: 400 })
+  assert.throws(() => ledger.begin('analysis', 3000), /token.*budget exceeded/)
+  assert.equal(ledger.usage().inputTokens, 6000)
+})
 
 const budget = defaultReviewBudget({
   maxTokens: 10_000,

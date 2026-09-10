@@ -9,6 +9,30 @@ import { codexCli, hardenOutputSchema } from '../dist/src/codex-adapter.js'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
+test('parent execution ceilings reject invalid or exhausted budgets before model calls', () => {
+  for (const [flag, value] of [['--run-token-ceiling', '0'], ['--run-call-ceiling', '-1'], ['--run-token-ceiling', '1']]) {
+    const directory = mkdtempSync(join(tmpdir(), 'codex-ceiling-'))
+    try {
+      const run = spawnSync(process.execPath, ['dist/src/cli.js', '--provider', 'codex-cli', '--stdin', '--health-check', 'off', flag, value], {
+        cwd: root, input: 'export const answer = 42\n', encoding: 'utf8', timeout: 10000,
+        env: { ...process.env, CODEX_FIXTURE_COUNT_FILE: join(directory, 'calls'), PATH: `${join(root, 'test/fixtures/bin')}:${process.env.PATH ?? ''}` },
+      })
+      assert.notEqual(run.status, 0)
+      assert.throws(() => readFileSync(join(directory, 'calls')), /ENOENT/)
+    } finally { rmSync(directory, { recursive: true, force: true }) }
+  }
+})
+
+test('remaining parent allowance does not change the immutable provider-free batch plan', () => {
+  const args = ['dist/src/cli.js', '--provider', 'codex-cli', '--stdin', '--plan', '--json', '--batch-size', '5']
+  const options = { cwd: root, input: 'export const answer = 42\n', encoding: 'utf8', timeout: 10000 }
+  const planned = spawnSync(process.execPath, args, options)
+  const constrained = spawnSync(process.execPath, [...args, '--run-token-ceiling', '1', '--run-call-ceiling', '1'], options)
+  assert.equal(planned.status, 0, planned.stderr)
+  assert.equal(constrained.status, 0, constrained.stderr)
+  assert.deepEqual(JSON.parse(constrained.stdout), JSON.parse(planned.stdout))
+})
+
 test('Codex response schemas close every object for strict response validation', () => {
   assert.deepEqual(hardenOutputSchema({
     type: 'object',

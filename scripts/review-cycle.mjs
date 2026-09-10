@@ -82,7 +82,7 @@ async function main() {
   const summaryFile = join(runDir, 'cycle-summary.json')
   const artifactsDir = join(runDir, 'batches')
   const summary = { version: 1, runId, decision: 'BLOCKED', phase: 'contract', libraryVersion: pkg.version, sourceRevision: 'unknown', repository, pullNumber, artifacts: {}, blockers: [], problems: [], fixes: [], cache: { hits: 0, misses: 0, corruptMisses: 0, staleMisses: 0, unvalidatedMisses: 0, savedTokens: 0 }, startedAt: new Date().toISOString() }
-  const cycleStartedAt = Date.now()
+  let cycleStartedAt = Date.now()
   const remainingCycleMs = () => Math.max(0, globalDeadlineMs - (Date.now() - cycleStartedAt))
   mkdirSync(artifactsDir, { recursive: true })
   mkdirSync(stateRoot, { recursive: true })
@@ -117,11 +117,12 @@ async function main() {
     }
     const schema = safeExec(process.execPath, [cli, '--config-schema'])
     checks.push(check('config.schema', schema.ok && schema.stdout.includes('AgentsKitCodeReviewConfig'), 'public configuration schema is available', 'repair the packaged configuration schema', schema.ok ? 'schema generated' : schema.stderr))
-    const corpusFile = resolve(arg('quality-corpus') ?? join(root, 'quality/corpus/default.json'))
+    const corpusFile = resolve(arg('quality-corpus') ?? join(root, 'quality/evals/default.json'))
     const learningCorpusFile = resolve(arg('learning-corpus') ?? join(root, 'quality/learning/default.json'))
     let corpus
     try {
       corpus = readJson(corpusFile)
+      if (Array.isArray(corpus.cases)) corpus.cases = corpus.cases.map(entry => ({ ...entry, findings: entry.findings ?? (entry.expected ? [entry.expected] : entry.kind === 'clean' ? [] : undefined) }))
       checks.push(check('quality.corpus', corpus.version === 1 && Array.isArray(corpus.cases) && corpus.cases.length > 0, `quality corpus: ${corpusFile}`, 'provide a non-empty version 1 quality corpus', corpusFile))
     } catch (error) { checks.push(check('quality.corpus', false, `quality corpus: ${corpusFile}`, 'provide a readable JSON quality corpus', error instanceof Error ? error.message : String(error))) }
     let learningCorpus
@@ -215,9 +216,13 @@ async function main() {
     const configContent = readFileSync(configFile, 'utf8')
     const manifestFingerprint = sha256(readFileSync(manifestFile))
     const proposedContract = { version: 1, runId, libraryVersion: pkg.version, sourceRevision, repository, pullNumber, headSha: manifest.headSha, baseSha: prData.targetRevision, provider, model: model ?? null, transport: transport ?? null, mode, configFingerprint: sha256(configContent), qualityCorpusFingerprint: sha256(readFileSync(corpusFile)), learningCorpusFingerprint: sha256(readFileSync(learningCorpusFile)), policyFingerprint: manifest.policyFingerprint, manifestFingerprint, requiredLenses: plan.requiredLenses, retryLimit: maxRetries, maxCalls, maxTokens, deadlineMs, globalDeadlineMs, concurrency, batchConcurrency, runDir, stateRoot }
-    const contract = existsSync(contractFile) ? readJson(contractFile) : { ...proposedContract, createdAt: new Date().toISOString() }
+    const contract = existsSync(contractFile) ? readJson(contractFile) : { ...proposedContract, createdAt: summary.startedAt }
     for (const [key, value] of Object.entries(proposedContract)) if (JSON.stringify(contract[key]) !== JSON.stringify(value)) throw new Error(`existing contract mismatch: ${key}`)
     if (!existsSync(contractFile)) atomicJson(contractFile, contract)
+    cycleStartedAt = Date.parse(contract.createdAt)
+    if (!Number.isFinite(cycleStartedAt) || cycleStartedAt > Date.now()) throw new Error('invalid locked cycle start time')
+    summary.startedAt = contract.createdAt
+    if (remainingCycleMs() <= 0) throw new Error('locked cycle deadline expired; resume cannot reset its allowance')
     summary.artifacts.contract = contractFile
     summary.artifacts.manifest = manifestFile
     const reviewCache = createReviewCache(join(stateRoot, 'review-cache'))
@@ -241,6 +246,23 @@ async function main() {
     if (state.runId !== runId || state.sourceRevision !== sourceRevision || state.headSha !== manifest.headSha || state.policyFingerprint !== manifest.policyFingerprint || state.manifestFingerprint !== manifestFingerprint) throw new Error('existing run state does not match the locked contract')
     atomicJson(stateFile, state)
     summary.artifacts.state = stateFile
+
+    const usageFile = join(runDir, 'usage.json')
+    const savedUsage = existsSync(usageFile) ? readJson(usageFile) : { entries: [] }
+    if (savedUsage.sourceRevision && savedUsage.sourceRevision !== sourceRevision) throw new Error('usage evidence revision mismatch')
+    const meter = createCycleMeter({ maxTokens, maxCalls, entries: savedUsage.entries, persist: (usage) => {
+      summary.usage = usage
+      atomicJson(usageFile, { ...usage, runId, sourceRevision, headSha: manifest.headSha })
+    } })
+    summary.artifacts.usage = usageFile
+    const measuredRun = async (kind, resultFile, args, options) => {
+      const reservation = meter.begin(kind, projectConfig.review.maxTokens, batchConcurrency)
+      const run = await processResult(process.execPath, [...args, '--run-token-ceiling', String(reservation.maxTokens), '--run-call-ceiling', String(reservation.maxCalls)], options)
+      let review
+      try { const artifact = readJson(resultFile); review = artifact.review ?? artifact } catch { /* Unknown usage remains charged at its reservation ceiling. */ }
+      reservation.finish(review?.evidence, run.code)
+      return run
+    }
 
     const batchArgs = (index, artifact) => [cli, '--config', configFile, '--pr', `${repository}#${pullNumber}`, '--provider', provider, '--mode', mode, ...providerArgs, '--profile', 'full', '--batch-size', String(batchSize), '--batch-index', String(index), '--max-calls', String(maxCalls), '--concurrency', String(concurrency), '--deadline-ms', String(deadlineMs), '--health-check', 'off', '--no-fail', '--result', artifact]
     const validateArtifact = (artifact) => {
@@ -283,10 +305,10 @@ async function main() {
         atomicJson(stateFile, { ...state, updatedAt: new Date().toISOString() })
         const remaining = remainingCycleMs()
         if (remaining <= 0) throw new Error(`global cycle deadline exceeded after ${globalDeadlineMs}ms`)
-        const run = await processResult(process.execPath, batchArgs(index, artifact), { cwd: stateRoot, env: childEnv, timeout: Math.min(deadlineMs + 60_000, remaining) })
+        const run = await measuredRun(`batch-${index}-attempt-${state.attempts[index]}`, artifact, batchArgs(index, artifact), { cwd: stateRoot, env: childEnv, timeout: Math.min(deadlineMs + 60_000, remaining) })
         const validation = validateArtifact(artifact)
         last = { index, artifact, attempts: attempt, exitCode: run.code, timedOut: run.timedOut, validation, stderr: run.stderr.slice(-4000) }
-        atomicJson(join(runDir, `batch-${index}-attempt-${attempt}.json`), last)
+        atomicJson(join(runDir, `batch-${index}-attempt-${state.attempts[index]}.json`), last)
         if (validation.ready) {
           atomicJson(metadataFile, { version: 1, runId, sourceRevision, artifactHash: sha256(readFileSync(artifact)) })
           const review = readJson(artifact).review
@@ -311,10 +333,10 @@ async function main() {
     state.stage = 'full-review'; atomicJson(stateFile, { ...state, updatedAt: new Date().toISOString() })
     summary.artifacts.canary = canary.artifact
     if (!corpus) throw new Error('validated quality corpus unavailable')
-    const evaluation = await runQualityCorpus(corpus, { cli, configFile, provider, mode, providerArgs, qualityVotes: projectConfig.review.votes, maxCalls, concurrency, deadlineMs, runDir, stateRoot, childEnv, remainingCycleMs })
+    const evaluation = await runQualityCorpus(corpus, { cli, configFile, provider, mode, providerArgs, qualityVotes: projectConfig.review.votes, maxCalls, concurrency, deadlineMs, runDir, stateRoot, childEnv, remainingCycleMs, measuredRun })
     summary.artifacts.qualityEvaluation = evaluation.file
     if (!learningCorpus) throw new Error('validated learning corpus unavailable')
-    const learning = await runLearningEvaluation(learningCorpus, projectConfig, { cli, provider, mode, providerArgs, maxCalls, concurrency, deadlineMs, runDir, childEnv, remainingCycleMs })
+    const learning = await runLearningEvaluation(learningCorpus, projectConfig, { cli, provider, mode, providerArgs, maxCalls, concurrency, deadlineMs, runDir, childEnv, remainingCycleMs, measuredRun })
     summary.artifacts.learningEvaluation = learning.file
     const changedLines = Number(prData.additions ?? 0) + Number(prData.deletions ?? 0)
     const pilotInput = qualityInput({ runId, version: pkg.version, sourceRevision, repository, pullNumber, manifest, artifacts: [readJson(canary.artifact)], changedLines, elapsedBaseline: undefined, baselineTokensPerChangedLine: undefined, memory: { enabled: projectConfig.memory.enabled, persistencePass: false, loadPass: false, malformedRejected: false, feedbackRecorded: false, rulesApproved: false, learningEvaluationPass: false, learningDetectionLift: false, learningPrecisionPass: false, learningTokenPass: false }, evaluation, integration: { githubPass: true, orcaPass: false, releasePass: false, mergeSafetyPass: true } })
@@ -366,12 +388,15 @@ async function main() {
       try { const metadata = readJson(join(artifactsDir, `batch-${index}.meta.json`)); return metadata.sourceRevision === sourceRevision && metadata.artifactHash === sha256(readFileSync(file)) } catch { return false }
     })
     const input = qualityInput({ runId, version: pkg.version, sourceRevision, repository, pullNumber, manifest, artifacts: reviews, changedLines, elapsedBaseline: baselineInput?.performance?.p95Ms ?? baselineArea('speed')?.p95Ms, baselineChangedLines, baselineTokensPerChangedLine, baselineTokensPerProviderCall, memory, evaluation, cache: summary.cache, evidence: { checks, replay: readJson(summary.artifacts.replay), state, artifactMetaValid, secretLeaks: ghToken && serializedArtifacts.includes(ghToken) ? 1 : 0, maxCalls, maxTokens }, integration: { githubPass: true, orcaPass, releasePass, mergeSafetyPass } })
+    input.batches.providerCalls = meter.report().chargedCalls
+    input.batches.overBudget = meter.report().withinBudget ? 0 : 1
     atomicJson(join(runDir, 'quality-input.json'), input)
     const baselineReport = baselineArtifact?.areas ? baselineArtifact : baselineInput ? evaluateQuality(baselineInput) : undefined
     const quality = baselineReport ? evaluateQualityAgainstBaseline(input, baselineReport) : evaluateQuality(input)
     const comparison = baselineReport ? compareQuality(quality, baselineReport) : { regressions: [], materialRegressions: [], improved: [] }
     const unresolvedGaps = quality.areas.filter((area) => area.status !== 'passed').map((area) => area.area)
     const matrix = { ...quality, target: `${repository}#${pullNumber}`, headSha: manifest.headSha, configFingerprint: contract.configFingerprint, manifestFingerprint, evidencePaths: [...artifactFiles, evaluation.file, memory.evidenceFile].filter(Boolean), rawInput: input, baseline: baselineFile ? { path: resolve(baselineFile), runId: baselineArtifact?.runId ?? null, version: baselineArtifact?.libraryVersion ?? baselineArtifact?.version ?? null } : null, comparison, regressions: comparison.regressions, improvements: comparison.improved, unresolvedGaps }
+    matrix.cycleUsage = meter.report()
     atomicJson(join(runDir, 'quality-report.json'), matrix)
     const matrixFile = join(runDir, 'quality', 'matrices', `v${pkg.version}-${runId}.json`)
     atomicJson(matrixFile, matrix)
@@ -406,6 +431,7 @@ async function main() {
     summary.problems.push(error instanceof Error ? error.message : String(error))
   } finally {
     summary.finishedAt = new Date().toISOString()
+    if (summary.usage) summary.usage.wallClockMs = Date.parse(summary.finishedAt) - Date.parse(summary.startedAt)
     if (!summary.artifacts.qualityReport) {
       const file = join(runDir, 'quality-report.json')
       atomicJson(file, { ...blockedQualityReport(summary.problems.join('; ') || 'review did not finish'), runId, libraryVersion: pkg.version, sourceRevision: summary.sourceRevision, headSha: summary.headSha ?? null, target: `${repository}#${pullNumber}` })
@@ -428,7 +454,7 @@ async function runLearningEvaluation(corpus, projectConfig, options) {
   atomicJson(withoutMemoryConfig, { ...projectConfig, memory: { ...projectConfig.memory, enabled: false, autoPromoteRules: false } })
   await createReviewKnowledgeStore(join(directory, memoryPath), projectConfig.memory.retentionDays).saveApprovedRule({ rule: corpus.rule })
   const fixture = { version: 1, cases: [corpus.case] }
-  const common = { cli: options.cli, provider: options.provider, mode: options.mode, providerArgs: options.providerArgs, maxCalls: options.maxCalls, concurrency: options.concurrency, deadlineMs: options.deadlineMs, stateRoot: directory, childEnv: options.childEnv, remainingCycleMs: options.remainingCycleMs }
+  const common = { cli: options.cli, provider: options.provider, mode: options.mode, providerArgs: options.providerArgs, maxCalls: options.maxCalls, concurrency: options.concurrency, deadlineMs: options.deadlineMs, stateRoot: directory, childEnv: options.childEnv, remainingCycleMs: options.remainingCycleMs, measuredRun: options.measuredRun }
   const withMemory = await runQualityCorpus(fixture, { ...common, configFile: withMemoryConfig, runDir: join(directory, 'with-memory') })
   const withoutMemory = await runQualityCorpus(fixture, { ...common, configFile: withoutMemoryConfig, runDir: join(directory, 'without-memory') })
   const expected = corpus.case.findings.length
@@ -549,6 +575,43 @@ function qualityInput({ runId, version, sourceRevision, repository, pullNumber, 
   }
 }
 
+export function createCycleMeter({ maxTokens, maxCalls, entries = [], persist = () => {} }) {
+  if (![maxTokens, maxCalls].every(value => Number.isSafeInteger(value) && value > 0)) throw new Error('invalid cycle budget')
+  if (!Array.isArray(entries) || entries.some(entry => ![entry.chargedTokens, entry.chargedCalls].every(value => Number.isSafeInteger(value) && value >= 0))) throw new Error('invalid cycle usage journal')
+  entries = entries.map(entry => ({ ...entry }))
+  const started = Date.now()
+  const report = () => {
+    const chargedTokens = entries.reduce((sum, entry) => sum + entry.chargedTokens, 0)
+    const chargedCalls = entries.reduce((sum, entry) => sum + entry.chargedCalls, 0)
+    const complete = entries.every(entry => entry.status === 'measured')
+    return { version: 1, accounting: complete ? 'reported' : 'partial', maxTokens, maxCalls, chargedTokens, chargedCalls, recordedTokens: complete ? chargedTokens : null, recordedCalls: complete ? chargedCalls : null, wallClockMs: Date.now() - started, withinBudget: chargedTokens <= maxTokens && chargedCalls <= maxCalls, entries }
+  }
+  return { report, begin(kind, requestedTokens, parallel = 1) {
+    const current = report()
+    const tokens = Math.min(requestedTokens, Math.floor((maxTokens - current.chargedTokens) / parallel))
+    const calls = Math.floor((maxCalls - current.chargedCalls) / parallel)
+    if (tokens < 1 || calls < 1) throw new Error('global cycle budget exhausted before provider execution')
+    const entry = { kind, status: 'reserved', chargedTokens: tokens, chargedCalls: calls }
+    entries.push(entry)
+    persist(report())
+    let finished = false
+    return { maxTokens: tokens, maxCalls: calls, finish(evidence, exitCode) {
+      if (finished) return
+      finished = true
+      const tokensUsed = evidence?.tokensUsed
+      const providerCalls = evidence?.providerCalls
+      // tokensUsed can be a partial callback total if a later call failed
+      // without usage. The aggregate ledger explicitly marks that as unknown.
+      const known = [tokensUsed, providerCalls, evidence?.usage?.inputTokens, evidence?.usage?.outputTokens].every(value => Number.isSafeInteger(value) && value >= 0)
+        && tokensUsed === evidence.usage.inputTokens + evidence.usage.outputTokens
+      Object.assign(entry, { status: known ? 'measured' : 'unknown', exitCode, usage: evidence?.usage ?? null,
+        chargedTokens: known ? tokensUsed : tokens, chargedCalls: known ? providerCalls : calls })
+      persist(report())
+      if (!report().withinBudget) throw new Error('global cycle budget exceeded; no further provider work is permitted')
+    } }
+  } }
+}
+
 export function scoreGroundTruth(actual, groundTruth) {
   if (!Array.isArray(groundTruth)) throw new Error('ground truth must contain a findings array')
   const matched = new Set()
@@ -577,7 +640,7 @@ export function scoreGroundTruth(actual, groundTruth) {
   }
 }
 
-async function runQualityCorpus(corpus, options) {
+export async function runQualityCorpus(corpus, options) {
   if (corpus?.version !== 1 || !Array.isArray(corpus.cases) || corpus.cases.length === 0) throw new Error('quality corpus must contain at least one version 1 case')
   const results = []
   for (const testCase of corpus.cases) {
@@ -586,7 +649,11 @@ async function runQualityCorpus(corpus, options) {
     mkdirSync(dirname(resultFile), { recursive: true })
     const remaining = options.remainingCycleMs()
     if (remaining <= 0) throw new Error(`global cycle deadline exceeded before quality case ${testCase.id}`)
-    const run = await processResult(process.execPath, [options.cli, '--config', options.configFile, '--provider', options.provider, '--mode', options.mode, ...options.providerArgs, '--profile', 'fast', ...(options.qualityVotes ? ['--votes', String(options.qualityVotes)] : []), '--stdin', '--lang', testCase.language ?? 'ts', '--max-findings-per-file', '1', '--max-calls', String(options.maxCalls), '--concurrency', String(options.concurrency), '--deadline-ms', String(options.deadlineMs), '--health-check', 'off', '--no-fail', '--result', resultFile], { cwd: options.stateRoot, env: options.childEnv, timeout: Math.min(options.deadlineMs + 60_000, remaining), input: testCase.source })
+    const args = [options.cli, '--config', options.configFile, '--provider', options.provider, '--mode', options.mode, ...options.providerArgs, '--profile', 'fast', ...(options.qualityVotes ? ['--votes', String(options.qualityVotes)] : []), '--stdin', '--lang', testCase.language ?? 'ts', '--max-calls', String(options.maxCalls), '--concurrency', String(options.concurrency), '--deadline-ms', String(options.deadlineMs), '--health-check', 'off', '--no-fail', '--result', resultFile]
+    const execution = { cwd: options.stateRoot, env: options.childEnv, timeout: Math.min(options.deadlineMs + 60_000, remaining), input: testCase.source }
+    const run = options.measuredRun
+      ? await options.measuredRun(`eval:${options.runDir}:${testCase.id}`, resultFile, args, execution)
+      : await processResult(process.execPath, args, execution)
     if (run.code !== 0 || !existsSync(resultFile)) throw new Error(`quality corpus ${testCase.id} failed: ${run.stderr || run.stdout}`)
     const review = readJson(resultFile)
     if (review.incomplete || review.evidence?.deadlineExceeded || review.execution?.failed) throw new Error(`quality corpus ${testCase.id} returned incomplete evidence`)

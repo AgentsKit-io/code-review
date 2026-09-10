@@ -34,6 +34,7 @@ import { assertBatchManifestComplete, planReviewBatches, batchSourceRequested } 
 import { generateConfigSchema, loadProjectConfig, toReviewConfig } from './public-config.js'
 import { createReviewKnowledgeStore } from './review-stores.js'
 import { reviewPolicyFingerprint } from './review-policy.js'
+import { tightenReviewBudget } from './budget.js'
 
 function loadReviewConfigFromProject(config: Parameters<typeof toReviewConfig>[0], options: Parameters<typeof resolveReviewConfig>[1]): ResolvedReviewConfig {
   return resolveReviewConfig(toReviewConfig(config), options)
@@ -328,6 +329,15 @@ async function main() {
     context: reviewConfig.context,
   }
 
+  // Parse parent ceilings without changing the immutable batch plan.
+  const executionLimits: { maxTokens?: number; maxCalls?: number } = {}
+  for (const [flagName, key] of [['run-token-ceiling', 'maxTokens'], ['run-call-ceiling', 'maxCalls']] as const) {
+    const raw = flag(flagName)
+    if (raw === undefined) continue
+    const limit = Number(raw)
+    if (!Number.isSafeInteger(limit) || limit <= 0) throw new Error(`${flagName} must be a positive integer`)
+    executionLimits[key] = limit
+  }
   let agent = createCodeReviewAgent(config)
   let plan = await agent.plan()
   let selectedBatch: { index: number; files: string[]; packIds?: string[] } | undefined
@@ -360,6 +370,16 @@ async function main() {
     selectedBatch = batches.find((item) => item.index === Number(requestedBatch))
     if (!selectedBatch) throw new Error('--batch-index is outside the planned batch manifest')
     await agent.plan(selectedBatch.files, selectedBatch.packIds)
+  }
+  // A smaller remaining allowance must not re-partition batch indexes. The
+  // original plan selects the batch; only its execution gets tighter limits.
+  if (Object.keys(executionLimits).length) {
+    config.budget = { ...config.budget,
+      maxTokens: Math.min(config.budget?.maxTokens ?? Infinity, executionLimits.maxTokens ?? Infinity),
+      maxCalls: Math.min(config.budget?.maxCalls ?? Infinity, executionLimits.maxCalls ?? Infinity),
+      hierarchy: config.budget?.hierarchy ? tightenReviewBudget(config.budget.hierarchy, executionLimits) : undefined,
+    }
+    agent = createCodeReviewAgent(config)
   }
   await preflightProvider(reviewConfig)
   let providerTokens = 0

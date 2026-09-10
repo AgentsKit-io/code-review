@@ -838,6 +838,13 @@ an ad-hoc batch script or accept a missing artifact as an empty review. Use a
 unique run directory for a changed SHA or policy; reuse the same directory and
 run ID only for crash recovery.
 
+Configure `review.globalMaxTokens` for the entire single-PR cycle (default
+10,000,000), distinct from the child-invocation limit `review.maxTokens`.
+`review.globalDeadlineMs` bounds the entire cycle. Its private `usage.json`
+includes reservations and settled consumption for retries, semantic evaluation,
+and both memory A/B arms. Unknown usage stays charged and explicitly unknown;
+resuming a run does not reset its budget. See [cycle accounting](https://github.com/AgentsKit-io/code-review/blob/main/docs/continuous-improvement.md).
+
 Run `npm run harness:faults` for the credential-free fault-injection gate. It executes seven
 deterministic scenarios against the existing core contracts: provider timeout/authentication,
 stale SCM identity, atomic checkpoint crash, clock drift during replay, budget exhaustion, and
@@ -1062,7 +1069,7 @@ Release work updates [`CHANGELOG.md`](https://github.com/AgentsKit-io/code-revie
 
 Changesets is the release source of truth. A product-affecting pull request adds a small Markdown file in `.changeset/` that names `@agentskit/code-review`, selects `patch`, `minor`, or `major`, and explains the user-visible change. Documentation-only, test-only, and CI-only pull requests add `npx changeset --empty` when they intentionally require no release.
 
-Every merge to `main` runs `.github/workflows/release.yml`. When pending non-empty changesets exist, it creates or updates the `chore: version packages` pull request on the trusted `changeset-release/main` branch. That pull request contains the version bump, generated `CHANGELOG.md` entry, and consumed changesets. Merging this version pull request is the only automatic publish trigger. This extra review boundary is intentional: ordinary feature merges collect safely, while the versioned release has a concrete, reviewable diff. A maintainer-authored release PR may use the explicitly allowlisted `codex/release-0.4.1` recovery branch when repository rules prevent the bot PR from receiving required checks.
+Every merge to `main` runs `.github/workflows/release.yml`. When pending non-empty changesets exist, it creates or updates the `chore: version packages` pull request on the trusted `changeset-release/main` branch. That pull request contains the version bump, generated `CHANGELOG.md` entry, and consumed changesets. After checking bot authorship and same-repository branch identity, the workflow explicitly dispatches CI, CodeQL, and dependency review on that branch using GitHub's built-in token. No close/reopen or personal token is needed. Merging the checked version pull request remains the only automatic publish trigger.
 
 `.github/workflows/publish.yml` runs only after that trusted version pull request is merged. It checks out that exact merge commit, verifies the package version and a clean release payload with `npm run check` and `npm pack --dry-run`, publishes `@agentskit/code-review` using [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) (OIDC), then creates the immutable `v<version>` GitHub Release. If npm already has the exact version, it skips only the publish step and still creates a missing GitHub release; normal PR-triggered runs cannot publish a duplicate. No long-lived `NPM_TOKEN`, npm access token, or personal GitHub token is stored in this repository. GitHub's built-in workflow token is used only to create the version PR and GitHub release.
 

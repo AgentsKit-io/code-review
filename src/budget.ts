@@ -108,6 +108,13 @@ export function emptyReviewUsage(): ReviewUsage {
   return { providerCalls: 0, wallClockMs: 0 }
 }
 
+export function tightenReviewBudget(budget: HierarchicalReviewBudget, limits: { maxTokens?: number; maxCalls?: number }): HierarchicalReviewBudget {
+  const campaign = { ...budget.campaign, maxTokens: Math.min(budget.campaign.maxTokens, limits.maxTokens ?? Infinity), maxCalls: Math.min(budget.campaign.maxCalls, limits.maxCalls ?? Infinity) }
+  const pullRequest = { ...budget.pullRequest, maxTokens: Math.min(budget.pullRequest.maxTokens, campaign.maxTokens - campaign.reserveForOutput - campaign.reserveForVerification), maxCalls: Math.min(budget.pullRequest.maxCalls, Math.max(1, campaign.maxCalls - 1)) }
+  const child = (scope: ReviewBudgetScope): ReviewBudgetScope => ({ ...scope, maxTokens: Math.min(scope.maxTokens, pullRequest.maxTokens - pullRequest.reserveForOutput - pullRequest.reserveForVerification), maxCalls: Math.min(scope.maxCalls, pullRequest.maxCalls) })
+  return compileReviewBudget({ campaign, pullRequest, contextPack: child(budget.contextPack), analysis: child(budget.analysis), verification: child(budget.verification) })
+}
+
 function addOptional(current: number | undefined, next: number | undefined): number | undefined {
   if (next === undefined) return undefined
   return current === undefined ? next : current + next
@@ -168,19 +175,18 @@ export function createReviewBudgetLedger(budget: HierarchicalReviewBudget) {
         finished = true
         reservedTokens -= estimatedTokens + reserve
         reservedCalls -= 1
-        // Reserves protect the active request while it is in flight. Once it
-        // finishes, only the input estimate remains committed; output is
-        // checked from provider-reported dimensions below when available.
-        committedTokens += estimatedTokens
+        // Settle reported input + output, or keep the conservative reservation.
+        // Cached input and reasoning are subsets, not additional token charges.
+        // Missing optional dimensions must not disable enforcement of known usage.
+        const measuredTokens = input?.inputTokens !== undefined && input?.outputTokens !== undefined
+          ? input.inputTokens + input.outputTokens : estimatedTokens + reserve
+        committedTokens += measuredTokens
         const dimensions = ['inputTokens', 'cachedInputTokens', 'outputTokens', 'reasoningOutputTokens', 'memoryTokens', 'retryTokens'] as const
         for (const dimension of dimensions) if (input?.[dimension] === undefined) unavailable.add(dimension)
         const measured = input ? { ...input, ...Object.fromEntries([...unavailable].map((dimension) => [dimension, undefined])), providerCalls: 1, wallClockMs: Date.now() - startedAt } : { providerCalls: 1, wallClockMs: Date.now() - startedAt }
         const next = addReviewUsage(usage, measured)
         Object.assign(usage, next)
-        const usageDimensions = ['inputTokens', 'cachedInputTokens', 'outputTokens', 'reasoningOutputTokens', 'memoryTokens', 'retryTokens'] as const
-        const fullyMeasured = usageDimensions.every((dimension) => usage[dimension] !== undefined)
-        const total = fullyMeasured ? usageDimensions.reduce((sum, dimension) => sum + usage[dimension]!, 0) : undefined
-        if (total !== undefined && total > capacity) throw new ReviewBudgetExceededError(scope, 'tokens', capacity)
+        if (committedTokens + reservedTokens > capacity) throw new ReviewBudgetExceededError(scope, 'tokens', capacity)
         return usage
       },
     }
