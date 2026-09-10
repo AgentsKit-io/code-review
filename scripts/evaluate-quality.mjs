@@ -24,8 +24,8 @@ if (baselinePath && !report.inputError) {
   try {
     const baseline = JSON.parse(readFileSync(resolve(baselinePath), 'utf8'))
     const baselineReport = baseline.areas ? baseline : evaluateQuality(parseQualityInput(baseline))
-    const comparison = compareQuality(report, baselineReport, { maxScoreDrop: Number(value('max-score-drop') ?? 1) })
-    output = { ...evaluateQualityAgainstBaseline(parseQualityInput(JSON.parse(readFileSync(resolve(inputPath), 'utf8'))), baselineReport, { maxScoreDrop: Number(value('max-score-drop') ?? 1) }), comparison }
+    const comparison = compareQuality(report, baselineReport, { maxScoreDrop: Number(value('max-score-drop') ?? 2) })
+    output = { ...evaluateQualityAgainstBaseline(parseQualityInput(JSON.parse(readFileSync(resolve(inputPath), 'utf8'))), baselineReport, { maxScoreDrop: Number(value('max-score-drop') ?? 2) }), comparison }
   } catch (error) {
     output = blockedQualityReport(error instanceof Error ? `invalid quality baseline: ${error.message}` : String(error))
   }

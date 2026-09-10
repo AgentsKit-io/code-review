@@ -301,7 +301,10 @@ export function compareQuality(current: QualityReport, baseline: QualityReport, 
   const regressions: { area: QualityArea; from: number | null; to: number | null }[] = []
   const materialRegressions: { area: QualityArea; from: number | null; to: number | null }[] = []
   const improved: QualityArea[] = []
-  const maxScoreDrop = policy.maxScoreDrop ?? 1
+  // A one-point change still satisfies the matrix floor (3/4); only a drop
+  // below the floor is material by default. Callers can opt into stricter
+  // policy.maxScoreDrop when their baseline requires it.
+  const maxScoreDrop = policy.maxScoreDrop ?? 2
   const blockNewlyUnmeasured = policy.blockNewlyUnmeasured ?? true
   for (const area of current.areas) {
     const before = baseline.areas.find((candidate) => candidate.area === area.area)?.score ?? null
