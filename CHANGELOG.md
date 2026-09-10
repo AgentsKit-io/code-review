@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.30.13
+
+### Patch Changes
+
+- [#240](https://github.com/AgentsKit-io/code-review/pull/240) [`3ab37e8`](https://github.com/AgentsKit-io/code-review/commit/3ab37e87450842b57693d6f5082c576afb7707bc) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Stop and drain concurrent batches before reporting a failed cycle, preventing pending batches from starting after a terminal failure. Propagate CLI cancellation to provider subprocesses and drain parallel analysis/verification calls after fatal budget errors. Add real subprocess and deterministic queue regressions.
+
 ## 0.30.12
 
 ### Patch Changes
