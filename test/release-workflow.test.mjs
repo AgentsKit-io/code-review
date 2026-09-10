@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
+import { readFileSync, mkdtempSync, writeFileSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import { dirname, join, resolve } from 'node:path'
 import test from 'node:test'
@@ -49,4 +51,26 @@ test('Changesets versioning refreshes generated documentation before release gat
   const lock = JSON.parse(read('package-lock.json'))
   assert.equal(lock.version, packageJson.version)
   assert.equal(lock.packages[''].version, packageJson.version)
+})
+
+test('release step requires server-confirmed immutability for new and existing releases', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'review-release-'))
+  const script = read('.github/workflows/publish.yml').split('      - name: Create the immutable GitHub release')[1].split('        run: |\n')[1].replace(/^          /gm, '')
+  try {
+    writeFileSync(join(directory, 'gh'), `#!/usr/bin/env node
+const args = process.argv.slice(2)
+if (args[0] === 'release' && args[1] === 'view') process.exit(Number(process.env.FIXTURE_EXISTS) ? 0 : 1)
+if (args[0] === 'release' && args[1] === 'create') process.exit(0)
+if (args[0] === 'api' && args[1].includes('/releases/tags/') && args.at(-1) === '.immutable') {
+  process.stdout.write(process.env.FIXTURE_IMMUTABLE + '\\n'); process.exit(0)
+}
+process.exit(2)
+`, { mode: 0o700 })
+    for (const exists of ['0', '1']) for (const immutable of ['true', 'false']) {
+      const result = spawnSync('bash', ['-c', script], { cwd: root, encoding: 'utf8', timeout: 10000,
+        env: { ...process.env, PATH: `${directory}:${process.env.PATH}`, GITHUB_REPOSITORY: 'example/release', FIXTURE_EXISTS: exists, FIXTURE_IMMUTABLE: immutable } })
+      assert.equal(result.status, immutable === 'true' ? 0 : 1, result.stderr)
+      if (immutable === 'false') assert.match(result.stderr, /not immutable/)
+    }
+  } finally { rmSync(directory, { recursive: true, force: true }) }
 })
