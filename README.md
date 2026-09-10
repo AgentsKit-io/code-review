@@ -105,6 +105,7 @@ npx --yes --package=@agentskit/code-review@latest agentskit-review-campaign \
   --config /absolute/path/code-review.config.ts \
   --output /absolute/path/campaign-report.json \
   --automation-id my-orca-automation \
+  --mode trusted-local \
   --post --merge
 ```
 
