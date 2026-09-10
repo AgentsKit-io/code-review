@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.30.10
+
+### Patch Changes
+
+- [#233](https://github.com/AgentsKit-io/code-review/pull/233) [`cd8aef5`](https://github.com/AgentsKit-io/code-review/commit/cd8aef5fee8e25e933b9fb386b406ef3deed5e56) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Exclude worker concurrency from the semantic review-policy fingerprint. Campaign preflight and publication now recognize the same completed SHA/policy even when their scheduling limits differ, preventing repeated reviews, comments and model costs. Meaningful policy changes still invalidate the identity.
+
 ## 0.30.9
 
 ### Patch Changes
