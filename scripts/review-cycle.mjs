@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { spawn, spawnSync } from 'node:child_process'
 import { createHash, randomUUID } from 'node:crypto'
-import { existsSync, mkdirSync, readFileSync, renameSync, statfsSync, unlinkSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, realpathSync, renameSync, statfsSync, unlinkSync, writeFileSync } from 'node:fs'
 import { dirname, extname, isAbsolute, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { blockedQualityReport, compareQuality, evaluateQuality, evaluateQualityAgainstBaseline } from '../dist/src/quality-matrix.js'
@@ -681,7 +681,7 @@ export function scoreCorpusCases(results) {
   return results.map(item => scoreGroundTruth(item.review.findings, item.expected)).reduce((sum, item) => Object.fromEntries(Object.keys(item).map(key => [key, (sum[key] ?? 0) + item[key]])), {})
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)) {
 process.once('SIGINT', requestShutdown)
 process.once('SIGTERM', requestShutdown)
 main().catch((error) => { console.error(error); process.exitCode = 2 }).finally(() => {

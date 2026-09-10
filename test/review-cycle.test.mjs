@@ -1,10 +1,21 @@
 import assert from 'node:assert/strict'
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync, symlinkSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { spawnSync } from 'node:child_process'
 import test from 'node:test'
 import { scoreCorpusCases, createCycleMeter } from '../scripts/review-cycle.mjs'
+
+test('npm-style symlink invokes the cycle instead of silently succeeding', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'review-cycle-bin-'))
+  try {
+    const bin = join(directory, 'agentskit-review-cycle')
+    symlinkSync(new URL('../scripts/review-cycle.mjs', import.meta.url), bin)
+    const run = spawnSync(process.execPath, [bin], { encoding: 'utf8', timeout: 10_000 })
+    assert.equal(run.status, 2, run.stderr)
+    assert.match(run.stderr, /missing --repository/)
+  } finally { rmSync(directory, { recursive: true, force: true }) }
+})
 
 test('cycle totals include retries and evals, reserve concurrent work, and preserve unknown usage', () => {
   const evidence = (tokensUsed, providerCalls) => ({ tokensUsed, providerCalls, usage: { inputTokens: tokensUsed, outputTokens: 0 } })
