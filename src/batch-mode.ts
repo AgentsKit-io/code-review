@@ -5,7 +5,9 @@ export function batchSourceRequested(batchIndex: string | undefined, batchSize: 
 
 /** Total call estimates are per invocation; a batch manifest runs each batch separately. */
 export function batchPlanOverBudget(overBudget: readonly string[], hasBatchPlan: boolean): string[] {
-  return hasBatchPlan ? overBudget.filter((reason) => !/estimated provider calls exceed maxCalls/.test(reason)) : [...overBudget]
+  return hasBatchPlan
+    ? overBudget.filter((reason) => !/estimated provider calls exceed maxCalls|estimated analysis tokens exceed analysis capacity/.test(reason))
+    : [...overBudget]
 }
 
 /** Never start a publishable batch run when the source itself is incomplete. */

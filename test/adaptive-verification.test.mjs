@@ -17,7 +17,7 @@ export function canDeleteAccount(token) {
 
 async function run(extraEnv = {}, options = {}) {
   const previous = { path: process.env.PATH }
-  const names = ['CODEX_FIXTURE_QUALITY_CORPUS', 'CODEX_FIXTURE_VERIFICATION_FAIL', 'CODEX_FIXTURE_VERIFICATION_MALFORMED', 'CODEX_FIXTURE_VERIFICATION_DISAGREE']
+  const names = ['CODEX_FIXTURE_QUALITY_CORPUS', 'CODEX_FIXTURE_VERIFICATION_FAIL', 'CODEX_FIXTURE_VERIFICATION_MALFORMED', 'CODEX_FIXTURE_VERIFICATION_DISAGREE', 'CODEX_FIXTURE_CAPTURE_PROMPT']
   const saved = Object.fromEntries(names.map((name) => [name, process.env[name]]))
   process.env.PATH = `${fixtureBin}:${previous.path ?? ''}`
   for (const name of names) {
@@ -43,6 +43,26 @@ async function run(extraEnv = {}, options = {}) {
     }
   }
 }
+
+test('skeptic verification receives bounded source context for oversized files', async () => {
+  const capture = join(root, 'test/fixtures/verification-prompt.txt')
+  const previous = { path: process.env.PATH, corpus: process.env.CODEX_FIXTURE_QUALITY_CORPUS, capture: process.env.CODEX_FIXTURE_CAPTURE_PROMPT }
+  const oversized = `${source}\n${'const filler = 1\n'.repeat(20_000)}`
+  try {
+    process.env.PATH = `${fixtureBin}:${previous.path ?? ''}`
+    process.env.CODEX_FIXTURE_QUALITY_CORPUS = '1'
+    process.env.CODEX_FIXTURE_CAPTURE_PROMPT = capture
+    const agent = createCodeReviewAgent({ adapter: codexCli(), source: { kind: 'stdin', content: oversized, filename: 'snippet.ts', limits: { maxFileBytes: 1_000_000 } }, auditVotes: 1, consolidate: false, reporters: [], budget: { maxTokens: 500_000 } })
+    const review = await agent.run()
+    assert.equal(review.incomplete, false)
+    assert.ok((await import('node:fs')).statSync(capture).size < 100_000)
+  } finally {
+    try { (await import('node:fs')).unlinkSync(capture) } catch { /* fixture is best-effort cleanup */ }
+    if (previous.path === undefined) delete process.env.PATH; else process.env.PATH = previous.path
+    if (previous.corpus === undefined) delete process.env.CODEX_FIXTURE_QUALITY_CORPUS; else process.env.CODEX_FIXTURE_QUALITY_CORPUS = previous.corpus
+    if (previous.capture === undefined) delete process.env.CODEX_FIXTURE_CAPTURE_PROMPT; else process.env.CODEX_FIXTURE_CAPTURE_PROMPT = previous.capture
+  }
+})
 
 test('adaptive verification batches candidates and preserves detections', async () => {
   const review = await run({}, { verification: { maxBatchFindings: 8 } })

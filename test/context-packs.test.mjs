@@ -188,3 +188,18 @@ test('oversized multi-line files split into complete bounded context packs', asy
     assert.equal(plan.contextPacks.flatMap((pack) => pack.files).every((file) => file === 'large.ts'), true)
   } finally { rmSync(cwd, { recursive: true, force: true }) }
 })
+
+test('large projections leave provider overhead margin before execution', async () => {
+  const cwd = repo({ 'generated.api.md': Array.from({ length: 1_200 }, (_, index) => `export const line${index + 1} = '${'x'.repeat(150)}'`).join('\n') })
+  try {
+    const plan = await createCodeReviewAgent({
+      source: { kind: 'paths', cwd, paths: ['generated.api.md'] },
+      budget: { maxTokens: 250_000 },
+      context: { adjacentLines: 0, maxTokens: 16_000, reserveForOutput: 2_000 },
+      reporters: [],
+    }).plan()
+    assert.ok(plan.contextPacks.length > 1)
+    assert.equal(plan.overBudget.length, 0)
+    assert.ok(plan.contextPacks.every((pack) => pack.estimatedTokens <= pack.tokenBudget - 4_000))
+  } finally { rmSync(cwd, { recursive: true, force: true }) }
+})

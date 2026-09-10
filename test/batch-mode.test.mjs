@@ -9,7 +9,7 @@ test('batch planning widens the PR source before partitioning', () => {
 })
 
 test('batch planning evaluates call budgets per batch', () => {
-  const reasons = ['1037 estimated provider calls exceed maxCalls 1000', '4 files exceed maxFiles 3']
+  const reasons = ['1037 estimated provider calls exceed maxCalls 1000', '592698 estimated analysis tokens exceed analysis capacity 229700', '4 files exceed maxFiles 3']
   assert.deepEqual(batchPlanOverBudget(reasons, true), ['4 files exceed maxFiles 3'])
   assert.deepEqual(batchPlanOverBudget(reasons, false), reasons)
 })
