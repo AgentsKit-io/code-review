@@ -3,6 +3,7 @@ import { builtInLenses, createCodeReviewAgent } from '../agents/code-review/agen
 import { configFingerprint, ReviewConfigSchema, toReviewConfig, type ReviewProjectConfig } from './public-config.js'
 import { resolveReviewConfig } from './review-config.js'
 import { reviewPolicyFingerprint } from './review-policy.js'
+import { batchPlanOverBudget } from './batch-mode.js'
 import type { DoctorReport } from './provider-registry.js'
 import type { ChangeRequestMetadata, ChangeRequestRef, ScmAdapter } from './scm-contract.js'
 
@@ -113,7 +114,7 @@ export async function preflightCampaign(input: {
       plan = { files: planned.files, bytes: planned.bytes, estimatedProviderCalls: planned.estimatedProviderCalls, maxCalls: planned.maxCalls, changedFiles: diff.files.map((file) => file.path).sort(), reviewableFiles: planned.reviewableFiles, unreviewed: planned.unreviewed }
       if (!planned.files) reasons.push('no reviewable changed files')
       if ((config.batches.requireCompleteCoverage || config.batches.failOnUnreviewableFiles) && planned.unreviewedFiles) reasons.push(`${planned.unreviewedFiles} changed file(s) are unreviewed`)
-      reasons.push(...planned.overBudget)
+      reasons.push(...batchPlanOverBudget(planned.overBudget, config.batches.enabled))
     } catch (error) { reasons.push(`source plan: ${error instanceof Error ? error.message : String(error)}`) }
     const blocked = reasons.length > 0
     pullRequests.push({ ref, title: metadata.title, author: metadata.author, headRevision: metadata.sourceRevision, status: blocked ? 'blocked' : 'ready', reasons, worktreeAllowed: !blocked, plan })
