@@ -49,7 +49,6 @@ const processResult = (command, args, options = {}) => new Promise((resolveRun) 
   }, options.timeout ?? 660_000)
   shutdown.signal.addEventListener('abort', kill, { once: true })
   if (shutdown.signal.aborted) kill()
-  if (shutdown.signal.aborted) kill()
   child.stdout.on('data', (chunk) => { stdout = (stdout + chunk).slice(-200_000) })
   child.stderr.on('data', (chunk) => { stderr = (stderr + chunk).slice(-200_000) })
   child.once('close', (code, signal) => finish({ code, signal, timedOut, stdout, stderr }))
@@ -399,9 +398,12 @@ async function main() {
     atomicJson(matrixFile, matrix)
     summary.artifacts.matrix = matrixFile
     summary.artifacts.qualityReport = join(runDir, 'quality-report.json')
+    summary.qualityDecision = quality.decision
+    summary.fullReview = { batches: manifest.batches.length, completed: state.completedBatches.length, files: new Set(manifest.batches.flatMap((batch) => batch.files)).size, verdict: consolidated.review.verdict, findings: consolidated.review.findings.length, tokensUsed: consolidated.review.evidence.tokensUsed, cache: summary.cache }
     state.stage = quality.decision === 'PASS' ? 'complete' : 'quality'; atomicJson(stateFile, { ...state, updatedAt: new Date().toISOString() })
 
     if (has('post')) {
+      summary.phase = 'publication'
       if (quality.decision !== 'PASS') throw new Error('posting forbidden because the quality matrix is BLOCKED')
       const post = safeExec(process.execPath, [cli, '--config', configFile, '--pr', `${repository}#${pullNumber}`, '--provider', provider, '--mode', mode, ...providerArgs, '--profile', 'full', '--max-calls', String(maxCalls), '--concurrency', String(concurrency), '--deadline-ms', String(deadlineMs), '--publish-result', consolidatedFile, '--post', '--no-fail'], { cwd: runDir, env: childEnv, timeout: 180_000 })
       if (!post.ok) throw new Error(`posting blocked: ${post.stderr || post.stdout}`)
@@ -421,8 +423,6 @@ async function main() {
 
     summary.decision = quality.decision === 'PASS' ? 'COMPLETE' : 'BLOCKED'
     summary.phase = quality.decision === 'PASS' ? 'complete' : 'quality'
-    summary.qualityDecision = quality.decision
-    summary.fullReview = { batches: manifest.batches.length, completed: state.completedBatches.length, files: new Set(manifest.batches.flatMap((batch) => batch.files)).size, verdict: consolidated.review.verdict, findings: consolidated.review.findings.length, tokensUsed: consolidated.review.evidence.tokensUsed, cache: summary.cache }
     if (quality.decision !== 'PASS') summary.blockers = quality.areas.filter((area) => area.status !== 'passed').map((area) => ({ id: `quality.${area.area}`, message: area.reason, evidence: area.metrics }))
   } catch (error) {
     summary.problems.push(error instanceof Error ? error.message : String(error))
@@ -451,7 +451,7 @@ async function runLearningEvaluation(corpus, projectConfig, options) {
   atomicJson(withoutMemoryConfig, { ...projectConfig, memory: { ...projectConfig.memory, enabled: false, autoPromoteRules: false } })
   await createReviewKnowledgeStore(join(directory, memoryPath), projectConfig.memory.retentionDays).saveApprovedRule({ rule: corpus.rule })
   const fixture = { version: 1, cases: [corpus.case] }
-  const common = { cli: options.cli, provider: options.provider, mode: options.mode, providerArgs: options.providerArgs, maxCalls: options.maxCalls, concurrency: options.concurrency, deadlineMs: options.deadlineMs, stateRoot: directory, childEnv: options.childEnv, remainingCycleMs: options.remainingCycleMs, measuredRun: options.measuredRun }
+  const common = { cli: options.cli, provider: options.provider, mode: options.mode, providerArgs: options.providerArgs, maxCalls: options.maxCalls, concurrency: options.concurrency, deadlineMs: options.deadlineMs, stateRoot: directory, childEnv: options.childEnv, remainingCycleMs: options.remainingCycleMs, measuredRun: options.measuredRun, contextFingerprint: sha256(JSON.stringify(corpus)) }
   const withMemory = await runQualityCorpus(fixture, { ...common, configFile: withMemoryConfig, runDir: join(directory, 'with-memory') })
   const withoutMemory = await runQualityCorpus(fixture, { ...common, configFile: withoutMemoryConfig, runDir: join(directory, 'without-memory') })
   const expected = corpus.case.findings.length
@@ -648,12 +648,19 @@ export async function runQualityCorpus(corpus, options) {
     if (remaining <= 0) throw new Error(`global cycle deadline exceeded before quality case ${testCase.id}`)
     const args = [options.cli, '--config', options.configFile, '--provider', options.provider, '--mode', options.mode, ...options.providerArgs, '--profile', 'fast', ...(options.qualityVotes ? ['--votes', String(options.qualityVotes)] : []), '--stdin', '--lang', testCase.language ?? 'ts', '--max-calls', String(options.maxCalls), '--concurrency', String(options.concurrency), '--deadline-ms', String(options.deadlineMs), '--health-check', 'off', '--no-fail', '--result', resultFile]
     const execution = { cwd: options.stateRoot, env: options.childEnv, timeout: Math.min(options.deadlineMs + 60_000, remaining), input: testCase.source }
-    const run = options.measuredRun
-      ? await options.measuredRun(`eval:${options.runDir}:${testCase.id}`, resultFile, args, execution)
-      : await processResult(process.execPath, args, execution)
-    if (run.code !== 0 || !existsSync(resultFile)) throw new Error(`quality corpus ${testCase.id} failed: ${run.stderr || run.stdout}`)
+    const metadataFile = `${resultFile}.meta.json`
+    const inputHash = sha256(JSON.stringify({ version: pkg.version, cliHash: sha256(readFileSync(options.cli)), configHash: sha256(readFileSync(options.configFile)), testCase, args, context: options.contextFingerprint }))
+    let reusable = false
+    try { const metadata = readJson(metadataFile); reusable = metadata.inputHash === inputHash && metadata.artifactHash === sha256(readFileSync(resultFile)) } catch { /* Missing or changed evidence must be measured. */ }
+    if (!reusable) {
+      const run = options.measuredRun
+        ? await options.measuredRun(`eval:${options.runDir}:${testCase.id}`, resultFile, args, execution)
+        : await processResult(process.execPath, args, execution)
+      if (run.code !== 0 || !existsSync(resultFile)) throw new Error(`quality corpus ${testCase.id} failed: ${run.stderr || run.stdout}`)
+    }
     const review = readJson(resultFile)
     if (review.incomplete || review.evidence?.deadlineExceeded || review.execution?.failed) throw new Error(`quality corpus ${testCase.id} returned incomplete evidence`)
+    atomicJson(metadataFile, { inputHash, artifactHash: sha256(readFileSync(resultFile)) })
     results.push({ id: testCase.id, expected: testCase.findings, review })
   }
   const metrics = scoreCorpusCases(results)

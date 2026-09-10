@@ -48,6 +48,18 @@ test('campaign skips a completed worker review regardless of execution concurren
 
 const providerHealth = { ok: true, provider: 'codex-cli', checks: [{ name: 'executable', status: 'pass', detail: 'codex' }] }
 
+test('batched policy identity retains optional lenses, thresholds and publication/check policy', () => {
+  const file = toReviewConfig(defineConfig({ target: { repository: 'org/repo' }, review: {}, batches: { enabled: true } }))
+  const fingerprint = value => reviewPolicyFingerprint(resolveReviewConfig(value))
+  const baseline = fingerprint(file)
+  for (const modified of [
+    { ...file, lenses: { ...file.lenses, performance: { enabled: false, required: false } } },
+    { ...file, thresholds: { ...file.thresholds, maxPerFile: 2 } },
+    { ...file, comments: { ...file.comments, summary: false } },
+    { ...file, checks: { mode: 'disabled' } },
+  ]) assert.notEqual(fingerprint(modified), baseline)
+})
+
 test('campaign preflight classifies every discovered PR and permits worktrees only for ready entries', async () => {
   const config = defineConfig({
     target: { provider: 'github', repository: 'AgentsKit-io/example', authors: ['alice', 'bob', 'carol'], excludeAuthors: ['carol'] },

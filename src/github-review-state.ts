@@ -115,6 +115,8 @@ export interface GithubPullReview {
   id?: number
   html_url?: string
   body?: string
+  state?: string
+  user?: { login?: string }
 }
 
 export async function githubIssueComments(token: string, owner: string, repo: string, number: number, fetcher: typeof fetch = fetch): Promise<{ comments: GithubIssueComment[]; truncated: boolean }> {
@@ -153,15 +155,18 @@ export async function getGithubReviewState(input: {
   token: string
   fingerprint: string
   fetcher?: typeof fetch
+  channel?: 'review' | 'summary'
 }): Promise<GithubReviewState> {
   const pr = await githubGet<{
     head: { sha: string; repo?: { full_name?: string } }
     base: { sha: string; repo?: { full_name?: string } }
   }>(input.token, `/repos/${input.owner}/${input.repo}/pulls/${input.number}`, input.fetcher)
   const marker = reviewMarker(pr.head.sha, input.fingerprint)
-  const history = await githubIssueComments(input.token, input.owner, input.repo, input.number, input.fetcher)
+  const history = input.channel === 'review'
+    ? await githubPullReviews(input.token, input.owner, input.repo, input.number, input.fetcher)
+    : await githubIssueComments(input.token, input.owner, input.repo, input.number, input.fetcher)
   if (history.truncated) throw new Error(`GitHub review comment history exceeded ${MAX_COMMENT_PAGES * COMMENT_PAGE_SIZE} comments; refusing to post without idempotency proof`)
-  const comments = history.comments
+  const comments = 'comments' in history ? history.comments : history.reviews
   const previousSha = comments.map((comment) => previousMarker(comment.body, input.fingerprint)).find(Boolean)
   let scope: GithubReviewState['scope'] = 'full'
   if (previousSha && previousSha !== pr.head.sha) {

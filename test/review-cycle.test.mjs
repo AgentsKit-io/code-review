@@ -4,7 +4,30 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { spawnSync } from 'node:child_process'
 import test from 'node:test'
-import { scoreCorpusCases, createCycleMeter, runCycleBatches } from '../scripts/review-cycle.mjs'
+import { scoreCorpusCases, createCycleMeter, runCycleBatches, runQualityCorpus } from '../scripts/review-cycle.mjs'
+
+test('resume reuses bound successful evals but remeasures changed or corrupted evidence', async () => {
+  const directory = mkdtempSync(join(tmpdir(), 'review-eval-resume-'))
+  try {
+    const cli = join(directory, 'cli.js'), configFile = join(directory, 'config.json')
+    writeFileSync(cli, 'fixture executable identity'); writeFileSync(configFile, '{}')
+    let calls = 0
+    const options = { cli, configFile, provider: 'fixture', mode: 'isolated', providerArgs: [], maxCalls: 10, concurrency: 1, deadlineMs: 1000, runDir: directory, stateRoot: directory, remainingCycleMs: () => 1000,
+      measuredRun: async (_kind, file) => {
+        calls++
+        writeFileSync(file, JSON.stringify({ findings: [], incomplete: false, execution: { attempted: 1, succeeded: 1, failed: 0 }, evidence: { tokensUsed: 5, providerCalls: 1, deadlineExceeded: false } }))
+        return { code: 0 }
+      } }
+    const corpus = { version: 1, cases: [{ id: 'clean', source: 'safe', findings: [] }] }
+    await runQualityCorpus(corpus, options); await runQualityCorpus(corpus, options)
+    assert.equal(calls, 1)
+    writeFileSync(join(directory, 'quality-evaluation', 'clean.json'), '{}')
+    await runQualityCorpus(corpus, options); assert.equal(calls, 2)
+    await runQualityCorpus(corpus, { ...options, contextFingerprint: 'new-approved-rule' }); assert.equal(calls, 3)
+    writeFileSync(configFile, '{"changed":true}')
+    await runQualityCorpus(corpus, options); assert.equal(calls, 4)
+  } finally { rmSync(directory, { recursive: true, force: true }) }
+})
 
 test('a failed batch cancels and drains its peer before reporting, without starting queued work', async () => {
   const controller = new AbortController()

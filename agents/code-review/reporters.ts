@@ -184,6 +184,7 @@ export function scmReviewReporter(c: { adapter: ScmAdapter; ref: ChangeRequestRe
     name: `scm-${c.channel}`,
     async emit(review: ReviewResult) {
       if (c.channel === 'summary') {
+        if (c.policy?.summary === false) return
         await c.adapter.publishReview(c.ref, { channel: 'summary', headRevision: c.headRevision, ...(c.fingerprint ? { fingerprint: c.fingerprint } : {}), verdict: review.verdict === 'REQUEST CHANGES' ? 'REQUEST_CHANGES' : review.verdict, summary: renderGithubWalkthrough(review), annotations: [] })
         return
       }
