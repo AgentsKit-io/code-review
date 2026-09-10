@@ -309,6 +309,7 @@ async function main() {
     ? createReviewKnowledgeStore(memoryFilePath(process.cwd(), projectConfig.config.memory.path), projectConfig.config.memory.retentionDays)
     : undefined
   const config: CodeReviewConfig = {
+    signal: cliAbort.signal,
     source,
     reporters,
     observers: [createProgressObserver()],
@@ -534,7 +535,14 @@ function autoConventions(): string | undefined {
   return undefined
 }
 
+const cliAbort = new AbortController()
+const cancel = () => cliAbort.abort(new Error('review CLI interrupted'))
+process.once('SIGINT', cancel)
+process.once('SIGTERM', cancel)
 main().catch((e) => {
   console.error(e instanceof Error ? e.message : e)
-  process.exit(2)
+  process.exitCode = 2
+}).finally(() => {
+  process.removeListener('SIGINT', cancel)
+  process.removeListener('SIGTERM', cancel)
 })

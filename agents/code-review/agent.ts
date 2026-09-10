@@ -360,6 +360,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
   let terminalProviderFailure: Error | undefined
   let deadlineExceeded = false
   let runSignal: AbortSignal | undefined
+  let runController: AbortController | undefined
   let contextPackEvidence: ContextPackEvidence[] = []
   // submit_* tools only record a terminal structured result; a follow-up model
   // turn after the tool call adds cost without adding evidence.
@@ -416,6 +417,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
     deadlineExceeded = false
     runStartedAt = Date.now()
     const deadlineController = new AbortController()
+    runController = deadlineController
     runSignal = config.signal ? AbortSignal.any([config.signal, deadlineController.signal]) : deadlineController.signal
     deadlineTimer = setTimeout(() => { deadlineExceeded = true; deadlineController.abort() }, deadlineMs)
     deadlineTimer.unref()
@@ -424,7 +426,19 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
   function finishRun(): void {
     if (deadlineTimer) clearTimeout(deadlineTimer)
     deadlineTimer = undefined
+    runController?.abort()
+    runController = undefined
     runSignal = undefined
+  }
+
+  async function settleReviewWork<T>(work: Promise<T>[]): Promise<T[]> {
+    const settled = await Promise.allSettled(work.map(promise => promise.catch(error => {
+      runController?.abort(error)
+      throw error
+    })))
+    const failed = settled.find((result): result is PromiseRejectedResult => result.status === 'rejected')
+    if (failed) throw runController?.signal.reason ?? failed.reason
+    return settled.map(result => (result as PromiseFulfilledResult<T>).value)
   }
 
   function evidence(): ReviewEvidence {
@@ -847,7 +861,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
         return { findings: [], execution: { attempted: 1, succeeded: 0, failed: 1 }, succeededLenses: [] }
       }
     }
-    const results = await Promise.all(lenses.map(async (lens) => {
+    const results = await settleReviewWork(lenses.map(async (lens) => {
       try {
         const submission = LensSubmission.superRefine((value, context) => value.findings.forEach((finding, index) => validateFindingContext(finding, index, context)))
         const sub = await runStructured(lens.skill, pack.task, submit('submit_findings', submission), submission)
@@ -999,7 +1013,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
     const applyRound = async (candidates: Candidate[], round: number): Promise<void> => {
       const batches = []
       for (let index = 0; index < candidates.length; index += verificationPolicy.maxBatchFindings) batches.push(candidates.slice(index, index + verificationPolicy.maxBatchFindings))
-      await Promise.all(batches.map(async (batch) => {
+      await settleReviewWork(batches.map(async (batch) => {
         const verdicts = await request(batch, round)
         for (const { id } of batch) {
           const state = states.get(id)!
@@ -1283,7 +1297,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
 
     emit('review', 'start', `multidimensional analysis × ${packs.length} context pack(s)`)
     const t1 = Date.now()
-    const targetResults = await Promise.all(packs.map((pack) => reviewPack(pack)))
+    const targetResults = await settleReviewWork(packs.map((pack) => reviewPack(pack)))
     const execution = targetResults.reduce<LensExecutionStats>(
       (total, result) => ({
         attempted: total.attempted + result.execution.attempted,

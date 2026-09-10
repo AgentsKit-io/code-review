@@ -49,6 +49,7 @@ const processResult = (command, args, options = {}) => new Promise((resolveRun) 
   }, options.timeout ?? 660_000)
   shutdown.signal.addEventListener('abort', kill, { once: true })
   if (shutdown.signal.aborted) kill()
+  if (shutdown.signal.aborted) kill()
   child.stdout.on('data', (chunk) => { stdout = (stdout + chunk).slice(-200_000) })
   child.stderr.on('data', (chunk) => { stderr = (stderr + chunk).slice(-200_000) })
   child.once('close', (code, signal) => finish({ code, signal, timedOut, stdout, stderr }))
@@ -301,6 +302,7 @@ async function main() {
       const limit = canary ? Math.max(1, maxRetries + 1) : Math.max(1, maxRetries + 1)
       let last
       for (let attempt = 1; attempt <= limit; attempt += 1) {
+        shutdown.signal.throwIfAborted()
         state.attempts[index] = (state.attempts[index] ?? 0) + 1
         atomicJson(stateFile, { ...state, updatedAt: new Date().toISOString() })
         const remaining = remainingCycleMs()
@@ -346,16 +348,11 @@ async function main() {
 
     summary.phase = 'full-review'
     const pending = manifest.batches.map((batch) => batch.index).filter((index) => !state.completedBatches.includes(index))
-    const queue = [...pending]
-    const workers = Array.from({ length: Math.min(batchConcurrency, queue.length) }, async () => {
-      while (queue.length) {
-        const index = queue.shift()
+    await runCycleBatches(pending, batchConcurrency, async (index) => {
         const result = await runBatch(index)
         state.completedBatches = [...new Set([...state.completedBatches, result.index])].sort((a, b) => a - b)
         atomicJson(stateFile, { ...state, updatedAt: new Date().toISOString() })
-      }
-    })
-    await Promise.all(workers)
+    }, shutdown)
     if (state.completedBatches.length !== manifest.batches.length) throw new Error(`full review incomplete: ${state.completedBatches.length}/${manifest.batches.length} batches`)
 
     summary.phase = 'consolidation'
@@ -674,6 +671,22 @@ function validateOrcaEvidence(file, expected) {
     const evidence = readJson(resolve(file))
     return evidence.version === 1 && evidence.status === 'passed' && evidence.runId === expected.runId && evidence.sourceRevision === expected.sourceRevision && evidence.libraryVersion === expected.libraryVersion && typeof evidence.automationId === 'string' && evidence.automationId.length > 0
   } catch { return false }
+}
+
+export async function runCycleBatches(indexes, concurrency, runBatch, controller) {
+  controller.signal.throwIfAborted()
+  const queue = [...indexes]
+  const workers = Array.from({ length: Math.min(concurrency, queue.length) }, async () => {
+    try {
+      while (queue.length && !controller.signal.aborted) await runBatch(queue.shift())
+    } catch (error) { controller.abort(error); throw error }
+  })
+  // Match the campaign runner: stop peers and await their accounting/cleanup
+  // before any terminal report is written.
+  const settled = await Promise.allSettled(workers)
+  const failed = settled.find(result => result.status === 'rejected')
+  if (failed) throw controller.signal.reason ?? failed.reason
+  controller.signal.throwIfAborted()
 }
 
 export function scoreCorpusCases(results) {

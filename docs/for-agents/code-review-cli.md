@@ -49,6 +49,7 @@ Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and
 
 - CLI flag/provider behavior: start at `src/cli.ts`, then update README, operations docs, and tests.
 - Cycle entry-point changes must pass the npm-style symlink subprocess test; an import must remain side-effect free.
+- Fatal batch/provider errors must abort peers and drain active work before writing a terminal result. CLI SIGTERM must reach the provider subprocess, not just terminate its parent.
 - Local CLI subprocess behavior: start at the matching `src/<provider>-adapter.ts` and add an offline fixture.
 - Review logic or noise reduction: start at `agents/code-review/agent.ts`, `agents/code-review/sources.ts`, and the relevant dimension prompt; preserve bounded diff-first packs, exact changed-line anchoring, pre-provider AgentsKit token checks, and one structured analysis per normal pack. Prove both survival and rejection behavior.
 - Campaign lifecycle or resume behavior: update the reducer/store together and run their focused crash/replay tests.

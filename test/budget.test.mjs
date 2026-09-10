@@ -1,5 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { createCodeReviewAgent } from '../dist/agents/code-review/agent.js'
 import {
   ReviewBudgetExceededError,
   compileReviewBudget,
@@ -7,6 +8,33 @@ import {
   defaultReviewBudget,
   tightenReviewBudget,
 } from '../dist/src/budget.js'
+
+test('fatal model-call budget errors abort and drain active review calls', async () => {
+  let started = 0
+  let aborted = 0
+  let settled = 0
+  const adapter = { createSource() {
+    let finish
+    let cancelled = false
+    return {
+      async *stream() {
+        started++
+        if (!cancelled) await new Promise(resolve => { finish = resolve })
+        settled++
+      },
+      abort() { cancelled = true; aborted++; finish?.() },
+    }
+  } }
+  const hierarchy = defaultReviewBudget({ maxTokens: 500000, maxCalls: 100, deadlineMs: 2000,
+    reserveForOutput: 2000, reserveForVerification: 2000, contextMaxTokens: 16000, contextReserveForOutput: 2000 })
+  hierarchy.analysis.maxCalls = 2
+  const agent = createCodeReviewAgent({ adapter, source: { kind: 'stdin', content: 'export const answer = 42\n' },
+    batchLenses: false, profile: 'full', reporters: [], budget: { maxTokens: 500000, maxCalls: 100, concurrency: 8, deadlineMs: 2000, hierarchy } })
+  await assert.rejects(agent.run(), /calls budget exceeded/)
+  assert.ok(started > 0)
+  assert.ok(aborted >= started)
+  assert.equal(settled, started)
+})
 
 test('resource ceilings never loosen a configured child scope', () => {
   const tightened = tightenReviewBudget(budget, { maxTokens: 8000, maxCalls: 4 })
