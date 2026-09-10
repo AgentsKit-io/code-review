@@ -81,8 +81,12 @@ jobs:
           PACKAGE_VERSION="$(node -p "require('./package.json').version")"
           RELEASE_TAG="v${PACKAGE_VERSION}"
           if gh release view "${RELEASE_TAG}" >/dev/null 2>&1; then
-            echo "${RELEASE_TAG} already exists; preserving the existing immutable release."
-            exit 0
+            echo "${RELEASE_TAG} already exists; verifying its immutability."
+          else
+            gh release create "${RELEASE_TAG}" --target "$(git rev-parse HEAD)" \
+              --title "${RELEASE_TAG}" --generate-notes
           fi
-          gh release create "${RELEASE_TAG}" --target "$(git rev-parse HEAD)" \
-            --title "${RELEASE_TAG}" --generate-notes
+          test "$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG" --jq .immutable)" = true || {
+            echo 'GitHub release is not immutable. Enable repository release immutability before the next version; do not replace existing releases.' >&2
+            exit 1
+          }

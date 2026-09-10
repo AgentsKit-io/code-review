@@ -523,6 +523,8 @@ Every merge to `main` runs `.github/workflows/release.yml`. When pending non-emp
 
 `.github/workflows/publish.yml` runs only after that trusted version pull request is merged. It checks out that exact merge commit, verifies the package version and a clean release payload with `npm run check` and `npm pack --dry-run`, publishes `@agentskit/code-review` using [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) (OIDC), then creates the immutable `v<version>` GitHub Release. If npm already has the exact version, it skips only the publish step and still creates a missing GitHub release; normal PR-triggered runs cannot publish a duplicate. No long-lived `NPM_TOKEN`, npm access token, or personal GitHub token is stored in this repository. GitHub's built-in workflow token is used only to create the version PR and GitHub release.
 
+Enable [GitHub release immutability](https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/establish-provenance-and-integrity/prevent-release-changes) in this repository before publishing. It applies only to future releases. The publish workflow verifies the release API's `immutable` value, including on retries, and fails rather than claiming an unprotected release is immutable. Never delete or replace an existing release to retrofit protection; publish the next reviewed version.
+
 Before the first release, configure the npm package's Trusted Publisher for GitHub Actions with:
 
 - Organization: `AgentsKit-io`
