@@ -1288,6 +1288,12 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.30.14
+
+### Patch Changes
+
+- [#242](https://github.com/AgentsKit-io/code-review/pull/242) [`b3f3064`](https://github.com/AgentsKit-io/code-review/commit/b3f30646976f04a1019387710919418069b3ff10) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Make packaged recovery fixtures tolerate bounded cold CLI startup before asserting provider cancellation. Keep the provider's 50 ms fault timeout and real child-exit assertions unchanged; expose early CLI errors instead of reporting an ambiguous missing PID.
+
 ## 0.30.13
 
 ### Patch Changes
