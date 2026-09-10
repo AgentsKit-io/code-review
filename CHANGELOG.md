@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.30.17
+
+### Patch Changes
+
+- [#248](https://github.com/AgentsKit-io/code-review/pull/248) [`8a1aa29`](https://github.com/AgentsKit-io/code-review/commit/8a1aa2986a8e7b133df1fca049a2915e77b97047) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Share runtime-evidence safeguards across single, combined and skeptical review so generated API declarations are not mistaken for unconstrained runtime schemas. Validate the dense declaration regression and learning corpus with the same full profile used for real PR batches.
+
 ## 0.30.16
 
 ### Patch Changes
