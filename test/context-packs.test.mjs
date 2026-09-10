@@ -162,10 +162,29 @@ test('AgentsKit token budgeting rejects an oversized pack before provider execut
     assert.throws(() => readFileSync(countFile, 'utf8'), /ENOENT/)
     const plan = await agent.plan()
     assert.equal(plan.contextPacks.length, 1)
-    assert.match(plan.overBudget[0], /pack-1 needs .* tokens/)
+    assert.match(plan.overBudget[0], /pack-1(?:\.\d+)? needs .* tokens/)
   } finally {
     if (previous.path === undefined) delete process.env.PATH; else process.env.PATH = previous.path
     if (previous.count === undefined) delete process.env.CODEX_FIXTURE_COUNT_FILE; else process.env.CODEX_FIXTURE_COUNT_FILE = previous.count
     rmSync(cwd, { recursive: true, force: true })
   }
+})
+
+test('oversized multi-line files split into complete bounded context packs', async () => {
+  const cwd = repo({ 'large.ts': Array.from({ length: 800 }, (_, index) => `export const line${index + 1} = ${index + 1}`).join('\n') })
+  try {
+    const plan = await createCodeReviewAgent({
+      source: { kind: 'paths', cwd, paths: ['large.ts'] },
+      context: { adjacentLines: 0, maxTokens: 4_000, reserveForOutput: 500 },
+      reporters: [],
+    }).plan()
+    assert.ok(plan.contextPacks.length > 1)
+    assert.equal(plan.overBudget.length, 0)
+    assert.ok(plan.contextPacks.every((pack) => pack.estimatedTokens <= pack.tokenBudget))
+    const ranges = plan.contextPacks.flatMap((pack) => pack.expansion.flatMap((item) => item.includedRanges)).sort((a, b) => a.start - b.start)
+    assert.equal(ranges[0].start, 1)
+    assert.equal(ranges.at(-1).end, 800)
+    assert.ok(ranges.every((range, index) => index === 0 || range.start <= ranges[index - 1].end + 1))
+    assert.equal(plan.contextPacks.flatMap((pack) => pack.files).every((file) => file === 'large.ts'), true)
+  } finally { rmSync(cwd, { recursive: true, force: true }) }
 })

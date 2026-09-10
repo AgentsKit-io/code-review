@@ -705,6 +705,44 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
     }
   }
 
+  function sourceRanges(lines: readonly number[]): Array<{ start: number; end: number }> {
+    const ordered = [...new Set(lines)].sort((a, b) => a - b)
+    const ranges: Array<{ start: number; end: number }> = []
+    for (const line of ordered) {
+      const previous = ranges.at(-1)
+      if (previous && line <= previous.end + 1) previous.end = line
+      else ranges.push({ start: line, end: line })
+    }
+    return ranges
+  }
+
+  function sliceTarget(target: ReviewTarget, start: number, end: number): ReviewTarget {
+    const lines = target.fullContent.split('\n').slice(start, end)
+    const sourceLineNumbers = target.sourceLineNumbers?.slice(start, end) ?? lines.map((_, index) => start + index + 1)
+    const projection = target.contextProjection
+    return {
+      ...target,
+      fullContent: lines.join('\n'),
+      sourceLineNumbers,
+      contextProjection: projection ? {
+        ...projection,
+        includedBytes: Buffer.byteLength(lines.join('\n'), 'utf8'),
+        includedRanges: sourceRanges(sourceLineNumbers),
+      } : undefined,
+    }
+  }
+
+  async function splitOversizedTarget(target: ReviewTarget, conventions: string, id: string): Promise<PreparedPack[]> {
+    const candidate = await measurePack([target], conventions, id)
+    const lineCount = target.fullContent.split('\n').length
+    if (candidate.fits || lineCount <= 1) return [candidate]
+    const midpoint = Math.ceil(lineCount / 2)
+    return [
+      ...await splitOversizedTarget(sliceTarget(target, 0, midpoint), conventions, `${id}.1`),
+      ...await splitOversizedTarget(sliceTarget(target, midpoint, lineCount), conventions, `${id}.2`),
+    ]
+  }
+
   async function reviewPack(
     pack: PreparedPack,
   ): Promise<{ findings: Finding[]; execution: LensExecutionStats; succeededLenses: Category[] }> {
@@ -1102,8 +1140,8 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
         }
         const conventions = await resolveConventions(scope)
         const combined = await measurePack(group, conventions, `pack-${index + 1}`)
-        if (combined.fits || group.length === 1) packs.push(combined)
-        else for (const [part, target] of group.entries()) packs.push(await measurePack([target], conventions, `pack-${index + 1}.${part + 1}`))
+        if (combined.fits) packs.push(combined)
+        else for (const [part, target] of group.entries()) packs.push(...await splitOversizedTarget(target, conventions, `pack-${index + 1}.${part + 1}`))
       }
       contextPackEvidence = packs.map((pack) => pack.evidence)
       return { all, targets, packs, conventions: packs.map((pack) => pack.conventions).join('\n\n'), plan: makePlan(all, packs) }
