@@ -1268,6 +1268,14 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.30.7
+
+### Patch Changes
+
+- [#227](https://github.com/AgentsKit-io/code-review/pull/227) [`16459cd`](https://github.com/AgentsKit-io/code-review/commit/16459cdd8ba0840ce79a08ca568e9ee5bde81a95) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Bind campaign checkpoints to the stable preflight manifest and package version so scheduled runs do not reject a prior terminal campaign as stale.
+
+- [#227](https://github.com/AgentsKit-io/code-review/pull/227) [`16459cd`](https://github.com/AgentsKit-io/code-review/commit/16459cdd8ba0840ce79a08ca568e9ee5bde81a95) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Campaign preflight now respects enabled batch plans for aggregate budgets, and incomplete lens executions receive one bounded retry before failing closed.
+
 ## 0.30.6
 
 ### Patch Changes
