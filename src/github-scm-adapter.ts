@@ -137,7 +137,14 @@ export function createGithubScmAdapter(options: GithubScmAdapterOptions): ScmAda
     async fileContent(ref: ChangeRequestRef, path: string, revision: string, maxBytes: number): Promise<ScmFileContent> {
       requireScmCapability(adapter, 'file-content')
       const { owner, repo } = coordinates(ref)
-      const content = await api<{ content: string; encoding: string; download_url?: string }>(options.token, `/repos/${owner}/${repo}/contents/${encodeURIComponent(path)}?ref=${revision}`)
+      const endpoint = `/repos/${owner}/${repo}/contents/${encodeURIComponent(path)}?ref=${revision}`
+      const read = () => api<{ content: string; encoding: string; download_url?: string }>(options.token, endpoint)
+      // GitHub can briefly return 404 for a file present at an immutable revision.
+      // Retry exactly once at the same SHA; never substitute another revision.
+      const content = await read().catch((error: unknown) => {
+        if (!(error instanceof Error) || !/→ 404:/.test(error.message)) throw error
+        return read()
+      })
       if (content.encoding !== 'none') {
         const decoded = Buffer.from(content.content, content.encoding as BufferEncoding)
         return ScmFileContentSchema.parse({ content: decoded.byteLength <= maxBytes ? decoded.toString('utf8') : '', truncated: decoded.byteLength > maxBytes })

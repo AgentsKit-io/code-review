@@ -16,6 +16,7 @@ Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and
 - `src/cli.ts`: public flags, source selection, provider selection, exit policy.
 - `src/campaign-reducer.ts` and `src/campaign-store.ts`: deterministic lifecycle, atomic checkpoints, leases, replay, and resume.
 - `src/campaign-preflight.ts`: provider-free campaign discovery, eligibility, source planning, budget checks, and worktree gating.
+- `src/batch-mode.ts`: shared measured batching, including single-file context-pack partitioning (ADR-0006); preserve pack identity in artifacts, cache keys, and consolidation.
 - `src/budget.ts`: provider-free hierarchical budget compilation, reservations, and dimension-aware usage accounting.
 - `src/review-stores.ts`: separate self-hosted feedback and approved-knowledge stores with bounded schemas, atomic writes, retention, concurrent-write serialization, and the scoped AgentsKit `Retriever`.
 - `src/review-feedback.ts`: deterministic feedback reconciliation, resumable checkpoints, metrics, and inactive candidate-rule evidence.

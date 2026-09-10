@@ -85,6 +85,7 @@ export async function executeCampaign(input: {
   leaseTtlMs?: number
   pullRequestLeaseTtlMs?: number
   leasePullRequests?: boolean
+  onCheckpoint?: (report: CampaignExecutionReport) => void
 }): Promise<CampaignExecutionReport> {
   const preflight = CampaignPreflightReportSchema.parse(input.preflight)
   const concurrency = Math.max(1, Math.min(16, input.concurrency ?? 1))
@@ -129,7 +130,7 @@ export async function executeCampaign(input: {
     return sealReport({ ...report, checkpointFingerprint: undefined, state: 'terminal', outcome: terminalOutcome(pullRequests, false, true), updatedAt: finishedAt, finishedAt, pullRequests })
   }
   const heartbeat = setInterval(() => { try { lease = renewCampaignLease(input.stateRoot, lease, leaseTtlMs) } catch (error) { leaseFailure = error; stop = true; abort.abort(error) } }, Math.max(250, Math.floor(leaseTtlMs / 3)))
-  const save = () => { if (leaseFailure) throw leaseFailure; report = sealReport({ ...report, checkpointFingerprint: undefined, updatedAt: now().toISOString() }); writeLeasedJson(input.stateRoot, lease, file, report) }
+  const save = () => { if (leaseFailure) throw leaseFailure; report = sealReport({ ...report, checkpointFingerprint: undefined, updatedAt: now().toISOString() }); writeLeasedJson(input.stateRoot, lease, file, report); input.onCheckpoint?.(report) }
   const preflightByRef = new Map(preflight.pullRequests.map((entry) => [`${entry.ref.repository}#${entry.ref.id}`, entry]))
   try {
     save()

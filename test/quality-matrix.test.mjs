@@ -78,6 +78,16 @@ test('campaign matrices require every discovered pull request to reach a termina
   assert.equal(report.evidence?.kind, 'real-campaign')
 })
 
+test('eligible completed reviews and intentionally skipped PRs form a complete campaign', () => {
+  const input = {
+    evidence: { kind: 'real-campaign', campaignId: 'skipped-campaign' },
+    campaign: { discovered: 6, terminal: 6, completed: 1, partial: 0, blocked: 0, skipped: 5, cancelled: 0, qualityReports: 1, retries: 0, wastedCalls: 0, wallClockMs: 100 },
+    pullRequestReports: [evaluateQuality(complete())],
+  }
+  assert.equal(evaluateCampaignQuality(input).decision, 'PASS')
+  assert.equal(evaluateCampaignQuality({ ...input, campaign: { ...input.campaign, skipped: 4, blocked: 1 } }).decision, 'BLOCKED')
+})
+
 test('retries, wasted calls, wall clock, and reported token classes participate in scores', () => {
   const base = complete({
     performance: { p95Ms: 1000, baselineP95Ms: 1000, wallClockMs: 1000, baselineWallClockMs: 1000 },
@@ -86,8 +96,13 @@ test('retries, wasted calls, wall clock, and reported token classes participate 
   })
   const degraded = evaluateQuality({ ...base, performance: { ...base.performance, wallClockMs: 1600 }, tokens: { ...base.tokens, accounting: { ...base.tokens.accounting, retryTokens: 300, total: 1700 } }, batches: { ...base.batches, retried: 2, wastedCalls: 2 } })
   assert.equal(degraded.areas.find((area) => area.area === 'speed')?.score, 1)
-  assert.equal(degraded.areas.find((area) => area.area === 'batch-efficiency')?.score, 1)
+  assert.equal(degraded.areas.find((area) => area.area === 'batch-efficiency')?.score, 2)
   assert.ok((degraded.areas.find((area) => area.area === 'token-efficiency')?.metrics.tokensUsed ?? 0) > 1400)
+})
+
+test('provider retry efficiency uses provider calls, not file-batch count', () => {
+  const report = evaluateQuality(complete({ batches: { planned: 2, completed: 2, retried: 0, wastedCalls: 1, providerCalls: 28, overBudget: 0 } }))
+  assert.equal(report.areas.find(area => area.area === 'batch-efficiency').score, 3)
 })
 
 test('a material baseline regression blocks the release decision', () => {

@@ -1,6 +1,6 @@
 import { execFile } from 'node:child_process'
 import { closeSync, fstatSync, lstatSync, openSync, readdirSync, readFileSync, realpathSync } from 'node:fs'
-import { extname, isAbsolute, join, relative } from 'node:path'
+import { extname, isAbsolute, join, relative, posix } from 'node:path'
 import { promisify } from 'node:util'
 import type { ReviewTarget } from './agent.js'
 import { redactSecrets } from '../../src/local-cli-process.js'
@@ -36,7 +36,7 @@ export type SourceConfig =
 const CODE_EXT = new Set([
   '.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.py', '.go', '.rs', '.java', '.kt', '.rb', '.php', '.cs', '.c', '.h', '.cpp', '.hpp',
   '.swift', '.scala', '.sql', '.sh', '.vue', '.svelte', '.html', '.css', '.md', '.mdx', '.json', '.jsonc', '.yaml', '.yml', '.toml', '.ini', '.cfg', '.conf', '.xml',
-  '.graphql', '.gql', '.tf', '.tfvars', '.hcl', '.tsv',
+  '.graphql', '.gql', '.tf', '.tfvars', '.hcl', '.tsv', '.patch', '.diff',
 ])
 const SPECIAL_FILES = new Set(['Dockerfile', 'Containerfile', 'Makefile', 'Jenkinsfile', 'Procfile', 'llms.txt', 'llms-full.txt', 'gitignore', 'dockerignore', 'npmignore', 'eslintignore', 'prettierignore', 'env.example', 'env.sample', 'env.template', ' justfile '].map((name) => name.trim()))
 const DENY_DIRS = new Set(['.git', 'node_modules', 'dist', 'build', 'coverage', '.next', 'out', 'vendor'])
@@ -322,6 +322,7 @@ export async function loadScmTargets(c: { adapter: ScmAdapter; ref: ChangeReques
     .slice(0, maxFiles)
     .map(({ file }) => file.path))
   const targets: ReviewTarget[] = []
+  const stylesheetGroups: Array<{ html: string; paths: string[] }> = []
   let downloadedBytes = 0
   let byteBudgetHit = false
   for (const f of files) {
@@ -360,6 +361,16 @@ export async function loadScmTargets(c: { adapter: ScmAdapter; ref: ChangeReques
     const raw = promptText(content.content)
     if (raw === undefined) { targets.push(unreviewed(f.path, 'binary content')); continue }
     const safe = c.redact ? redactSecrets(raw) : raw
+    if (/\.html?$/i.test(f.path)) {
+      const paths = [...safe.matchAll(/<link\b[^>]*>/gi)].flatMap(([tag]) => {
+        if (!/\brel\s*=\s*["'][^"']*\bstylesheet\b[^"']*["']/i.test(tag)) return []
+        const href = tag.match(/\bhref\s*=\s*["']([^"']+)["']/i)?.[1]?.split(/[?#]/)[0]
+        if (!href || /[:%\\]/.test(href) || href.startsWith('/')) return []
+        const path = posix.normalize(posix.join(posix.dirname(f.path), href))
+        return path.startsWith('../') || deniedPath(path) || !/\.css$/i.test(path) ? [] : [path]
+      })
+      stylesheetGroups.push({ html: f.path, paths: [...new Set(paths)] })
+    }
     const projected = f.patch ? projectChangedContent(safe, parsePatch(f.patch), c.limits?.contextLines ?? 40) : { fullContent: safe, contextProjection: { mode: 'whole-file' as const, originalBytes: Buffer.byteLength(raw, 'utf8'), includedBytes: Buffer.byteLength(safe, 'utf8'), includedRanges: [{ start: 1, end: safe.split('\n').length }], adjacentLines: 0, requestedAdjacentLines: c.limits?.contextLines ?? 40 } }
     const size = Buffer.byteLength(projected.fullContent, 'utf8')
     if (downloadedBytes + size > (c.limits?.maxBytes ?? Number.POSITIVE_INFINITY)) {
@@ -369,6 +380,31 @@ export async function loadScmTargets(c: { adapter: ScmAdapter; ref: ChangeReques
     }
     downloadedBytes += size
     targets.push({ file: f.path, language: langOf(f.path), ...projected, changedRanges: f.patch ? changedRanges(f.patch) : [], patch: f.patch, isChanged: true, commitId: sha })
+  }
+  // ponytail: one hop from changed HTML, at most four unchanged stylesheets; no repository crawler.
+  const supporting = new Map<string, NonNullable<ReviewTarget['supportingSources']>[number]>()
+  for (const group of stylesheetGroups) {
+    for (const path of group.paths.filter(path => !files.some(file => file.path === path))) {
+      if (!supporting.has(path)) {
+        const limit = Math.min(64 * 1024, c.limits?.maxFileBytes ?? DEFAULT_PROMPT_FILE_BYTES, (c.limits?.maxBytes ?? Number.POSITIVE_INFINITY) - downloadedBytes)
+        let source: NonNullable<ReviewTarget['supportingSources']>[number] = { file: path, fullContent: '', unavailableReason: 'supporting-source budget exceeded' }
+        if (supporting.size < 4 && limit > 0) {
+          try {
+            const content = await c.adapter.fileContent(c.ref, path, sha, limit)
+            const text = promptText(content.content)
+            if (!content.truncated && text !== undefined && Buffer.byteLength(text, 'utf8') <= limit) {
+              downloadedBytes += Buffer.byteLength(text, 'utf8')
+              source = { file: path, fullContent: c.redact ? redactSecrets(text) : text }
+            } else source.unavailableReason = 'supporting source is truncated or non-text'
+          } catch { source.unavailableReason = 'supporting source could not be read at the candidate SHA' }
+        }
+        supporting.set(path, source)
+      }
+    }
+    const context = group.paths.flatMap(path => supporting.get(path) ?? [])
+    for (const target of targets.filter(target => target.file === group.html || group.paths.includes(target.file))) {
+      target.supportingSources = [...new Map([...(target.supportingSources ?? []), ...context].map(source => [source.file, source])).values()]
+    }
   }
   if (!diff.complete) targets.push(unreviewed('[github-pr file list]', `PR file metadata truncated after ${MAX_GITHUB_PR_METADATA_FILES} files`))
   return applyLimits(targets, c.limits)

@@ -2,6 +2,11 @@
 import { closeSync, openSync, readFileSync, writeFileSync } from 'node:fs'
 
 const prompt = process.argv.at(-1) ?? ''
+if (process.env.CODEX_FIXTURE_CAPTURE_INVOCATION) {
+  const args = process.argv.slice(2)
+  const instructions = args.find((arg) => arg.startsWith('model_instructions_file='))
+  writeFileSync(process.env.CODEX_FIXTURE_CAPTURE_INVOCATION, JSON.stringify({ args, cwd: process.cwd(), instructions: instructions ? readFileSync(JSON.parse(instructions.slice(instructions.indexOf('=') + 1)), 'utf8') : null }))
+}
 if (process.env.CODEX_FIXTURE_CAPTURE_PROMPT) writeFileSync(process.env.CODEX_FIXTURE_CAPTURE_PROMPT, prompt)
 const healthProbe = prompt.includes('Reply with exactly OK.')
 if (process.argv[2] === 'login' && process.argv[3] === 'status') {

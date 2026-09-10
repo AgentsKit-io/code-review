@@ -554,6 +554,14 @@ This guide is the repository-native reference for running AgentsKit Code Review 
 
 ## Provider and credential choices
 
+For a bounded production canary, run `agentskit-review-campaign --config /absolute/code-review.config.json --pull 123 --output /absolute/campaign.json --quality-output /absolute/quality.json`. Add `--preflight-only` to collect source and budget blockers without model calls. Omit `--pull` for the configured repository campaign; posting and merging still require their explicit flags.
+
+Batch size is a maximum. Every batch is measured before execution, and a single oversized file can span multiple context-pack batches. Every pack must be present at consolidation. Impossible single packs remain blocked; source completeness and token gates are never suppressed. See [ADR-0006](https://github.com/AgentsKit-io/code-review/blob/main/docs/adr/0006-measured-batch-completion.md).
+
+Codex inference runs in a temporary directory with focused review instructions, ambient skills/plugins disabled, and no shell, delegation or web search. Read-only sandboxing and structured output remain enabled. This reduces unrelated agent context; actual usage is still measured.
+
+For changed HTML, SCM ingestion can include up to four unchanged local linked stylesheets (64 KiB each, within the source budget) at the same head SHA. They are context for analysis and skepticism, not extra reviewed files. Remote/sensitive paths are excluded and unavailable context is explicit. This is one-hop context, not a complete dependency graph: quality corpus scores do not replace auditing real findings against the surrounding application.
+
 | Provider class | Examples | Secret or login | Network boundary |
 |---|---|---|---|
 | Logged-in local CLI | `codex-cli`, `claude-cli`, `grok-cli`, `opencode-cli` | Existing local login | Provider CLI policy |
@@ -1104,6 +1112,7 @@ Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and
 - `src/cli.ts`: public flags, source selection, provider selection, exit policy.
 - `src/campaign-reducer.ts` and `src/campaign-store.ts`: deterministic lifecycle, atomic checkpoints, leases, replay, and resume.
 - `src/campaign-preflight.ts`: provider-free campaign discovery, eligibility, source planning, budget checks, and worktree gating.
+- `src/batch-mode.ts`: shared measured batching, including single-file context-pack partitioning (ADR-0006); preserve pack identity in artifacts, cache keys, and consolidation.
 - `src/budget.ts`: provider-free hierarchical budget compilation, reservations, and dimension-aware usage accounting.
 - `src/review-stores.ts`: separate self-hosted feedback and approved-knowledge stores with bounded schemas, atomic writes, retention, concurrent-write serialization, and the scoped AgentsKit `Retriever`.
 - `src/review-feedback.ts`: deterministic feedback reconciliation, resumable checkpoints, metrics, and inactive candidate-rule evidence.

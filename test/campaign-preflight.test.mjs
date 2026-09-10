@@ -80,15 +80,15 @@ test('preflight keeps per-file failures and changed-head races visible', async (
   assert.match(report.pullRequests[0].plan.unreviewed[0].reason, /fixture unavailable/)
 })
 
-test('preflight defers aggregate call and token budgets to enabled batches', async () => {
+test('preflight checks every batch instead of suppressing impossible budgets', async () => {
   const adapter = fakeScm()
   adapter.discover = async () => [ref(1)]
   adapter.diff = async () => ({ baseRevision: sha('a'), headRevision: sha('1'), complete: true, files: Array.from({ length: 20 }, (_, index) => ({ path: `src/${index}.ts`, status: 'modified', patch: '@@ -1 +1 @@\n-old\n+new', truncated: false })) })
   adapter.fileContent = async (_change, path) => ({ content: `export const value = '${path}'\n`, truncated: false })
   const config = defineConfig({ target: { provider: 'github', repository: 'AgentsKit-io/example', authors: ['alice'] }, review: { maxCalls: 1 }, batches: { enabled: true, size: 1 } })
   const report = await preflightCampaign({ config, adapter, providerHealth })
-  assert.equal(report.pullRequests[0].status, 'ready')
-  assert.equal(report.pullRequests[0].reasons.length, 0)
+  assert.equal(report.pullRequests[0].status, 'blocked')
+  assert.match(report.pullRequests[0].reasons.join('; '), /batch .*estimated provider calls/)
 })
 
 test('packaged campaign command rejects invalid configuration before credentials or model work', () => {

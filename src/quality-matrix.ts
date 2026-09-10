@@ -201,7 +201,7 @@ export function evaluateQuality(input: QualityInput): QualityReport {
   const security = minimum([zeroScore(input.security.secretLeaks), zeroScore(input.security.unsafeActions), zeroScore(input.security.failClosedViolations)])
   const campaignReliability = input.campaign ? minimum([
     ratioScore(input.campaign.terminal, input.campaign.discovered),
-    ratioScore(input.campaign.completed, input.campaign.terminal),
+    ratioScore(input.campaign.completed, input.campaign.terminal - input.campaign.skipped),
     zeroScore(input.campaign.cancelled),
   ]) : null
   const reliability = minimum([
@@ -241,7 +241,8 @@ export function evaluateQuality(input: QualityInput): QualityReport {
   const batchEfficiency = minimum([
     ratioScore(input.batches.completed, input.batches.planned),
     zeroScore(input.batches.overBudget),
-    overheadScore(input.batches.retried + batchWastedCalls, input.batches.planned + input.batches.retried + batchWastedCalls),
+    overheadScore(input.batches.retried, input.batches.planned + input.batches.retried),
+    overheadScore(batchWastedCalls, input.batches.providerCalls ?? input.batches.planned + batchWastedCalls),
     input.batches.providerCalls !== undefined && input.batches.baselineProviderCalls !== undefined && input.batches.baselineProviderCalls > 0
       ? input.batches.providerCalls <= input.batches.baselineProviderCalls ? 4 : input.batches.providerCalls <= input.batches.baselineProviderCalls * 1.25 ? 3 : input.batches.providerCalls <= input.batches.baselineProviderCalls * 1.5 ? 2 : 1
       : null,
@@ -291,7 +292,7 @@ export function evaluateCampaignQuality(input: QualityCampaignInput): QualityRep
   }
   const campaignReliability = minimum([
     ratioScore(input.campaign.terminal, input.campaign.discovered),
-    ratioScore(input.campaign.completed, input.campaign.terminal),
+    ratioScore(input.campaign.completed, input.campaign.terminal - input.campaign.skipped),
     zeroScore(input.campaign.cancelled),
   ])
   const areas = QUALITY_AREAS.map((area) => {

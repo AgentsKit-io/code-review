@@ -11,6 +11,17 @@ const state = {
   batches: [{ index: 0, files: ['a.ts'], completed: false, findings: 0 }],
 }
 
+test('a partial-file batch cannot replace or omit its context-pack identities', () => {
+  const manifest = { ...state, batches: [{ ...state.batches[0], packIds: ['pack-1'] }] }
+  const review = artifact()
+  assert.equal(validateCanary(manifest, review).ready, false)
+  review.batch.packIds = ['pack-1']
+  review.review.evidence.contextPacks = [{ id: 'pack-2' }]
+  assert.equal(validateCanary(manifest, review).ready, false)
+  review.review.evidence.contextPacks = [{ id: 'pack-1' }]
+  assert.equal(validateCanary(manifest, review).ready, true)
+})
+
 function artifact(overrides = {}) {
   return {
     version: 1,

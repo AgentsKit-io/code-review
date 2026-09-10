@@ -3,11 +3,36 @@ export function batchSourceRequested(batchIndex: string | undefined, batchSize: 
   return batchIndex !== undefined || batchSize !== undefined
 }
 
-/** Total call estimates are per invocation; a batch manifest runs each batch separately. */
-export function batchPlanOverBudget(overBudget: readonly string[], hasBatchPlan: boolean): string[] {
-  return hasBatchPlan
-    ? overBudget.filter((reason) => !/estimated provider calls exceed maxCalls|estimated analysis tokens exceed analysis capacity/.test(reason))
-    : [...overBudget]
+import { partitionReviewableFiles } from './batch-coverage.js'
+
+/** Split only after measuring the exact invocation; a single-file failure stays blocked. */
+export async function planReviewBatches(
+  files: readonly string[], size: number,
+  measure: (files: string[], packIds?: string[]) => Promise<{ overBudget: string[]; contextPacks?: Array<{ id: string }> }>,
+): Promise<{ batches: Array<{ index: number; files: string[]; packIds?: string[] }>; overBudget: string[] }> {
+  const batches: Array<{ index: number; files: string[]; packIds?: string[] }> = []
+  const overBudget: string[] = []
+  async function visit(files: string[], packIds?: string[]): Promise<void> {
+    const plan = await measure(files, packIds)
+    if (plan.overBudget.length && files.length > 1) {
+      const middle = Math.ceil(files.length / 2)
+      await visit(files.slice(0, middle))
+      await visit(files.slice(middle))
+      return
+    }
+    const packs = packIds ?? plan.contextPacks?.map((pack) => pack.id)
+    if (plan.overBudget.length && files.length === 1 && packs && packs.length > 1) {
+      const middle = Math.ceil(packs.length / 2)
+      await visit(files, packs.slice(0, middle))
+      await visit(files, packs.slice(middle))
+      return
+    }
+    const index = batches.length
+    batches.push({ index, files, ...(packIds ? { packIds } : {}) })
+    overBudget.push(...plan.overBudget.map((reason) => `batch ${index} (${files.join(', ')}): ${reason}`))
+  }
+  for (const batch of partitionReviewableFiles(files, size)) await visit(batch.files)
+  return { batches, overBudget }
 }
 
 /** Never start a publishable batch run when the source itself is incomplete. */

@@ -9,6 +9,21 @@ const pull = {
   mergeable: true, mergeable_state: 'clean',
 }
 
+test('transient file 404 retries once at the identical revision and persistent 404 fails', async () => {
+  const urls = []
+  const scm = createGithubScmAdapter({ token: 'fixture', fetch: async url => {
+    urls.push(String(url))
+    return urls.length === 1 ? Response.json({ message: 'Not Found' }, { status: 404 }) : Response.json({ encoding: 'base64', content: Buffer.from('source').toString('base64') })
+  } })
+  assert.equal((await scm.fileContent({ repository: 'org/repo', id: '7' }, 'src/a.ts', pull.head.sha, 100)).content, 'source')
+  assert.equal(urls.length, 2)
+  assert.equal(urls[0], urls[1])
+  let calls = 0
+  const unavailable = createGithubScmAdapter({ token: 'fixture', fetch: async () => { calls++; return Response.json({ message: 'Not Found' }, { status: 404 }) } })
+  await assert.rejects(unavailable.fileContent({ repository: 'org/repo', id: '7' }, 'src/a.ts', pull.head.sha, 100), /404/)
+  assert.equal(calls, 2)
+})
+
 test('GitHub SCM adapter publishes and revision-locks merge through a fake HTTP boundary', async () => {
   const calls = []
   const fakeFetch = async (url, init = {}) => {

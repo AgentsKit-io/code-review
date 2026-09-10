@@ -4,6 +4,18 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { spawnSync } from 'node:child_process'
 import test from 'node:test'
+import { scoreCorpusCases } from '../scripts/review-cycle.mjs'
+
+test('a duplicate detection in one corpus case cannot satisfy a missed defect in another', () => {
+  const finding = { file: 'snippet.ts', line: 1, severity: 'high', category: 'security', title: 'Missing authorization', rationale: 'Unprotected action', suggestion: 'Authorize first' }
+  const metrics = scoreCorpusCases([
+    { expected: [finding], review: { findings: [finding, finding] } },
+    { expected: [finding], review: { findings: [] } },
+  ])
+  assert.equal(metrics.expected, 2)
+  assert.equal(metrics.detectedExpected, 1)
+  assert.equal(metrics.duplicates, 1)
+})
 
 test('cycle runner collects blockers and always writes its summary before failing', () => {
   const directory = mkdtempSync(join(tmpdir(), 'agentskit-review-cycle-'))
@@ -20,5 +32,9 @@ test('cycle runner collects blockers and always writes its summary before failin
     assert.equal(summary.decision, 'BLOCKED')
     assert.equal(summary.phase, 'preflight')
     assert.notEqual(summary.sourceRevision, 'unknown')
+    const matrix = JSON.parse(readFileSync(summary.artifacts.qualityReport, 'utf8'))
+    assert.equal(matrix.decision, 'BLOCKED')
+    assert.equal(matrix.runId, summary.runId)
+    assert.ok(matrix.areas.every(area => area.status === 'not-measured'))
   } finally { rmSync(directory, { recursive: true, force: true }) }
 })

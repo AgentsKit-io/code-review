@@ -29,8 +29,8 @@ import type { SourceConfig } from '../agents/code-review/sources.js'
 import { diagnoseProvider, factoryFor, providerEntry, providerRegistry, resolveProviderId, type DoctorReport, type ProviderEntry } from './provider-registry.js'
 import { loadReviewConfig, resolveReviewConfig, type ResolvedReviewConfig } from './review-config.js'
 import { createGithubScmAdapter } from './github-scm-adapter.js'
-import { consolidateToArtifact, createBatchCoverage, partitionReviewableFiles, type BatchCoverageState, type BatchReviewArtifact, type ConsolidatedReviewArtifact } from './batch-coverage.js'
-import { assertBatchManifestComplete, batchPlanOverBudget, batchSourceRequested } from './batch-mode.js'
+import { consolidateToArtifact, createBatchCoverage, type BatchCoverageState, type BatchReviewArtifact, type ConsolidatedReviewArtifact } from './batch-coverage.js'
+import { assertBatchManifestComplete, planReviewBatches, batchSourceRequested } from './batch-mode.js'
 import { generateConfigSchema, loadProjectConfig, toReviewConfig } from './public-config.js'
 import { createReviewKnowledgeStore } from './review-stores.js'
 import { reviewPolicyFingerprint } from './review-policy.js'
@@ -330,16 +330,18 @@ async function main() {
 
   let agent = createCodeReviewAgent(config)
   let plan = await agent.plan()
-  let selectedBatch: { index: number; files: string[] } | undefined
+  let selectedBatch: { index: number; files: string[]; packIds?: string[] } | undefined
   if (has('dry-run') || has('plan')) {
     const batchSize = flag('batch-size')
     const configuredBatchSize = batchSize === undefined && reviewConfig.batching.enabled ? reviewConfig.batching.size : batchSize
-    const batches = configuredBatchSize === undefined ? undefined : partitionReviewableFiles(plan.reviewableFiles, Number(configuredBatchSize))
-    plan.overBudget = batchPlanOverBudget(plan.overBudget, batches !== undefined)
+    const batchPlan = configuredBatchSize === undefined ? undefined : await planReviewBatches(plan.reviewableFiles, Number(configuredBatchSize), (files, packs) => agent.plan(files, packs))
+    const batches = batchPlan?.batches
+    if (batchPlan) plan.overBudget = batchPlan.overBudget
     const batchManifest = flag('batch-manifest')
     if (batchManifest) {
       if (!batches || source.kind !== 'github-pr' || !githubState) throw new Error('--batch-manifest needs --pr, --batch-size, and GITHUB_TOKEN')
       if (reviewConfig.batching.requireCompleteCoverage || reviewConfig.batching.failOnUnreviewableFiles) assertBatchManifestComplete(plan.unreviewed)
+      if (plan.overBudget.length) throw new Error(`batch manifest refused: ${plan.overBudget.join('; ')}`)
       // codeql[js/http-to-file-access] -- This is an explicit user-selected local
       // orchestration artifact. Remote PR metadata is serialized as data only and
       // is never loaded as configuration or executed by this command.
@@ -353,19 +355,17 @@ async function main() {
   if (requestedBatch !== undefined) {
     if (has('post')) throw new Error('--post is forbidden for a partial batch')
     const size = Number(flag('batch-size'))
-    const batches = partitionReviewableFiles(plan.reviewableFiles, size)
+    const { batches, overBudget } = await planReviewBatches(plan.reviewableFiles, size, (files, packs) => agent.plan(files, packs))
+    if (overBudget.length) throw new Error(`batch preflight refused: ${overBudget.join('; ')}`)
     selectedBatch = batches.find((item) => item.index === Number(requestedBatch))
     if (!selectedBatch) throw new Error('--batch-index is outside the planned batch manifest')
-    config.targetFiles = selectedBatch.files
-    config.reviewContext = `Complete PR file manifest (${plan.reviewableFiles.length} reviewable file(s)); only the selected batch source is shown:\n${plan.reviewableFiles.map((file) => `- ${file}`).join('\n')}`
-    agent = createCodeReviewAgent(config)
-    await agent.plan()
+    await agent.plan(selectedBatch.files, selectedBatch.packIds)
   }
   await preflightProvider(reviewConfig)
   let providerTokens = 0
   let hasProviderTokens = false
   agent.setAdapter(buildAdapter(reviewConfig, (tokens) => { providerTokens += tokens; hasProviderTokens = true }))
-  const review = await agent.run()
+  const review = await agent.run(selectedBatch?.files, selectedBatch?.packIds)
   if (hasProviderTokens) review.evidence.tokensUsed = providerTokens
   if (resultFile) {
     if (requestedBatch !== undefined) {
