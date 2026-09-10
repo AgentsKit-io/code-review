@@ -81,7 +81,8 @@ try {
   report = await executeCampaign({
     preflight, stateRoot, campaignId, concurrency: config.execution.maxConcurrentPullRequests,
     continueAfterPerPrFailure: config.execution.continueAfterPerPrFailure, resume: config.execution.resumeIncompleteRuns,
-    signal: campaignAbort.signal, pullRequestLeaseTtlMs: workerTimeoutMs + 60_000,
+    // The parent heartbeat keeps live reviews leased; a short TTL lets a killed worker recover quickly.
+    signal: campaignAbort.signal, pullRequestLeaseTtlMs: Math.min(workerTimeoutMs + 60_000, 120_000),
     execute: async (entry, signal) => {
       const runId = hash(JSON.stringify({ packageVersion: packageVersion(), repository: entry.ref.repository, pull: entry.ref.id, headRevision: entry.headRevision, configFingerprint: configFingerprint(config), mode }))
       const runRoot = resolve(stateRoot, 'runs', `${entry.ref.repository.replace('/', '-')}-${entry.ref.id}-${runId.slice(0, 16)}`)
