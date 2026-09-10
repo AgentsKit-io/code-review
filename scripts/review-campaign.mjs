@@ -19,6 +19,7 @@ const environmentSecrets = Object.entries(process.env).filter(([key, value]) => 
 const value = (name) => { const index = process.argv.indexOf(`--${name}`); return index < 0 ? undefined : process.argv[index + 1] }
 const post = process.argv.includes('--post')
 const merge = process.argv.includes('--merge')
+const mode = value('mode') ?? 'isolated'
 const automationId = value('automation-id') ?? process.env.ORCA_AUTOMATION_ID ?? 'agentskit-review-campaign'
 const write = (file, report) => {
   if (!file) return
@@ -59,7 +60,8 @@ try {
   const loaded = await loadProjectConfig(process.cwd(), configFile)
   const config = loaded.config
   campaignConfig = config
-  const providerHealth = await diagnoseProvider({ provider: config.review.provider, model: config.review.model, mode: config.review.mode, live: false })
+  const executionFingerprint = hash(JSON.stringify({ configFingerprint: configFingerprint(config), mode }))
+  const providerHealth = await diagnoseProvider({ provider: config.review.provider, model: config.review.model, mode, live: false })
   const token = process.env.GITHUB_TOKEN || String(spawnSync('gh', ['auth', 'token'], { encoding: 'utf8', timeout: 10_000 }).stdout ?? '').trim()
   const blockers = [
     ...(config.target.provider === 'github' ? [] : [{ id: 'scm.provider', ok: false, detail: `SCM provider ${config.target.provider} is not implemented` }]),
@@ -72,11 +74,11 @@ try {
   campaignStateRoot = stateRoot
   const workerTimeoutMs = Math.min(7_260_000, Math.max(config.review.deadlineMs + 60_000, config.review.deadlineMs * 2 + 60_000))
   report = await executeCampaign({
-    preflight, stateRoot, concurrency: config.execution.maxConcurrentPullRequests,
+    preflight, stateRoot, campaignId: `campaign-${executionFingerprint.slice(0, 16)}`, concurrency: config.execution.maxConcurrentPullRequests,
     continueAfterPerPrFailure: config.execution.continueAfterPerPrFailure, resume: config.execution.resumeIncompleteRuns,
     signal: campaignAbort.signal, pullRequestLeaseTtlMs: workerTimeoutMs + 60_000,
     execute: async (entry, signal) => {
-      const runId = hash(JSON.stringify({ packageVersion: packageVersion(), repository: entry.ref.repository, pull: entry.ref.id, headRevision: entry.headRevision, configFingerprint: configFingerprint(config) }))
+      const runId = hash(JSON.stringify({ packageVersion: packageVersion(), repository: entry.ref.repository, pull: entry.ref.id, headRevision: entry.headRevision, configFingerprint: configFingerprint(config), mode }))
       const runRoot = resolve(stateRoot, 'runs', `${entry.ref.repository.replace('/', '-')}-${entry.ref.id}-${runId.slice(0, 16)}`)
       const orcaEvidence = resolve(runRoot, 'orca-evidence.json')
       write(orcaEvidence, { version: 1, status: 'passed', runId, sourceRevision: entry.headRevision, libraryVersion: packageVersion(), automationId })
@@ -84,7 +86,7 @@ try {
         const existing = JSON.parse(readFileSync(resolve(runRoot, 'cycle-summary.json'), 'utf8'))
         if (existing.runId === runId && existing.decision === 'COMPLETE') return { outcome: existing.fullReview?.verdict === 'APPROVE' ? 'APPROVED' : 'CHANGES_REQUESTED', reason: `reused review verdict: ${existing.fullReview?.verdict ?? 'unknown'}` }
       } catch { /* no reusable terminal worker result */ }
-      const args = [resolve(packageRoot, 'scripts/review-cycle.mjs'), '--repository', entry.ref.repository, '--pull', entry.ref.id, '--config', loaded.path ?? resolve(configFile), '--run-dir', runRoot, '--state-dir', resolve(stateRoot, 'pull-requests'), '--run-id', runId, '--provider', config.review.provider, '--mode', config.review.mode, '--max-calls', String(config.review.maxCalls), '--deadline-ms', String(config.review.deadlineMs), '--global-deadline-ms', String(Math.min(7_200_000, Math.max(config.review.deadlineMs, config.review.deadlineMs * 2))), '--batch-size', String(config.batches.size), '--batch-concurrency', '1', '--orca-evidence', orcaEvidence, ...(config.review.model ? ['--model', config.review.model] : []), ...(post ? ['--post'] : []), ...(merge ? ['--merge'] : [])]
+      const args = [resolve(packageRoot, 'scripts/review-cycle.mjs'), '--repository', entry.ref.repository, '--pull', entry.ref.id, '--config', loaded.path ?? resolve(configFile), '--run-dir', runRoot, '--state-dir', resolve(stateRoot, 'pull-requests'), '--run-id', runId, '--provider', config.review.provider, '--mode', mode, '--max-calls', String(config.review.maxCalls), '--deadline-ms', String(config.review.deadlineMs), '--global-deadline-ms', String(Math.min(7_200_000, Math.max(config.review.deadlineMs, config.review.deadlineMs * 2))), '--batch-size', String(config.batches.size), '--batch-concurrency', '1', '--orca-evidence', orcaEvidence, ...(config.review.model ? ['--model', config.review.model] : []), ...(post ? ['--post'] : []), ...(merge ? ['--merge'] : [])]
       const result = await run(process.execPath, args, { cwd: stateRoot, env: { ...process.env, GITHUB_TOKEN: token }, signal, timeout: workerTimeoutMs })
       let summary
       try { summary = JSON.parse(readFileSync(resolve(runRoot, 'cycle-summary.json'), 'utf8')) } catch { throw new Error(result.timedOut ? 'single-PR review timed out' : redactDiagnostic(result.stderr || 'single-PR review summary is unavailable', [token, ...environmentSecrets])) }
@@ -99,7 +101,7 @@ if ('outcome' in report) {
   const entries = report.pullRequests
   const qualityReports = []
   for (const entry of entries) {
-    const runId = hash(JSON.stringify({ packageVersion: packageVersion(), repository: entry.ref.repository, pull: entry.ref.id, headRevision: entry.headRevision, configFingerprint: configFingerprint(campaignConfig) }))
+    const runId = hash(JSON.stringify({ packageVersion: packageVersion(), repository: entry.ref.repository, pull: entry.ref.id, headRevision: entry.headRevision, configFingerprint: configFingerprint(campaignConfig), mode }))
     const file = resolve(campaignStateRoot, 'runs', `${entry.ref.repository.replace('/', '-')}-${entry.ref.id}-${runId.slice(0, 16)}`, 'quality-report.json')
     try { qualityReports.push(JSON.parse(readFileSync(file, 'utf8'))) } catch { /* missing reports are represented by the campaign coverage gate */ }
   }
