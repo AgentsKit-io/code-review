@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.30.0
+
+### Minor Changes
+
+- [#212](https://github.com/AgentsKit-io/code-review/pull/212) [`11f8ea9`](https://github.com/AgentsKit-io/code-review/commit/11f8ea9d772fe0784c15dc79057759810d515bcd) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Partition oversized multi-line review targets into deterministic, source-line-preserving context chunks so complete PR coverage can proceed within provider budgets.
+
 ## 0.29.0
 
 ### Minor Changes
