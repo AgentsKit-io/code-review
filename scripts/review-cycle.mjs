@@ -646,7 +646,7 @@ export async function runQualityCorpus(corpus, options) {
     mkdirSync(dirname(resultFile), { recursive: true })
     const remaining = options.remainingCycleMs()
     if (remaining <= 0) throw new Error(`global cycle deadline exceeded before quality case ${testCase.id}`)
-    const args = [options.cli, '--config', options.configFile, '--provider', options.provider, '--mode', options.mode, ...options.providerArgs, '--profile', 'fast', ...(options.qualityVotes ? ['--votes', String(options.qualityVotes)] : []), '--stdin', '--lang', testCase.language ?? 'ts', '--max-calls', String(options.maxCalls), '--concurrency', String(options.concurrency), '--deadline-ms', String(options.deadlineMs), '--health-check', 'off', '--no-fail', '--result', resultFile]
+    const args = [options.cli, '--config', options.configFile, '--provider', options.provider, '--mode', options.mode, ...options.providerArgs, '--profile', 'full', ...(options.qualityVotes ? ['--votes', String(options.qualityVotes)] : []), '--stdin', '--lang', testCase.language ?? 'ts', '--max-calls', String(options.maxCalls), '--concurrency', String(options.concurrency), '--deadline-ms', String(options.deadlineMs), '--health-check', 'off', '--no-fail', '--result', resultFile]
     const execution = { cwd: options.stateRoot, env: options.childEnv, timeout: Math.min(options.deadlineMs + 60_000, remaining), input: testCase.source }
     const metadataFile = `${resultFile}.meta.json`
     const inputHash = sha256(JSON.stringify({ version: pkg.version, cliHash: sha256(readFileSync(options.cli)), configHash: sha256(readFileSync(options.configFile)), testCase, args, context: options.contextFingerprint }))

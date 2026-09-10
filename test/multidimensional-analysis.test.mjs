@@ -7,10 +7,20 @@ import { fileURLToPath } from 'node:url'
 import test from 'node:test'
 import { createCodeReviewAgent, builtInLenses } from '../dist/agents/code-review/agent.js'
 import { codexCli } from '../dist/src/codex-adapter.js'
+import { multidimensionalLens, skeptic } from '../dist/agents/code-review/lenses.js'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const fixtureBin = join(root, 'test/fixtures/bin')
 const categories = ['correctness', 'security', 'performance', 'maintainability', 'design', 'tests', 'conventions']
+
+test('single, combined, and skeptical review share runtime-evidence and changed-line safeguards', () => {
+  for (const skill of [...builtInLenses(categories).map(lens => lens.skill), multidimensionalLens(categories), skeptic]) {
+    assert.match(skill.systemPrompt, /anchor\s+to a changed line/)
+    assert.match(skill.systemPrompt, /ZodNumber\/ZodString do not reveal int\/min\/max\/refine checks/)
+    assert.match(skill.systemPrompt, /Require implementation evidence for a runtime claim/)
+    assert.match(skill.systemPrompt, /Still\s+report defects directly demonstrated by executable source/)
+  }
+})
 
 function run(source, extraEnv = {}, votes = 3) {
   const directory = mkdtempSync(join(tmpdir(), 'multidimensional-review-'))
