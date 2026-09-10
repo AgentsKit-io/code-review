@@ -1268,6 +1268,14 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.30.3
+
+### Patch Changes
+
+- [#219](https://github.com/AgentsKit-io/code-review/pull/219) [`66eba5f`](https://github.com/AgentsKit-io/code-review/commit/66eba5fd096fac97cae7f203763278d21ea01f9e) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Make the campaign-wide deadline configurable and honor it for each PR worker, so complete multi-batch reviews do not stop at the previous two-batch-derived timeout.
+
+- [#219](https://github.com/AgentsKit-io/code-review/pull/219) [`66eba5f`](https://github.com/AgentsKit-io/code-review/commit/66eba5fd096fac97cae7f203763278d21ea01f9e) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Split large source projections with a provider-overhead safety margin before live execution, and give multi-pack reviews an aggregate analysis budget so generated files cannot fail after only a few safe packs. Plans now fail fast when aggregate analysis demand exceeds the declared budget.
+
 ## 0.30.2
 
 ### Patch Changes
