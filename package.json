@@ -54,6 +54,7 @@
     "scripts/capture-quality-baseline.mjs",
     "scripts/evaluate-quality.mjs",
     "scripts/review-harness.mjs",
+    "scripts/run-fault-injection.mjs",
     "scripts/review-campaign.mjs",
     "scripts/review-cycle.mjs",
     "quality/corpus/default.json",
@@ -70,6 +71,7 @@
     "test/quality-evals.test.mjs",
     "test/risk-depth.test.mjs",
     "test/quality-matrix-cli.test.mjs",
+    "test/fault-injection.test.mjs",
     "test/fixtures/bin/codex",
     "test/fixtures/review/good.ts",
     "test/fixtures/review/unreviewed.ts"
@@ -99,6 +101,7 @@
     "benchmark:baseline": "npm run build && node scripts/capture-quality-baseline.mjs",
     "quality:matrix": "npm run build && node scripts/evaluate-quality.mjs",
     "harness": "npm run build && node scripts/review-harness.mjs",
+    "harness:faults": "node scripts/run-fault-injection.mjs",
     "cycle": "npm run build && node scripts/review-cycle.mjs",
     "campaign": "npm run build && node scripts/review-campaign.mjs",
     "docs:full": "node scripts/generate-llms-full.mjs",

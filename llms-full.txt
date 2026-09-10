@@ -804,6 +804,14 @@ an ad-hoc batch script or accept a missing artifact as an empty review. Use a
 unique run directory for a changed SHA or policy; reuse the same directory and
 run ID only for crash recovery.
 
+Run `npm run harness:faults` for the credential-free fault-injection gate. It executes seven
+deterministic scenarios against the existing core contracts: provider timeout/authentication,
+stale SCM identity, atomic checkpoint crash, clock drift during replay, budget exhaustion, and
+crash-after-publication/merge side effects. The JSON report records expected and observed
+dispositions, attempts, reused units, duplicate mutations, replay stability, and credential-free
+execution. Every scenario must be `PASS`; the command uses temporary state and removes it before
+returning. The same harness is also included in `npm test`.
+
 `prompt` is the default context mode. To review an explicit repository snapshot,
 set `context.mode` to `isolated-snapshot` and provide repository-relative
 patterns such as `src/**` or `!src/generated/**`. Sensitive directories/files,
