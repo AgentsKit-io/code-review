@@ -153,4 +153,5 @@ test('campaign mutations stay explicit and are forwarded to the single-PR worker
   assert.match(source, /const campaignId = `campaign-\$\{hash\(JSON\.stringify\(\{ executionFingerprint, packageVersion: packageVersion\(\), preflight: stablePreflight \}\)\)\.slice\(0, 16\)\}`/)
   assert.match(source, /\.\.\.\(post \? \['--post'\] : \[\]\)/)
   assert.match(source, /\.\.\.\(merge \? \['--merge'\] : \[\]\)/)
+  assert.match(source, /pullRequestLeaseTtlMs: Math\.min\(workerTimeoutMs \+ 60_000, 120_000\)/)
 })
