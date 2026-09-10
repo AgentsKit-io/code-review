@@ -76,8 +76,10 @@ try {
   const stateRoot = resolve(dirname(loaded.path ?? resolve(configFile)), config.execution.statePath)
   campaignStateRoot = stateRoot
   const workerTimeoutMs = Math.min(7_260_000, Math.max(config.review.deadlineMs + 60_000, globalDeadlineMs + 60_000))
+  const { generatedAt: _generatedAt, ...stablePreflight } = preflight
+  const campaignId = `campaign-${hash(JSON.stringify({ executionFingerprint, packageVersion: packageVersion(), preflight: stablePreflight })).slice(0, 16)}`
   report = await executeCampaign({
-    preflight, stateRoot, campaignId: `campaign-${executionFingerprint.slice(0, 16)}`, concurrency: config.execution.maxConcurrentPullRequests,
+    preflight, stateRoot, campaignId, concurrency: config.execution.maxConcurrentPullRequests,
     continueAfterPerPrFailure: config.execution.continueAfterPerPrFailure, resume: config.execution.resumeIncompleteRuns,
     signal: campaignAbort.signal, pullRequestLeaseTtlMs: workerTimeoutMs + 60_000,
     execute: async (entry, signal) => {

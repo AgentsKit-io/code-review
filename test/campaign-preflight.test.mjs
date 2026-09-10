@@ -139,7 +139,7 @@ test('campaign mutations stay explicit and are forwarded to the single-PR worker
   assert.match(source, /const merge = process\.argv\.includes\('--merge'\)/)
   assert.match(source, /const mode = value\('mode'\) \?\? 'isolated'/)
   assert.match(source, /'--mode', mode/)
-  assert.match(source, /campaignId: `campaign-\$\{executionFingerprint\.slice\(0, 16\)\}`/)
+  assert.match(source, /const campaignId = `campaign-\$\{hash\(JSON\.stringify\(\{ executionFingerprint, packageVersion: packageVersion\(\), preflight: stablePreflight \}\)\)\.slice\(0, 16\)\}`/)
   assert.match(source, /\.\.\.\(post \? \['--post'\] : \[\]\)/)
   assert.match(source, /\.\.\.\(merge \? \['--merge'\] : \[\]\)/)
 })
