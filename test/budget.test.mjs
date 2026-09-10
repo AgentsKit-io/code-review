@@ -33,7 +33,20 @@ test('provider-free compilation rejects impossible minimum capacity', () => {
     reserveForVerification: 50,
     contextMaxTokens: 20,
     contextReserveForOutput: 1,
-  }), /leave input capacity/)
+}), /leave input capacity/)
+})
+
+test('analysis budget spans all context packs but remains under the PR ceiling', () => {
+  assert.ok(budget.analysis.maxTokens > budget.contextPack.maxTokens)
+  assert.equal(
+    budget.analysis.maxTokens,
+    budget.pullRequest.maxTokens - budget.pullRequest.reserveForOutput - budget.pullRequest.reserveForVerification,
+  )
+})
+
+test('analysis budget keeps enough declared capacity for a large multi-pack batch', () => {
+  assert.ok(budget.pullRequest.maxTokens >= Math.floor((10_000 - 500 - 500) * 0.95))
+  assert.ok(budget.analysis.maxTokens > budget.contextPack.maxTokens)
 })
 
 test('ledger reserves before concurrent provider execution and accounts dimensions', () => {

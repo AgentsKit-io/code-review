@@ -76,7 +76,9 @@ export function defaultReviewBudget(input: {
   }
   const availableTokens = campaign.maxTokens - campaign.reserveForOutput - campaign.reserveForVerification
   const pullRequest = {
-    maxTokens: Math.max(1, Math.floor(availableTokens * 0.8)),
+    // Keep the campaign reserves, but leave enough of the declared review
+    // budget for one large file split across several context packs.
+    maxTokens: Math.max(1, Math.floor(availableTokens * 0.95)),
     maxCalls: Math.max(1, campaign.maxCalls - 1),
     deadlineMs: campaign.deadlineMs,
     reserveForOutput: campaign.reserveForOutput,
@@ -89,7 +91,15 @@ export function defaultReviewBudget(input: {
     reserveForOutput: input.contextReserveForOutput,
     reserveForVerification: 0,
   }
-  const defaults = { campaign, pullRequest, contextPack: child, analysis: child, verification: { ...child, reserveForOutput: 0 } }
+  // Context packs are individually bounded, while analysis is accumulated
+  // across every pack in one review. Reusing the per-pack limit here made a
+  // multi-pack review fail after its first few packs even when the PR budget
+  // still had capacity.
+  const analysis = {
+    ...child,
+    maxTokens: Math.max(1, pullRequest.maxTokens - pullRequest.reserveForOutput - pullRequest.reserveForVerification),
+  }
+  const defaults = { campaign, pullRequest, contextPack: child, analysis, verification: { ...analysis, reserveForOutput: 0 } }
   const merged = Object.fromEntries(Object.entries(defaults).map(([key, value]) => [key, { ...value, ...(input.hierarchy?.[key as keyof HierarchicalReviewBudget] ?? {}) }]))
   return compileReviewBudget(merged)
 }
