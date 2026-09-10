@@ -8,9 +8,84 @@ import test from 'node:test'
 import { createCodeReviewAgent, ReviewPreflightError } from '../dist/agents/code-review/agent.js'
 import { loadTargets } from '../dist/agents/code-review/sources.js'
 import { codexCli } from '../dist/src/codex-adapter.js'
+import { planReviewBatches } from '../dist/src/batch-mode.js'
 
 const root = resolve(fileURLToPath(new URL('.', import.meta.url)), '..')
 const fixtureBin = join(root, 'test/fixtures/bin')
+
+test('unchanged linked CSS reaches analysis and skeptic without inflating diff coverage', async () => {
+  const calls = []
+  const contents = {
+    'ui/index.html': '<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="tour.css"><link rel="stylesheet" href="https://evil.test/remote.css"><link rel="stylesheet" href="../../../secret.css">',
+    'ui/tour.css': '.tour-glow { animation: pulse 1s infinite }',
+    'ui/base.css': '@media(prefers-reduced-motion:reduce){*{animation:none!important}}',
+  }
+  const adapter = {
+    async diff() { return { headRevision: 'immutable-head', complete: true, files: ['ui/index.html', 'ui/tour.css'].map(path => ({ path, status: 'added', patch: '@@ -0,0 +1 @@\n+' + contents[path] })) } },
+    async fileContent(ref, file, sha) { calls.push([file, sha]); return { content: contents[file], truncated: false } },
+  }
+  const prompts = []
+  const inference = { createSource(request) { return { async *stream() {
+    const prompt = request.messages.map(message => message.content).join('\n')
+    const tool = request.context.tools[0]
+    prompts.push({ name: tool.name, prompt })
+    const args = tool.name === 'submit_verdicts'
+      ? { verdicts: [{ id: 0, refuted: prompt.includes('animation:none!important'), reason: 'Global stylesheet disables motion.' }] }
+      : { completedCategories: ['correctness', 'security', 'tests'], findings: prompt.includes('FILE: ui/tour.css') ? [{ file: 'ui/tour.css', line: 1, endLine: null, severity: 'med', category: 'correctness', confidence: .99, title: 'Motion is not disabled', rationale: 'Pulse is animated.', suggestion: 'Disable motion.', suggestedPatch: null }] : [] }
+    yield { type: 'tool_call', toolCall: { id: 't', name: tool.name, args: JSON.stringify(args) } }
+    yield { type: 'done' }
+  } } } }
+  const agent = createCodeReviewAgent({ source: { kind: 'scm', adapter, ref: { repository: 'org/repo', id: '1' } }, adapter: inference, reporters: [], consolidate: false })
+  const plan = await agent.plan()
+  assert.deepEqual(plan.reviewableFiles.sort(), ['ui/index.html', 'ui/tour.css'])
+  const result = await agent.run(['ui/tour.css'])
+  assert.deepEqual(calls, [['ui/index.html', 'immutable-head'], ['ui/tour.css', 'immutable-head'], ['ui/base.css', 'immutable-head']])
+  assert.ok(prompts.some(item => item.name === 'submit_verdicts'))
+  assert.ok(prompts.every(item => item.prompt.includes('animation:none!important')))
+  assert.equal(result.findings.length, 0)
+})
+
+test('unavailable supporting CSS is explicit uncertainty, not fabricated complete context', async () => {
+  const source = { kind: 'scm', ref: { repository: 'org/repo', id: '1' }, adapter: {
+    async diff() { return { headRevision: 'head', complete: true, files: [{ path: 'index.html', status: 'added' }] } },
+    async fileContent(ref, path) { return path === 'index.html' ? { content: '<link rel="stylesheet" href="base.css">', truncated: false } : { content: 'incomplete', truncated: true } },
+  } }
+  const [target] = await loadTargets(source)
+  assert.equal(target.supportingSources[0].file, 'base.css')
+  assert.equal(target.supportingSources[0].fullContent, '')
+  assert.match(target.supportingSources[0].unavailableReason, /truncated/)
+})
+
+test('measured single-file batches reuse source and execute the exact selected packs', async () => {
+  let reads = 0
+  const content = Array.from({ length: 1800 }, (_, i) => `export const item${i} = '${'value '.repeat(10)}'`).join('\n')
+  const adapter = {
+    async diff() { return { headRevision: 'head', complete: true, files: [{ path: 'large.ts', status: 'added', patch: `@@ -0,0 +1,1800 @@\n${content.split('\n').map(line => `+${line}`).join('\n')}` }] } },
+    async fileContent() { reads++; return { content, truncated: false } },
+  }
+  const agent = createCodeReviewAgent({ source: { kind: 'scm', adapter, ref: { repository: 'org/repo', id: '1' }, limits: { maxFileBytes: 1_000_000 } }, reporters: [], budget: { maxTokens: 40_000 } })
+  const full = await agent.plan()
+  const batches = await planReviewBatches(full.reviewableFiles, 5, (files, packs) => agent.plan(files, packs))
+  assert.equal(reads, 1)
+  assert.deepEqual(batches.overBudget, [])
+  assert.ok(batches.batches.length > 1)
+  const ids = batches.batches.flatMap(batch => batch.packIds)
+  assert.deepEqual(ids, full.contextPacks.map(pack => pack.id))
+  assert.equal(new Set(ids).size, ids.length)
+  const selected = batches.batches[0]
+  const plan = await agent.plan(selected.files, selected.packIds)
+  assert.deepEqual(plan.contextPacks.map(pack => pack.id), selected.packIds)
+  assert.ok(plan.estimatedAnalysisTokens <= plan.analysisTokenBudget)
+})
+
+test('patch files are reviewable text without treating patch instructions as commands', async () => {
+  const targets = await loadTargets({ kind: 'scm', ref: { repository: 'org/repo', id: '1' }, adapter: {
+    async diff() { return { headRevision: 'head', complete: true, files: [{ path: 'patches/dependency.patch', status: 'added' }] } },
+    async fileContent() { return { content: 'diff --git a/a.ts b/a.ts\n@@ -1 +1 @@\n-old\n+new', truncated: false } },
+  } })
+  assert.equal(targets.length, 1)
+  assert.notEqual(targets[0].reviewStatus, 'UNREVIEWED')
+})
 
 function git(cwd, ...args) {
   return execFileSync('git', args, { cwd, encoding: 'utf8' })

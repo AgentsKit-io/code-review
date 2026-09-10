@@ -7,7 +7,7 @@ export type BatchCoverageState = {
   pullNumber: number
   headSha: string
   policyFingerprint: string
-  batches: Array<{ index: number; files: string[]; completed: boolean; findings: number }>
+  batches: Array<{ index: number; files: string[]; packIds?: string[]; completed: boolean; findings: number }>
 }
 
 /** A private, immutable output from exactly one batch run. Never publish this file. */
@@ -17,7 +17,7 @@ export type BatchReviewArtifact = {
   pullNumber: number
   headSha: string
   policyFingerprint: string
-  batch: { index: number; files: string[] }
+  batch: { index: number; files: string[]; packIds?: string[] }
   review: ReviewResult
 }
 
@@ -37,7 +37,7 @@ export function partitionReviewableFiles(files: readonly string[], batchSize: nu
   return Array.from({ length: Math.ceil(unique.length / batchSize) }, (_, index) => ({ index, files: unique.slice(index * batchSize, (index + 1) * batchSize) }))
 }
 
-export function createBatchCoverage(input: Omit<BatchCoverageState, 'version' | 'batches'> & { batches: Array<{ index: number; files: string[] }> }): BatchCoverageState {
+export function createBatchCoverage(input: Omit<BatchCoverageState, 'version' | 'batches'> & { batches: Array<{ index: number; files: string[]; packIds?: string[] }> }): BatchCoverageState {
   const indices = new Set<number>()
   for (const batch of input.batches) {
     if (!Number.isInteger(batch.index) || batch.index < 0 || indices.has(batch.index) || !batch.files.length) throw new Error('invalid batch coverage manifest')
@@ -70,6 +70,8 @@ function assertUsableArtifact(state: BatchCoverageState, artifact: BatchReviewAr
   if (artifact.headSha !== state.headSha || artifact.policyFingerprint !== state.policyFingerprint) throw new Error('stale batch result')
   const expected = state.batches.find((batch) => batch.index === artifact.batch.index)
   if (!expected || expected.files.join('\0') !== artifact.batch.files.join('\0')) throw new Error('batch result does not match the planned file manifest')
+  if (JSON.stringify(expected.packIds) !== JSON.stringify(artifact.batch.packIds)) throw new Error('batch result does not match the planned context packs')
+  if (expected.packIds && JSON.stringify(expected.packIds) !== JSON.stringify(artifact.review.evidence.contextPacks?.map((pack) => pack.id))) throw new Error('batch result did not review every planned context pack')
   if (artifact.review.unreviewed?.length || artifact.review.missingRequiredLenses?.length || artifact.review.execution.failed || artifact.review.execution.succeeded !== artifact.review.execution.attempted || artifact.review.evidence.deadlineExceeded) {
     throw new Error(`batch ${artifact.batch.index} has incomplete review evidence`)
   }
@@ -138,7 +140,7 @@ export function consolidateBatchArtifacts(state: BatchCoverageState, artifacts: 
     evidence,
     enabledCategories,
     completedCategories,
-    summary: `Complete batch review: ${reviews.length} batch(es), ${state.batches.reduce((total, batch) => total + batch.files.length, 0)} file(s), ${findings.length} verified finding(s).`,
+    summary: `Complete batch review: ${reviews.length} batch(es), ${new Set(state.batches.flatMap((batch) => batch.files)).size} file(s), ${findings.length} verified finding(s).`,
   }
 }
 

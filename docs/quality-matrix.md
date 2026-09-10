@@ -6,6 +6,8 @@ The quality matrix is the release gate for continuous improvement of the review 
 
 ## Decision rule
 
+Skipped PRs count toward terminal coverage but not review failures. Retry overhead compares retried batches to batch attempts and wasted provider calls to provider calls, separately. Corpus matches are scored within each labelled case. Codex cache/reasoning counts are subsets of input/output totals, not additional consumption. Early failures emit a current blocked matrix with unmeasured areas; running campaign report pointers must never display a prior run as current.
+
 `evaluateQuality()` returns `PASS` only when every area has a measured score of at least 3/4 and every absolute gate passes. A missing metric is `not-measured` and blocks the run. The minimum score is intentionally fixed at 3: no area may be below 3. `evaluateCampaignQuality()` produces the same matrix for every campaign outcome, bounds each area by its pull-request results, and blocks when any discovered pull request lacks a terminal outcome or completed quality matrix.
 
 The absolute gates require complete file/lens coverage, no secret leak, unsafe action, fail-open event, stale artifact, incomplete acceptance, invalid inline comment, or silent failure. Campaign matrices additionally require terminal coverage and one quality matrix for every completed pull request. `agentskit-review-campaign` writes this matrix as `quality-matrix.json` beside the campaign state (or to `--quality-output`), keeping the strict campaign execution report contract backward-compatible.

@@ -11,7 +11,7 @@ import { blockedCampaignPreflightReport, preflightCampaign } from '../dist/src/c
 import { configFingerprint, loadProjectConfig } from '../dist/src/public-config.js'
 import { diagnoseProvider } from '../dist/src/provider-registry.js'
 import { packageVersion } from '../dist/src/review-policy.js'
-import { evaluateCampaignQuality } from '../dist/src/quality-matrix.js'
+import { blockedQualityReport, evaluateCampaignQuality } from '../dist/src/quality-matrix.js'
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const hash = (value) => createHash('sha256').update(value).digest('hex')
@@ -59,6 +59,8 @@ try {
   if (!configFile) throw new Error('missing --config <path>')
   const loaded = await loadProjectConfig(process.cwd(), configFile)
   const config = loaded.config
+  const pull = value('pull')
+  if (pull !== undefined && !/^[1-9]\d*$/.test(pull)) throw new Error('--pull must be a positive pull-request number')
   campaignConfig = config
   const globalDeadlineMs = config.review.globalDeadlineMs
   const qualityBaseline = config.review.qualityBaseline ? resolve(dirname(loaded.path ?? resolve(configFile)), config.review.qualityBaseline) : undefined
@@ -72,17 +74,21 @@ try {
   ]
   const preflight = blockers.length
     ? blockedCampaignPreflightReport({ repository: config.target.repository, configFingerprint: configFingerprint(config), checks: [...blockers, ...providerHealth.checks.filter((check) => check.status === 'fail').map((check) => ({ id: `provider.${check.name}`, ok: false, detail: check.detail }))] })
-    : await preflightCampaign({ config, adapter: createGithubScmAdapter({ token }), providerHealth, signal: campaignAbort.signal })
+    : await preflightCampaign({ config, adapter: createGithubScmAdapter({ token }), providerHealth, signal: campaignAbort.signal, ...(pull ? { refs: [{ repository: config.target.repository, id: pull }] } : {}) })
   const stateRoot = resolve(dirname(loaded.path ?? resolve(configFile)), config.execution.statePath)
   campaignStateRoot = stateRoot
   const workerTimeoutMs = Math.min(7_260_000, Math.max(config.review.deadlineMs + 60_000, globalDeadlineMs + 60_000))
   const { generatedAt: _generatedAt, ...stablePreflight } = preflight
   const campaignId = `campaign-${hash(JSON.stringify({ executionFingerprint, packageVersion: packageVersion(), preflight: stablePreflight })).slice(0, 16)}`
-  report = await executeCampaign({
+  report = process.argv.includes('--preflight-only') ? preflight : await executeCampaign({
     preflight, stateRoot, campaignId, concurrency: config.execution.maxConcurrentPullRequests,
     continueAfterPerPrFailure: config.execution.continueAfterPerPrFailure, resume: config.execution.resumeIncompleteRuns,
     // The parent heartbeat keeps live reviews leased; a short TTL lets a killed worker recover quickly.
     signal: campaignAbort.signal, pullRequestLeaseTtlMs: Math.min(workerTimeoutMs + 60_000, 120_000),
+    onCheckpoint: checkpoint => {
+      write(value('output'), checkpoint)
+      if (checkpoint.state !== 'terminal') write(value('quality-output'), { ...blockedQualityReport('campaign is still running; final quality is not yet available'), runId: checkpoint.campaignId, libraryVersion: packageVersion(), evidence: { kind: 'real-campaign', campaignId: checkpoint.campaignId } })
+    },
     execute: async (entry, signal) => {
       const runId = hash(JSON.stringify({ packageVersion: packageVersion(), repository: entry.ref.repository, pull: entry.ref.id, headRevision: entry.headRevision, configFingerprint: configFingerprint(config), mode }))
       const runRoot = resolve(stateRoot, 'runs', `${entry.ref.repository.replace('/', '-')}-${entry.ref.id}-${runId.slice(0, 16)}`)
@@ -118,7 +124,7 @@ if ('outcome' in report) {
     discovered: entries.length,
     terminal: entries.filter((entry) => entry.outcome !== null).length,
     completed: counts('APPROVED') + counts('CHANGES_REQUESTED'),
-    partial: report.outcome === 'PARTIAL' ? 1 : 0,
+    partial: 0,
     blocked: counts('BLOCKED'),
     skipped: counts('SKIPPED'),
     cancelled: counts('CANCELLED'),

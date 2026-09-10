@@ -4,7 +4,7 @@ import { createHash, randomUUID } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, renameSync, statfsSync, unlinkSync, writeFileSync } from 'node:fs'
 import { dirname, extname, isAbsolute, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { compareQuality, evaluateQuality, evaluateQualityAgainstBaseline } from '../dist/src/quality-matrix.js'
+import { blockedQualityReport, compareQuality, evaluateQuality, evaluateQualityAgainstBaseline } from '../dist/src/quality-matrix.js'
 import { validateCanary } from '../dist/src/harness.js'
 import { createReviewFeedbackStore, createReviewKnowledgeStore } from '../dist/src/review-stores.js'
 import { createReviewReconciliationStore, reconcileReviewFeedback } from '../dist/src/review-feedback.js'
@@ -18,8 +18,6 @@ const harness = join(root, 'scripts/review-harness.mjs')
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 const shutdown = new AbortController()
 const requestShutdown = () => shutdown.abort(new Error('review cycle interrupted'))
-process.once('SIGINT', requestShutdown)
-process.once('SIGTERM', requestShutdown)
 const arg = (name) => { const index = process.argv.indexOf(`--${name}`); return index < 0 ? undefined : process.argv[index + 1] }
 const has = (name) => process.argv.includes(`--${name}`)
 const required = (name) => { const value = arg(name); if (!value) throw new Error(`missing --${name}`); return value }
@@ -180,6 +178,7 @@ async function main() {
     checks.push(check('pr.not-dependabot', prData?.author !== 'dependabot[bot]', `PR author: ${prData?.author ?? 'unknown'}`, 'choose a non-Dependabot pull request', prData?.author ?? 'missing'))
     checks.push(check('pr.not-fork', prData?.isFork === false, `PR fork: ${String(prData?.isFork)}`, 'choose an organization-owned pull request', String(prData?.isFork)))
     const firstSha = prData?.sourceRevision
+    summary.headSha = firstSha ?? null
     let stableSha
     try { if (github && firstSha) stableSha = (await github.metadata(scmRef)).sourceRevision } catch { /* collected below */ }
     checks.push(check('pr.stable-sha', Boolean(stableSha && stableSha === firstSha), `head SHA: ${firstSha ?? 'unknown'}`, 'restart after the PR head stabilizes', stableSha ?? 'head SHA unavailable'))
@@ -224,11 +223,11 @@ async function main() {
     const reviewCache = createReviewCache(join(stateRoot, 'review-cache'))
     summary.artifacts.reviewCache = join(stateRoot, 'review-cache')
     const cacheIdentity = (batch) => ({
-      sourceFingerprint: sha256(JSON.stringify({ headSha: manifest.headSha, files: batch.files })),
+      sourceFingerprint: sha256(JSON.stringify({ headSha: manifest.headSha, files: batch.files, packIds: batch.packIds })),
       diffFingerprint: sha256(JSON.stringify({ baseSha: prData.targetRevision, headSha: manifest.headSha, files: batch.files, manifestFingerprint })),
       baseFingerprint: sha256(prData.targetRevision),
       policyFingerprint: manifest.policyFingerprint,
-      promptFingerprint: sha256(JSON.stringify({ config: contract.configFingerprint, packageVersion: pkg.version, profile: 'full', files: batch.files })),
+      promptFingerprint: sha256(JSON.stringify({ config: contract.configFingerprint, packageVersion: pkg.version, profile: 'full', files: batch.files, packIds: batch.packIds })),
       modelFingerprint: sha256(JSON.stringify({ provider, model: model ?? null, transport: transport ?? null })),
       knowledgeFingerprint: sha256(JSON.stringify({ learningCorpus: readFileSync(learningCorpusFile, 'utf8'), memory: projectConfig.memory })),
     })
@@ -303,7 +302,7 @@ async function main() {
         const incompleteExecution = validation.blockers?.some(({ id }) => id === 'execution.complete')
         if (!transient && !incompleteExecution) break
       }
-      throw new Error(`batch ${index} blocked: ${JSON.stringify(last)}`)
+      throw new Error(`batch ${index} blocked: ${last.stderr || last.validation.blockers.map((item) => item.id).join(', ')}; details: ${join(runDir, `batch-${index}-attempt-${last.attempts}.json`)}`)
     }
 
     summary.phase = 'canary'
@@ -359,7 +358,7 @@ async function main() {
     const baselineChangedLines = baselineInput?.tokens?.changedLines ?? baselineArea('token-efficiency')?.changedLines
     const baselineTokensPerProviderCall = baselineInput?.tokens?.tokensUsed !== undefined && baselineInput.tokens.accounting?.providerCalls > 0
       ? baselineInput.tokens.tokensUsed / baselineInput.tokens.accounting.providerCalls
-      : baselineArea('token-efficiency')?.baselineTokensPerProviderCall
+      : baselineArea('token-efficiency')?.tokensPerProviderCall
     const orcaPass = validateOrcaEvidence(arg('orca-evidence'), { runId, sourceRevision: manifest.headSha, libraryVersion: pkg.version })
     const mergeSafetyPass = !has('merge') || (projectConfig.merge.enabled && has('post') && (!has('admin') || !projectConfig.merge.forbidAdmin))
     const serializedArtifacts = artifactFiles.map((file) => readFileSync(file, 'utf8')).join('\n')
@@ -401,12 +400,17 @@ async function main() {
     summary.decision = quality.decision === 'PASS' ? 'COMPLETE' : 'BLOCKED'
     summary.phase = quality.decision === 'PASS' ? 'complete' : 'quality'
     summary.qualityDecision = quality.decision
-    summary.fullReview = { batches: manifest.batches.length, completed: state.completedBatches.length, files: manifest.batches.reduce((count, batch) => count + batch.files.length, 0), verdict: consolidated.review.verdict, findings: consolidated.review.findings.length, tokensUsed: consolidated.review.evidence.tokensUsed, cache: summary.cache }
+    summary.fullReview = { batches: manifest.batches.length, completed: state.completedBatches.length, files: new Set(manifest.batches.flatMap((batch) => batch.files)).size, verdict: consolidated.review.verdict, findings: consolidated.review.findings.length, tokensUsed: consolidated.review.evidence.tokensUsed, cache: summary.cache }
     if (quality.decision !== 'PASS') summary.blockers = quality.areas.filter((area) => area.status !== 'passed').map((area) => ({ id: `quality.${area.area}`, message: area.reason, evidence: area.metrics }))
   } catch (error) {
     summary.problems.push(error instanceof Error ? error.message : String(error))
   } finally {
     summary.finishedAt = new Date().toISOString()
+    if (!summary.artifacts.qualityReport) {
+      const file = join(runDir, 'quality-report.json')
+      atomicJson(file, { ...blockedQualityReport(summary.problems.join('; ') || 'review did not finish'), runId, libraryVersion: pkg.version, sourceRevision: summary.sourceRevision, headSha: summary.headSha ?? null, target: `${repository}#${pullNumber}` })
+      summary.artifacts.qualityReport = file
+    }
     atomicJson(summaryFile, summary)
     process.stdout.write(`${JSON.stringify(summary, null, 2)}\n`)
   }
@@ -509,7 +513,7 @@ async function validateMemory(config, runDir, stateRoot, consolidated, contract,
 
 function qualityInput({ runId, version, sourceRevision, repository, pullNumber, manifest, artifacts, changedLines, elapsedBaseline, baselineChangedLines, baselineTokensPerChangedLine, baselineTokensPerProviderCall, memory, evaluation, cache, evidence = {}, integration }) {
   const reviews = artifacts.map((artifact) => artifact.review)
-  const files = manifest.batches.reduce((count, batch) => count + batch.files.length, 0)
+  const files = new Set(manifest.batches.flatMap((batch) => batch.files)).size
   const requiredLenses = 3
   const elapsedValues = reviews.map((review) => review.evidence.elapsedMs).sort((a, b) => a - b)
   const elapsed = elapsedValues[Math.max(0, Math.ceil(elapsedValues.length * 0.95) - 1)] ?? 0
@@ -545,7 +549,7 @@ function qualityInput({ runId, version, sourceRevision, repository, pullNumber, 
   }
 }
 
-function scoreGroundTruth(actual, groundTruth) {
+export function scoreGroundTruth(actual, groundTruth) {
   if (!Array.isArray(groundTruth)) throw new Error('ground truth must contain a findings array')
   const matched = new Set()
   let severityMatches = 0
@@ -588,9 +592,7 @@ async function runQualityCorpus(corpus, options) {
     if (review.incomplete || review.evidence?.deadlineExceeded || review.execution?.failed) throw new Error(`quality corpus ${testCase.id} returned incomplete evidence`)
     results.push({ id: testCase.id, expected: testCase.findings, review })
   }
-  const actual = results.flatMap((item) => item.review.findings)
-  const expected = results.flatMap((item) => item.expected)
-  const metrics = scoreGroundTruth(actual, expected)
+  const metrics = scoreCorpusCases(results)
   const comments = { inlineExpected: metrics.detectedExpected, inlineValid: metrics.detectedExpected, actionable: metrics.actionable, total: metrics.detected }
   const tokensUsed = results.reduce((total, item) => total + (item.review.evidence.tokensUsed ?? 0), 0)
   const providerCalls = results.reduce((total, item) => total + (item.review.evidence.providerCalls ?? 0), 0)
@@ -607,7 +609,16 @@ function validateOrcaEvidence(file, expected) {
   } catch { return false }
 }
 
+export function scoreCorpusCases(results) {
+  // A finding in one snippet cannot satisfy another case with the same path/line.
+  return results.map(item => scoreGroundTruth(item.review.findings, item.expected)).reduce((sum, item) => Object.fromEntries(Object.keys(item).map(key => [key, (sum[key] ?? 0) + item[key]])), {})
+}
+
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+process.once('SIGINT', requestShutdown)
+process.once('SIGTERM', requestShutdown)
 main().catch((error) => { console.error(error); process.exitCode = 2 }).finally(() => {
   process.removeListener('SIGINT', requestShutdown)
   process.removeListener('SIGTERM', requestShutdown)
 })
+}

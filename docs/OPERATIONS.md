@@ -4,6 +4,14 @@ This guide is the repository-native reference for running AgentsKit Code Review 
 
 ## Provider and credential choices
 
+For a bounded production canary, run `agentskit-review-campaign --config /absolute/code-review.config.json --pull 123 --output /absolute/campaign.json --quality-output /absolute/quality.json`. Add `--preflight-only` to collect source and budget blockers without model calls. Omit `--pull` for the configured repository campaign; posting and merging still require their explicit flags.
+
+Batch size is a maximum. Every batch is measured before execution, and a single oversized file can span multiple context-pack batches. Every pack must be present at consolidation. Impossible single packs remain blocked; source completeness and token gates are never suppressed. See [ADR-0006](adr/0006-measured-batch-completion.md).
+
+Codex inference runs in a temporary directory with focused review instructions, ambient skills/plugins disabled, and no shell, delegation or web search. Read-only sandboxing and structured output remain enabled. This reduces unrelated agent context; actual usage is still measured.
+
+For changed HTML, SCM ingestion can include up to four unchanged local linked stylesheets (64 KiB each, within the source budget) at the same head SHA. They are context for analysis and skepticism, not extra reviewed files. Remote/sensitive paths are excluded and unavailable context is explicit. This is one-hop context, not a complete dependency graph: quality corpus scores do not replace auditing real findings against the surrounding application.
+
 | Provider class | Examples | Secret or login | Network boundary |
 |---|---|---|---|
 | Logged-in local CLI | `codex-cli`, `claude-cli`, `grok-cli`, `opencode-cli` | Existing local login | Provider CLI policy |

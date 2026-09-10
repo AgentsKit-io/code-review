@@ -3,7 +3,7 @@ import { builtInLenses, createCodeReviewAgent } from '../agents/code-review/agen
 import { configFingerprint, ReviewConfigSchema, toReviewConfig, type ReviewProjectConfig } from './public-config.js'
 import { resolveReviewConfig } from './review-config.js'
 import { reviewPolicyFingerprint } from './review-policy.js'
-import { batchPlanOverBudget } from './batch-mode.js'
+import { planReviewBatches } from './batch-mode.js'
 import type { DoctorReport } from './provider-registry.js'
 import type { ChangeRequestMetadata, ChangeRequestRef, ScmAdapter } from './scm-contract.js'
 
@@ -40,6 +40,7 @@ export async function preflightCampaign(input: {
   providerHealth: Pick<DoctorReport, 'ok' | 'provider' | 'checks'>
   now?: () => Date
   signal?: AbortSignal
+  refs?: readonly ChangeRequestRef[]
 }): Promise<CampaignPreflightReport> {
   input.signal?.throwIfAborted()
   const config = ReviewConfigSchema.parse(input.config)
@@ -52,9 +53,10 @@ export async function preflightCampaign(input: {
   ]
 
   let refs: readonly ChangeRequestRef[] = []
-  try { refs = await input.adapter.discover({ repository: config.target.repository, state: 'open', authors: [], excludeAuthors: [], labels: [] }) }
+  try { refs = input.refs ?? await input.adapter.discover({ repository: config.target.repository, state: 'open', authors: [], excludeAuthors: [], labels: [] }) }
   catch (error) { checks.push({ id: 'scm.discovery', ok: false, detail: error instanceof Error ? error.message : String(error) }) }
   const unique = new Map(refs.map((ref) => [`${ref.repository}#${ref.id}`, ref]))
+  if (refs.some((ref) => ref.repository !== config.target.repository)) throw new Error('selected pull request is outside the configured repository')
   checks.push({ id: 'discovery.unique', ok: unique.size === refs.length, detail: `${unique.size}/${refs.length} unique change requests` })
   if (!refs.length && config.report.failOnEmptyReport) checks.push({ id: 'discovery.non-empty', ok: false, detail: 'no open change requests discovered' })
 
@@ -108,13 +110,15 @@ export async function preflightCampaign(input: {
         reporters: [], lenses: builtInLenses(Object.entries(resolved.lenses).filter(([, policy]) => policy.enabled).map(([key]) => key as Parameters<typeof builtInLenses>[0][number])),
         requiredLenses: Object.entries(resolved.lenses).filter(([, policy]) => policy.required).map(([key]) => key as Parameters<typeof builtInLenses>[0][number]),
         retries: resolved.retries, auditVotes: resolved.votes, profile: resolved.profile, batchLenses: resolved.batchLenses,
-        thresholds: resolved.thresholds, budget: resolved.budget,
+        thresholds: resolved.thresholds, budget: resolved.budget, context: resolved.context,
       })
       const planned = await review.plan()
       plan = { files: planned.files, bytes: planned.bytes, estimatedProviderCalls: planned.estimatedProviderCalls, maxCalls: planned.maxCalls, changedFiles: diff.files.map((file) => file.path).sort(), reviewableFiles: planned.reviewableFiles, unreviewed: planned.unreviewed }
       if (!planned.files) reasons.push('no reviewable changed files')
       if ((config.batches.requireCompleteCoverage || config.batches.failOnUnreviewableFiles) && planned.unreviewedFiles) reasons.push(`${planned.unreviewedFiles} changed file(s) are unreviewed`)
-      reasons.push(...batchPlanOverBudget(planned.overBudget, config.batches.enabled))
+      reasons.push(...(config.batches.enabled
+        ? (await planReviewBatches(planned.reviewableFiles, config.batches.size, (files, packs) => review.plan(files, packs))).overBudget
+        : planned.overBudget))
     } catch (error) { reasons.push(`source plan: ${error instanceof Error ? error.message : String(error)}`) }
     const blocked = reasons.length > 0
     pullRequests.push({ ref, title: metadata.title, author: metadata.author, headRevision: metadata.sourceRevision, status: blocked ? 'blocked' : 'ready', reasons, worktreeAllowed: !blocked, plan })
