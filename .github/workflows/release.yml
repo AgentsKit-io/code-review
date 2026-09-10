@@ -46,19 +46,29 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Dispatch required checks on the version branch
+      - name: Allow required workflows for the trusted version PR
+        timeout-minutes: 2
         if: steps.changesets.outputs.pullRequestNumber != ''
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION_PR: ${{ steps.changesets.outputs.pullRequestNumber }}
         run: |
           set -eu
-          gh pr view "$VERSION_PR" --json author,headRefName,isCrossRepository,state > "$RUNNER_TEMP/version-pr.json"
+          gh pr view "$VERSION_PR" --json author,headRefName,headRefOid,isCrossRepository,state > "$RUNNER_TEMP/version-pr.json"
           node --input-type=module -e '
             import { readFileSync } from "node:fs";
             const pr = JSON.parse(readFileSync(process.env.RUNNER_TEMP + "/version-pr.json", "utf8"));
             if (!pr.author.is_bot || pr.author.login !== "app/github-actions" || pr.headRefName !== "changeset-release/main" || pr.isCrossRepository || pr.state !== "OPEN") throw new Error("untrusted version PR");
           '
-          for workflow in ci.yml codeql.yml dependency-review.yml; do
-            gh workflow run "$workflow" --ref changeset-release/main
+          version_sha="$(jq -r .headRefOid "$RUNNER_TEMP/version-pr.json")"
+          for attempt in $(seq 1 12); do
+            gh api --method GET "repos/$GITHUB_REPOSITORY/actions/runs" -f event=pull_request -f head_sha="$version_sha" -F per_page=100 > "$RUNNER_TEMP/version-runs.json"
+            jq --arg pr "$VERSION_PR" '[.workflow_runs[] | select(.head_branch == "changeset-release/main" and any(.pull_requests[]; .number == ($pr | tonumber))) | select(.path == ".github/workflows/ci.yml" or .path == ".github/workflows/codeql.yml" or .path == ".github/workflows/dependency-review.yml")]' "$RUNNER_TEMP/version-runs.json" > "$RUNNER_TEMP/required-runs.json"
+            for run_id in $(jq -r '.[] | select(.conclusion == "action_required") | .id' "$RUNNER_TEMP/required-runs.json"); do
+              gh api --method POST "repos/$GITHUB_REPOSITORY/actions/runs/$run_id/approve"
+            done
+            if [ "$(jq '[.[].path] | unique | length' "$RUNNER_TEMP/required-runs.json")" -eq 3 ]; then exit 0; fi
+            sleep 5
           done
+          echo 'Required version-PR workflow events did not arrive within the bounded wait.' >&2
+          exit 1
