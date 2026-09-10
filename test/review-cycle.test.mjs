@@ -38,6 +38,14 @@ test('a duplicate detection in one corpus case cannot satisfy a missed defect in
   assert.equal(metrics.duplicates, 1)
 })
 
+test('resume retains the locked clock and distinct cumulative attempt receipts', () => {
+  const source = readFileSync(new URL('../scripts/review-cycle.mjs', import.meta.url), 'utf8')
+  assert.match(source, /cycleStartedAt = Date.parse\(contract.createdAt\)/)
+  assert.match(source, /summary.startedAt = contract.createdAt/)
+  assert.match(source, /remainingCycleMs\(\) <= 0/)
+  assert.match(source, /batch-\$\{index\}-attempt-\$\{state.attempts\[index\]\}/)
+})
+
 test('cycle runner collects blockers and always writes its summary before failing', () => {
   const directory = mkdtempSync(join(tmpdir(), 'agentskit-review-cycle-'))
   try {

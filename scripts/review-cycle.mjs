@@ -82,7 +82,7 @@ async function main() {
   const summaryFile = join(runDir, 'cycle-summary.json')
   const artifactsDir = join(runDir, 'batches')
   const summary = { version: 1, runId, decision: 'BLOCKED', phase: 'contract', libraryVersion: pkg.version, sourceRevision: 'unknown', repository, pullNumber, artifacts: {}, blockers: [], problems: [], fixes: [], cache: { hits: 0, misses: 0, corruptMisses: 0, staleMisses: 0, unvalidatedMisses: 0, savedTokens: 0 }, startedAt: new Date().toISOString() }
-  const cycleStartedAt = Date.now()
+  let cycleStartedAt = Date.now()
   const remainingCycleMs = () => Math.max(0, globalDeadlineMs - (Date.now() - cycleStartedAt))
   mkdirSync(artifactsDir, { recursive: true })
   mkdirSync(stateRoot, { recursive: true })
@@ -216,9 +216,13 @@ async function main() {
     const configContent = readFileSync(configFile, 'utf8')
     const manifestFingerprint = sha256(readFileSync(manifestFile))
     const proposedContract = { version: 1, runId, libraryVersion: pkg.version, sourceRevision, repository, pullNumber, headSha: manifest.headSha, baseSha: prData.targetRevision, provider, model: model ?? null, transport: transport ?? null, mode, configFingerprint: sha256(configContent), qualityCorpusFingerprint: sha256(readFileSync(corpusFile)), learningCorpusFingerprint: sha256(readFileSync(learningCorpusFile)), policyFingerprint: manifest.policyFingerprint, manifestFingerprint, requiredLenses: plan.requiredLenses, retryLimit: maxRetries, maxCalls, maxTokens, deadlineMs, globalDeadlineMs, concurrency, batchConcurrency, runDir, stateRoot }
-    const contract = existsSync(contractFile) ? readJson(contractFile) : { ...proposedContract, createdAt: new Date().toISOString() }
+    const contract = existsSync(contractFile) ? readJson(contractFile) : { ...proposedContract, createdAt: summary.startedAt }
     for (const [key, value] of Object.entries(proposedContract)) if (JSON.stringify(contract[key]) !== JSON.stringify(value)) throw new Error(`existing contract mismatch: ${key}`)
     if (!existsSync(contractFile)) atomicJson(contractFile, contract)
+    cycleStartedAt = Date.parse(contract.createdAt)
+    if (!Number.isFinite(cycleStartedAt) || cycleStartedAt > Date.now()) throw new Error('invalid locked cycle start time')
+    summary.startedAt = contract.createdAt
+    if (remainingCycleMs() <= 0) throw new Error('locked cycle deadline expired; resume cannot reset its allowance')
     summary.artifacts.contract = contractFile
     summary.artifacts.manifest = manifestFile
     const reviewCache = createReviewCache(join(stateRoot, 'review-cache'))
@@ -304,7 +308,7 @@ async function main() {
         const run = await measuredRun(`batch-${index}-attempt-${state.attempts[index]}`, artifact, batchArgs(index, artifact), { cwd: stateRoot, env: childEnv, timeout: Math.min(deadlineMs + 60_000, remaining) })
         const validation = validateArtifact(artifact)
         last = { index, artifact, attempts: attempt, exitCode: run.code, timedOut: run.timedOut, validation, stderr: run.stderr.slice(-4000) }
-        atomicJson(join(runDir, `batch-${index}-attempt-${attempt}.json`), last)
+        atomicJson(join(runDir, `batch-${index}-attempt-${state.attempts[index]}.json`), last)
         if (validation.ready) {
           atomicJson(metadataFile, { version: 1, runId, sourceRevision, artifactHash: sha256(readFileSync(artifact)) })
           const review = readJson(artifact).review
