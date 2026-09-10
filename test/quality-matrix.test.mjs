@@ -92,7 +92,16 @@ test('retries, wasted calls, wall clock, and reported token classes participate 
 
 test('a material baseline regression blocks the release decision', () => {
   const baseline = evaluateQuality(complete())
-  const report = evaluateQualityAgainstBaseline(complete({ findings: { ...complete().findings, detectedExpected: 3 } }), baseline)
+  const report = evaluateQualityAgainstBaseline(complete({ findings: { ...complete().findings, detectedExpected: 2 } }), baseline)
   assert.equal(report.decision, 'BLOCKED')
   assert.equal(report.absoluteGates.find((gate) => gate.name === 'no-material-regressions')?.passed, false)
+})
+
+test('a one-point score jitter remains compatible with the minimum quality floor', () => {
+  const baseline = evaluateQuality(complete())
+  const report = evaluateQualityAgainstBaseline(complete({ performance: { p95Ms: 1249, baselineP95Ms: 1100 } }), baseline)
+  assert.equal(report.decision, 'PASS')
+  assert.deepEqual(report.absoluteGates.find((gate) => gate.name === 'no-material-regressions'), {
+    name: 'no-material-regressions', passed: true, detail: 'no configured material quality regression',
+  })
 })

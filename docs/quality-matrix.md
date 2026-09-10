@@ -45,7 +45,7 @@ Budget evidence is retained in `tokens.accounting` when the provider reports it.
 
 ## Baselines and regressions
 
-Use the same labelled corpus and comparable PR shape when creating a baseline. Token efficiency is measured per changed line so clean reviews remain measurable. `compareQuality()` reports score regressions, material regressions, and improvements by area. `evaluateQualityAgainstBaseline()` adds a release gate for configured material regressions; a regression to 2 or a newly missing area blocks publication even if the aggregate result looks better.
+Use the same labelled corpus and comparable PR shape when creating a baseline. Token efficiency is measured per changed line so clean reviews remain measurable. `compareQuality()` reports score regressions, material regressions, and improvements by area. `evaluateQualityAgainstBaseline()` adds a release gate for configured material regressions; by default a one-point jitter is tolerated because it can still leave the area at the required 3/4 floor. A regression to 2 or a newly missing area blocks publication even if the aggregate result looks better. Use `--max-score-drop 1` for a stricter baseline-specific policy.
 
 The deterministic `npm run benchmark:cycle` remains a process-safety benchmark. It is complementary to this matrix and cannot provide the semantic ground truth needed for detection or precision.
 
