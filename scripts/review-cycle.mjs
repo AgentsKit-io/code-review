@@ -355,13 +355,17 @@ async function main() {
     const baselineTokensPerChangedLine = baselineInput?.tokens?.tokensUsed !== undefined && baselineInput.tokens.changedLines > 0
       ? baselineInput.tokens.tokensUsed / baselineInput.tokens.changedLines
       : baselineArea('token-efficiency')?.tokensPerChangedLine
+    const baselineChangedLines = baselineInput?.tokens?.changedLines ?? baselineArea('token-efficiency')?.changedLines
+    const baselineTokensPerProviderCall = baselineInput?.tokens?.tokensUsed !== undefined && baselineInput.tokens.accounting?.providerCalls > 0
+      ? baselineInput.tokens.tokensUsed / baselineInput.tokens.accounting.providerCalls
+      : baselineArea('token-efficiency')?.baselineTokensPerProviderCall
     const orcaPass = validateOrcaEvidence(arg('orca-evidence'), { runId, sourceRevision: manifest.headSha, libraryVersion: pkg.version })
     const mergeSafetyPass = !has('merge') || (projectConfig.merge.enabled && has('post') && (!has('admin') || !projectConfig.merge.forbidAdmin))
     const serializedArtifacts = artifactFiles.map((file) => readFileSync(file, 'utf8')).join('\n')
     const artifactMetaValid = artifactFiles.every((file, index) => {
       try { const metadata = readJson(join(artifactsDir, `batch-${index}.meta.json`)); return metadata.sourceRevision === sourceRevision && metadata.artifactHash === sha256(readFileSync(file)) } catch { return false }
     })
-    const input = qualityInput({ runId, version: pkg.version, sourceRevision, repository, pullNumber, manifest, artifacts: reviews, changedLines, elapsedBaseline: baselineInput?.performance?.p95Ms ?? baselineArea('speed')?.p95Ms, baselineTokensPerChangedLine, memory, evaluation, cache: summary.cache, evidence: { checks, replay: readJson(summary.artifacts.replay), state, artifactMetaValid, secretLeaks: ghToken && serializedArtifacts.includes(ghToken) ? 1 : 0, maxCalls, maxTokens }, integration: { githubPass: true, orcaPass, releasePass, mergeSafetyPass } })
+    const input = qualityInput({ runId, version: pkg.version, sourceRevision, repository, pullNumber, manifest, artifacts: reviews, changedLines, elapsedBaseline: baselineInput?.performance?.p95Ms ?? baselineArea('speed')?.p95Ms, baselineChangedLines, baselineTokensPerChangedLine, baselineTokensPerProviderCall, memory, evaluation, cache: summary.cache, evidence: { checks, replay: readJson(summary.artifacts.replay), state, artifactMetaValid, secretLeaks: ghToken && serializedArtifacts.includes(ghToken) ? 1 : 0, maxCalls, maxTokens }, integration: { githubPass: true, orcaPass, releasePass, mergeSafetyPass } })
     atomicJson(join(runDir, 'quality-input.json'), input)
     const baselineReport = baselineArtifact?.areas ? baselineArtifact : baselineInput ? evaluateQuality(baselineInput) : undefined
     const quality = baselineReport ? evaluateQualityAgainstBaseline(input, baselineReport) : evaluateQuality(input)
@@ -502,7 +506,7 @@ async function validateMemory(config, runDir, stateRoot, consolidated, contract,
   return evidence
 }
 
-function qualityInput({ runId, version, sourceRevision, repository, pullNumber, manifest, artifacts, changedLines, elapsedBaseline, baselineTokensPerChangedLine, memory, evaluation, cache, evidence = {}, integration }) {
+function qualityInput({ runId, version, sourceRevision, repository, pullNumber, manifest, artifacts, changedLines, elapsedBaseline, baselineChangedLines, baselineTokensPerChangedLine, baselineTokensPerProviderCall, memory, evaluation, cache, evidence = {}, integration }) {
   const reviews = artifacts.map((artifact) => artifact.review)
   const files = manifest.batches.reduce((count, batch) => count + batch.files.length, 0)
   const requiredLenses = 3
@@ -530,7 +534,7 @@ function qualityInput({ runId, version, sourceRevision, repository, pullNumber, 
     security: { secretLeaks: evidence.secretLeaks ?? 0, unsafeActions: 0, failClosedViolations: replayPass ? 0 : 1 },
     reliability: { runs: 1, completeRuns: complete ? 1 : 0, incompleteAccepted: complete ? 0 : 1, staleArtifactsAccepted: evidence.artifactMetaValid === false ? 1 : 0, silentFailures: reviews.some((review) => review.execution.failed > 0 && !review.incomplete) ? 1 : 0 },
     performance: { p95Ms: elapsed, wallClockMs: reviews.reduce((total, review) => total + review.evidence.elapsedMs, 0), ...(elapsedBaseline ? { baselineP95Ms: elapsedBaseline } : {}) },
-    tokens: { ...(tokensUsed === undefined ? {} : { tokensUsed }), changedLines, validFindings: evaluation.metrics.detectedExpected, ...(baselineTokensPerChangedLine ? { baselineTokensPerChangedLine } : {}), ...(Object.keys(accounting).length ? { accounting } : {}) },
+    tokens: { ...(tokensUsed === undefined ? {} : { tokensUsed }), changedLines, validFindings: evaluation.metrics.detectedExpected, ...(baselineChangedLines ? { baselineChangedLines } : {}), ...(baselineTokensPerChangedLine ? { baselineTokensPerChangedLine } : {}), ...(baselineTokensPerProviderCall ? { baselineTokensPerProviderCall } : {}), ...(Object.keys(accounting).length ? { accounting } : {}) },
     batches: { planned: manifest.batches.length, completed: artifacts.length, retried: retries, wastedCalls, providerCalls, overBudget: providerCalls > (evidence.maxCalls ?? Infinity) || (tokensUsed ?? Infinity) + evaluation.tokensUsed > (evidence.maxTokens ?? Infinity) ? 1 : 0 },
     ...(cache ? { cache } : {}),
     memory: { enabled: memory.enabled, persistencePass: memory.persistencePass, loadPass: memory.loadPass, malformedRejected: memory.malformedRejected, feedbackRecorded: memory.feedbackRecorded, rulesApproved: memory.rulesApproved, learningEvaluationPass: memory.learningEvaluationPass, learningDetectionLift: memory.learningDetectionLift, learningPrecisionPass: memory.learningPrecisionPass, learningTokenPass: memory.learningTokenPass },
