@@ -28,6 +28,18 @@
       "kind": "clean",
       "language": "md",
       "source": "# Review guide\n\nRun the checks before opening a pull request.\n"
+    },
+    {
+      "id": "reduced-motion-already-handled",
+      "kind": "clean",
+      "language": "css",
+      "source": ".tour-glow { border: 2px solid transparent; animation: pulse 1.6s ease-in-out infinite; }\n@keyframes pulse { 50% { border-color: #c18a32; } }\n@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }\n"
+    },
+    {
+      "id": "generated-number-declaration",
+      "kind": "clean",
+      "language": "ts",
+      "source": "// Generated public type surface. Runtime refinements are not represented in declarations.\nimport type { ZodNumber } from 'zod'\nexport declare const expiresInMinutes: ZodNumber\n"
     }
   ]
 }

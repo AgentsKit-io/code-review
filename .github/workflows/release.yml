@@ -19,6 +19,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      actions: write
     steps:
       - name: Check out main
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -36,6 +37,7 @@ jobs:
         run: npm ci
 
       - name: Create or update Version Packages pull request
+        id: changesets
         uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
         with:
           version: npm run version-packages
@@ -43,3 +45,20 @@ jobs:
           title: "chore: version packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Dispatch required checks on the version branch
+        if: steps.changesets.outputs.pullRequestNumber != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION_PR: ${{ steps.changesets.outputs.pullRequestNumber }}
+        run: |
+          set -eu
+          gh pr view "$VERSION_PR" --json author,headRefName,isCrossRepository,state > "$RUNNER_TEMP/version-pr.json"
+          node --input-type=module -e '
+            import { readFileSync } from "node:fs";
+            const pr = JSON.parse(readFileSync(process.env.RUNNER_TEMP + "/version-pr.json", "utf8"));
+            if (!pr.author.is_bot || pr.author.login !== "app/github-actions" || pr.headRefName !== "changeset-release/main" || pr.isCrossRepository || pr.state !== "OPEN") throw new Error("untrusted version PR");
+          '
+          for workflow in ci.yml codeql.yml dependency-review.yml; do
+            gh workflow run "$workflow" --ref changeset-release/main
+          done

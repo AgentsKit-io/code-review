@@ -37,6 +37,17 @@ Completed review units are also cached locally by an immutable fingerprint over 
 
 Every live cycle also compiles a hierarchical budget before execution. Campaign and pull-request scopes retain capacity for output and critical verification; context-pack, analysis, and verification calls reserve their estimated input before concurrent execution. Provider usage is copied into the evidence and quality matrix by dimension when available, while missing dimensions stay explicitly unavailable.
 
+`review.maxTokens` limits a child review invocation; `review.globalMaxTokens`
+(default 10,000,000) limits the entire single-PR cycle, including failed attempts,
+the labelled corpus, and both learning A/B arms. `usage.json` reserves capacity
+before each child starts and settles it using reported input plus output tokens.
+Cached input and reasoning are subsets, never additional charges. Missing usage
+retains its reservation and makes recorded totals unavailable. Crash recovery
+keeps that journal; cached artifacts retain their original evidence but incur no
+new provider charge. `cycle-summary.json` includes full-cycle wall time, including
+preflight and publication. The default live corpus includes positive, clean,
+reduced-motion, and generated-declaration regression cases.
+
 ## Closed cycle
 
 1. Run and store the baseline benchmark.

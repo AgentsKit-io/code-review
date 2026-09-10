@@ -4,7 +4,28 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { spawnSync } from 'node:child_process'
 import test from 'node:test'
-import { scoreCorpusCases } from '../scripts/review-cycle.mjs'
+import { scoreCorpusCases, createCycleMeter } from '../scripts/review-cycle.mjs'
+
+test('cycle totals include retries and evals, reserve concurrent work, and preserve unknown usage', () => {
+  const evidence = (tokensUsed, providerCalls) => ({ tokensUsed, providerCalls, usage: { inputTokens: tokensUsed, outputTokens: 0 } })
+  const meter = createCycleMeter({ maxTokens: 1000, maxCalls: 20 })
+  const first = meter.begin('batch-attempt-1', 400, 2)
+  const second = meter.begin('batch-attempt-2', 400, 2)
+  assert.equal(first.maxTokens, 400)
+  assert.equal(second.maxTokens, 300)
+  first.finish(evidence(200, 2), 2)
+  second.finish(evidence(100, 1), 0)
+  meter.begin('quality-corpus', 400).finish(evidence(150, 2), 0)
+  meter.begin('memory-with', 400).finish(evidence(90, 1), 0)
+  meter.begin('memory-without', 400).finish(evidence(60, 1), 0)
+  assert.equal(meter.report().recordedTokens, 600)
+  assert.equal(meter.report().recordedCalls, 7)
+  meter.begin('interrupted', 400).finish({ tokensUsed: 10, providerCalls: 2, usage: { outputTokens: 10 } }, null)
+  assert.equal(meter.report().recordedTokens, null)
+  assert.equal(meter.report().chargedTokens, 1000)
+  const resumed = createCycleMeter({ maxTokens: 1000, maxCalls: 20, entries: meter.report().entries })
+  assert.throws(() => resumed.begin('must-not-run', 1), /budget exhausted/)
+})
 
 test('a duplicate detection in one corpus case cannot satisfy a missed defect in another', () => {
   const finding = { file: 'snippet.ts', line: 1, severity: 'high', category: 'security', title: 'Missing authorization', rationale: 'Unprotected action', suggestion: 'Authorize first' }

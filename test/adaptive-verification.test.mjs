@@ -75,6 +75,23 @@ test('adaptive verification batches candidates and preserves detections', async 
   assert.ok(review.evidence.verificationRequests < review.evidence.verificationCandidates * 3)
 })
 
+test('skeptic shrinks dense neighbouring lines without dropping the claimed range', async () => {
+  const previous = { path: process.env.PATH, corpus: process.env.CODEX_FIXTURE_QUALITY_CORPUS }
+  try {
+    process.env.PATH = `${fixtureBin}:${previous.path ?? ''}`
+    process.env.CODEX_FIXTURE_QUALITY_CORPUS = '1'
+    const dense = source + Array.from({ length: 60 }, (_, i) => `// adjacent ${i}: ${'declaration '.repeat(400)}`).join('\n')
+    const agent = createCodeReviewAgent({ adapter: codexCli(), source: { kind: 'stdin', content: dense, filename: 'snippet.ts', limits: { maxFileBytes: 1_000_000 } }, auditVotes: 1, consolidate: false, reporters: [], budget: { maxTokens: 500_000 } })
+    const review = await agent.run()
+    assert.equal(review.incomplete, false)
+    assert.equal(review.evidence.verificationUnverifiedFindings, 0)
+    assert.equal(review.findings.length, 2)
+  } finally {
+    if (previous.path === undefined) delete process.env.PATH; else process.env.PATH = previous.path
+    if (previous.corpus === undefined) delete process.env.CODEX_FIXTURE_QUALITY_CORPUS; else process.env.CODEX_FIXTURE_QUALITY_CORPUS = previous.corpus
+  }
+})
+
 test('third vote is used only for configured disagreement', async () => {
   const review = await run({ CODEX_FIXTURE_VERIFICATION_DISAGREE: '1' })
   assert.equal(review.incomplete, false)

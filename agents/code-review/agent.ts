@@ -760,13 +760,13 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
     }
   }
 
-  function verificationTarget(target: ReviewTarget, line: number, endLine: number): ReviewTarget {
+  function verificationTarget(target: ReviewTarget, line: number, endLine: number, adjacentLines = contextPolicy.adjacentLines): ReviewTarget {
     const sourceLineNumbers = target.sourceLineNumbers ?? target.fullContent.split('\n').map((_, index) => index + 1)
     const first = sourceLineNumbers.findIndex((candidate) => candidate === line)
     const last = sourceLineNumbers.findIndex((candidate) => candidate === endLine)
     if (first < 0 || last < 0) return sliceTarget(target, 0, Math.min(target.fullContent.split('\n').length, contextPolicy.adjacentLines * 2 + 1))
-    const start = Math.max(0, first - contextPolicy.adjacentLines)
-    const end = Math.min(sourceLineNumbers.length, last + contextPolicy.adjacentLines + 1)
+    const start = Math.max(0, first - adjacentLines)
+    const end = Math.min(sourceLineNumbers.length, last + adjacentLines + 1)
     return sliceTarget(target, start, end)
   }
 
@@ -944,7 +944,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
     const states = new Map<number, State>(findings.map((finding, id) => [id, { finding, votes: [], unverified: false }]))
     verificationCandidates = findings.length
 
-    const request = async (candidates: Candidate[], round: number): Promise<Map<number, z.infer<typeof SkepticVerdict>> | undefined> => {
+    const request = async (candidates: Candidate[], round: number, adjacentLines = contextPolicy.adjacentLines): Promise<Map<number, z.infer<typeof SkepticVerdict>> | undefined> => {
       if (!candidates.length) return new Map()
       const claims = candidates.map(({ id, finding }) => {
         const target = byFile.get(finding.file)
@@ -956,7 +956,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
       const files = candidates
         .map(({ id, finding }) => {
           const target = byFile.get(finding.file)
-          const source = target ? verificationTarget(target, finding.line, finding.endLine ?? finding.line) : undefined
+          const source = target ? verificationTarget(target, finding.line, finding.endLine ?? finding.line, adjacentLines) : undefined
           return `SOURCE FOR FINDING [${id}] — ${finding.file}\n${fenced(source ? numbered(source) : '(source unavailable)')}`
         })
         .join('\n\n')
@@ -969,7 +969,13 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
         messages: [buildMessage({ role: 'user', content: task, status: 'complete' })],
       })
       if (!measured.fits) {
-        if (candidates.length === 1) { verificationFailedRequests++; return undefined }
+        // Dense generated declarations can exceed the budget in a few adjacent
+        // lines. Preserve the full claimed range and shrink only its neighbours.
+        if (candidates.length === 1) {
+          if (adjacentLines > 0) return request(candidates, round, Math.floor(adjacentLines / 2))
+          verificationFailedRequests++
+          return undefined
+        }
         const middle = Math.ceil(candidates.length / 2)
         const left = await request(candidates.slice(0, middle), round)
         const right = await request(candidates.slice(middle), round)
