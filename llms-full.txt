@@ -1287,6 +1287,12 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.30.12
+
+### Patch Changes
+
+- [#238](https://github.com/AgentsKit-io/code-review/pull/238) [`4834e68`](https://github.com/AgentsKit-io/code-review/commit/4834e6809e062c76f067e85a54472e4c2e2bd5b6) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Resolve the cycle CLI entry-point symlink before comparing module identity so npm/npx invocations execute instead of silently returning success. Add an actual symlink subprocess regression while retaining side-effect-free imports.
+
 ## 0.30.11
 
 ### Patch Changes
