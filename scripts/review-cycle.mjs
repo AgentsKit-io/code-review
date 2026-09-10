@@ -300,7 +300,8 @@ async function main() {
           return last
         }
         const transient = run.timedOut || /(?:timeout|timed out|ECONNRESET|429|5\d\d|temporar|rate limit)/i.test(run.stderr)
-        if (!transient) break
+        const incompleteExecution = validation.blockers?.some(({ id }) => id === 'execution.complete')
+        if (!transient && !incompleteExecution) break
       }
       throw new Error(`batch ${index} blocked: ${JSON.stringify(last)}`)
     }
