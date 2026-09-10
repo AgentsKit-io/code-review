@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.30.16
+
+### Patch Changes
+
+- [#246](https://github.com/AgentsKit-io/code-review/pull/246) [`4da5164`](https://github.com/AgentsKit-io/code-review/commit/4da51645966ce4662eaca2dc7b455f6a08ff9e54) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Recover lost GitHub publication acknowledgements by reconciling marked remote history, complete missing summaries on validated artifact replay, and avoid duplicate writes. Preserve completed review/matrix evidence on publication failure, reuse hash-bound successful evaluations without resetting cumulative budgets, and honor configured comment channels and semantic policy identity.
+
+  Block merges with outstanding changes-requested reviews even when the current commit checks pass; incomplete review history fails closed.
+
 ## 0.30.15
 
 ### Patch Changes
