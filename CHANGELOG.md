@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.30.4
+
+### Patch Changes
+
+- [#221](https://github.com/AgentsKit-io/code-review/pull/221) [`604ebf2`](https://github.com/AgentsKit-io/code-review/commit/604ebf28dda5e5ae87d19f9ea6974974d21d6b30) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Make real campaign evidence trustworthy by validating Orca against the PR head SHA, exercising a real memory persistence round-trip, and accepting an explicit external quality baseline for speed and token measurements.
+
 ## 0.30.3
 
 ### Patch Changes
