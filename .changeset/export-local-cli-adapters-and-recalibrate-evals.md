@@ -1,7 +1,0 @@
----
-"@agentskit/code-review": patch
----
-
-Export `codexCli`, `claudeCode`, `grokCli`, `opencodeCli`, `ollamaReview`, `createAutoCliAdapter`, `createHeadlessCliAdapter`, and their associated types (`GrokCliOptions`, `OpenCodeCliOptions`, `OllamaReviewOptions`, `HeadlessCliOptions`, `LocalCliMode`) from the package root. Same gap as `createCodeReviewAgent` (0.30.19): none of these local-CLI provider adapters were reachable from `@agentskit/code-review` — pairing `createCodeReviewAgent` with a real local-CLI provider required an internal relative import. Found during a real-provider quality/error/token testing round against 0.30.19.
-
-That same round ran the full 20-case labelled corpus against a live `codex-cli` provider (not the fixture) and surfaced two corpus calibration issues, both fixed here: the `hardcoded-api-key` case's secret literal read as an obvious placeholder (`NOT-A-REAL-SECRET-...`), which a real model reasonably declined to flag as a credential — replaced with an opaque-looking token that still avoids matching a recognizable secret-scanner format. And `silent-behavior-change-rounding` / `unused-required-parameter` were labelled `high`; a real model consistently and defensibly rated both `med` — the corpus and its matching fixture (`test/fixtures/bin/codex`) now expect `med` for these two. `off-by-one-loop` and `unhandled-promise-rejection`'s `titleIncludes` keyword lists were also broadened: the real model found the correct bug in both but phrased the title differently than the original narrow list expected.

@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.31.0
+
+### Minor Changes
+
+- [#280](https://github.com/AgentsKit-io/code-review/pull/280) [`3ad2dde`](https://github.com/AgentsKit-io/code-review/commit/3ad2dde95e65af15ab70c8511ebe4847f4ea28dd) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Promote `conservative` to the default `verification.posture` on `createCodeReviewAgent`, replacing `strict`. This closes out ADR-0008's pending live A/B: run against all 20 cases in `quality/evals/default.json` (including the corpus recalibration from the previous release) through a real `codex-cli` provider, `conservative` detected 10/12 positive cases versus `strict`'s 9/12 (+8.3 points), at a precision cost of only 1.2 points (41.7% vs 42.9%), with zero false positives on clean-code cases under either posture. This meets the promotion criterion set in ADR-0008 (detection gain ≥5 points, precision drop ≤3 points).
+
+  `strict` remains fully available — pass `verification: { posture: 'strict' }` explicitly to keep the prior behavior. This is a minor version bump because it changes default review output (a caller relying on the exact prior finding set from an unconfigured `verification.posture` will see different results, typically catching more real issues at a small, measured precision cost) even though no public API signature changed.
+
+### Patch Changes
+
+- [#278](https://github.com/AgentsKit-io/code-review/pull/278) [`a50ffe6`](https://github.com/AgentsKit-io/code-review/commit/a50ffe6229bc27e3e62030ee298c81d133242aff) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Export `codexCli`, `claudeCode`, `grokCli`, `opencodeCli`, `ollamaReview`, `createAutoCliAdapter`, `createHeadlessCliAdapter`, and their associated types (`GrokCliOptions`, `OpenCodeCliOptions`, `OllamaReviewOptions`, `HeadlessCliOptions`, `LocalCliMode`) from the package root. Same gap as `createCodeReviewAgent` (0.30.19): none of these local-CLI provider adapters were reachable from `@agentskit/code-review` — pairing `createCodeReviewAgent` with a real local-CLI provider required an internal relative import. Found during a real-provider quality/error/token testing round against 0.30.19.
+
+  That same round ran the full 20-case labelled corpus against a live `codex-cli` provider (not the fixture) and surfaced two corpus calibration issues, both fixed here: the `hardcoded-api-key` case's secret literal read as an obvious placeholder (`NOT-A-REAL-SECRET-...`), which a real model reasonably declined to flag as a credential — replaced with an opaque-looking token that still avoids matching a recognizable secret-scanner format. And `silent-behavior-change-rounding` / `unused-required-parameter` were labelled `high`; a real model consistently and defensibly rated both `med` — the corpus and its matching fixture (`test/fixtures/bin/codex`) now expect `med` for these two. `off-by-one-loop` and `unhandled-promise-rejection`'s `titleIncludes` keyword lists were also broadened: the real model found the correct bug in both but phrased the title differently than the original narrow list expected.
+
 ## 0.30.19
 
 ### Patch Changes
