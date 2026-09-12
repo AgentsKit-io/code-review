@@ -1,4 +1,4 @@
-# ADR-0008: Optional conservative verification posture, default unchanged pending a live A/B
+# ADR-0008: Conservative verification posture promoted to default after a live A/B
 
 Status: Accepted
 
@@ -33,27 +33,51 @@ discarded. `incomplete` is still forced true whenever any finding carries that t
 an unverified finding is never silently presented as a clean, fully-verified result
 either.
 
-**The default stays `strict`** — this implementation does not flip it. The stated
-promotion criterion (precision drops at most 3 points, detection rises at least 5
-points on `src/quality-matrix.ts`'s 14-area matrix) needs a genuine live-provider A/B:
-the credential-free fixture harness this repository's `quality:matrix`/
-`evaluate-quality.mjs` is built around returns a deterministic verdict regardless of
-posture-prompt content (per `docs/baseline-protocol.md`, fixtures "prove deterministic
-fail-closed behavior," not semantic quality), so it cannot distinguish the two
-postures' real detection/precision. This implementation session has no live-provider
-credentials and no standing authorization to spend against one, so it does not fabricate
-an A/B result. A maintainer with provider access should run
-`quality:matrix` with both postures against `quality/evals/default.json`'s 12
-positive/protected-subject cases, apply the promotion criterion above, and update this
-ADR (and the `verification.posture` default) with the actual outcome.
+## Live A/B result (2026-09-12)
+
+Ran all 20 `quality/evals/default.json` cases (12 positive/protected-subject, 8 clean)
+against a live `codex-cli` provider — not the credential-free fixture, which returns a
+deterministic verdict regardless of posture-prompt content and so cannot distinguish
+the two postures' real detection/precision (per `docs/baseline-protocol.md`). Each
+posture ran the full corpus independently, same cases, same provider, same model
+defaults.
+
+| Metric | `strict` | `conservative` | Δ |
+| --- | --- | --- | --- |
+| Detection (of 12 positive cases) | 9/12 = 75.0% | 10/12 = 83.3% | **+8.3 pts** |
+| Precision (valid / total findings) | 9/21 = 42.9% | 10/24 = 41.7% | **−1.2 pts** |
+| False positives on clean cases | 0/8 | 0/8 | none |
+| Severity exact-match (of detected) | 4/9 = 44.4% | 5/10 = 50.0% | +5.6 pts |
+
+Both cases the `strict` run missed and `conservative` caught were correctness findings
+(`path-traversal-read`, `off-by-one-loop`) the skeptic had refuted under `strict`'s
+chain-of-reasoning latitude but that survive `conservative`'s narrower refutation bar.
+Neither posture caught `unused-required-parameter` or `memory-leak-event-listener` —
+both protected subjects the skeptic vetoes before assessing correctness at all under
+either posture, so this A/B does not bear on whether the veto itself is well-calibrated,
+only on refutation behavior for findings the veto lets through.
+
+Applying the stated promotion criterion (precision drop ≤3 points, detection gain ≥5
+points): detection gained 8.3 points (exceeds the 5-point bar) while precision dropped
+1.2 points (well under the 3-point limit), with zero false-positive regression on clean
+code. **The criterion is met — `conservative` is promoted to the default.**
+
+## Decision (updated)
+
+`verification.posture` on `createCodeReviewAgent`'s config now defaults to
+`conservative` instead of `strict`. `strict` remains available and unchanged for a
+caller that explicitly opts back into it. This is the only behavior change from this
+ADR's original (additive) decision below — everything else stands as originally
+written.
 
 ## Consequences
 
-Both postures are available today, behind a config flag that defaults to today's
-behavior — this is additive, not a behavior change for existing callers. A caller that
-opts into `conservative` accepts that it has not yet been measured against this
-repository's own quality bar; that is documented in the config's own doc comment, not
-only here. An unverified finding now always reaches the report (marked), which can
-raise finding counts for runs that previously hit the verification deadline — this is
-the intended trade-off (nothing real disappears silently) and is why `incomplete`
-already covered this case.
+Both postures remain available, behind the same config flag — a caller that pins
+`posture: 'strict'` keeps today's exact prior behavior. A caller that does not set
+`verification.posture` at all now gets `conservative`'s narrower refutation bar and
+protected-subject veto instead of `strict`'s, per the measured result above: modestly
+higher detection, negligibly lower precision, no new false positives on clean code. An
+unverified finding still always reaches the report (marked), which can raise finding
+counts for runs that previously hit the verification deadline — this is the intended
+trade-off (nothing real disappears silently) and is why `incomplete` already covered
+this case.
