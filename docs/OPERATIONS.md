@@ -203,6 +203,23 @@ are enabled by default; correctness, security, and tests are required.
 The shared local worker also accepts bounded `timeoutMs` and `maxOutputBytes`
 settings; absolute ceilings are always enforced.
 
+## Per-language review rules (opt-in)
+
+`createCodeReviewAgent({ rules: { enabled: true } })` resolves a per-file review
+checklist by glob and injects it alongside `conventions` for every file in a context
+pack, deduplicated across files that share a language. Precedence: a `.agentskit-review/rules.json`
+in the project root, then `~/.agentskit-review/rules.json`, then a built-in system
+checklist (`agents/code-review/rules.ts` — TypeScript/JavaScript, Python, Go, Rust,
+Java/Kotlin, Terraform, GitHub Actions workflows, YAML, JSON, and a general default).
+A project/global rule file entry is `{ "rules": [{ "path": "<glob>", "rule": "<text>",
+"mergeSystemRule": false }] }`; `mergeSystemRule: false` (default: merged) replaces the
+matching system checklist instead of appending to it. `rules.maxChars` (default 4000)
+bounds the combined resolved-rules text per pack, with a truncation warning emitted the
+same way as an over-long `conventions` file. This option is **off by default** — enabling
+it changes prompt content (and cost) for every file, so it is not turned on silently on
+upgrade. `src/review-rules.ts`'s `resolveRuleForFile(path, layers)` can be called
+directly to see which rule, and from which layer, would apply to a given file.
+
 Risk classification is provider-free and records every contributing signal. Documentation and
 generated-only packs are `low`; ordinary source and tests are `normal`; public contracts, IO, and
 repository-control files are `high`; security, authorization, credential, and migration evidence is
