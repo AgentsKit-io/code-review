@@ -226,6 +226,14 @@ export interface ReviewResult {
   /** Configured dimensions and dimensions completed for every reviewed context pack. */
   enabledCategories?: Category[]
   completedCategories?: Category[]
+  /**
+   * A single-run coverage denominator: how many of the eligible files this run actually
+   * reviewed, distinct from `incomplete` (which folds every uncertainty — budget,
+   * deadline, unverified findings, missing lenses — into one boolean). A report can show
+   * "N of M files reviewed" instead of only "incomplete"; `unreviewed[].reason` still
+   * carries the per-file cause.
+   */
+  coverage: { totalFiles: number; reviewedFiles: number; unreviewedFiles: number }
   summary: string
 }
 
@@ -1166,6 +1174,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
       enabledCategories: lenses.map((lens) => lens.key),
       completedCategories,
       ...(missingRequired.length ? { missingRequiredLenses: missingRequired } : {}),
+      coverage: { totalFiles: reviewed + unreviewedCount, reviewedFiles: reviewed, unreviewedFiles: unreviewedCount },
       summary,
     }
   }
@@ -1322,6 +1331,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
         completedCategories: [],
         incomplete: Boolean(unreviewed.length > 0 || config.incompleteProfile),
         unreviewed: unreviewed.map((target) => ({ file: target.file, reason: target.unreviewedReason ?? 'unreviewed' })),
+        coverage: { totalFiles: unreviewed.length, reviewedFiles: 0, unreviewedFiles: unreviewed.length },
         summary: unreviewed.length ? `${unreviewed.length} file(s) UNREVIEWED; nothing else to review.` : 'Nothing to review.',
       }
       return finalize(result)
