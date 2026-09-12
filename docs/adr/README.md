@@ -11,3 +11,4 @@ Accepted architecture decisions for AgentsKit Code Review.
 | [0005](0005-separated-safe-review-memory.md) | Separate operational state, cache, feedback, and approved knowledge |
 | [0006](0006-measured-batch-completion.md) | Measure and split oversized review batches before execution |
 | [0007](0007-whole-cycle-resource-accounting.md) | Reserve and reconcile batches, retries, evals, and learning within one cycle |
+| [0008](0008-verification-posture.md) | Optional conservative verification posture (default unchanged pending a live A/B); surface unverified findings instead of discarding them |
