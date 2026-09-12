@@ -106,3 +106,17 @@ export { createTelemetryObserver } from './telemetry.js'
 export type { TelemetryOptions } from './telemetry.js'
 export { ReviewFeedbackFileSchema, ReviewFeedbackSchema, ReviewKnowledgeFileSchema, ReviewKnowledgeSchema, ReviewKnowledgeScopeSchema, ReviewSafeTextSchema, ReviewStoreLayoutSchema, createApprovedReviewRetriever, createReviewFeedbackStore, createReviewKnowledgeStore, createReviewStoreLayout, createReviewStores } from './review-stores.js'
 export type { ReviewFeedback, ReviewFeedbackStore, ReviewKnowledge, ReviewKnowledgeScope, ReviewKnowledgeScopeInput, ReviewKnowledgeStore, ReviewStoreLayout } from './review-stores.js'
+// The reviewing agent itself. Was never part of this package's public surface before
+// this export (predates release 0.31) -- every review-time option, including
+// verification.posture, rules.*, and context.grouping, lives on CodeReviewConfig and
+// was unreachable by an external consumer until now (see issue #275).
+export { builtInLenses, createCodeReviewAgent, ReviewDeadlineError, ReviewExecutionError, ReviewPreflightError } from '../agents/code-review/agent.js'
+export type {
+  Category, CodeReviewConfig, ContextPackEvidence, Finding, Lens, LensExecutionStats, Reporter,
+  ReviewEvidence, ReviewPlan, ReviewResult, ReviewTarget, Severity, Verdict,
+} from '../agents/code-review/agent.js'
+export {
+  githubInlineReporter, githubSummaryReporter, markdownReporter, renderGithubWalkthrough, renderMarkdown,
+  sarifReporter, scmReviewReporter,
+} from '../agents/code-review/reporters.js'
+export type { GithubCommentPolicy } from '../agents/code-review/reporters.js'
