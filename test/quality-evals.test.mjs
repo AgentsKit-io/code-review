@@ -11,11 +11,18 @@ const root = resolve(fileURLToPath(new URL('..', import.meta.url)))
 const fixtureBin = join(root, 'test/fixtures/bin')
 const corpus = JSON.parse(readFileSync(join(root, 'quality/evals/default.json'), 'utf8'))
 
+const PROTECTED_SUBJECTS = ['memory-safety', 'concurrency', 'behavioral-change', 'unused-parameter', 'linkage-consistency']
+
 test('semantic eval corpus is versioned, balanced, and structurally complete', () => {
   assert.equal(corpus.version, 1)
-  assert.ok(corpus.cases.length >= 4)
-  assert.ok(corpus.cases.some((entry) => entry.kind === 'positive'))
-  assert.ok(corpus.cases.some((entry) => entry.kind === 'clean'))
+  assert.ok(corpus.cases.length >= 20, 'corpus should cover at least 8 positive, 8 clean, and 4 protected-subject cases')
+  const positive = corpus.cases.filter((entry) => entry.kind === 'positive')
+  const clean = corpus.cases.filter((entry) => entry.kind === 'clean')
+  const protectedCases = corpus.cases.filter((entry) => entry.protectedSubject)
+  assert.ok(positive.length >= 8, 'expected at least 8 positive cases')
+  assert.ok(clean.length >= 8, 'expected at least 8 clean cases')
+  assert.ok(protectedCases.length >= 4, 'expected at least 4 protected-subject cases')
+  for (const entry of protectedCases) assert.ok(PROTECTED_SUBJECTS.includes(entry.protectedSubject), `${entry.id}: unknown protectedSubject "${entry.protectedSubject}"`)
   for (const entry of corpus.cases) {
     assert.match(entry.id, /^[a-z0-9-]+$/)
     assert.equal(typeof entry.source, 'string')
@@ -65,12 +72,13 @@ test('fixture semantic evals preserve expected detections and clean precision', 
     if (previous.corpus === undefined) delete process.env.CODEX_FIXTURE_QUALITY_CORPUS
     else process.env.CODEX_FIXTURE_QUALITY_CORPUS = previous.corpus
   }
+  const positiveCount = corpus.cases.filter((entry) => entry.kind !== 'clean').length
   const report = evaluateQuality({
     runId: 'fixture-semantic-evals', version: '0.21.0', sourceRevision: 'fixture',
     evidence: { kind: 'synthetic', fixtureId: 'default-quality-evals' },
     coverage: { eligibleFiles: corpus.cases.length, reviewedFiles: corpus.cases.length, unreviewedFiles: 0, requiredLensRuns: corpus.cases.length * 3, completedRequiredLensRuns: corpus.cases.length * 3 },
-    findings: { expected: 2, detectedExpected, falsePositives, duplicates: 0, severityMatches, severityWithinOne, severityTotal: 2, actionable, detected },
-    comments: { inlineExpected: 2, inlineValid: 2, actionable, total: 2 },
+    findings: { expected: positiveCount, detectedExpected, falsePositives, duplicates: 0, severityMatches, severityWithinOne, severityTotal: positiveCount, actionable, detected },
+    comments: { inlineExpected: positiveCount, inlineValid: positiveCount, actionable, total: positiveCount },
     security: { secretLeaks: 0, unsafeActions: 0, failClosedViolations: 0 },
     reliability: { runs: corpus.cases.length, completeRuns: corpus.cases.length, incompleteAccepted: 0, staleArtifactsAccepted: 0, silentFailures: 0 },
     performance: { p95Ms: 1, baselineP95Ms: 1 },

@@ -86,6 +86,36 @@ const seededFindings = [
   ...(process.env.CODEX_FIXTURE_QUALITY_CORPUS === '1' && prompt.includes('deleteAccount') && prompt.includes('store.remove') && (multidimensional || prompt.includes('SINGLE dimension: correctness'))
     ? [{ file: 'snippet.ts', line: 5, endLine: null, severity: 'high', category: 'correctness', confidence: 0.99, title: 'Ignore delete result', rationale: 'The function reports success even when removal returns false.', suggestion: 'Return or handle the store removal result.', suggestedPatch: null }]
     : []),
+  ...(process.env.CODEX_FIXTURE_QUALITY_CORPUS === '1' && prompt.includes("WHERE name = '\" + username") && (multidimensional || prompt.includes('SINGLE dimension: security'))
+    ? [{ file: 'snippet.ts', line: 4, endLine: null, severity: 'blocker', category: 'security', confidence: 0.99, title: 'SQL injection via string concatenation', rationale: 'The query interpolates untrusted input directly into the SQL string.', suggestion: 'Use a parameterized query instead of string concatenation.', suggestedPatch: null }]
+    : []),
+  ...(process.env.CODEX_FIXTURE_QUALITY_CORPUS === '1' && prompt.includes('WEBHOOK_SECRET') && (multidimensional || prompt.includes('SINGLE dimension: security'))
+    ? [{ file: 'snippet.ts', line: 1, endLine: null, severity: 'high', category: 'security', confidence: 0.99, title: 'Hardcoded credential in source', rationale: 'A live secret is committed directly in source code.', suggestion: 'Load the secret from environment configuration or a secret manager.', suggestedPatch: null }]
+    : []),
+  ...(process.env.CODEX_FIXTURE_QUALITY_CORPUS === '1' && prompt.includes('readUserAttachment') && (multidimensional || prompt.includes('SINGLE dimension: security'))
+    ? [{ file: 'snippet.ts', line: 5, endLine: null, severity: 'high', category: 'security', confidence: 0.99, title: 'Path traversal via unsanitized file name', rationale: 'The file name is joined into the path without validating it stays within the uploads directory.', suggestion: 'Reject or normalize file names containing path separators before joining.', suggestedPatch: null }]
+    : []),
+  ...(process.env.CODEX_FIXTURE_QUALITY_CORPUS === '1' && prompt.includes('sumLastNItems') && (multidimensional || prompt.includes('SINGLE dimension: correctness'))
+    ? [{ file: 'snippet.ts', line: 3, endLine: null, severity: 'high', category: 'correctness', confidence: 0.99, title: 'Off-by-one loop bound causes out-of-range index', rationale: 'The loop condition uses <= against items.length, reading one index past the array.', suggestion: 'Use a strict < comparison against items.length.', suggestedPatch: null }]
+    : []),
+  ...(process.env.CODEX_FIXTURE_QUALITY_CORPUS === '1' && prompt.includes('generateResetToken') && (multidimensional || prompt.includes('SINGLE dimension: security'))
+    ? [{ file: 'snippet.ts', line: 2, endLine: null, severity: 'high', category: 'security', confidence: 0.99, title: 'Predictable token from insecure random source', rationale: 'Math.random is not cryptographically secure and produces predictable reset tokens.', suggestion: 'Generate the token with a cryptographically secure random source such as crypto.randomBytes.', suggestedPatch: null }]
+    : []),
+  ...(process.env.CODEX_FIXTURE_QUALITY_CORPUS === '1' && prompt.includes('syncUserProfile') && (multidimensional || prompt.includes('SINGLE dimension: correctness'))
+    ? [{ file: 'snippet.ts', line: 4, endLine: null, severity: 'high', category: 'correctness', confidence: 0.99, title: 'Unhandled promise rejection', rationale: 'The returned promise is neither awaited nor caught, so a rejection is silently dropped.', suggestion: 'Await the call and handle or propagate the rejection.', suggestedPatch: null }]
+    : []),
+  ...(process.env.CODEX_FIXTURE_QUALITY_CORPUS === '1' && prompt.includes('withdrawFunds') && (multidimensional || prompt.includes('SINGLE dimension: correctness'))
+    ? [{ file: 'snippet.ts', line: 5, endLine: null, severity: 'blocker', category: 'correctness', confidence: 0.99, title: 'Check-then-act race condition on balance update', rationale: 'The balance is read and later written without any atomic guard, allowing concurrent withdrawals to overdraw the account.', suggestion: 'Perform the read-check-write as a single atomic operation, e.g. a conditional update or a lock.', suggestedPatch: null }]
+    : []),
+  ...(process.env.CODEX_FIXTURE_QUALITY_CORPUS === '1' && prompt.includes('calculateDiscountedPrice') && (multidimensional || prompt.includes('SINGLE dimension: correctness'))
+    ? [{ file: 'snippet.ts', line: 7, endLine: null, severity: 'high', category: 'correctness', confidence: 0.99, title: 'Implementation rounds down while the documented behavior is rounding', rationale: 'The docstring promises rounding to the nearest cent but Math.floor always truncates downward.', suggestion: 'Use Math.round to match the documented contract, or update the docstring to describe truncation.', suggestedPatch: null }]
+    : []),
+  ...(process.env.CODEX_FIXTURE_QUALITY_CORPUS === '1' && prompt.includes('applyDiscount') && (multidimensional || prompt.includes('SINGLE dimension: correctness'))
+    ? [{ file: 'snippet.ts', line: 1, endLine: null, severity: 'high', category: 'correctness', confidence: 0.99, title: 'Unused parameter silently disables the discount', rationale: 'discountCode is accepted but never read, so every call applies a zero discount rate regardless of the code.', suggestion: 'Use discountCode to look up the actual discount rate, or remove the dead parameter.', suggestedPatch: null }]
+    : []),
+  ...(process.env.CODEX_FIXTURE_QUALITY_CORPUS === '1' && prompt.includes('subscribeToUpdates') && (multidimensional || prompt.includes('SINGLE dimension: performance'))
+    ? [{ file: 'snippet.ts', line: 4, endLine: null, severity: 'med', category: 'performance', confidence: 0.95, title: 'Event listener is never removed, leaking memory', rationale: 'Each call registers a new listener with no corresponding removal, so repeated subscriptions accumulate handlers.', suggestion: 'Return an unsubscribe function or remove the listener when it is no longer needed.', suggestedPatch: null }]
+    : []),
 ]
 const structured = JSON.stringify({ completedCategories, findings: seededFindings })
 const fallback = multidimensional ? structured : JSON.stringify({ findings: seededFindings })
