@@ -55,7 +55,8 @@ function groupBySeverity(findings: Finding[]): string {
     if (!group.length) continue
     lines.push(`\n### ${SEV_EMOJI[sev]} ${sev} (${group.length})\n`)
     for (const f of group) {
-      lines.push(`- **${f.file}:${f.line}** — ${f.title} _(${f.category}, conf ${f.confidence.toFixed(2)})_`)
+      const unverifiedTag = f.verification === 'unverified' ? ' ⚠️ unverified — verification did not reach a verdict' : ''
+      lines.push(`- **${f.file}:${f.line}** — ${f.title} _(${f.category}, conf ${f.confidence.toFixed(2)})_${unverifiedTag}`)
       lines.push(`  - ${f.rationale}`)
       lines.push(`  - 💡 ${f.suggestion}`)
       if (f.suggestedPatch) {
