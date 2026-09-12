@@ -83,7 +83,7 @@ function reviewEnvelope() {
   const completedCategories = ['correctness', 'security', 'performance', 'maintainability', 'design', 'tests', 'conventions']
   const output = invalid
     ? (mode === 'invalid' ? '{not-json}' : mode === 'finding-invalid' ? JSON.stringify({ schemaVersion: 1, findings: [{ file: 'snippet.ts' }] }) : JSON.stringify({ schemaVersion: 2, findings: [] }))
-    : JSON.stringify({ schemaVersion: 1, ...(multidimensional ? { completedCategories } : {}), findings: mode === 'finding' ? [finding] : [] })
+    : JSON.stringify({ schemaVersion: 1, ...(multidimensional ? { completedCategories, analysis: ['Checked every enabled dimension against the reviewed source.'] } : {}), findings: mode === 'finding' ? [finding] : [] })
   invalid = false
   return output
 }

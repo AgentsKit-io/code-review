@@ -30,8 +30,8 @@ test('unchanged linked CSS reaches analysis and skeptic without inflating diff c
     const tool = request.context.tools[0]
     prompts.push({ name: tool.name, prompt })
     const args = tool.name === 'submit_verdicts'
-      ? { verdicts: [{ id: 0, refuted: prompt.includes('animation:none!important'), reason: 'Global stylesheet disables motion.' }] }
-      : { completedCategories: ['correctness', 'security', 'tests'], findings: prompt.includes('FILE: ui/tour.css') ? [{ file: 'ui/tour.css', line: 1, endLine: null, severity: 'med', category: 'correctness', confidence: .99, title: 'Motion is not disabled', rationale: 'Pulse is animated.', suggestion: 'Disable motion.', suggestedPatch: null }] : [] }
+      ? { verdicts: [{ id: 0, analysis: 'Global stylesheet disables motion, so the flagged finding does not hold.', refuted: prompt.includes('animation:none!important') }] }
+      : { completedCategories: ['correctness', 'security', 'tests'], analysis: ['Checked the context pack for correctness, security, and test coverage.'], findings: prompt.includes('FILE: ui/tour.css') ? [{ file: 'ui/tour.css', line: 1, endLine: null, severity: 'med', category: 'correctness', confidence: .99, title: 'Motion is not disabled', rationale: 'Pulse is animated.', suggestion: 'Disable motion.', suggestedPatch: null }] : [] }
     yield { type: 'tool_call', toolCall: { id: 't', name: tool.name, args: JSON.stringify(args) } }
     yield { type: 'done' }
   } } } }
