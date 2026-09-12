@@ -120,3 +120,17 @@ export {
   sarifReporter, scmReviewReporter,
 } from '../agents/code-review/reporters.js'
 export type { GithubCommentPolicy } from '../agents/code-review/reporters.js'
+// Local-CLI provider adapters. Same gap as createCodeReviewAgent above (issue #275):
+// none of these were reachable from the package root before this export, so pairing
+// createCodeReviewAgent with a real local-CLI provider required an internal import.
+export { codexCli } from './codex-adapter.js'
+export { claudeCode } from './claude-code-adapter.js'
+export { grokCli } from './grok-cli-adapter.js'
+export type { GrokCliOptions } from './grok-cli-adapter.js'
+export { opencodeCli } from './opencode-cli-adapter.js'
+export type { OpenCodeCliOptions } from './opencode-cli-adapter.js'
+export { ollamaReview } from './ollama-adapter.js'
+export type { OllamaReviewOptions } from './ollama-adapter.js'
+export { createAutoCliAdapter, createHeadlessCliAdapter } from './headless-cli-adapter.js'
+export type { HeadlessCliOptions } from './headless-cli-adapter.js'
+export type { LocalCliMode } from './local-cli-process.js'

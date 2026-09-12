@@ -17,6 +17,18 @@ issue (#251, #252, ...) has a fixed comparison point instead of a moving `main`.
   this protocol — external to the repository, never committed (see below). It is the
   reference point every later 0.31 change (skeptic posture, per-language rules, semantic
   grouping) is compared against with `npm run quality:matrix -- --baseline <path>`.
+- **Recalibrated against a real `codex-cli` run (0.30.19).** A full 20-case pass against a
+  live provider (not the fixture) surfaced two corpus issues, both fixed here: the
+  `hardcoded-api-key` secret literal read as `NOT-A-REAL-SECRET-...`, which a real model
+  reasonably declined to flag as a credential — replaced with an opaque-looking token that
+  still avoids matching a known secret-scanner format. And `silent-behavior-change-rounding`
+  / `unused-required-parameter` were labelled `high`; a real model consistently, and
+  defensibly, called both `med` (a doc/behavior inconsistency and a silently-disabled
+  discount, neither an active security or data-integrity emergency) — the corpus now
+  expects `med` for these two, and the fixture in `test/fixtures/bin/codex` was updated to
+  match. `off-by-one-loop` and `unhandled-promise-rejection`'s `titleIncludes` word lists
+  were also broadened: a real model found the correct bug in both but phrased the title
+  differently than the original narrow keyword list expected.
 
 Reproduce the 0.31 pre-change snapshot:
 

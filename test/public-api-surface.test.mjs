@@ -21,6 +21,15 @@ test('reporters are part of the public API surface, not only usable by the bundl
   }
 })
 
+test('local-CLI provider adapters are part of the public API surface, not only usable by the bundled CLI', () => {
+  // Same class of gap as createCodeReviewAgent above, found in the same pilot round:
+  // an external consumer could reach createCodeReviewAgent (once the fix above landed)
+  // but had no way to construct a real local-CLI adapter to pass it.
+  for (const name of ['codexCli', 'claudeCode', 'grokCli', 'opencodeCli', 'ollamaReview', 'createAutoCliAdapter', 'createHeadlessCliAdapter']) {
+    assert.equal(typeof publicApi[name], 'function', `${name} must be exported`)
+  }
+})
+
 test('an external consumer can actually run a review end to end through the public entry point', async () => {
   const fakeAdapter = {
     createSource(request) {
