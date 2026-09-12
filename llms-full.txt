@@ -951,6 +951,20 @@ Troubleshooting:
 - **Context overflow:** review narrower paths or a smaller branch diff; unreviewed files must remain visibly outside the result.
 - **No findings with exit 0:** inspect the summary and successful/failed lens counts; advisory output is not proof that every file was reviewed.
 
+## Incremental GitHub inline posting
+
+`githubInlineReporter` (`agents/code-review/reporters.ts`) fetches the PR's existing
+review comments before posting and drops any candidate whose line range overlaps one at
+or above `policy.incrementalOverlapThreshold` (default `0.6`, an IoU over `[startLine,
+endLine]`) — a second run on the same PR (a new commit, a re-triggered CI job) does not
+repeat a finding still standing from a previous run; the summary body notes how many were
+skipped this way. `policy.routeSeverityBelow` additionally folds findings at or below a
+given severity into the summary instead of posting them inline, independent of the
+overlap check. Fetching history is best-effort: a failure to read it (network error, rate
+limit) never blocks posting — it only skips the overlap filter for that run. Both options
+are library-level `GithubCommentPolicy` fields today, not yet exposed as CLI flags or
+`.agentskit-review.json` config keys.
+
 ## GitHub Action permissions
 
 The copy-ready workflow in [`examples/pull-request.yml`](https://github.com/AgentsKit-io/code-review/blob/main/examples/pull-request.yml) requires:

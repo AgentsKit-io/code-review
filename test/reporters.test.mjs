@@ -95,6 +95,71 @@ test('GitHub inline reporter can disable both inline and summary output', async 
   } finally { globalThis.fetch = originalFetch }
 })
 
+test('GitHub inline reporter skips a finding whose line overlaps a previous review comment', async () => {
+  const twoFindings = {
+    ...review,
+    findings: [
+      { file: 'src/example.ts', line: 4, severity: 'high', category: 'correctness', confidence: 0.95, title: 'Example defect', rationale: 'The value is not validated.', suggestion: 'Validate the value before use.', inDiff: true },
+      { file: 'src/other.ts', line: 20, severity: 'high', category: 'security', confidence: 0.9, title: 'Unrelated defect', rationale: 'Different file entirely.', suggestion: 'Fix it.', inDiff: true },
+    ],
+  }
+  const originalFetch = globalThis.fetch
+  let posted
+  globalThis.fetch = async (url, init) => {
+    const path = new URL(url).pathname
+    if ((init?.method ?? 'GET') === 'GET' && path.endsWith('/comments')) {
+      return Response.json([{ id: 1, path: 'src/example.ts', line: 4, start_line: null, body: 'previously reported' }])
+    }
+    posted = JSON.parse(String(init.body))
+    return Response.json({ html_url: 'https://github.test/review/overlap' })
+  }
+  try {
+    await githubInlineReporter({ owner: 'org', repo: 'repo', number: 9, token: 'test-token', commitId: 'abc123' }).emit(twoFindings)
+    assert.equal(posted.comments.length, 1, 'the overlapping finding must not be re-posted')
+    assert.equal(posted.comments[0].path, 'src/other.ts')
+    assert.match(posted.body, /already reported in a previous review/)
+  } finally { globalThis.fetch = originalFetch }
+})
+
+test('GitHub inline reporter routes findings below the configured severity into the summary', async () => {
+  const mixed = {
+    ...review,
+    findings: [
+      { file: 'src/example.ts', line: 4, severity: 'high', category: 'correctness', confidence: 0.95, title: 'A high finding', rationale: 'Matters a lot.', suggestion: 'Fix it.', inDiff: true },
+      { file: 'src/example.ts', line: 10, severity: 'nit', category: 'style', confidence: 0.5, title: 'A nit finding', rationale: 'Minor style issue.', suggestion: 'Consider renaming.', inDiff: true },
+    ],
+  }
+  const originalFetch = globalThis.fetch
+  let posted
+  globalThis.fetch = async (url, init) => {
+    const path = new URL(url).pathname
+    if ((init?.method ?? 'GET') === 'GET' && path.endsWith('/comments')) return Response.json([])
+    posted = JSON.parse(String(init.body))
+    return Response.json({ html_url: 'https://github.test/review/routed' })
+  }
+  try {
+    await githubInlineReporter({ owner: 'org', repo: 'repo', number: 10, token: 'test-token', commitId: 'abc123', policy: { routeSeverityBelow: 'med' } }).emit(mixed)
+    assert.equal(posted.comments.length, 1)
+    assert.match(posted.comments[0].body, /A high finding/)
+    assert.match(posted.body, /A nit finding/, 'the nit finding must appear in the summary instead of inline')
+  } finally { globalThis.fetch = originalFetch }
+})
+
+test('GitHub inline reporter still posts when fetching review-comment history fails', async () => {
+  const originalFetch = globalThis.fetch
+  let posted
+  globalThis.fetch = async (url, init) => {
+    const path = new URL(url).pathname
+    if ((init?.method ?? 'GET') === 'GET' && path.endsWith('/comments')) throw new Error('network unavailable')
+    posted = JSON.parse(String(init.body))
+    return Response.json({ html_url: 'https://github.test/review/resilient' })
+  }
+  try {
+    await githubInlineReporter({ owner: 'org', repo: 'repo', number: 11, token: 'test-token', commitId: 'abc123' }).emit(review)
+    assert.equal(posted.comments.length, 1, 'a history-fetch failure must not block posting the finding')
+  } finally { globalThis.fetch = originalFetch }
+})
+
 test('SARIF reporter matches the 2.1.0 shape and includes a stable partialFingerprints', async () => {
   const dir = mkdtempSync(join(tmpdir(), 'agentskit-sarif-'))
   const file = join(dir, 'report.sarif')

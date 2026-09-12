@@ -139,6 +139,53 @@ export async function githubPullReviews(token: string, owner: string, repo: stri
   return { reviews, truncated: true }
 }
 
+export interface GithubReviewComment {
+  id?: number
+  path?: string
+  line?: number | null
+  start_line?: number | null
+  body?: string
+}
+
+const REVIEW_COMMENT_PAGE_SIZE = 100
+const MAX_REVIEW_COMMENT_PAGES = 10
+
+/** Existing inline review comments (not the review summary bodies) — used to detect a
+ * line-range overlap with a previous run's comments before re-posting the same finding. */
+export async function githubReviewComments(token: string, owner: string, repo: string, number: number, fetcher: typeof fetch = fetch): Promise<{ comments: GithubReviewComment[]; truncated: boolean }> {
+  const comments: GithubReviewComment[] = []
+  for (let page = 1; page <= MAX_REVIEW_COMMENT_PAGES; page++) {
+    const batch = await githubGet<GithubReviewComment[]>(token, `/repos/${owner}/${repo}/pulls/${number}/comments?per_page=${REVIEW_COMMENT_PAGE_SIZE}&page=${page}`, fetcher)
+    comments.push(...batch)
+    if (batch.length < REVIEW_COMMENT_PAGE_SIZE) return { comments, truncated: false }
+  }
+  return { comments, truncated: true }
+}
+
+/** Line-range Intersection-over-Union between a candidate annotation and an existing
+ * review comment on the same file. GitHub's own `line`/`start_line` model a single line
+ * as `start_line: null, line: N` — normalized here to a closed `[start, end]` range. */
+export function lineRangeOverlap(candidate: { path: string; line: number; endLine?: number }, existing: GithubReviewComment): number {
+  if (existing.path !== candidate.path || existing.line == null) return 0
+  const existingStart = existing.start_line ?? existing.line
+  const existingEnd = existing.line
+  const candidateStart = candidate.line
+  const candidateEnd = candidate.endLine ?? candidate.line
+  const intersectionStart = Math.max(existingStart, candidateStart)
+  const intersectionEnd = Math.min(existingEnd, candidateEnd)
+  const intersection = Math.max(0, intersectionEnd - intersectionStart + 1)
+  if (!intersection) return 0
+  const union = (existingEnd - existingStart + 1) + (candidateEnd - candidateStart + 1) - intersection
+  return intersection / union
+}
+
+/** True when a candidate annotation's line range overlaps ANY existing review comment on
+ * the same file at or above `threshold` (default 0.6, matching `open-code-review`'s IoU
+ * cutoff for the same problem). */
+export function overlapsExistingComment(candidate: { path: string; line: number; endLine?: number }, existing: readonly GithubReviewComment[], threshold = 0.6): boolean {
+  return existing.some((comment) => lineRangeOverlap(candidate, comment) >= threshold)
+}
+
 export function markerIn(body: string | undefined, marker: string): boolean {
   return body?.includes(marker) ?? false
 }
