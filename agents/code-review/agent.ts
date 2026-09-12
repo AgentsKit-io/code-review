@@ -26,6 +26,7 @@ import { markdownReporter } from './reporters.js'
 import { ProviderCircuitBreaker, ProviderCircuitOpenError } from '../../src/provider-circuit-breaker.js'
 import { AdaptiveConcurrencyGate, normalizeProviderFailure, providerRetryDelay, waitForProviderRetry } from '../../src/provider-execution.js'
 import { loadApprovedReviewRules } from '../../src/review-learning.js'
+import { loadRuleLayers, resolveRulesForFiles } from '../../src/review-rules.js'
 import type { ReviewKnowledgeScopeInput, ReviewKnowledgeStore } from '../../src/review-stores.js'
 import { classifyContextPack, type RiskAssessment } from './risk.js'
 import { createReviewBudgetLedger, defaultReviewBudget, emptyReviewUsage, ReviewBudgetExceededError, type HierarchicalReviewBudget, type ReviewUsage } from '../../src/budget.js'
@@ -284,6 +285,23 @@ export interface CodeReviewConfig {
   retries?: number
   /** Project conventions injected into every lens — a string, or a file to read. */
   conventions?: string | { path: string }
+  /** Truncation ceiling for `conventions` when it is a file. Default 6000 characters. */
+  conventionsMaxChars?: number
+  rules?: {
+    /**
+     * Default false: resolving per-language rules changes prompt content (and cost) for
+     * every file, so it is opt-in rather than silently changing behavior for existing
+     * callers on a patch upgrade. Set true to enable the built-in system checklists and
+     * any project/global rule files.
+     */
+    enabled?: boolean
+    /** Default `<projectRoot>/.agentskit-review/rules.json`. */
+    projectRulesPath?: string
+    /** Default `~/.agentskit-review/rules.json`. */
+    globalRulesPath?: string
+    /** Truncation ceiling for the combined resolved-rules text per pack. Default 4000. */
+    maxChars?: number
+  }
   /** Bounded, non-source context such as the complete PR file manifest for batched review. */
   reviewContext?: string
   thresholds?: { minSeverity?: Severity; minConfidence?: number; maxPerFile?: number; suppressNits?: boolean }
@@ -420,6 +438,12 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
     posture: config.verification?.posture ?? 'strict',
     protectedSubjects: config.verification?.protectedSubjects ?? DEFAULT_PROTECTED_SUBJECTS,
   }
+  const conventionsMaxChars = config.conventionsMaxChars ?? 6_000
+  const rulesPolicy = { enabled: config.rules?.enabled ?? false, maxChars: config.rules?.maxChars ?? 4_000 }
+  const projectRoot = 'cwd' in config.source && config.source.cwd ? config.source.cwd : process.cwd()
+  const ruleLayers = rulesPolicy.enabled
+    ? loadRuleLayers({ projectRoot, projectRulesPath: config.rules?.projectRulesPath, globalRulesPath: config.rules?.globalRulesPath })
+    : {}
   const skepticSkill = skepticLens(verificationPolicy.posture, verificationPolicy.protectedSubjects)
   const gate = new AdaptiveConcurrencyGate(concurrency)
   const circuit = new ProviderCircuitBreaker()
@@ -646,18 +670,30 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
     }
   }
 
-  async function resolveConventions(scope?: ReviewKnowledgeScopeInput): Promise<string> {
+  async function resolveConventions(scope?: ReviewKnowledgeScopeInput, files: readonly string[] = []): Promise<string> {
     let conventions = '(none provided)'
     if (typeof config.conventions === 'string') conventions = config.conventions
     else if (config.conventions) {
       const { readFileSync } = await import('node:fs')
-      try { conventions = readFileSync(config.conventions.path, 'utf8').slice(0, 6000) }
-      catch { conventions = '(conventions file not found)' }
+      try {
+        const raw = readFileSync(config.conventions.path, 'utf8')
+        conventions = raw.slice(0, conventionsMaxChars)
+        if (raw.length > conventionsMaxChars) emit('ingest', 'skip', `conventions file truncated at ${conventionsMaxChars} chars (was ${raw.length})`)
+      } catch { conventions = '(conventions file not found)' }
     }
     const approvedRules = await loadApprovedReviewRules(config.memory, config.knowledge, scope)
-    return approvedRules.length
+    const withApproved = approvedRules.length
       ? `${conventions}\n\nAPPROVED REVIEW RULES:\n${approvedRules.map((rule) => `- ${rule}`).join('\n')}`
       : conventions
+    if (!rulesPolicy.enabled || !files.length) return withApproved
+    const resolvedRules = resolveRulesForFiles(files, ruleLayers)
+    if (!resolvedRules.length) return withApproved
+    let rulesText = resolvedRules.join('\n\n')
+    if (rulesText.length > rulesPolicy.maxChars) {
+      emit('ingest', 'skip', `resolved rules truncated at ${rulesPolicy.maxChars} chars (was ${rulesText.length})`)
+      rulesText = rulesText.slice(0, rulesPolicy.maxChars)
+    }
+    return `${withApproved}\n\nLANGUAGE/PATH REVIEW RULES:\n${rulesText}`
   }
 
   function numbered(target: ReviewTarget): string {
@@ -1288,7 +1324,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
           languages: [...new Set(group.map((target) => target.language))],
           categories: lenses.map((lens) => lens.key),
         }
-        const conventions = await resolveConventions(scope)
+        const conventions = await resolveConventions(scope, scope.paths)
         const combined = await measurePack(group, conventions, `pack-${index + 1}`)
         if (combined.fits) packs.push(combined)
         else for (const [part, target] of group.entries()) packs.push(...await splitOversizedTarget(target, conventions, `pack-${index + 1}.${part + 1}`))
