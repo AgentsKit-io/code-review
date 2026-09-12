@@ -117,16 +117,16 @@ const seededFindings = [
     ? [{ file: 'snippet.ts', line: 4, endLine: null, severity: 'med', category: 'performance', confidence: 0.95, title: 'Event listener is never removed, leaking memory', rationale: 'Each call registers a new listener with no corresponding removal, so repeated subscriptions accumulate handlers.', suggestion: 'Return an unsubscribe function or remove the listener when it is no longer needed.', suggestedPatch: null }]
     : []),
 ]
-const structured = JSON.stringify({ completedCategories, findings: seededFindings })
+const structured = JSON.stringify({ completedCategories, analysis: [`Checked ${completedCategories.join(', ') || 'the enabled dimensions'} against the reviewed source.`], findings: seededFindings })
 const fallback = multidimensional ? structured : JSON.stringify({ findings: seededFindings })
 const output = healthProbe
   ? 'OK'
   : process.env.CODEX_FIXTURE_VERIFICATION_FAIL === '1' && prompt.includes('Call `submit_verdicts` EXACTLY ONCE')
   ? (process.stderr.write('fixture skeptic failure\n'), process.exit(1), '')
   : process.env.CODEX_FIXTURE_VERIFICATION_MALFORMED === '1' && prompt.includes('Call `submit_verdicts` EXACTLY ONCE')
-  ? JSON.stringify({ verdicts: [{ id: 999, refuted: false, reason: 'invalid fixture verdict' }] })
+  ? JSON.stringify({ verdicts: [{ id: 999, analysis: 'This id does not match any requested finding, which is the fixture-injected malformation under test.', refuted: false }] })
   : prompt.includes('Call `submit_verdicts` EXACTLY ONCE')
-  ? JSON.stringify({ verdicts: [...prompt.matchAll(/FINDING \[(\d+)\]/g)].map((match, index) => ({ id: Number(match[1]), refuted: process.env.CODEX_FIXTURE_VERIFICATION_DISAGREE === '1' && prompt.includes('ROUND 2') ? true : false, reason: 'The seeded defect is concrete.' })).filter((verdict, index, all) => all.findIndex((candidate) => candidate.id === verdict.id) === index) })
+  ? JSON.stringify({ verdicts: [...prompt.matchAll(/FINDING \[(\d+)\]/g)].map((match, index) => ({ id: Number(match[1]), analysis: 'The seeded defect is concrete and directly demonstrated by the reviewed source.', refuted: process.env.CODEX_FIXTURE_VERIFICATION_DISAGREE === '1' && prompt.includes('ROUND 2') ? true : false })).filter((verdict, index, all) => all.findIndex((candidate) => candidate.id === verdict.id) === index) })
   : prompt.includes('Call `submit_verdict` EXACTLY ONCE')
   ? JSON.stringify({ refuted: false, reason: 'The seeded defect is concrete.' })
   : process.env.CODEX_FIXTURE_MULTIPLE_FENCED_OUTPUT === '1'
