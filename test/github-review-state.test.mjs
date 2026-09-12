@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { GithubResponseLimitError, getGithubReviewState, readGithubResponseText, reviewFingerprint, reviewMarker } from '../dist/src/github-review-state.js'
+import { GithubResponseLimitError, getGithubReviewState, githubReviewComments, lineRangeOverlap, overlapsExistingComment, readGithubResponseText, reviewFingerprint, reviewMarker } from '../dist/src/github-review-state.js'
 
 test('reconciles the same SHA and fingerprint without provider work', async () => {
   const originalFetch = globalThis.fetch
@@ -115,5 +115,36 @@ test('uses incremental scope only when the previous reviewed SHA is an ancestor'
     assert.equal(state.scope, 'incremental')
     assert.equal(state.baselineSha, 'head-old')
     assert.ok(calls.some(path => path.includes('/compare/head-old...head-new')))
+  } finally { globalThis.fetch = originalFetch }
+})
+
+test('lineRangeOverlap computes IoU on the same file and treats a different file as zero overlap', () => {
+  // GitHub models a single-line comment as { start_line: null, line: N }.
+  assert.equal(lineRangeOverlap({ path: 'a.ts', line: 10 }, { path: 'a.ts', line: 10, start_line: null }), 1)
+  assert.equal(lineRangeOverlap({ path: 'a.ts', line: 10 }, { path: 'b.ts', line: 10, start_line: null }), 0, 'a different file must never overlap')
+  // [8,12] vs [10,10]: intersection 1, union 5 -> 0.2
+  assert.equal(lineRangeOverlap({ path: 'a.ts', line: 8, endLine: 12 }, { path: 'a.ts', line: 10, start_line: 10 }), 0.2)
+  // Disjoint ranges on the same file overlap 0.
+  assert.equal(lineRangeOverlap({ path: 'a.ts', line: 1, endLine: 2 }, { path: 'a.ts', line: 50, start_line: 48 }), 0)
+  // An existing comment with no resolved line (e.g. outdated/orphaned) never matches.
+  assert.equal(lineRangeOverlap({ path: 'a.ts', line: 10 }, { path: 'a.ts', line: null }), 0)
+})
+
+test('overlapsExistingComment applies the configured threshold', () => {
+  const existing = [{ path: 'a.ts', line: 12, start_line: 8 }] // range [8,12]
+  // Candidate [10,10]: intersection 1, union 5 -> 0.2, below the default 0.6 threshold.
+  assert.equal(overlapsExistingComment({ path: 'a.ts', line: 10 }, existing), false)
+  assert.equal(overlapsExistingComment({ path: 'a.ts', line: 10 }, existing, 0.1), true, 'a lower explicit threshold must match')
+  assert.equal(overlapsExistingComment({ path: 'a.ts', line: 8, endLine: 12 }, existing), true, 'an identical range always matches')
+})
+
+test('githubReviewComments paginates and reports truncation past the page cap', async () => {
+  const originalFetch = globalThis.fetch
+  let pages = 0
+  globalThis.fetch = async () => { pages++; return Response.json(Array.from({ length: 100 }, (_, i) => ({ id: i, path: 'a.ts', line: 1 }))) }
+  try {
+    const result = await githubReviewComments('token', 'org', 'repo', 5)
+    assert.equal(result.truncated, true)
+    assert.equal(pages, 10)
   } finally { globalThis.fetch = originalFetch }
 })
