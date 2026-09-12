@@ -513,6 +513,22 @@ verification, where the same tripped deadline naturally marks them `verification
 'unverified'` (surfaced, not silently discarded) rather than every candidate finding
 disappearing because one other pack was still in flight when time ran out.
 
+## Telemetry (opt-in)
+
+`createTelemetryObserver({ enabled: true, ... })` (`src/telemetry.ts`) exports every
+`progress` event — the same phase/status/timing stream a human-facing progress renderer
+consumes — as an OTLP-shaped span, and can be passed straight into `observers: [...]`.
+`exporter: 'console'` (the default once enabled) writes one JSON span per line;
+`exporter: 'otlp'` POSTs an OTLP/HTTP JSON trace payload to `otlpEndpoint` (best-effort:
+a collector being unreachable never fails or slows the review it is only observing).
+This is a direct OTLP/HTTP JSON emitter, not the official `@opentelemetry/sdk-node` —
+no new dependency is required. `contentLogging` (default `false`) controls whether a
+progress event's short `detail` note is included in its span; an `Observer` never has
+access to prompts, diffs, findings, or provider credentials in the first place,
+regardless of this setting. **Disabled by default** — like `rules.enabled` and
+`verification.posture`, this is a library-level option (no CLI flag or
+`.agentskit-review.json` key yet) that a caller opts into explicitly.
+
 ## SARIF
 
 `--sarif out.sarif` writes SARIF 2.1.0 alongside Markdown. Each surviving finding includes a `code-review/<category>` rule, severity level, message, file, and line, plus a `partialFingerprints.primaryLocationLineHash` derived from the file, rule, and title only — deliberately excluding the line number, so GitHub Code Scanning still recognizes the same finding across runs even when an unrelated edit shifts it a few lines. `tool.driver` also reports the package `version` and an `informationUri`. Uploading SARIF to GitHub code scanning requires the separate `security-events: write` permission and `github/codeql-action/upload-sarif`; the bundled Action does not request that permission or upload automatically.
