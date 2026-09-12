@@ -1,15 +1,24 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { consolidateBatchArtifacts, consolidateToArtifact, createBatchCoverage, finalCoverage, partitionReviewableFiles, publicationDecision, recordBatch } from '../dist/src/batch-coverage.js'
+import { consolidateBatchArtifacts, consolidateToArtifact, createBatchCoverage, describeCoverage, finalCoverage, partitionReviewableFiles, publicationDecision, recordBatch } from '../dist/src/batch-coverage.js'
 
 test('batch coverage rejects stale SHA and completes only after every batch', () => {
   const state = createBatchCoverage({ repository: 'AgentsKit-io/agentskit-os', pullNumber: 1, headSha: 'a'.repeat(40), policyFingerprint: 'policy', batches: [{ index: 0, files: ['a.ts'] }, { index: 1, files: ['b.ts'] }] })
-  assert.deepEqual(finalCoverage(state), { complete: false, findings: 0, pending: [0, 1] })
+  assert.deepEqual(finalCoverage(state), { complete: false, findings: 0, pending: [0, 1], totalFiles: 2, reviewedFiles: 0 })
   assert.equal(publicationDecision(state).publish, false)
   assert.throws(() => recordBatch(state, { headSha: 'b'.repeat(40), policyFingerprint: 'policy', index: 0, findings: 0 }), /stale/)
   const first = recordBatch(state, { headSha: 'a'.repeat(40), policyFingerprint: 'policy', index: 0, findings: 1 })
-  assert.deepEqual(finalCoverage(first), { complete: false, findings: 1, pending: [1] })
-  assert.deepEqual(finalCoverage(recordBatch(first, { headSha: 'a'.repeat(40), policyFingerprint: 'policy', index: 1, findings: 0 })), { complete: true, findings: 1, pending: [] })
+  assert.deepEqual(finalCoverage(first), { complete: false, findings: 1, pending: [1], totalFiles: 2, reviewedFiles: 1 })
+  assert.deepEqual(finalCoverage(recordBatch(first, { headSha: 'a'.repeat(40), policyFingerprint: 'policy', index: 1, findings: 0 })), { complete: true, findings: 1, pending: [], totalFiles: 2, reviewedFiles: 2 })
+})
+
+test('describeCoverage reports N of M files reviewed instead of only a boolean', () => {
+  const state = createBatchCoverage({ repository: 'AgentsKit-io/agentskit-os', pullNumber: 1, headSha: 'a'.repeat(40), policyFingerprint: 'policy', batches: [{ index: 0, files: ['a.ts'] }, { index: 1, files: ['b.ts'] }] })
+  assert.equal(describeCoverage(state), '0 of 2 file(s) reviewed; 2 batch(es) pending: 0, 1')
+  const first = recordBatch(state, { headSha: 'a'.repeat(40), policyFingerprint: 'policy', index: 0, findings: 1 })
+  assert.equal(describeCoverage(first), '1 of 2 file(s) reviewed; 1 batch(es) pending: 1')
+  const done = recordBatch(first, { headSha: 'a'.repeat(40), policyFingerprint: 'policy', index: 1, findings: 0 })
+  assert.equal(describeCoverage(done), '2 of 2 file(s) reviewed (complete)')
 })
 
 test('file partitioning is deterministic', () => {
@@ -24,6 +33,7 @@ test('only complete, matching batch artifacts can become a publishable review', 
   const combined = consolidateBatchArtifacts(state, [artifact(0, ['a.ts']), artifact(1, ['b.ts'])])
   assert.equal(combined.incomplete, false)
   assert.equal(combined.verdict, 'APPROVE')
+  assert.deepEqual(combined.coverage, { totalFiles: 2, reviewedFiles: 2, unreviewedFiles: 0 })
   const publishable = consolidateToArtifact(state, [artifact(0, ['a.ts']), artifact(1, ['b.ts'])])
   assert.deepEqual({ repository: publishable.repository, pullNumber: publishable.pullNumber, headSha: publishable.headSha, policyFingerprint: publishable.policyFingerprint, incomplete: publishable.review.incomplete }, { repository: state.repository, pullNumber: state.pullNumber, headSha: state.headSha, policyFingerprint: state.policyFingerprint, incomplete: false })
   assert.throws(() => consolidateBatchArtifacts(state, [artifact(0, ['wrong.ts']), artifact(1, ['b.ts'])]), /manifest/)
