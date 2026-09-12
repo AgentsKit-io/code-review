@@ -356,11 +356,11 @@ export interface CodeReviewConfig {
     mediumSecondVoteBelow?: number
     thirdVoteOnDisagreement?: boolean
     /**
-     * `strict` (default) refutes on a broad set of grounds and drops an unverified
-     * finding. `conservative` refutes only on narrow, provable grounds and vetoes
-     * `protectedSubjects` before assessing correctness at all — see ADR-0008 for the
-     * A/B this posture was decided from. Experimental: flip the default only after
-     * re-running that A/B against a current baseline.
+     * `conservative` (default) refutes only on narrow, provable grounds and vetoes
+     * `protectedSubjects` before assessing correctness at all. `strict` refutes on a
+     * broader set of grounds, including a chain of reasoning, and drops an unverified
+     * finding — see ADR-0008 for the live A/B (+8.3pt detection, -1.2pt precision)
+     * this default was promoted from.
      */
     posture?: VerificationPosture
     /** Subjects the `conservative` posture refuses to refute without unambiguous proof. */
@@ -462,7 +462,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
     maxBatchFindings: Math.max(1, config.verification?.maxBatchFindings ?? 8),
     mediumSecondVoteBelow: config.verification?.mediumSecondVoteBelow ?? 0.9,
     thirdVoteOnDisagreement: config.verification?.thirdVoteOnDisagreement ?? true,
-    posture: config.verification?.posture ?? 'strict',
+    posture: config.verification?.posture ?? 'conservative',
     protectedSubjects: config.verification?.protectedSubjects ?? DEFAULT_PROTECTED_SUBJECTS,
   }
   const conventionsMaxChars = config.conventionsMaxChars ?? 6_000
