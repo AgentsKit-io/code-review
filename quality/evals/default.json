@@ -1,7 +1,7 @@
 {
   "version": 1,
   "name": "core-review-semantic-evals",
-  "description": "Small labelled corpus for credential-free regression tests. Live provider runs must use the same cases and record their own evidence.",
+  "description": "Labelled corpus for credential-free regression tests. Live provider runs must use the same cases and record their own evidence. Cases tagged with protectedSubject exercise the skeptic's asymmetric-loss verification posture (see docs/adr/0008-verification-posture.md).",
   "cases": [
     {
       "id": "auth-bypass",
@@ -16,6 +16,80 @@
       "language": "ts",
       "source": "type AccountStore = { remove(accountId: string): Promise<boolean> }\n\nexport async function deleteAccount(store: AccountStore, accountId: string): Promise<boolean> {\n  await store.remove(accountId)\n  return true\n}\n",
       "expected": { "line": 5, "lineTolerance": 2, "severity": "high", "titleIncludes": ["result", "failure", "success", "return"] }
+    },
+    {
+      "id": "sql-injection-concat",
+      "kind": "positive",
+      "language": "ts",
+      "source": "type Db = { query(sql: string): Promise<unknown[]> }\n\nexport async function runUserQuery(db: Db, username: string): Promise<unknown[]> {\n  const sql = \"SELECT * FROM users WHERE name = '\" + username + \"'\"\n  return db.query(sql)\n}\n",
+      "expected": { "line": 4, "lineTolerance": 2, "severity": "blocker", "titleIncludes": ["injection", "sql", "sanitiz", "parameteriz"] }
+    },
+    {
+      "id": "hardcoded-api-key",
+      "kind": "positive",
+      "language": "ts",
+      "source": "const WEBHOOK_SECRET = 'NOT-A-REAL-SECRET-eval-fixture-only-0000000000'\n\nexport async function sendWebhookNotification(payload: unknown): Promise<void> {\n  await fetch('https://hooks.example.com/notify', {\n    method: 'POST',\n    headers: { authorization: WEBHOOK_SECRET },\n    body: JSON.stringify(payload),\n  })\n}\n",
+      "expected": { "line": 1, "lineTolerance": 2, "severity": "high", "titleIncludes": ["secret", "credential", "hardcod", "key"] }
+    },
+    {
+      "id": "path-traversal-read",
+      "kind": "positive",
+      "language": "ts",
+      "source": "import { readFile } from 'node:fs/promises'\nimport { join } from 'node:path'\n\nexport async function readUserAttachment(uploadsDir: string, fileName: string): Promise<Buffer> {\n  return readFile(join(uploadsDir, fileName))\n}\n",
+      "expected": { "line": 5, "lineTolerance": 2, "severity": "high", "titleIncludes": ["traversal", "sanitiz", "path", "validat"] }
+    },
+    {
+      "id": "off-by-one-loop",
+      "kind": "positive",
+      "language": "ts",
+      "source": "export function sumLastNItems(items: number[], count: number): number {\n  let total = 0\n  for (let index = items.length - count; index <= items.length; index += 1) {\n    total += items[index]\n  }\n  return total\n}\n",
+      "expected": { "line": 3, "lineTolerance": 2, "severity": "high", "titleIncludes": ["bound", "off-by-one", "index", "overrun"] }
+    },
+    {
+      "id": "weak-random-token",
+      "kind": "positive",
+      "language": "ts",
+      "source": "export function generateResetToken(): string {\n  return Math.random().toString(36).slice(2)\n}\n",
+      "expected": { "line": 2, "lineTolerance": 2, "severity": "high", "titleIncludes": ["random", "predictab", "crypto", "insecure"] }
+    },
+    {
+      "id": "unhandled-promise-rejection",
+      "kind": "positive",
+      "language": "ts",
+      "source": "type Api = { syncProfile(userId: string): Promise<void> }\n\nexport function syncUserProfile(api: Api, userId: string): void {\n  api.syncProfile(userId)\n}\n",
+      "expected": { "line": 4, "lineTolerance": 2, "severity": "high", "titleIncludes": ["reject", "await", "unhandled", "error"] }
+    },
+    {
+      "id": "race-condition-balance-update",
+      "kind": "positive",
+      "protectedSubject": "concurrency",
+      "language": "ts",
+      "source": "type Ledger = { getBalance(accountId: string): Promise<number>; setBalance(accountId: string, value: number): Promise<void> }\n\nexport async function withdrawFunds(ledger: Ledger, accountId: string, amount: number): Promise<boolean> {\n  const balance = await ledger.getBalance(accountId)\n  if (balance < amount) return false\n  await ledger.setBalance(accountId, balance - amount)\n  return true\n}\n",
+      "expected": { "line": 5, "lineTolerance": 3, "severity": "blocker", "titleIncludes": ["race", "concurren", "check-then-act", "atomic"] }
+    },
+    {
+      "id": "silent-behavior-change-rounding",
+      "kind": "positive",
+      "protectedSubject": "behavioral-change",
+      "language": "ts",
+      "source": "/**\n * Returns the price rounded to the nearest cent, as documented for downstream billing.\n */\nexport function calculateDiscountedPrice(price: number, discountPercent: number): number {\n  const discounted = price - (price * discountPercent) / 100\n  return Math.floor(discounted * 100) / 100\n}\n",
+      "expected": { "line": 7, "lineTolerance": 2, "severity": "high", "titleIncludes": ["round", "behavior", "document", "contract"] }
+    },
+    {
+      "id": "unused-required-parameter",
+      "kind": "positive",
+      "protectedSubject": "unused-parameter",
+      "language": "ts",
+      "source": "export function applyDiscount(basePrice: number, discountCode: string): number {\n  const discountRate = 0\n  return basePrice - basePrice * discountRate\n}\n",
+      "expected": { "line": 1, "lineTolerance": 2, "severity": "high", "titleIncludes": ["unused", "parameter", "discountcode", "ignore"] }
+    },
+    {
+      "id": "memory-leak-event-listener",
+      "kind": "positive",
+      "protectedSubject": "memory-safety",
+      "language": "ts",
+      "source": "type Bus = { on(event: string, handler: () => void): void }\n\nexport function subscribeToUpdates(bus: Bus, onUpdate: () => void): void {\n  bus.on('update', onUpdate)\n}\n",
+      "expected": { "line": 4, "lineTolerance": 2, "severity": "med", "titleIncludes": ["leak", "listener", "unsubscribe", "remove"] }
     },
     {
       "id": "safe-value-helper",
@@ -40,6 +114,30 @@
       "kind": "clean",
       "language": "md",
       "source": "# API Report File for @example/contracts\n\n```ts\nimport { z } from 'zod';\nexport const ContentSchedulePlanParams: z.ZodObject<{ scheduleId: z.ZodString; campaignId: z.ZodString; cadence: z.ZodEnum<{ monthly: \"monthly\"; daily: \"daily\"; weekly: \"weekly\"; }>; bound: z.ZodDiscriminatedUnion<[z.ZodObject<{ kind: z.ZodLiteral<\"count\">; count: z.ZodNumber; }, z.core.$strict>, z.ZodObject<{ kind: z.ZodLiteral<\"until\">; endDate: z.ZodString; }, z.core.$strict>], \"kind\">; startDate: z.ZodString; }, z.core.$strict>\nexport const ContentVersion: z.ZodObject<{ id: z.ZodString; createdAt: z.ZodString; state: z.ZodEnum<{ approved: \"approved\"; awaiting_review: \"awaiting_review\"; changes_requested: \"changes_requested\"; }>; }, z.core.$strict>\n```\n"
+    },
+    {
+      "id": "clean-parameterized-query",
+      "kind": "clean",
+      "language": "ts",
+      "source": "type Db = { query(sql: string, params: unknown[]): Promise<unknown[]> }\n\nexport async function runUserQueryParameterized(db: Db, username: string): Promise<unknown[]> {\n  return db.query('SELECT * FROM users WHERE name = $1', [username])\n}\n"
+    },
+    {
+      "id": "clean-config-loader",
+      "kind": "clean",
+      "language": "ts",
+      "source": "export interface AppConfig {\n  timeoutMs: number\n  retries: number\n}\n\nexport function loadConfigDefaults(): AppConfig {\n  return { timeoutMs: 5000, retries: 3 }\n}\n"
+    },
+    {
+      "id": "clean-rate-limiter",
+      "kind": "clean",
+      "language": "ts",
+      "source": "export function allowRequest(requestsInWindow: number, maxRequests: number): boolean {\n  if (requestsInWindow < 0 || maxRequests <= 0) return false\n  return requestsInWindow < maxRequests\n}\n"
+    },
+    {
+      "id": "clean-type-guard",
+      "kind": "clean",
+      "language": "ts",
+      "source": "export function isNonEmptyString(value: unknown): value is string {\n  return typeof value === 'string' && value.length > 0\n}\n"
     }
   ]
 }
