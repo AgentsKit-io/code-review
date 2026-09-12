@@ -11,8 +11,16 @@ const FindingSchema = z.object({
 const ReviewEnvelope = z.object({
   schemaVersion: z.literal(1),
   completedCategories: z.array(z.enum(['correctness', 'security', 'performance', 'maintainability', 'design', 'tests', 'conventions'])).optional(),
+  // Required only in the multidimensional (completedCategories present) branch, mirroring
+  // BatchedSubmission in agents/code-review/agent.ts: the worker must record what it
+  // checked, per file, before its findings — reasoning before commitment.
+  analysis: z.array(z.string().min(1)).optional(),
   findings: z.array(FindingSchema),
-}).strict()
+}).strict().superRefine((value, ctx) => {
+  if (value.completedCategories !== undefined && (!value.analysis || value.analysis.length === 0)) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['analysis'], message: 'analysis is required alongside completedCategories' })
+  }
+})
 export class InvalidReviewOutputError extends Error {}
 export class InvalidAcpOutputError extends InvalidReviewOutputError {}
 
@@ -30,7 +38,7 @@ export function buildReviewPrompt(request: AdapterRequest): string {
   const convo = request.messages.filter((message) => message.role !== 'system').map((message) => `${message.role.toUpperCase()}: ${message.content}`).join('\n\n')
   const tool = request.context?.tools?.[0]
   const envelope = tool?.schema && typeof tool.schema === 'object' && 'properties' in tool.schema && tool.schema.properties && typeof tool.schema.properties === 'object' && 'completedCategories' in tool.schema.properties
-    ? '{"schemaVersion":1,"completedCategories":[],"findings":[]}'
+    ? '{"schemaVersion":1,"completedCategories":[],"analysis":["what you checked per file, before findings"],"findings":[]}'
     : '{"schemaVersion":1,"findings":[]}'
   return `${system}\n\n${convo}\n\nYou are one isolated code-review worker. Review only the supplied source and do not delegate, execute tools, edit files, use MCP, or use a terminal. Return ONLY JSON matching this envelope: ${envelope} . The tool arguments must match this schema: ${JSON.stringify(tool?.schema ?? {})}`
 }
