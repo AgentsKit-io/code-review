@@ -12,6 +12,7 @@ import {
   conventionsLens,
   correctnessLens,
   designLens,
+  fileGrouping,
   maintainabilityLens,
   performanceLens,
   securityLens,
@@ -330,7 +331,26 @@ export interface CodeReviewConfig {
   observers?: Observer[]
   onConfirm?: (toolCall: ToolCall) => boolean | Promise<boolean>
   maxSteps?: number
-  context?: { adjacentLines?: number; maxRelatedFiles?: number; maxTokens?: number; reserveForOutput?: number }
+  context?: {
+    adjacentLines?: number
+    maxRelatedFiles?: number
+    maxTokens?: number
+    reserveForOutput?: number
+    /**
+     * Default `heuristic`: same-basename test/impl pairs and same-directory local
+     * imports. `semantic` adds one LLM call (paths + line counts only, no content) that
+     * clusters changed files by index before analysis, for cross-file relationships the
+     * heuristic cannot see (e.g. a header and its C implementation, a .proto and its
+     * generated code). Only triggers with `groupingMinFiles`+ files and
+     * `groupingMinLines`+ combined changed lines; falls back to `heuristic` below that,
+     * and on any failure of the grouping call itself.
+     */
+    grouping?: 'heuristic' | 'semantic'
+    /** Minimum changed-file count before a `semantic` grouping call is attempted. Default 4. */
+    groupingMinFiles?: number
+    /** Minimum combined changed-line count before a `semantic` grouping call is attempted. Default 200. */
+    groupingMinLines?: number
+  }
   verification?: {
     maxBatchFindings?: number
     mediumSecondVoteBelow?: number
@@ -377,6 +397,10 @@ const BatchedSubmission = z.object({
 const SkepticVerdict = z.object({ id: z.number().int().min(0), analysis: z.string().min(20), refuted: z.boolean() })
 const SkepticBatch = z.object({ verdicts: z.array(SkepticVerdict) })
 const Consolidation = z.object({ duplicateGroups: z.array(z.array(z.number())) })
+// Files are referenced by integer index into the numbered list sent in the prompt, never
+// by path — an anti-hallucination measure: an invented path cannot slip through, since
+// only in-range integers are meaningful here.
+const FileGroupsSubmission = z.object({ groups: z.array(z.array(z.number().int().min(0))) })
 
 const toJson = (s: z.ZodTypeAny): JSONSchema7 => zodToJsonSchema(s) as JSONSchema7
 const SEV_RANK: Record<Severity, number> = { blocker: 0, high: 1, med: 2, nit: 3 }
@@ -430,6 +454,9 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
     maxRelatedFiles: config.context?.maxRelatedFiles ?? 1,
     maxTokens: config.context?.maxTokens ?? 16_000,
     reserveForOutput: config.context?.reserveForOutput ?? 2_000,
+    grouping: config.context?.grouping ?? 'heuristic',
+    groupingMinFiles: config.context?.groupingMinFiles ?? 4,
+    groupingMinLines: config.context?.groupingMinLines ?? 200,
   }
   const verificationPolicy = {
     maxBatchFindings: Math.max(1, config.verification?.maxBatchFindings ?? 8),
@@ -748,6 +775,46 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
       groups.push(group)
     }
     return groups
+  }
+
+  /**
+   * LLM-driven alternative to `groupTargets`'s import/test-pair heuristic: one call,
+   * paths and line counts only (no file content), asking the model to cluster changed
+   * files that plausibly belong in one review pass. Falls back to `groupTargets` on any
+   * failure — this must never be the reason a review cannot proceed.
+   */
+  async function semanticGroupTargets(targets: ReviewTarget[]): Promise<ReviewTarget[][]> {
+    const list = targets.map((target, index) => `[${index}] ${target.file} (${target.fullContent.split('\n').length} lines)`).join('\n')
+    try {
+      const out = await runStructured(fileGrouping, list, submit('submit_file_groups', FileGroupsSubmission), FileGroupsSubmission)
+      const seen = new Set<number>()
+      const groups: ReviewTarget[][] = []
+      for (const raw of out.groups) {
+        const idx = [...new Set(raw)].filter((i) => Number.isInteger(i) && i >= 0 && i < targets.length && !seen.has(i)).slice(0, 10)
+        if (!idx.length) continue
+        for (const i of idx) seen.add(i)
+        groups.push(idx.map((i) => targets[i]!))
+      }
+      for (let i = 0; i < targets.length; i++) if (!seen.has(i)) groups.push([targets[i]!])
+      return groups
+    } catch (error) {
+      if (error instanceof ReviewCallBudgetError || error instanceof ReviewTokenBudgetError || error instanceof ReviewBudgetExceededError) throw error
+      return groupTargets(targets)
+    }
+  }
+
+  /**
+   * `dryRun` forces the heuristic grouping even when `semantic` is configured — `plan()`
+   * is a documented, tested provider-free preflight (`--plan`/`--dry-run`), and semantic
+   * grouping is a real model call. `review()` always passes `dryRun: false`, so an actual
+   * run gets the real semantic grouping; `plan()`'s preview of pack membership is then an
+   * approximation in that mode, not a guarantee of the exact packs `review()` will use.
+   */
+  async function groupTargetsForPacking(targets: ReviewTarget[], dryRun: boolean): Promise<ReviewTarget[][]> {
+    if (contextPolicy.grouping !== 'semantic' || dryRun) return groupTargets(targets)
+    const combinedLines = targets.reduce((sum, target) => sum + target.fullContent.split('\n').length, 0)
+    if (targets.length < contextPolicy.groupingMinFiles || combinedLines < contextPolicy.groupingMinLines) return groupTargets(targets)
+    return semanticGroupTargets(targets)
   }
 
   function supportingContext(targets: readonly ReviewTarget[]): string {
@@ -1295,13 +1362,16 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
   let cachedTargets: Promise<ReviewTarget[]> | undefined
   type Preparation = { all: ReviewTarget[]; targets: ReviewTarget[]; packs: PreparedPack[]; conventions: string; plan: ReviewPlan }
   const preparations = new Map<string, Promise<Preparation>>()
-  async function prepare(files?: string[], packIds?: string[]): Promise<Preparation> {
-    const key = JSON.stringify([files ?? null, packIds ?? null])
+  async function prepare(files?: string[], packIds?: string[], dryRun = false): Promise<Preparation> {
+    // dryRun only needs its own cache entry when it can change the outcome (semantic
+    // grouping); in heuristic mode (the default), plan() and review() correctly share one.
+    const cacheDryRun = contextPolicy.grouping === 'semantic' ? dryRun : false
+    const key = JSON.stringify([files ?? null, packIds ?? null, cacheDryRun])
     const existing = preparations.get(key)
     if (existing) return existing
     const preparation = (async () => {
       if (packIds) {
-        const full = await prepare(files)
+        const full = await prepare(files, undefined, dryRun)
         const wanted = new Set(packIds)
         const packs = full.packs.filter((pack) => wanted.has(pack.id))
         if (!packs.length || packs.length !== wanted.size) throw new Error('selected context packs do not match the source plan')
@@ -1317,7 +1387,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
       const all = selected ? loaded.filter((target) => selected.has(target.file)) : loaded
       const targets = rankTargets(all)
       const packs: PreparedPack[] = []
-      for (const [index, group] of groupTargets(targets).entries()) {
+      for (const [index, group] of (await groupTargetsForPacking(targets, dryRun)).entries()) {
         const scope: ReviewKnowledgeScopeInput = {
           ...config.knowledgeScope,
           paths: group.map((target) => target.file),
@@ -1337,7 +1407,7 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
   }
 
   async function plan(files?: string[], packIds?: string[]): Promise<ReviewPlan> {
-    return (await prepare(files, packIds)).plan
+    return (await prepare(files, packIds, true)).plan
   }
 
   async function review(files?: string[], packIds?: string[]): Promise<ReviewResult> {
