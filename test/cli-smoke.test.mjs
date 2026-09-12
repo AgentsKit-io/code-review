@@ -452,8 +452,8 @@ test('global review deadline aborts a hanging fast run', () => {
     const artifact = JSON.parse(readFileSync(result, 'utf8'))
     assert.equal(artifact.incomplete, true)
     assert.equal(artifact.evidence.deadlineExceeded, true)
-    assert.equal(artifact.findings.length, 0)
-    assert.match(artifact.droppedNote, /discarded/i)
+    assert.equal(artifact.findings.length, 0, 'the one pack never finished analysis, so it has no findings to surface')
+    assert.ok(artifact.unreviewed?.some((entry) => /deadline exceeded/i.test(entry.reason)), 'the unreviewed file must carry the real deadline reason')
   } finally { rmSync(dir, { recursive: true, force: true }) }
 })
 
