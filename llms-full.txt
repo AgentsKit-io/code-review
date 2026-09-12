@@ -210,7 +210,7 @@ jobs:
   review:
     runs-on: ubuntu-latest
     steps:
-      - uses: AgentsKit-io/code-review@v0.4.0
+      - uses: AgentsKit-io/code-review@v0.31.0
         with:
           provider: openai
           model: gpt-4o
@@ -233,7 +233,7 @@ GitLab is intentionally unsupported until an adapter passes the same tests.
 
 Building a conversational review experience? Use [AgentsKit Chat](https://chat.agentskit.io/docs) for the cross-framework application layer instead of embedding chat here. Looking for organization-wide orchestration, governance, and production controls? Continue with [AKOS](https://akos.agentskit.io/docs).
 
-Pin the Action to an immutable release tag such as `@v0.4.0`; use a full commit SHA when your policy requires the strongest reproducibility.
+Pin the Action to an immutable release tag such as `@v0.31.0`; use a full commit SHA when your policy requires the strongest reproducibility.
 
 ## Choose how to run
 
@@ -505,7 +505,7 @@ node examples/verify-readme.mjs
 
 ## Maturity
 
-The repository is **pre-v1 (`0.4.x`)**. The CLI and Action are available for evaluation and advisory CI; use an exact release tag such as `@v0.4.0` or a commit SHA, and treat the future `v1` moving tag as a separate stability milestone. See [ROADMAP.md](https://github.com/AgentsKit-io/code-review/blob/main/ROADMAP.md) and the [release guidance](https://github.com/AgentsKit-io/code-review/blob/main/docs/OPERATIONS.md#releases-and-maturity).
+The repository is **pre-v1 (`0.31.x`)**. The CLI and Action are available for evaluation and advisory CI; use an exact release tag such as `@v0.31.0` or a commit SHA, and treat the future `v1` moving tag as a separate stability milestone. See [ROADMAP.md](https://github.com/AgentsKit-io/code-review/blob/main/ROADMAP.md) and the [release guidance](https://github.com/AgentsKit-io/code-review/blob/main/docs/OPERATIONS.md#releases-and-maturity).
 
 ## Compatibility
 
@@ -1154,10 +1154,10 @@ The default `added` filter limits inline feedback to changed lines. Choose a bro
 
 ## Releases and maturity
 
-The current package is `0.4.0` and the project is pre-v1:
+The current package is `0.31.0` and the project is pre-v1:
 
 - GitHub-source CLI commands can pin a commit SHA after `github:AgentsKit-io/code-review#<sha>`;
-- Actions should pin `@v0.4.0` or a full commit SHA;
+- Actions should pin `@v0.31.0` or a full commit SHA;
 - a moving `@main` reference is suitable only when that mutability is accepted;
 - the future `@v1` Action tag remains a separate stability milestone.
 
@@ -1370,7 +1370,7 @@ This roadmap communicates direction, not a promise of dates.
 
 ## Toward v1
 
-- [ ] Publish the calibrated `0.4.x` line of `@agentskit/code-review` and signed release artifacts.
+- [ ] Publish the calibrated `0.31.x` line of `@agentskit/code-review` and signed release artifacts.
 - [ ] Publish immutable GitHub Action releases with a moving `v1` tag.
 - [ ] Add credential-free adapter contract tests and opt-in provider smoke tests.
 - [ ] Document measured review cost and latency by configuration.

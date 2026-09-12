@@ -604,10 +604,10 @@ The default `added` filter limits inline feedback to changed lines. Choose a bro
 
 ## Releases and maturity
 
-The current package is `0.4.0` and the project is pre-v1:
+The current package is `0.31.0` and the project is pre-v1:
 
 - GitHub-source CLI commands can pin a commit SHA after `github:AgentsKit-io/code-review#<sha>`;
-- Actions should pin `@v0.4.0` or a full commit SHA;
+- Actions should pin `@v0.31.0` or a full commit SHA;
 - a moving `@main` reference is suitable only when that mutability is accepted;
 - the future `@v1` Action tag remains a separate stability milestone.
 
