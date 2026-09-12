@@ -51,6 +51,47 @@ test('known usage enforces tokens despite unavailable optional fields without do
   assert.equal(ledger.usage().inputTokens, 6000)
 })
 
+test('canAfford is a read-only preview of begin(): it never reserves and matches begin()\'s outcome', () => {
+  const ledger = createReviewBudgetLedger(budget)
+  assert.equal(ledger.canAfford('analysis', 100), true)
+  // Checking twice must not itself consume capacity.
+  assert.equal(ledger.canAfford('analysis', 100), true)
+  const reservation = ledger.begin('analysis', 100)
+  // Something that fit before an unrelated reservation may no longer fit after it.
+  assert.equal(ledger.canAfford('analysis', 9_000), false)
+  assert.throws(() => ledger.begin('analysis', 9_000), ReviewBudgetExceededError)
+  reservation.finish({ inputTokens: 100, outputTokens: 0 })
+})
+
+test('canAfford accumulates a caller-supplied pending total across a sequential lookahead pass', () => {
+  // Without `pending`, checking three candidates of 4000 tokens each against the same
+  // 10_000-token campaign ceiling (minus reserves) would let all three through, since
+  // each individually still looks affordable from the same unchanged snapshot.
+  const ledger = createReviewBudgetLedger(budget)
+  let pendingTokens = 0
+  let pendingCalls = 0
+  const accepted = []
+  for (const estimate of [4000, 4000, 4000]) {
+    if (ledger.canAfford('analysis', estimate, { tokens: pendingTokens, calls: pendingCalls })) {
+      accepted.push(estimate)
+      pendingTokens += estimate
+      pendingCalls += 1
+    }
+  }
+  assert.ok(accepted.length < 3, 'a running pending total must reject at least one candidate that would not really fit alongside the earlier ones')
+  assert.ok(accepted.length >= 1, 'at least the first candidate must still be accepted')
+})
+
+test('canAfford reports false once the call ceiling for a scope is reached', () => {
+  const tightCalls = defaultReviewBudget({ maxTokens: 10_000, maxCalls: 6, deadlineMs: 10_000, reserveForOutput: 500, reserveForVerification: 500, contextMaxTokens: 2_000, contextReserveForOutput: 200 })
+  tightCalls.analysis.maxCalls = 1
+  const ledger = createReviewBudgetLedger(tightCalls)
+  assert.equal(ledger.canAfford('analysis', 10), true)
+  const reservation = ledger.begin('analysis', 10)
+  assert.equal(ledger.canAfford('analysis', 10), false, 'the single allowed call is already in flight')
+  reservation.finish({ inputTokens: 10, outputTokens: 0 })
+})
+
 const budget = defaultReviewBudget({
   maxTokens: 10_000,
   maxCalls: 6,
