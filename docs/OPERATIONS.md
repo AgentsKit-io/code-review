@@ -203,6 +203,18 @@ are enabled by default; correctness, security, and tests are required.
 The shared local worker also accepts bounded `timeoutMs` and `maxOutputBytes`
 settings; absolute ceilings are always enforced.
 
+## Library API
+
+`createCodeReviewAgent`, `builtInLenses`, and every reporter (`markdownReporter`,
+`sarifReporter`, `githubInlineReporter`, `githubSummaryReporter`, `scmReviewReporter`,
+`renderMarkdown`, `renderGithubWalkthrough`) are exported from the package root
+(`import { createCodeReviewAgent } from '@agentskit/code-review'`) — this only became
+true from `0.30.19` onward; earlier versions defined these but never added them to
+`src/index.ts`'s export list, so no external consumer could reach them (see issue #275).
+Every `createCodeReviewAgent({...})` option documented below — `rules`,
+`verification.posture`, `context.grouping` — is reachable this way, not only through the
+bundled CLI.
+
 ## Semantic file grouping (opt-in)
 
 `createCodeReviewAgent({ context: { grouping: 'semantic' } })` replaces the default
