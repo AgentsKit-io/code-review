@@ -313,11 +313,19 @@ const FindingSchema = z.object({
 })
 const CategorySchema = z.enum(['correctness', 'security', 'performance', 'maintainability', 'design', 'tests', 'conventions'])
 const LensSubmission = z.object({ findings: z.array(FindingSchema) })
+// Field order is load-bearing: `analysis` is declared (and so emitted in the JSON Schema
+// sent to the provider) before `findings`, so the model works through what it checked
+// before it commits to specific findings, instead of deciding first and rationalizing after.
 const BatchedSubmission = z.object({
   completedCategories: z.array(CategorySchema),
+  analysis: z.array(z.string().min(1)).min(1),
   findings: z.array(FindingSchema),
 })
-const SkepticVerdict = z.object({ id: z.number().int().min(0), refuted: z.boolean(), reason: z.string() })
+// Same reasoning-before-commitment ordering: `analysis` precedes the `refuted` boolean it
+// justifies. A model that reasons "this is a protected subject, I should not remove it" in
+// the *later* field while `refuted: true` is already committed in an earlier field cannot
+// retract it; declaring `analysis` first closes that gap.
+const SkepticVerdict = z.object({ id: z.number().int().min(0), analysis: z.string().min(20), refuted: z.boolean() })
 const SkepticBatch = z.object({ verdicts: z.array(SkepticVerdict) })
 const Consolidation = z.object({ duplicateGroups: z.array(z.array(z.number())) })
 
