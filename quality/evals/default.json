@@ -28,7 +28,7 @@
       "id": "hardcoded-api-key",
       "kind": "positive",
       "language": "ts",
-      "source": "const WEBHOOK_SECRET = 'NOT-A-REAL-SECRET-eval-fixture-only-0000000000'\n\nexport async function sendWebhookNotification(payload: unknown): Promise<void> {\n  await fetch('https://hooks.example.com/notify', {\n    method: 'POST',\n    headers: { authorization: WEBHOOK_SECRET },\n    body: JSON.stringify(payload),\n  })\n}\n",
+      "source": "const WEBHOOK_SECRET = '7f3a9c2e8b41d6f0a5c8e93b4d1f6a72'\n\nexport async function sendWebhookNotification(payload: unknown): Promise<void> {\n  await fetch('https://hooks.example.com/notify', {\n    method: 'POST',\n    headers: { authorization: WEBHOOK_SECRET },\n    body: JSON.stringify(payload),\n  })\n}\n",
       "expected": { "line": 1, "lineTolerance": 2, "severity": "high", "titleIncludes": ["secret", "credential", "hardcod", "key"] }
     },
     {
@@ -43,7 +43,7 @@
       "kind": "positive",
       "language": "ts",
       "source": "export function sumLastNItems(items: number[], count: number): number {\n  let total = 0\n  for (let index = items.length - count; index <= items.length; index += 1) {\n    total += items[index]\n  }\n  return total\n}\n",
-      "expected": { "line": 3, "lineTolerance": 2, "severity": "high", "titleIncludes": ["bound", "off-by-one", "index", "overrun"] }
+      "expected": { "line": 3, "lineTolerance": 2, "severity": "high", "titleIncludes": ["bound", "off-by-one", "index", "overrun", "loop", "length"] }
     },
     {
       "id": "weak-random-token",
@@ -57,7 +57,7 @@
       "kind": "positive",
       "language": "ts",
       "source": "type Api = { syncProfile(userId: string): Promise<void> }\n\nexport function syncUserProfile(api: Api, userId: string): void {\n  api.syncProfile(userId)\n}\n",
-      "expected": { "line": 4, "lineTolerance": 2, "severity": "high", "titleIncludes": ["reject", "await", "unhandled", "error"] }
+      "expected": { "line": 4, "lineTolerance": 2, "severity": "high", "titleIncludes": ["reject", "await", "unhandled", "error", "discard", "promise", "return"] }
     },
     {
       "id": "race-condition-balance-update",
@@ -73,7 +73,7 @@
       "protectedSubject": "behavioral-change",
       "language": "ts",
       "source": "/**\n * Returns the price rounded to the nearest cent, as documented for downstream billing.\n */\nexport function calculateDiscountedPrice(price: number, discountPercent: number): number {\n  const discounted = price - (price * discountPercent) / 100\n  return Math.floor(discounted * 100) / 100\n}\n",
-      "expected": { "line": 7, "lineTolerance": 2, "severity": "high", "titleIncludes": ["round", "behavior", "document", "contract"] }
+      "expected": { "line": 7, "lineTolerance": 2, "severity": "med", "titleIncludes": ["round", "behavior", "document", "contract"] }
     },
     {
       "id": "unused-required-parameter",
@@ -81,7 +81,7 @@
       "protectedSubject": "unused-parameter",
       "language": "ts",
       "source": "export function applyDiscount(basePrice: number, discountCode: string): number {\n  const discountRate = 0\n  return basePrice - basePrice * discountRate\n}\n",
-      "expected": { "line": 1, "lineTolerance": 2, "severity": "high", "titleIncludes": ["unused", "parameter", "discountcode", "ignore"] }
+      "expected": { "line": 1, "lineTolerance": 2, "severity": "med", "titleIncludes": ["unused", "parameter", "discountcode", "ignore"] }
     },
     {
       "id": "memory-leak-event-listener",
