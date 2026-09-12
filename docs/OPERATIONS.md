@@ -203,6 +203,24 @@ are enabled by default; correctness, security, and tests are required.
 The shared local worker also accepts bounded `timeoutMs` and `maxOutputBytes`
 settings; absolute ceilings are always enforced.
 
+## Semantic file grouping (opt-in)
+
+`createCodeReviewAgent({ context: { grouping: 'semantic' } })` replaces the default
+same-basename-test-pair/local-import heuristic with one model call that clusters changed
+files by index (paths and line counts only, never file content) before packing — for
+relationships the heuristic cannot see, such as a header and its implementation in a
+different-language pair, or a schema and its generated code. It only fires above
+`groupingMinFiles` (default 4) changed files and `groupingMinLines` (default 200)
+combined lines; below that, or on any failure of the grouping call itself, grouping
+falls back to the heuristic. **`--plan`/`--dry-run` always uses the heuristic**, even
+when `semantic` is configured and thresholds are met — the preflight plan is a
+documented, tested provider-free contract, and semantic grouping is a real model call;
+only an actual `review()`/CLI run performs it, so a `--plan --json` preview of pack
+membership is an approximation in that mode, not a guarantee of the exact packs the
+real run will use. Files referenced outside the valid index range, or duplicated across
+groups, are dropped rather than trusted — every real file still lands in exactly one
+group, defaulting to its own singleton group if the model omitted or mis-referenced it.
+
 ## Per-language review rules (opt-in)
 
 `createCodeReviewAgent({ rules: { enabled: true } })` resolves a per-file review
