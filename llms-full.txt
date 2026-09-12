@@ -1052,6 +1052,17 @@ and cancellation are never retried. Repeated exhausted transient failures open
 the circuit, and cooldown permits one recovery probe. Completed sibling units
 remain valid when another unit fails. Incomplete evidence is never an approval.
 
+Before a context pack is dispatched, its estimated token cost is checked against the
+analysis budget (a running total across the packs already accepted in the same
+lookahead pass, so cumulative demand is bounded correctly, not just each pack in
+isolation) — a pack that cannot possibly fit is marked unreviewed with that reason
+directly, instead of occupying a concurrency slot only to fail moments later and abort
+sibling packs that already had real findings. A global deadline reached mid-analysis
+keeps whatever findings packs already produced before it fired: they flow into
+verification, where the same tripped deadline naturally marks them `verification:
+'unverified'` (surfaced, not silently discarded) rather than every candidate finding
+disappearing because one other pack was still in flight when time ran out.
+
 ## SARIF
 
 `--sarif out.sarif` writes SARIF 2.1.0 alongside Markdown. Each surviving finding includes a `code-review/<category>` rule, severity level, message, file, and line, plus a `partialFingerprints.primaryLocationLineHash` derived from the file, rule, and title only — deliberately excluding the line number, so GitHub Code Scanning still recognizes the same finding across runs even when an unrelated edit shifts it a few lines. `tool.driver` also reports the package `version` and an `informationUri`. Uploading SARIF to GitHub code scanning requires the separate `security-events: write` permission and `github/codeql-action/upload-sarif`; the bundled Action does not request that permission or upload automatically.

@@ -1445,9 +1445,28 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
 
     const byFile = new Map(targets.map((t) => [t.file, t]))
 
-    emit('review', 'start', `multidimensional analysis × ${packs.length} context pack(s)`)
+    // Budget lookahead: check affordability BEFORE a pack occupies a concurrency slot,
+    // not after. A pack that cannot possibly fit is marked unreviewed for that reason
+    // directly, instead of entering gate.run only to fail inside budgetLedger.begin() a
+    // moment later. Accumulate a running `pending` total across this one sequential pass
+    // (see canAfford's doc comment) so accepting an earlier pack correctly counts against
+    // whether a later one still fits — packs actually run concurrently afterward, each
+    // making its own real, independently-enforced begin() reservation; this loop only
+    // decides in advance which ones are worth attempting at all.
+    let pendingTokens = 0
+    let pendingCalls = 0
+    const affordablePacks: PreparedPack[] = []
+    const budgetSkippedPacks: PreparedPack[] = []
+    for (const pack of packs) {
+      if (budgetLedger.canAfford('analysis', pack.evidence.estimatedTokens, { tokens: pendingTokens, calls: pendingCalls })) {
+        affordablePacks.push(pack)
+        pendingTokens += pack.evidence.estimatedTokens
+        pendingCalls += 1
+      } else budgetSkippedPacks.push(pack)
+    }
+    emit('review', 'start', `multidimensional analysis × ${affordablePacks.length} context pack(s)${budgetSkippedPacks.length ? ` (${budgetSkippedPacks.length} skipped: over budget)` : ''}`)
     const t1 = Date.now()
-    const targetResults = await settleReviewWork(packs.map((pack) => reviewPack(pack)))
+    const targetResults = await settleReviewWork(affordablePacks.map((pack) => reviewPack(pack)))
     const execution = targetResults.reduce<LensExecutionStats>(
       (total, result) => ({
         attempted: total.attempted + result.execution.attempted,
@@ -1458,37 +1477,36 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
     )
     const missingRequired = [...requiredLenses].filter((key) => targetResults.some((result) => !result.succeededLenses.includes(key)))
     const completedCategories = lenses.map((lens) => lens.key).filter((key) => targetResults.every((result) => result.succeededLenses.includes(key)))
-    const unreviewedFiles = targetResults.flatMap((result, index) => result.execution.succeeded === 0 ? packs[index]!.targets.map((target) => target.file) : [])
-    if (deadlineExceeded) {
-      // A deadline is an incomplete review, not a runtime crash.  At this point
-      // candidate findings have not gone through skeptical verification, so do
-      // not emit them.  Return only the auditable coverage evidence, allowing
-      // callers to persist a safe result artifact and schedule a retry.
-      const deadlineUnreviewed = targets.map((target) => ({ file: target.file, reason: `review deadline exceeded after ${deadlineMs}ms` }))
-      const result = synthesize(
-        [], [], targets.length, droppedFiles, execution,
-        unreviewed.length + deadlineUnreviewed.length,
-        true, missingRequired, completedCategories, evidence(),
-      )
-      result.unreviewed = [
-        ...unreviewed.map((target) => ({ file: target.file, reason: target.unreviewedReason ?? 'unreviewed' })),
-        ...deadlineUnreviewed,
-      ]
-      result.droppedNote = 'Candidate findings were discarded because the review deadline expired before skeptical verification.'
-      return finalize(result)
-    }
-    if (unreviewedFiles.length) {
+    // Budget-skipped files are an intentional, expected outcome of the lookahead above —
+    // never ReviewExecutionError's "something is actually broken" signal. A deadline is
+    // likewise an incomplete review, not a crash: a pack with zero successful lenses is
+    // expected once the deadline aborts in-flight calls. Packs that DID finish analysis
+    // before the deadline fired keep their real findings — they flow into verification
+    // below, where the already-tripped deadline naturally marks them `unverified`
+    // (surfaced, not silently discarded; see #252) rather than a second, parallel
+    // "lost to deadline" bucket for the same situation.
+    const executionFailedFiles = targetResults.flatMap((result, index) => result.execution.succeeded === 0 ? affordablePacks[index]!.targets.map((target) => target.file) : [])
+    const budgetSkippedFiles = budgetSkippedPacks.flatMap((pack) => pack.targets.map((target) => target.file))
+    if (executionFailedFiles.length && !deadlineExceeded) {
       emit(
         'review',
         'error',
-        `${execution.succeeded}/${execution.attempted} lens executions succeeded; ${execution.failed} failed; ${unreviewedFiles.length} file(s) unreviewed`,
+        `${execution.succeeded}/${execution.attempted} lens executions succeeded; ${execution.failed} failed; ${executionFailedFiles.length} file(s) unreviewed`,
         Date.now() - t1,
       )
-      throw new ReviewExecutionError(execution, unreviewedFiles)
+      throw new ReviewExecutionError(execution, executionFailedFiles)
     }
+    const unreviewedFiles = [...executionFailedFiles, ...budgetSkippedFiles]
     const raw = targetResults.flatMap((result) => result.findings)
     const deduped = capCandidates(dedupe(raw))
-    emit('review', 'ok', `${deduped.length} candidate finding(s)`, Date.now() - t1)
+    emit(
+      'review',
+      'ok',
+      `${deduped.length} candidate finding(s)` +
+        (budgetSkippedFiles.length ? `; ${budgetSkippedFiles.length} file(s) unreviewed (over budget)` : '') +
+        (executionFailedFiles.length ? `; ${executionFailedFiles.length} file(s) unreviewed (deadline exceeded during analysis)` : ''),
+      Date.now() - t1,
+    )
 
     emit('verify', 'start', `${deduped.length} candidate(s), batches of ${verificationPolicy.maxBatchFindings}`)
     const t2 = Date.now()
@@ -1515,9 +1533,14 @@ export function createCodeReviewAgent(config: CodeReviewConfig) {
       emit('validate-patch', 'ok', undefined, Date.now() - t3)
     }
 
-    const incomplete = Boolean(config.incompleteProfile || unreviewed.length || droppedFiles || missingRequired.length || deadlineExceeded || verification.unverified.length)
-    const result = synthesize(kept, dropped, targets.length, droppedFiles, execution, unreviewed.length, incomplete, missingRequired, completedCategories, evidence())
-    result.unreviewed = unreviewed.map((target) => ({ file: target.file, reason: target.unreviewedReason ?? 'unreviewed' }))
+    const allUnreviewed = [
+      ...unreviewed.map((target) => ({ file: target.file, reason: target.unreviewedReason ?? 'unreviewed' })),
+      ...budgetSkippedFiles.map((file) => ({ file, reason: 'skipped: over the analysis token/call budget before this pack was scheduled' })),
+      ...executionFailedFiles.map((file) => ({ file, reason: `review deadline exceeded after ${deadlineMs}ms before this file's analysis completed` })),
+    ]
+    const incomplete = Boolean(config.incompleteProfile || allUnreviewed.length || droppedFiles || missingRequired.length || deadlineExceeded || verification.unverified.length)
+    const result = synthesize(kept, dropped, targets.length - unreviewedFiles.length, droppedFiles, execution, allUnreviewed.length, incomplete, missingRequired, completedCategories, evidence())
+    result.unreviewed = allUnreviewed
     result.droppedNote =
       `${refuted.length} refuted by skeptics; ${verification.unverified.length} unverified and surfaced unconfirmed; ${belowThreshold.length} below threshold` +
       (thresholded.length - kept.length ? `; ${thresholded.length - kept.length} merged as duplicates` : '') + '.'
