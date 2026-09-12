@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict'
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import test from 'node:test'
-import { githubInlineReporter, renderGithubWalkthrough } from '../dist/agents/code-review/reporters.js'
+import { githubInlineReporter, renderGithubWalkthrough, sarifReporter } from '../dist/agents/code-review/reporters.js'
 
 const review = {
   verdict: 'REQUEST CHANGES',
@@ -90,4 +93,55 @@ test('GitHub inline reporter can disable both inline and summary output', async 
     await githubInlineReporter({ owner: 'org', repo: 'repo', number: 3, token: 'test-token', policy: { inline: false, summary: false } }).emit(review)
     assert.equal(calls, 0)
   } finally { globalThis.fetch = originalFetch }
+})
+
+test('SARIF reporter matches the 2.1.0 shape and includes a stable partialFingerprints', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'agentskit-sarif-'))
+  const file = join(dir, 'report.sarif')
+  try {
+    await sarifReporter({ file }).emit(review)
+    const sarif = JSON.parse(readFileSync(file, 'utf8'))
+    assert.equal(sarif.$schema, 'https://json.schemastore.org/sarif-2.1.0.json')
+    assert.equal(sarif.version, '2.1.0')
+    assert.equal(sarif.runs.length, 1)
+    const [run] = sarif.runs
+    assert.equal(run.tool.driver.name, 'agentskit-code-review')
+    assert.equal(typeof run.tool.driver.version, 'string')
+    assert.ok(run.tool.driver.version.length > 0)
+    assert.equal(run.tool.driver.informationUri, 'https://github.com/AgentsKit-io/code-review')
+    assert.ok(run.tool.driver.rules.some((rule) => rule.id === 'code-review/correctness'))
+    assert.equal(run.results.length, 1)
+    const [result] = run.results
+    assert.equal(result.ruleId, 'code-review/correctness')
+    assert.equal(result.level, 'error')
+    assert.equal(result.locations[0].physicalLocation.artifactLocation.uri, 'src/example.ts')
+    assert.equal(result.locations[0].physicalLocation.region.startLine, 4)
+    assert.equal(typeof result.partialFingerprints.primaryLocationLineHash, 'string')
+    assert.equal(result.partialFingerprints.primaryLocationLineHash.length, 64, 'a sha256 hex digest')
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('SARIF fingerprints are identical across runs and unaffected by an adjacent line shift', async () => {
+  const shifted = { ...review, findings: review.findings.map((f) => ({ ...f, line: f.line + 3, endLine: f.endLine ? f.endLine + 3 : undefined })) }
+  const dirA = mkdtempSync(join(tmpdir(), 'agentskit-sarif-a-'))
+  const dirB = mkdtempSync(join(tmpdir(), 'agentskit-sarif-b-'))
+  try {
+    const fileA = join(dirA, 'a.sarif')
+    const fileB = join(dirB, 'b.sarif')
+    await sarifReporter({ file: fileA }).emit(review)
+    await sarifReporter({ file: fileB }).emit(review)
+    const a = JSON.parse(readFileSync(fileA, 'utf8'))
+    const b = JSON.parse(readFileSync(fileB, 'utf8'))
+    assert.equal(a.runs[0].results[0].partialFingerprints.primaryLocationLineHash, b.runs[0].results[0].partialFingerprints.primaryLocationLineHash, 'identical runs must produce identical fingerprints')
+
+    const fileC = join(dirA, 'c.sarif')
+    await sarifReporter({ file: fileC }).emit(shifted)
+    const c = JSON.parse(readFileSync(fileC, 'utf8'))
+    assert.equal(c.runs[0].results[0].partialFingerprints.primaryLocationLineHash, a.runs[0].results[0].partialFingerprints.primaryLocationLineHash, 'moving the finding a few lines must not change its fingerprint')
+  } finally {
+    rmSync(dirA, { recursive: true, force: true })
+    rmSync(dirB, { recursive: true, force: true })
+  }
 })
