@@ -12,3 +12,5 @@ Accepted architecture decisions for AgentsKit Code Review.
 | [0006](0006-measured-batch-completion.md) | Measure and split oversized review batches before execution |
 | [0007](0007-whole-cycle-resource-accounting.md) | Reserve and reconcile batches, retries, evals, and learning within one cycle |
 | [0008](0008-verification-posture.md) | Optional conservative verification posture (default unchanged pending a live A/B); surface unverified findings instead of discarding them |
+| [0009](0009-layered-language-rules.md) | Layered, glob-resolved per-language review rules, opt-in and library-level |
+| [0010](0010-single-step-calls.md) | Keep single-step structured calls; do not adopt an agent-loop context-compression scheme |
