@@ -2,6 +2,8 @@ import { writeFileSync } from 'node:fs'
 import type { Finding, Reporter, ReviewResult } from './agent.js'
 import { createGithubScmAdapter } from '../../src/github-scm-adapter.js'
 import type { ChangeRequestRef, ScmAdapter } from '../../src/scm-contract.js'
+import { packageVersion } from '../../src/review-policy.js'
+import { stableFingerprint } from '../../src/stable-fingerprint.js'
 
 /**
  * Reporters turn a ReviewResult into an output surface. They are orchestration code
@@ -141,6 +143,11 @@ export function sarifReporter(opts: { file?: string; write?: (s: string) => void
       const results = review.findings.map((f) => {
         const ruleId = `code-review/${f.category}`
         if (!rulesSeen.has(ruleId)) rulesSeen.set(ruleId, { id: ruleId, name: f.category })
+        // Deliberately excludes `line`/`endLine`: an unrelated edit a few lines above or
+        // below must not change the fingerprint GitHub Code Scanning uses to dedupe a
+        // finding across runs. This is the same finding as long as the file, rule, and
+        // title stay the same — the location can drift without it being a new issue.
+        const primaryLocationLineHash = stableFingerprint({ file: f.file, ruleId, title: f.title })
         return {
           ruleId,
           level: sevToLevel[f.severity],
@@ -153,6 +160,7 @@ export function sarifReporter(opts: { file?: string; write?: (s: string) => void
               },
             },
           ],
+          partialFingerprints: { primaryLocationLineHash },
           properties: { severity: f.severity, confidence: f.confidence },
         }
       })
@@ -161,7 +169,14 @@ export function sarifReporter(opts: { file?: string; write?: (s: string) => void
         version: '2.1.0',
         runs: [
           {
-            tool: { driver: { name: 'agentskit-code-review', rules: [...rulesSeen.values()].map((r) => ({ id: r.id, name: r.name })) } },
+            tool: {
+              driver: {
+                name: 'agentskit-code-review',
+                version: packageVersion(),
+                informationUri: 'https://github.com/AgentsKit-io/code-review',
+                rules: [...rulesSeen.values()].map((r) => ({ id: r.id, name: r.name })),
+              },
+            },
             results,
           },
         ],
