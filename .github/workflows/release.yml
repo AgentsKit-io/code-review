@@ -48,10 +48,10 @@ jobs:
 
       - name: Allow required workflows for the trusted version PR
         timeout-minutes: 2
-        if: steps.changesets.outputs.pullRequestNumber != ''
+        if: steps.changesets.outputs.pr-number != ''
         env:
           GH_TOKEN: ${{ github.token }}
-          VERSION_PR: ${{ steps.changesets.outputs.pullRequestNumber }}
+          VERSION_PR: ${{ steps.changesets.outputs.pr-number }}
         run: |
           set -eu
           gh pr view "$VERSION_PR" --json author,headRefName,headRefOid,isCrossRepository,state > "$RUNNER_TEMP/version-pr.json"
