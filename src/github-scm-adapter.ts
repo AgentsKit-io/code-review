@@ -25,6 +25,7 @@ export interface GithubScmAdapterOptions {
   token: string
   fetch?: typeof fetch
   command?: CommandRunner
+  reviewStateChannel?: 'review' | 'summary'
 }
 
 function coordinates(ref: ChangeRequestRef): { owner: string; repo: string; number: number } {
@@ -163,7 +164,7 @@ export function createGithubScmAdapter(options: GithubScmAdapterOptions): ScmAda
     async reviewState(ref: ChangeRequestRef, fingerprint: string): Promise<ScmReviewState> {
       requireScmCapability(adapter, 'review-state')
       const { owner, repo, number } = coordinates(ref)
-      const state = await getGithubReviewState({ owner, repo, number, token: options.token, fingerprint, fetcher })
+      const state = await getGithubReviewState({ owner, repo, number, token: options.token, fingerprint, fetcher, channel: options.reviewStateChannel })
       return ScmReviewStateSchema.parse({ headRevision: state.sha, fingerprint, alreadyPublished: state.alreadyReviewed, scope: state.scope, baselineRevision: state.baselineSha ?? null })
     },
 
@@ -172,23 +173,42 @@ export function createGithubScmAdapter(options: GithubScmAdapterOptions): ScmAda
       const review = ScmReviewPublicationSchema.parse(input)
       const { owner, repo, number } = coordinates(ref)
       const marker = review.fingerprint ? reviewMarker(review.headRevision, review.fingerprint) : undefined
+      const body = `${marker ? `${marker}\n` : ''}${review.summary}`
+      const publish = async (method: 'POST' | 'PATCH', path: string, payload: unknown): Promise<{ id?: number; html_url?: string }> => {
+        try { return await mutate(method, path, payload) }
+        catch (error) {
+          // A failed acknowledgement is not proof that GitHub rejected the write.
+          // Reconcile once by exact marker and body; never blindly repeat a POST.
+          if (marker) {
+            try {
+              const history = review.channel === 'summary'
+                ? await githubIssueComments(options.token, owner, repo, number, fetcher)
+                : await githubPullReviews(options.token, owner, repo, number, fetcher)
+              if (!history.truncated) {
+                const items = 'comments' in history ? history.comments : history.reviews
+                const existing = items.find(item => item.id !== undefined && item.body === body)
+                if (existing?.id !== undefined) return { id: existing.id }
+              }
+            } catch { /* Preserve the original failure when delivery cannot be proven. */ }
+          }
+          throw error
+        }
+      }
       if (review.channel === 'summary') {
-        const body = `${marker ? `${marker}\n` : ''}${review.summary}`
         if (!marker) {
-          const posted = await mutate<{ id?: number; html_url?: string }>('POST', `/repos/${owner}/${repo}/issues/${number}/comments`, { body })
+          const posted = await publish('POST', `/repos/${owner}/${repo}/issues/${number}/comments`, { body })
           return ScmPublicationReceiptSchema.parse({ id: String(posted.id ?? 'summary'), ...(posted.html_url ? { url: posted.html_url } : {}) })
         }
         const history = await githubIssueComments(options.token, owner, repo, number, fetcher)
         if (history.truncated) throw new Error('GitHub review comment history is too large to update safely')
         const existing = history.comments.find((comment) => comment.id !== undefined && comment.body?.includes(marker))
         if (existing?.id !== undefined) {
-          await mutate('PATCH', `/repos/${owner}/${repo}/issues/comments/${existing.id}`, { body })
+          if (existing.body !== body) await publish('PATCH', `/repos/${owner}/${repo}/issues/comments/${existing.id}`, { body })
           return ScmPublicationReceiptSchema.parse({ id: String(existing.id) })
         }
-        const posted = await mutate<{ id?: number; html_url?: string }>('POST', `/repos/${owner}/${repo}/issues/${number}/comments`, { body })
+        const posted = await publish('POST', `/repos/${owner}/${repo}/issues/${number}/comments`, { body })
         return ScmPublicationReceiptSchema.parse({ id: String(posted.id ?? 'summary'), ...(posted.html_url ? { url: posted.html_url } : {}) })
       }
-      const body = `${marker ? `${marker}\n` : ''}${review.summary}`
       const payload = { body, commit_id: review.headRevision, ...(review.annotations.length ? { comments: review.annotations.map((annotation) => ({ path: annotation.path, line: annotation.endLine ?? annotation.line, body: annotation.body })) } : {}) }
       if (marker) {
         const history = await githubPullReviews(options.token, owner, repo, number, fetcher)
@@ -198,10 +218,10 @@ export function createGithubScmAdapter(options: GithubScmAdapterOptions): ScmAda
       }
       const event = review.verdict === 'REQUEST_CHANGES' ? 'REQUEST_CHANGES' : 'COMMENT'
       let posted: { id?: number; html_url?: string }
-      try { posted = await mutate('POST', `/repos/${owner}/${repo}/pulls/${number}/reviews`, { event, ...payload }) }
+      try { posted = await publish('POST', `/repos/${owner}/${repo}/pulls/${number}/reviews`, { event, ...payload }) }
       catch (error) {
         if (!(error instanceof Error) || !error.message.includes('422')) throw error
-        posted = await mutate('POST', `/repos/${owner}/${repo}/pulls/${number}/reviews`, { event: 'COMMENT', ...payload })
+        posted = await publish('POST', `/repos/${owner}/${repo}/pulls/${number}/reviews`, { event: 'COMMENT', ...payload })
       }
       return ScmPublicationReceiptSchema.parse({ id: String(posted.id ?? 'review'), ...(posted.html_url ? { url: posted.html_url } : {}) })
     },
@@ -214,6 +234,16 @@ export function createGithubScmAdapter(options: GithubScmAdapterOptions): ScmAda
       const checks = await api<{ total_count?: number; check_runs?: Array<{ name?: string; status?: string; conclusion?: string | null }> }>(options.token, `/repos/${owner}/${repo}/commits/${pull.head.sha}/check-runs?per_page=100`)
       const statuses = await api<{ state?: string; total_count?: number; statuses?: unknown[] }>(options.token, `/repos/${owner}/${repo}/commits/${pull.head.sha}/status`)
       const blockers: string[] = []
+      const reviewHistory = await githubPullReviews(options.token, owner, repo, number, fetcher)
+      if (reviewHistory.truncated) blockers.push('review history exceeds bounded readiness response')
+      const decisions = new Map<string, string>()
+      for (const review of reviewHistory.reviews) {
+        if (!review.state) { blockers.push('review readiness response is incomplete'); continue }
+        if (!['APPROVED', 'CHANGES_REQUESTED'].includes(review.state)) continue
+        if (!review.user?.login) { blockers.push('review decision has no author'); continue }
+        decisions.set(review.user.login, review.state)
+      }
+      for (const [author, decision] of decisions) if (decision === 'CHANGES_REQUESTED') blockers.push(`changes requested by ${author}`)
       if (pull.draft) blockers.push('change request is draft')
       if (pull.mergeable !== true) blockers.push(`mergeable=${String(pull.mergeable)}`)
       if (!['clean', 'has_hooks'].includes(pull.mergeable_state ?? 'unknown')) blockers.push(`merge state=${pull.mergeable_state ?? 'unknown'}`)

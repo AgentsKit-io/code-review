@@ -74,7 +74,7 @@ try {
   ]
   const preflight = blockers.length
     ? blockedCampaignPreflightReport({ repository: config.target.repository, configFingerprint: configFingerprint(config), checks: [...blockers, ...providerHealth.checks.filter((check) => check.status === 'fail').map((check) => ({ id: `provider.${check.name}`, ok: false, detail: check.detail }))] })
-    : await preflightCampaign({ config, adapter: createGithubScmAdapter({ token }), providerHealth, signal: campaignAbort.signal, ...(pull ? { refs: [{ repository: config.target.repository, id: pull }] } : {}) })
+    : await preflightCampaign({ config, adapter: createGithubScmAdapter({ token, reviewStateChannel: config.comments.summary ? 'summary' : 'review' }), providerHealth, signal: campaignAbort.signal, ...(pull ? { refs: [{ repository: config.target.repository, id: pull }] } : {}) })
   const stateRoot = resolve(dirname(loaded.path ?? resolve(configFile)), config.execution.statePath)
   campaignStateRoot = stateRoot
   const workerTimeoutMs = Math.min(7_260_000, Math.max(config.review.deadlineMs + 60_000, globalDeadlineMs + 60_000))

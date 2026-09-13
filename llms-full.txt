@@ -210,7 +210,7 @@ jobs:
   review:
     runs-on: ubuntu-latest
     steps:
-      - uses: AgentsKit-io/code-review@v0.4.0
+      - uses: AgentsKit-io/code-review@v0.31.0
         with:
           provider: openai
           model: gpt-4o
@@ -233,7 +233,7 @@ GitLab is intentionally unsupported until an adapter passes the same tests.
 
 Building a conversational review experience? Use [AgentsKit Chat](https://chat.agentskit.io/docs) for the cross-framework application layer instead of embedding chat here. Looking for organization-wide orchestration, governance, and production controls? Continue with [AKOS](https://akos.agentskit.io/docs).
 
-Pin the Action to an immutable release tag such as `@v0.4.0`; use a full commit SHA when your policy requires the strongest reproducibility.
+Pin the Action to an immutable release tag such as `@v0.31.0`; use a full commit SHA when your policy requires the strongest reproducibility.
 
 ## Choose how to run
 
@@ -505,7 +505,7 @@ node examples/verify-readme.mjs
 
 ## Maturity
 
-The repository is **pre-v1 (`0.4.x`)**. The CLI and Action are available for evaluation and advisory CI; use an exact release tag such as `@v0.4.0` or a commit SHA, and treat the future `v1` moving tag as a separate stability milestone. See [ROADMAP.md](https://github.com/AgentsKit-io/code-review/blob/main/ROADMAP.md) and the [release guidance](https://github.com/AgentsKit-io/code-review/blob/main/docs/OPERATIONS.md#releases-and-maturity).
+The repository is **pre-v1 (`0.31.x`)**. The CLI and Action are available for evaluation and advisory CI; use an exact release tag such as `@v0.31.0` or a commit SHA, and treat the future `v1` moving tag as a separate stability milestone. See [ROADMAP.md](https://github.com/AgentsKit-io/code-review/blob/main/ROADMAP.md) and the [release guidance](https://github.com/AgentsKit-io/code-review/blob/main/docs/OPERATIONS.md#releases-and-maturity).
 
 ## Compatibility
 
@@ -560,9 +560,15 @@ Batch size is a maximum. Every batch is measured before execution, and a single 
 
 Review identity excludes execution concurrency: preflight and workers can schedule differently without creating a different semantic policy. Engine version, source SHA, review rules and substantive budgets still identify the review. Repeating a completed SHA/policy must skip before downloading source or calling a model.
 
+Publication failures do not invalidate completed analysis. The cycle retains its review and quality decision and reports the publication phase separately. After an uncertain GitHub write, the adapter checks bounded history for the exact marked body before accepting delivery; it never blindly repeats the POST. `--publish-result <consolidated.json> --post` validates the current SHA and complete policy before reconciling both configured channels, including a missing walkthrough. An unchanged repeat performs no POST or PATCH. Inline-only policies use review history for idempotency; disabling both channels produces no remote comments.
+
+On same-identity cycle resume, successful corpus and learning evaluations are reused only when their input/configuration, engine entry point, approved-rule context and artifact hashes match. Prior usage remains charged and the original cycle clock is not reset. Changed, missing or corrupt evidence is measured again within the remaining budget. Batched policy identity includes optional lenses, thresholds, comment settings and merge-check policy; changing any of these requires new evidence.
+
 Codex inference runs in a temporary directory with focused review instructions, ambient skills/plugins disabled, and no shell, delegation or web search. Read-only sandboxing and structured output remain enabled. This reduces unrelated agent context; actual usage is still measured.
 
 For changed HTML, SCM ingestion can include up to four unchanged local linked stylesheets (64 KiB each, within the source budget) at the same head SHA. They are context for analysis and skepticism, not extra reviewed files. Remote/sensitive paths are excluded and unavailable context is explicit. This is one-hop context, not a complete dependency graph: quality corpus scores do not replace auditing real findings against the surrounding application.
+
+Single-lens, multidimensional and skeptical review share the same evidence policy: generated API types do not prove missing runtime refinements or state-transition guards. Runtime findings need implementation evidence; generated files remain reviewable for actual type changes. The live corpus and memory A/B use the same full review profile as PR batches, including an unhinted dense API-report regression. These checks reduce known noise; they do not establish zero false positives in arbitrary PRs.
 
 | Provider class | Examples | Secret or login | Network boundary |
 |---|---|---|---|
@@ -607,6 +613,8 @@ contracts. The GitHub adapter owns ingestion, bounded review-state inspection,
 inline and summary publication, conservative merge readiness, and
 revision-locked normal/admin merge. GitLab is future work and is not supported
 until an adapter passes the same contract suite.
+
+Merge readiness also reads bounded review history. An outstanding request for changes blocks merging even when checks pass or its reviewed SHA predates the current commit. Comments do not clear a request; a later approval by that reviewer or dismissal of that request does. Missing decision identity or truncated history fails closed.
 
 ## First local setup
 
@@ -744,6 +752,53 @@ included ranges, expansion, estimated input tokens, and output reserve. All buil
 are enabled by default; correctness, security, and tests are required.
 The shared local worker also accepts bounded `timeoutMs` and `maxOutputBytes`
 settings; absolute ceilings are always enforced.
+
+## Library API
+
+`createCodeReviewAgent`, `builtInLenses`, and every reporter (`markdownReporter`,
+`sarifReporter`, `githubInlineReporter`, `githubSummaryReporter`, `scmReviewReporter`,
+`renderMarkdown`, `renderGithubWalkthrough`) are exported from the package root
+(`import { createCodeReviewAgent } from '@agentskit/code-review'`) — this only became
+true from `0.30.19` onward; earlier versions defined these but never added them to
+`src/index.ts`'s export list, so no external consumer could reach them (see issue #275).
+Every `createCodeReviewAgent({...})` option documented below — `rules`,
+`verification.posture`, `context.grouping` — is reachable this way, not only through the
+bundled CLI.
+
+## Semantic file grouping (opt-in)
+
+`createCodeReviewAgent({ context: { grouping: 'semantic' } })` replaces the default
+same-basename-test-pair/local-import heuristic with one model call that clusters changed
+files by index (paths and line counts only, never file content) before packing — for
+relationships the heuristic cannot see, such as a header and its implementation in a
+different-language pair, or a schema and its generated code. It only fires above
+`groupingMinFiles` (default 4) changed files and `groupingMinLines` (default 200)
+combined lines; below that, or on any failure of the grouping call itself, grouping
+falls back to the heuristic. **`--plan`/`--dry-run` always uses the heuristic**, even
+when `semantic` is configured and thresholds are met — the preflight plan is a
+documented, tested provider-free contract, and semantic grouping is a real model call;
+only an actual `review()`/CLI run performs it, so a `--plan --json` preview of pack
+membership is an approximation in that mode, not a guarantee of the exact packs the
+real run will use. Files referenced outside the valid index range, or duplicated across
+groups, are dropped rather than trusted — every real file still lands in exactly one
+group, defaulting to its own singleton group if the model omitted or mis-referenced it.
+
+## Per-language review rules (opt-in)
+
+`createCodeReviewAgent({ rules: { enabled: true } })` resolves a per-file review
+checklist by glob and injects it alongside `conventions` for every file in a context
+pack, deduplicated across files that share a language. Precedence: a `.agentskit-review/rules.json`
+in the project root, then `~/.agentskit-review/rules.json`, then a built-in system
+checklist (`agents/code-review/rules.ts` — TypeScript/JavaScript, Python, Go, Rust,
+Java/Kotlin, Terraform, GitHub Actions workflows, YAML, JSON, and a general default).
+A project/global rule file entry is `{ "rules": [{ "path": "<glob>", "rule": "<text>",
+"mergeSystemRule": false }] }`; `mergeSystemRule: false` (default: merged) replaces the
+matching system checklist instead of appending to it. `rules.maxChars` (default 4000)
+bounds the combined resolved-rules text per pack, with a truncation warning emitted the
+same way as an over-long `conventions` file. This option is **off by default** — enabling
+it changes prompt content (and cost) for every file, so it is not turned on silently on
+upgrade. `src/review-rules.ts`'s `resolveRuleForFile(path, layers)` can be called
+directly to see which rule, and from which layer, would apply to a given file.
 
 Risk classification is provider-free and records every contributing signal. Documentation and
 generated-only packs are `low`; ordinary source and tests are `normal`; public contracts, IO, and
@@ -908,6 +963,20 @@ Troubleshooting:
 - **Context overflow:** review narrower paths or a smaller branch diff; unreviewed files must remain visibly outside the result.
 - **No findings with exit 0:** inspect the summary and successful/failed lens counts; advisory output is not proof that every file was reviewed.
 
+## Incremental GitHub inline posting
+
+`githubInlineReporter` (`agents/code-review/reporters.ts`) fetches the PR's existing
+review comments before posting and drops any candidate whose line range overlaps one at
+or above `policy.incrementalOverlapThreshold` (default `0.6`, an IoU over `[startLine,
+endLine]`) — a second run on the same PR (a new commit, a re-triggered CI job) does not
+repeat a finding still standing from a previous run; the summary body notes how many were
+skipped this way. `policy.routeSeverityBelow` additionally folds findings at or below a
+given severity into the summary instead of posting them inline, independent of the
+overlap check. Fetching history is best-effort: a failure to read it (network error, rate
+limit) never blocks posting — it only skips the overlap filter for that run. Both options
+are library-level `GithubCommentPolicy` fields today, not yet exposed as CLI flags or
+`.agentskit-review.json` config keys.
+
 ## GitHub Action permissions
 
 The copy-ready workflow in [`examples/pull-request.yml`](https://github.com/AgentsKit-io/code-review/blob/main/examples/pull-request.yml) requires:
@@ -958,6 +1027,8 @@ Use `--plan --json` (or `--dry-run`) to run the source and budget preflight with
 
 For a PR that exceeds one review budget, use deterministic coverage batches instead of accepting an incomplete review. Run `--plan --json --batch-size <n> --batch-manifest <private-file>` to create a private manifest keyed by repository, PR, head SHA, and policy fingerprint. Each `--batch-index <n> --result <private-file>` run is deliberately incomplete by itself and rejects `--post`; its result artifact carries the same identity plus its exact file manifest. `--consolidate-manifest <manifest> --artifacts <comma-list> --result <private-file>` rejects a missing, duplicate, stale, mismatched, failed, deadline-exceeded, or required-lens-incomplete artifact. Only that consolidated artifact is accepted by `--publish-result <file> --pr owner/repo#N --post`, which rechecks current SHA and policy before creating the one GitHub review. Delete or replace the private state when the PR SHA or policy changes; never upload it as a CI artifact or commit it.
 
+Every `ReviewResult` (single run or consolidated batch) carries a `coverage: { totalFiles, reviewedFiles, unreviewedFiles }` denominator distinct from the `incomplete` boolean: `incomplete` folds every uncertainty (budget, deadline, unverified findings, missing lenses) into one flag, while `coverage` says how many of the eligible files this run actually reviewed — the Markdown reporter prints it as "N of M file(s) reviewed". For an in-progress batch run, `describeCoverage` (`src/batch-coverage.ts`) renders the same "N of M" line from a `BatchCoverageState` before every batch has landed, naming which batch indices are still pending.
+
 When one changed text file is larger than the context budget, the planner recursively
 partitions its projected source into deterministic line-range chunks before provider
 execution. Each chunk keeps the original file and source-line identity, contributes to
@@ -993,9 +1064,36 @@ and cancellation are never retried. Repeated exhausted transient failures open
 the circuit, and cooldown permits one recovery probe. Completed sibling units
 remain valid when another unit fails. Incomplete evidence is never an approval.
 
+Before a context pack is dispatched, its estimated token cost is checked against the
+analysis budget (a running total across the packs already accepted in the same
+lookahead pass, so cumulative demand is bounded correctly, not just each pack in
+isolation) — a pack that cannot possibly fit is marked unreviewed with that reason
+directly, instead of occupying a concurrency slot only to fail moments later and abort
+sibling packs that already had real findings. A global deadline reached mid-analysis
+keeps whatever findings packs already produced before it fired: they flow into
+verification, where the same tripped deadline naturally marks them `verification:
+'unverified'` (surfaced, not silently discarded) rather than every candidate finding
+disappearing because one other pack was still in flight when time ran out.
+
+## Telemetry (opt-in)
+
+`createTelemetryObserver({ enabled: true, ... })` (`src/telemetry.ts`) exports every
+`progress` event — the same phase/status/timing stream a human-facing progress renderer
+consumes — as an OTLP-shaped span, and can be passed straight into `observers: [...]`.
+`exporter: 'console'` (the default once enabled) writes one JSON span per line;
+`exporter: 'otlp'` POSTs an OTLP/HTTP JSON trace payload to `otlpEndpoint` (best-effort:
+a collector being unreachable never fails or slows the review it is only observing).
+This is a direct OTLP/HTTP JSON emitter, not the official `@opentelemetry/sdk-node` —
+no new dependency is required. `contentLogging` (default `false`) controls whether a
+progress event's short `detail` note is included in its span; an `Observer` never has
+access to prompts, diffs, findings, or provider credentials in the first place,
+regardless of this setting. **Disabled by default** — like `rules.enabled` and
+`verification.posture`, this is a library-level option (no CLI flag or
+`.agentskit-review.json` key yet) that a caller opts into explicitly.
+
 ## SARIF
 
-`--sarif out.sarif` writes SARIF 2.1.0 alongside Markdown. Each surviving finding includes a `code-review/<category>` rule, severity level, message, file, and line. Uploading SARIF to GitHub code scanning requires the separate `security-events: write` permission and `github/codeql-action/upload-sarif`; the bundled Action does not request that permission or upload automatically.
+`--sarif out.sarif` writes SARIF 2.1.0 alongside Markdown. Each surviving finding includes a `code-review/<category>` rule, severity level, message, file, and line, plus a `partialFingerprints.primaryLocationLineHash` derived from the file, rule, and title only — deliberately excluding the line number, so GitHub Code Scanning still recognizes the same finding across runs even when an unrelated edit shifts it a few lines. `tool.driver` also reports the package `version` and an `informationUri`. Uploading SARIF to GitHub code scanning requires the separate `security-events: write` permission and `github/codeql-action/upload-sarif`; the bundled Action does not request that permission or upload automatically.
 
 SARIF can contain source paths and model-generated explanations. Apply the same retention and access policy as CI logs.
 
@@ -1056,10 +1154,10 @@ The default `added` filter limits inline feedback to changed lines. Choose a bro
 
 ## Releases and maturity
 
-The current package is `0.4.0` and the project is pre-v1:
+The current package is `0.31.0` and the project is pre-v1:
 
 - GitHub-source CLI commands can pin a commit SHA after `github:AgentsKit-io/code-review#<sha>`;
-- Actions should pin `@v0.4.0` or a full commit SHA;
+- Actions should pin `@v0.31.0` or a full commit SHA;
 - a moving `@main` reference is suitable only when that mutability is accepted;
 - the future `@v1` Action tag remains a separate stability milestone.
 
@@ -1211,6 +1309,8 @@ Please do not include secrets or private source code beyond what is necessary to
 ## Scope reminders
 
 This tool sends selected code to the provider you configure. Review that provider's data handling policy before using a hosted API. Prefer a local model or approved private gateway for repositories whose policy prohibits external processing. Store GitHub tokens and provider keys as secrets; never commit them to workflow files.
+
+Telemetry (`createTelemetryObserver`, `docs/OPERATIONS.md`) is opt-in and disabled by default. Enabled, it exports phase names, statuses, and timings as OTLP-shaped spans — never prompts, diffs, findings, or provider credentials, which an `Observer` cannot access in the first place. A progress event's short `detail` note is included only when `contentLogging` is also explicitly enabled.
 ## Contributing guide
 
 Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/CONTRIBUTING.md
@@ -1270,7 +1370,7 @@ This roadmap communicates direction, not a promise of dates.
 
 ## Toward v1
 
-- [ ] Publish the calibrated `0.4.x` line of `@agentskit/code-review` and signed release artifacts.
+- [ ] Publish the calibrated `0.31.x` line of `@agentskit/code-review` and signed release artifacts.
 - [ ] Publish immutable GitHub Action releases with a moving `v1` tag.
 - [ ] Add credential-free adapter contract tests and opt-in provider smoke tests.
 - [ ] Document measured review cost and latency by configuration.
@@ -1289,6 +1389,74 @@ Open an issue before starting a large item so maintainers and contributors can a
 Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/CHANGELOG.md
 
 # Changelog
+
+## 0.31.0
+
+### Minor Changes
+
+- [#280](https://github.com/AgentsKit-io/code-review/pull/280) [`3ad2dde`](https://github.com/AgentsKit-io/code-review/commit/3ad2dde95e65af15ab70c8511ebe4847f4ea28dd) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Promote `conservative` to the default `verification.posture` on `createCodeReviewAgent`, replacing `strict`. This closes out ADR-0008's pending live A/B: run against all 20 cases in `quality/evals/default.json` (including the corpus recalibration from the previous release) through a real `codex-cli` provider, `conservative` detected 10/12 positive cases versus `strict`'s 9/12 (+8.3 points), at a precision cost of only 1.2 points (41.7% vs 42.9%), with zero false positives on clean-code cases under either posture. This meets the promotion criterion set in ADR-0008 (detection gain ≥5 points, precision drop ≤3 points).
+
+  `strict` remains fully available — pass `verification: { posture: 'strict' }` explicitly to keep the prior behavior. This is a minor version bump because it changes default review output (a caller relying on the exact prior finding set from an unconfigured `verification.posture` will see different results, typically catching more real issues at a small, measured precision cost) even though no public API signature changed.
+
+### Patch Changes
+
+- [#278](https://github.com/AgentsKit-io/code-review/pull/278) [`a50ffe6`](https://github.com/AgentsKit-io/code-review/commit/a50ffe6229bc27e3e62030ee298c81d133242aff) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Export `codexCli`, `claudeCode`, `grokCli`, `opencodeCli`, `ollamaReview`, `createAutoCliAdapter`, `createHeadlessCliAdapter`, and their associated types (`GrokCliOptions`, `OpenCodeCliOptions`, `OllamaReviewOptions`, `HeadlessCliOptions`, `LocalCliMode`) from the package root. Same gap as `createCodeReviewAgent` (0.30.19): none of these local-CLI provider adapters were reachable from `@agentskit/code-review` — pairing `createCodeReviewAgent` with a real local-CLI provider required an internal relative import. Found during a real-provider quality/error/token testing round against 0.30.19.
+
+  That same round ran the full 20-case labelled corpus against a live `codex-cli` provider (not the fixture) and surfaced two corpus calibration issues, both fixed here: the `hardcoded-api-key` case's secret literal read as an obvious placeholder (`NOT-A-REAL-SECRET-...`), which a real model reasonably declined to flag as a credential — replaced with an opaque-looking token that still avoids matching a recognizable secret-scanner format. And `silent-behavior-change-rounding` / `unused-required-parameter` were labelled `high`; a real model consistently and defensibly rated both `med` — the corpus and its matching fixture (`test/fixtures/bin/codex`) now expect `med` for these two. `off-by-one-loop` and `unhandled-promise-rejection`'s `titleIncludes` keyword lists were also broadened: the real model found the correct bug in both but phrased the title differently than the original narrow list expected.
+
+## 0.30.19
+
+### Patch Changes
+
+- [#276](https://github.com/AgentsKit-io/code-review/pull/276) [`c1e88d8`](https://github.com/AgentsKit-io/code-review/commit/c1e88d8d6295689c6e339add0d79022373ebea6d) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Export `createCodeReviewAgent`, `builtInLenses`, every reporter (`markdownReporter`, `sarifReporter`, `githubInlineReporter`, `githubSummaryReporter`, `scmReviewReporter`, `renderMarkdown`, `renderGithubWalkthrough`), and the associated types (`CodeReviewConfig`, `ReviewResult`, `Finding`, `ReviewPlan`, `ReviewEvidence`, `Category`, `Severity`, `Verdict`, `Lens`, `Reporter`, `ReviewTarget`, `ContextPackEvidence`, `LensExecutionStats`, `GithubCommentPolicy`) from the package root. These were never part of `src/index.ts`'s export list — a gap that predates this release — so `verification.posture`, `rules.*`, and `context.grouping` (added in 0.31) were unreachable by any external consumer despite being fully implemented; only the bundled CLI could use them internally. Found while piloting the published 0.30.18 package from a clean install.
+
+## 0.30.18
+
+### Patch Changes
+
+- [#274](https://github.com/AgentsKit-io/code-review/pull/274) [`a792ed7`](https://github.com/AgentsKit-io/code-review/commit/a792ed7e4838c4e423c951b2dfbd400bcb863887) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Require an `analysis` field before the decision it explains in the skeptic's and the batched multidimensional lens's structured tool calls: `submit_verdicts` now declares `analysis` before `refuted`, and `submit_batched_findings` declares `analysis` before `findings`. Field declaration order is the JSON Schema property order sent to the provider, so the model works through its reasoning before it commits to a verdict or a finding list, instead of deciding first and rationalizing after. The shared ACP review envelope (`src/acp-cli-adapter.ts`, used by the grok-cli and opencode-cli/headless providers) accepts and requires the same field in its multidimensional branch.
+
+- [#272](https://github.com/AgentsKit-io/code-review/pull/272) [`539c825`](https://github.com/AgentsKit-io/code-review/commit/539c8258dec19879efe3fa4c4e7d370809ee1a2a) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Add ADR-0009 (layered, glob-resolved per-language review rules — the decision record promised in [#254](https://github.com/AgentsKit-io/code-review/issues/254) but not delivered with that PR) and ADR-0010 (keep single-step structured calls; do not adopt an agent-loop context-compression scheme, closing out the release 0.31 plan). No code changes.
+
+- [#270](https://github.com/AgentsKit-io/code-review/pull/270) [`ddd45be`](https://github.com/AgentsKit-io/code-review/commit/ddd45bee3a80f99199c289037f14717af1784718) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Add a budget lookahead (`ReviewBudgetLedger.canAfford`) checked before a context pack is dispatched, not after: a pack that cannot possibly fit the analysis budget is now marked unreviewed for that reason directly, instead of occupying a concurrency slot and then aborting the whole run when it fails inside the real reservation — which previously discarded sibling packs' already-produced findings too. Also fix a real bug where a global deadline reached during analysis discarded every candidate finding unconditionally, even from packs that finished before the deadline fired: those findings now flow into verification as usual, where the same tripped deadline marks them `verification: 'unverified'` (surfaced per [#252](https://github.com/AgentsKit-io/code-review/issues/252)'s fix) instead of the whole result silently going empty.
+
+- [#265](https://github.com/AgentsKit-io/code-review/pull/265) [`0c98986`](https://github.com/AgentsKit-io/code-review/commit/0c989864c4e2586f39558e5c5807bf6f70a55b5c) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Add a `coverage: { totalFiles, reviewedFiles, unreviewedFiles }` field to every `ReviewResult` (single run and consolidated batch), distinct from the `incomplete` boolean: `incomplete` folds every uncertainty (budget, deadline, unverified findings, missing lenses) into one flag, while `coverage` says how many of the eligible files a run actually reviewed. The Markdown reporter now prints "N of M file(s) reviewed" instead of only "INCOMPLETE". Also add `describeCoverage` to `src/batch-coverage.ts` for the same "N of M" summary from an in-progress `BatchCoverageState`, and extend `finalCoverage`'s return with `totalFiles`/`reviewedFiles`.
+
+- [#262](https://github.com/AgentsKit-io/code-review/pull/262) [`c5b392c`](https://github.com/AgentsKit-io/code-review/commit/c5b392c2fb15a1de976e253fd2347f7cd432d38f) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Expand the semantic evaluation corpus in `quality/evals/default.json` from 6 to 20 cases (8 plain positive, 4 protected-subject positive, 8 clean) and document how to reproduce a v0.30.17 quality baseline outside the repository, per the existing `validateStudyOutputPath` design. This is the prerequisite for the release 0.31 verification work ([#250](https://github.com/AgentsKit-io/code-review/issues/250), [#251](https://github.com/AgentsKit-io/code-review/issues/251), [#252](https://github.com/AgentsKit-io/code-review/issues/252)).
+
+- [#269](https://github.com/AgentsKit-io/code-review/pull/269) [`d1d12df`](https://github.com/AgentsKit-io/code-review/commit/d1d12df6f5d1a6508bc89657ab5c15ffb499af86) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - `githubInlineReporter` now fetches the PR's existing review comments before posting and drops any candidate whose line range overlaps one at or above `policy.incrementalOverlapThreshold` (default 0.6 IoU), so a second run on the same PR does not repeat a finding still standing from a previous run — the summary notes how many were skipped. `policy.routeSeverityBelow` additionally folds low-severity findings into the summary instead of posting them inline. History fetching is best-effort and never blocks posting on failure.
+
+- [#266](https://github.com/AgentsKit-io/code-review/pull/266) [`41587b6`](https://github.com/AgentsKit-io/code-review/commit/41587b6b62d96efc62861b23d344ec369132ce1d) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Add opt-in, layered per-language review rules: `createCodeReviewAgent({ rules: { enabled: true } })` resolves a checklist per file by glob (project `.agentskit-review/rules.json` → global `~/.agentskit-review/rules.json` → a built-in system checklist per language in `agents/code-review/rules.ts`), deduplicated across files sharing a language, and appended to the pack's conventions. Includes a small dependency-free glob matcher (`src/review-rules.ts` `matchGlob`, supporting `**`, `*`, `?`, and `{a,b,c}`) rather than adding a new glob library. Off by default, since enabling it changes prompt content and cost for every file.
+
+- [#268](https://github.com/AgentsKit-io/code-review/pull/268) [`c84f640`](https://github.com/AgentsKit-io/code-review/commit/c84f6404c0b7fef9baf989538558f84c103b43f8) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - SARIF output now includes `partialFingerprints.primaryLocationLineHash` per finding (derived from file, rule, and title — deliberately excluding the line number, so GitHub Code Scanning still recognizes the same finding across runs when an unrelated edit shifts it a few lines), plus `tool.driver.version` and `informationUri`.
+
+- [#267](https://github.com/AgentsKit-io/code-review/pull/267) [`2f24d47`](https://github.com/AgentsKit-io/code-review/commit/2f24d4775c72cc6d712d54d30926af63bd43a85e) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Add an opt-in `context.grouping: 'semantic'` mode: one model call clusters changed files by index (paths and line counts only, never content) into context packs, for cross-file relationships the default same-basename/local-import heuristic cannot see. Only triggers above `groupingMinFiles`/`groupingMinLines` thresholds (default 4 files / 200 combined lines), and always falls back to the heuristic below threshold, on any grouping-call failure, or during `--plan`/`--dry-run` (which stays a provider-free preflight in every mode). Out-of-range or duplicate indices from the model are dropped; every real file still lands in exactly one group.
+
+- [#264](https://github.com/AgentsKit-io/code-review/pull/264) [`96c1f3a`](https://github.com/AgentsKit-io/code-review/commit/96c1f3ae85cb615e7789d15ceb2b537d524453e3) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Add an optional `conservative` skeptic verification posture (`verification.posture` on `createCodeReviewAgent`) alongside the existing default `strict` one: it refutes a finding only when the evidence proves it wrong (the code is not where claimed, or a specific line directly contradicts the claim) and vetoes a configurable `verification.protectedSubjects` list (default: memory-safety, concurrency, behavioral-change, unused-parameter, linkage-consistency) before assessing correctness at all. The default stays `strict`, pending a live-provider A/B — see `docs/adr/0008-verification-posture.md`.
+
+  Also, independently of posture: a finding verification could not reach a verdict for (timeout, budget exhaustion, malformed output) is now surfaced in the result tagged `verification: 'unverified'`, instead of being silently folded into refuted findings and discarded. `incomplete` still forces the run to stop short of approval whenever this happens.
+
+- [#271](https://github.com/AgentsKit-io/code-review/pull/271) [`6605c26`](https://github.com/AgentsKit-io/code-review/commit/6605c264ffefd5ff2761699250047303dc4e8351) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Add optional, opt-in telemetry: `createTelemetryObserver({ enabled: true, ... })` (`src/telemetry.ts`, re-exported from the package root) exports every progress event as an OTLP-shaped span — `console` (JSON lines) or `otlp` (POSTed to a collector, best-effort, never blocking the review) — via a direct OTLP/HTTP JSON emitter rather than the official `@opentelemetry/sdk-node`, so no new dependency is required. Disabled by default; `contentLogging` (also default off) separately controls whether a progress event's short detail note is included. Telemetry never has access to prompts, diffs, findings, or provider credentials in the first place.
+
+## 0.30.17
+
+### Patch Changes
+
+- [#248](https://github.com/AgentsKit-io/code-review/pull/248) [`8a1aa29`](https://github.com/AgentsKit-io/code-review/commit/8a1aa2986a8e7b133df1fca049a2915e77b97047) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Share runtime-evidence safeguards across single, combined and skeptical review so generated API declarations are not mistaken for unconstrained runtime schemas. Validate the dense declaration regression and learning corpus with the same full profile used for real PR batches.
+
+## 0.30.16
+
+### Patch Changes
+
+- [#246](https://github.com/AgentsKit-io/code-review/pull/246) [`4da5164`](https://github.com/AgentsKit-io/code-review/commit/4da51645966ce4662eaca2dc7b455f6a08ff9e54) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Recover lost GitHub publication acknowledgements by reconciling marked remote history, complete missing summaries on validated artifact replay, and avoid duplicate writes. Preserve completed review/matrix evidence on publication failure, reuse hash-bound successful evaluations without resetting cumulative budgets, and honor configured comment channels and semantic policy identity.
+
+  Block merges with outstanding changes-requested reviews even when the current commit checks pass; incomplete review history fails closed.
+
+## 0.30.15
+
+### Patch Changes
+
+- [#244](https://github.com/AgentsKit-io/code-review/pull/244) [`3e2ebf4`](https://github.com/AgentsKit-io/code-review/commit/3e2ebf4658d1d0758bf79015a9cff3c7988a00aa) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Require GitHub-confirmed release immutability after publication and on release retries. Document the repository setting prerequisite instead of treating an existing release as proof of protection.
 
 ## 0.30.14
 

@@ -192,7 +192,7 @@ jobs:
   review:
     runs-on: ubuntu-latest
     steps:
-      - uses: AgentsKit-io/code-review@v0.4.0
+      - uses: AgentsKit-io/code-review@v0.31.0
         with:
           provider: openai
           model: gpt-4o
@@ -215,7 +215,7 @@ GitLab is intentionally unsupported until an adapter passes the same tests.
 
 Building a conversational review experience? Use [AgentsKit Chat](https://chat.agentskit.io/docs) for the cross-framework application layer instead of embedding chat here. Looking for organization-wide orchestration, governance, and production controls? Continue with [AKOS](https://akos.agentskit.io/docs).
 
-Pin the Action to an immutable release tag such as `@v0.4.0`; use a full commit SHA when your policy requires the strongest reproducibility.
+Pin the Action to an immutable release tag such as `@v0.31.0`; use a full commit SHA when your policy requires the strongest reproducibility.
 
 ## Choose how to run
 
@@ -487,7 +487,7 @@ node examples/verify-readme.mjs
 
 ## Maturity
 
-The repository is **pre-v1 (`0.4.x`)**. The CLI and Action are available for evaluation and advisory CI; use an exact release tag such as `@v0.4.0` or a commit SHA, and treat the future `v1` moving tag as a separate stability milestone. See [ROADMAP.md](ROADMAP.md) and the [release guidance](docs/OPERATIONS.md#releases-and-maturity).
+The repository is **pre-v1 (`0.31.x`)**. The CLI and Action are available for evaluation and advisory CI; use an exact release tag such as `@v0.31.0` or a commit SHA, and treat the future `v1` moving tag as a separate stability milestone. See [ROADMAP.md](ROADMAP.md) and the [release guidance](docs/OPERATIONS.md#releases-and-maturity).
 
 ## Compatibility
 

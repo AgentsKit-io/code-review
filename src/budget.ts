@@ -154,6 +154,29 @@ export function createReviewBudgetLedger(budget: HierarchicalReviewBudget) {
   let reservedTokens = 0
   let reservedCalls = 0
 
+  /**
+   * Read-only lookahead: would `begin(scope, estimatedTokens)` succeed right now, given
+   * everything already committed and reserved, PLUS `pending` — tokens/calls a caller has
+   * provisionally counted for other candidates it has already decided to accept in the
+   * same lookahead pass but not yet actually reserved via `begin()`. Without `pending`,
+   * checking several candidates against the same unchanged snapshot would let through
+   * more of them than the budget actually allows once they are all really reserved —
+   * `pending` is how a caller accumulates a running total across that one sequential
+   * pass. Never reserves anything itself. Intended to be checked BEFORE a caller queues
+   * work behind a concurrency gate, so a pack that cannot possibly fit is skipped —
+   * marked unreviewed for its real reason — instead of occupying a concurrency slot only
+   * to fail inside `begin()` a moment later.
+   */
+  function canAfford(scope: keyof HierarchicalReviewBudget, estimatedTokens: number, pending: { tokens: number; calls: number } = { tokens: 0, calls: 0 }): boolean {
+    if (!Number.isInteger(estimatedTokens) || estimatedTokens < 0) return false
+    const scopes = [budget.campaign, budget.pullRequest, budget[scope]]
+    if (usage.providerCalls + reservedCalls + pending.calls + 1 > Math.min(...scopes.map((candidate) => candidate.maxCalls))) return false
+    const reserve = budget[scope].reserveForOutput
+    const capacities = scopes.map((candidate, index) => candidate.maxTokens - candidate.reserveForVerification - (index < 2 ? candidate.reserveForOutput : 0))
+    const capacity = Math.min(...capacities)
+    return committedTokens + reservedTokens + pending.tokens + estimatedTokens + reserve <= capacity
+  }
+
   function begin(scope: keyof HierarchicalReviewBudget, estimatedTokens: number): BudgetReservation {
     if (!Number.isInteger(estimatedTokens) || estimatedTokens < 0) throw new Error('estimated provider input tokens must be a non-negative integer')
     const scopes = [budget.campaign, budget.pullRequest, budget[scope]]
@@ -207,5 +230,5 @@ export function createReviewBudgetLedger(budget: HierarchicalReviewBudget) {
     committedTokens = 0
   }
 
-  return { begin, usage: () => ({ ...usage }), reset, budget }
+  return { begin, canAfford, usage: () => ({ ...usage }), reset, budget }
 }
