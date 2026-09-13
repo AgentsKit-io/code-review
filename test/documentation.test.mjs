@@ -38,7 +38,7 @@ test('Changesets release automation is tokenless, gated, and recoverable', () =>
   assert.match(manifest.scripts['version-packages'], /^changeset version && npm version --no-git-tag-version --ignore-scripts --allow-same-version .* && npm run docs:full && npm run readme:standard:refresh$/)
   assert.equal(changesets.baseBranch, 'main')
   assert.deepEqual(changesets.changelog, ['@changesets/changelog-github', { repo: 'AgentsKit-io/code-review' }])
-  assert.match(versionWorkflow, /changesets\/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d/)
+  assert.match(versionWorkflow, /changesets\/action@ae32849d5ba541f9ae29e40e22a623bc13562f51/)
   assert.match(versionWorkflow, /pull-requests: write/)
   assert.doesNotMatch(versionWorkflow, /id-token: write/)
   const publishJob = publishWorkflow.match(/\n  publish:\n([\s\S]*?)(?=\n  [A-Za-z0-9_-]+:|\n\S|$)/)?.[1] ?? ''
