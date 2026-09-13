@@ -53,9 +53,19 @@ export function recordBatch(state: BatchCoverageState, input: { headSha: string;
   return { ...state, batches: state.batches.map((item) => item.index === input.index ? { ...item, completed: true, findings: input.findings } : item) }
 }
 
-export function finalCoverage(state: BatchCoverageState): { complete: boolean; findings: number; pending: number[] } {
+export function finalCoverage(state: BatchCoverageState): { complete: boolean; findings: number; pending: number[]; totalFiles: number; reviewedFiles: number } {
   const pending = state.batches.filter((batch) => !batch.completed).map((batch) => batch.index)
-  return { complete: pending.length === 0, findings: state.batches.reduce((sum, batch) => sum + batch.findings, 0), pending }
+  const totalFiles = new Set(state.batches.flatMap((batch) => batch.files)).size
+  const reviewedFiles = new Set(state.batches.filter((batch) => batch.completed).flatMap((batch) => batch.files)).size
+  return { complete: pending.length === 0, findings: state.batches.reduce((sum, batch) => sum + batch.findings, 0), pending, totalFiles, reviewedFiles }
+}
+
+/** Human-readable "N of M files reviewed" summary — for a plan/status line, not a publication gate. */
+export function describeCoverage(state: BatchCoverageState): string {
+  const coverage = finalCoverage(state)
+  return coverage.complete
+    ? `${coverage.reviewedFiles} of ${coverage.totalFiles} file(s) reviewed (complete)`
+    : `${coverage.reviewedFiles} of ${coverage.totalFiles} file(s) reviewed; ${coverage.pending.length} batch(es) pending: ${coverage.pending.join(', ')}`
 }
 
 export function publicationDecision(state: BatchCoverageState): { publish: boolean; reason: string } {
@@ -130,12 +140,16 @@ export function consolidateBatchArtifacts(state: BatchCoverageState, artifacts: 
   const severe = findings.some((finding) => finding.severity === 'blocker' || finding.severity === 'high')
   const enabledCategories = reviews[0]?.enabledCategories ?? []
   const completedCategories = enabledCategories.filter((category) => reviews.every((review) => review.completedCategories?.includes(category)))
+  // Every consolidated artifact was already rejected by assertUsableArtifact if it carried
+  // any unreviewed file, so a full consolidation always covers every planned file.
+  const totalFiles = new Set(state.batches.flatMap((batch) => batch.files)).size
   return {
     verdict: !findings.length ? 'APPROVE' : severe ? 'REQUEST CHANGES' : 'COMMENT',
     blocking: reviews.some((review) => review.blocking),
     incomplete: false,
     findings,
     dropped,
+    coverage: { totalFiles, reviewedFiles: totalFiles, unreviewedFiles: 0 },
     execution,
     evidence,
     enabledCategories,

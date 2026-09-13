@@ -2,6 +2,9 @@ import { writeFileSync } from 'node:fs'
 import type { Finding, Reporter, ReviewResult } from './agent.js'
 import { createGithubScmAdapter } from '../../src/github-scm-adapter.js'
 import type { ChangeRequestRef, ScmAdapter } from '../../src/scm-contract.js'
+import { packageVersion } from '../../src/review-policy.js'
+import { stableFingerprint } from '../../src/stable-fingerprint.js'
+import { githubReviewComments, overlapsExistingComment } from '../../src/github-review-state.js'
 
 /**
  * Reporters turn a ReviewResult into an output surface. They are orchestration code
@@ -27,6 +30,15 @@ export interface GithubCommentPolicy {
   includeInstructions?: boolean
   includeEvidence?: boolean
   collapsibleDetails?: boolean
+  /**
+   * Line-range IoU (0..1) at/above which a new inline finding is considered the same as
+   * an existing review comment on the same file, and is not re-posted. Default 0.6.
+   */
+  incrementalOverlapThreshold?: number
+  /** Findings at this severity or lower (nit < med < high < blocker) are folded into the
+   * summary body instead of posted as inline comments. Unset: everything eligible for
+   * inline (in-diff) posting stays inline. */
+  routeSeverityBelow?: Finding['severity']
 }
 
 function section(label: string, value: string, enabled: boolean): string {
@@ -55,7 +67,8 @@ function groupBySeverity(findings: Finding[]): string {
     if (!group.length) continue
     lines.push(`\n### ${SEV_EMOJI[sev]} ${sev} (${group.length})\n`)
     for (const f of group) {
-      lines.push(`- **${f.file}:${f.line}** — ${f.title} _(${f.category}, conf ${f.confidence.toFixed(2)})_`)
+      const unverifiedTag = f.verification === 'unverified' ? ' ⚠️ unverified — verification did not reach a verdict' : ''
+      lines.push(`- **${f.file}:${f.line}** — ${f.title} _(${f.category}, conf ${f.confidence.toFixed(2)})_${unverifiedTag}`)
       lines.push(`  - ${f.rationale}`)
       lines.push(`  - 💡 ${f.suggestion}`)
       if (f.suggestedPatch) {
@@ -82,7 +95,10 @@ export function markdownReporter(opts: { write?: (s: string) => void; file?: str
 
 export function renderMarkdown(review: ReviewResult): string {
   const evidence = `\n\n_Evidence: profile=${review.evidence.profile}; provider calls=${review.evidence.providerCalls} (failed=${review.evidence.failedProviderCalls}, skipped=${review.evidence.skippedProviderCalls}); elapsed=${review.evidence.elapsedMs}ms; circuit=${review.evidence.circuitState}${review.evidence.deadlineExceeded ? '; deadline exceeded' : ''}_`
-  const head = `## Code review — ${review.verdict}\n\n${review.summary}${evidence}`
+  const coverage = review.coverage.totalFiles
+    ? `\n\n_Coverage: ${review.coverage.reviewedFiles} of ${review.coverage.totalFiles} file(s) reviewed${review.coverage.unreviewedFiles ? `; ${review.coverage.unreviewedFiles} skipped (see reasons below)` : ''}._`
+    : ''
+  const head = `## Code review — ${review.verdict}\n\n${review.summary}${evidence}${coverage}`
   const body = review.findings.length ? groupBySeverity(review.findings) : '\nNo findings above threshold. ✅'
   const dropped = review.dropped.length ? `\n\n_${review.dropped.length} finding(s) dropped (verify/threshold). ${review.droppedNote ?? ''}_` : ''
   return `${head}\n${body}${dropped}\n`
@@ -137,6 +153,11 @@ export function sarifReporter(opts: { file?: string; write?: (s: string) => void
       const results = review.findings.map((f) => {
         const ruleId = `code-review/${f.category}`
         if (!rulesSeen.has(ruleId)) rulesSeen.set(ruleId, { id: ruleId, name: f.category })
+        // Deliberately excludes `line`/`endLine`: an unrelated edit a few lines above or
+        // below must not change the fingerprint GitHub Code Scanning uses to dedupe a
+        // finding across runs. This is the same finding as long as the file, rule, and
+        // title stay the same — the location can drift without it being a new issue.
+        const primaryLocationLineHash = stableFingerprint({ file: f.file, ruleId, title: f.title })
         return {
           ruleId,
           level: sevToLevel[f.severity],
@@ -149,6 +170,7 @@ export function sarifReporter(opts: { file?: string; write?: (s: string) => void
               },
             },
           ],
+          partialFingerprints: { primaryLocationLineHash },
           properties: { severity: f.severity, confidence: f.confidence },
         }
       })
@@ -157,7 +179,14 @@ export function sarifReporter(opts: { file?: string; write?: (s: string) => void
         version: '2.1.0',
         runs: [
           {
-            tool: { driver: { name: 'agentskit-code-review', rules: [...rulesSeen.values()].map((r) => ({ id: r.id, name: r.name })) } },
+            tool: {
+              driver: {
+                name: 'agentskit-code-review',
+                version: packageVersion(),
+                informationUri: 'https://github.com/AgentsKit-io/code-review',
+                rules: [...rulesSeen.values()].map((r) => ({ id: r.id, name: r.name })),
+              },
+            },
             results,
           },
         ],
@@ -184,6 +213,7 @@ export function scmReviewReporter(c: { adapter: ScmAdapter; ref: ChangeRequestRe
     name: `scm-${c.channel}`,
     async emit(review: ReviewResult) {
       if (c.channel === 'summary') {
+        if (c.policy?.summary === false) return
         await c.adapter.publishReview(c.ref, { channel: 'summary', headRevision: c.headRevision, ...(c.fingerprint ? { fingerprint: c.fingerprint } : {}), verdict: review.verdict === 'REQUEST CHANGES' ? 'REQUEST_CHANGES' : review.verdict, summary: renderGithubWalkthrough(review), annotations: [] })
         return
       }
@@ -212,8 +242,53 @@ export function githubSummaryReporter(c: { owner: string; repo: string; number: 
  * A batched PR review: inline comments on findings that land inside the diff, plus an
  * overall verdict + summary body. Findings outside the diff are folded into the body
  * (GitHub rejects review comments on unchanged lines).
+ *
+ * Before posting, this reporter fetches the PR's existing review comments and drops any
+ * candidate whose line range overlaps one at or above `policy.incrementalOverlapThreshold`
+ * (default 0.6) — a second run on the same PR (a new commit, a re-triggered CI job) does
+ * not repeat a finding still standing from a previous run. `policy.routeSeverityBelow`
+ * additionally folds low-severity findings into the summary instead of posting them
+ * inline, independent of the overlap check. Fetching history is best-effort: a failure to
+ * read it never blocks posting, it just skips the overlap filter for this run.
  */
 export function githubInlineReporter(c: { owner: string; repo: string; number: number; token: string; commitId?: string; marker?: string; policy?: GithubCommentPolicy }): Reporter {
   const identity = markerIdentity(c.marker)
-  return { ...scmReviewReporter({ adapter: createGithubScmAdapter({ token: c.token }), ref: { repository: `${c.owner}/${c.repo}`, id: String(c.number) }, channel: 'review', headRevision: c.commitId ?? identity.headRevision ?? 'unknown', ...(identity.fingerprint ? { fingerprint: identity.fingerprint } : {}), policy: c.policy }), name: 'github-inline' }
+  const headRevision = c.commitId ?? identity.headRevision ?? 'unknown'
+  const fingerprint = identity.fingerprint
+  const adapter = createGithubScmAdapter({ token: c.token })
+  const ref: ChangeRequestRef = { repository: `${c.owner}/${c.repo}`, id: String(c.number) }
+  return {
+    name: 'github-inline',
+    async emit(review: ReviewResult) {
+      const routeBelowRank = c.policy?.routeSeverityBelow ? SEV_ORDER.indexOf(c.policy.routeSeverityBelow) : -1
+      const eligible = c.policy?.inline === false ? [] : review.findings.filter((finding) => finding.inDiff)
+      const routed = routeBelowRank >= 0 ? eligible.filter((finding) => SEV_ORDER.indexOf(finding.severity) >= routeBelowRank) : []
+      let candidates = routeBelowRank >= 0 ? eligible.filter((finding) => SEV_ORDER.indexOf(finding.severity) < routeBelowRank) : eligible
+      let skippedOverlap = 0
+      if (candidates.length) {
+        try {
+          const history = await githubReviewComments(c.token, c.owner, c.repo, c.number)
+          if (!history.truncated) {
+            const before = candidates.length
+            const threshold = c.policy?.incrementalOverlapThreshold ?? 0.6
+            candidates = candidates.filter((finding) => !overlapsExistingComment({ path: finding.file, line: finding.line, endLine: finding.endLine }, history.comments, threshold))
+            skippedOverlap = before - candidates.length
+          }
+        } catch { /* history is a best-effort dedup aid, never a reason to fail posting */ }
+      }
+      const outOfDiff = [...review.findings.filter((finding) => !finding.inDiff), ...routed]
+      const summary = `## Code review — ${review.verdict}\n\n${review.summary}` +
+        (outOfDiff.length ? `\n\n### Findings outside the diff\n${groupBySeverity(outOfDiff)}` : '') +
+        (skippedOverlap ? `\n\n_${skippedOverlap} finding(s) already reported in a previous review on this PR were not repeated._` : '')
+      if (c.policy?.summary === false && candidates.length === 0) return
+      await adapter.publishReview(ref, {
+        channel: 'review',
+        headRevision,
+        ...(fingerprint ? { fingerprint } : {}),
+        verdict: review.verdict === 'REQUEST CHANGES' ? 'REQUEST_CHANGES' : review.verdict,
+        summary,
+        annotations: candidates.map((finding) => ({ path: finding.file, line: finding.line, ...(finding.endLine ? { endLine: finding.endLine } : {}), body: renderInlineFinding(finding, c.policy) })),
+      })
+    },
+  }
 }

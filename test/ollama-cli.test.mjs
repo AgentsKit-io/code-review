@@ -41,7 +41,7 @@ test('the built CLI completes a structured local Ollama review', async () => {
       requests.push(body)
       const tool = body.tools[0].function.name
       const arguments_ = tool === 'submit_batched_findings'
-        ? { completedCategories: ['correctness', 'security', 'performance', 'maintainability', 'design', 'tests', 'conventions'], findings: [] }
+        ? { completedCategories: ['correctness', 'security', 'performance', 'maintainability', 'design', 'tests', 'conventions'], analysis: ['Checked every enabled dimension against the reviewed source.'], findings: [] }
         : { findings: [] }
       response.writeHead(200, { 'content-type': 'application/x-ndjson' })
       response.end([

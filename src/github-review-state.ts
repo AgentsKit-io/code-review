@@ -115,6 +115,8 @@ export interface GithubPullReview {
   id?: number
   html_url?: string
   body?: string
+  state?: string
+  user?: { login?: string }
 }
 
 export async function githubIssueComments(token: string, owner: string, repo: string, number: number, fetcher: typeof fetch = fetch): Promise<{ comments: GithubIssueComment[]; truncated: boolean }> {
@@ -137,6 +139,53 @@ export async function githubPullReviews(token: string, owner: string, repo: stri
   return { reviews, truncated: true }
 }
 
+export interface GithubReviewComment {
+  id?: number
+  path?: string
+  line?: number | null
+  start_line?: number | null
+  body?: string
+}
+
+const REVIEW_COMMENT_PAGE_SIZE = 100
+const MAX_REVIEW_COMMENT_PAGES = 10
+
+/** Existing inline review comments (not the review summary bodies) — used to detect a
+ * line-range overlap with a previous run's comments before re-posting the same finding. */
+export async function githubReviewComments(token: string, owner: string, repo: string, number: number, fetcher: typeof fetch = fetch): Promise<{ comments: GithubReviewComment[]; truncated: boolean }> {
+  const comments: GithubReviewComment[] = []
+  for (let page = 1; page <= MAX_REVIEW_COMMENT_PAGES; page++) {
+    const batch = await githubGet<GithubReviewComment[]>(token, `/repos/${owner}/${repo}/pulls/${number}/comments?per_page=${REVIEW_COMMENT_PAGE_SIZE}&page=${page}`, fetcher)
+    comments.push(...batch)
+    if (batch.length < REVIEW_COMMENT_PAGE_SIZE) return { comments, truncated: false }
+  }
+  return { comments, truncated: true }
+}
+
+/** Line-range Intersection-over-Union between a candidate annotation and an existing
+ * review comment on the same file. GitHub's own `line`/`start_line` model a single line
+ * as `start_line: null, line: N` — normalized here to a closed `[start, end]` range. */
+export function lineRangeOverlap(candidate: { path: string; line: number; endLine?: number }, existing: GithubReviewComment): number {
+  if (existing.path !== candidate.path || existing.line == null) return 0
+  const existingStart = existing.start_line ?? existing.line
+  const existingEnd = existing.line
+  const candidateStart = candidate.line
+  const candidateEnd = candidate.endLine ?? candidate.line
+  const intersectionStart = Math.max(existingStart, candidateStart)
+  const intersectionEnd = Math.min(existingEnd, candidateEnd)
+  const intersection = Math.max(0, intersectionEnd - intersectionStart + 1)
+  if (!intersection) return 0
+  const union = (existingEnd - existingStart + 1) + (candidateEnd - candidateStart + 1) - intersection
+  return intersection / union
+}
+
+/** True when a candidate annotation's line range overlaps ANY existing review comment on
+ * the same file at or above `threshold` (default 0.6, matching `open-code-review`'s IoU
+ * cutoff for the same problem). */
+export function overlapsExistingComment(candidate: { path: string; line: number; endLine?: number }, existing: readonly GithubReviewComment[], threshold = 0.6): boolean {
+  return existing.some((comment) => lineRangeOverlap(candidate, comment) >= threshold)
+}
+
 export function markerIn(body: string | undefined, marker: string): boolean {
   return body?.includes(marker) ?? false
 }
@@ -153,15 +202,18 @@ export async function getGithubReviewState(input: {
   token: string
   fingerprint: string
   fetcher?: typeof fetch
+  channel?: 'review' | 'summary'
 }): Promise<GithubReviewState> {
   const pr = await githubGet<{
     head: { sha: string; repo?: { full_name?: string } }
     base: { sha: string; repo?: { full_name?: string } }
   }>(input.token, `/repos/${input.owner}/${input.repo}/pulls/${input.number}`, input.fetcher)
   const marker = reviewMarker(pr.head.sha, input.fingerprint)
-  const history = await githubIssueComments(input.token, input.owner, input.repo, input.number, input.fetcher)
+  const history = input.channel === 'review'
+    ? await githubPullReviews(input.token, input.owner, input.repo, input.number, input.fetcher)
+    : await githubIssueComments(input.token, input.owner, input.repo, input.number, input.fetcher)
   if (history.truncated) throw new Error(`GitHub review comment history exceeded ${MAX_COMMENT_PAGES * COMMENT_PAGE_SIZE} comments; refusing to post without idempotency proof`)
-  const comments = history.comments
+  const comments = 'comments' in history ? history.comments : history.reviews
   const previousSha = comments.map((comment) => previousMarker(comment.body, input.fingerprint)).find(Boolean)
   let scope: GithubReviewState['scope'] = 'full'
   if (previousSha && previousSha !== pr.head.sha) {

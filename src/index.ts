@@ -102,5 +102,35 @@ export { createReviewCache, reviewCacheKey, ReviewCacheIdentitySchema, ReviewCac
 export type { ReviewCache, ReviewCacheIdentity, ReviewCacheLookup, ReviewCacheMissReason, ReviewCacheRecord, ReviewCacheWrite } from './review-cache.js'
 export { HierarchicalReviewBudgetSchema, ReviewBudgetScopeSchema, addReviewUsage, compileReviewBudget, createReviewBudgetLedger, defaultReviewBudget, emptyReviewUsage, ReviewBudgetExceededError } from './budget.js'
 export type { HierarchicalReviewBudget, ReviewBudgetHierarchyInput, ReviewBudgetScope, ReviewUsage } from './budget.js'
+export { createTelemetryObserver } from './telemetry.js'
+export type { TelemetryOptions } from './telemetry.js'
 export { ReviewFeedbackFileSchema, ReviewFeedbackSchema, ReviewKnowledgeFileSchema, ReviewKnowledgeSchema, ReviewKnowledgeScopeSchema, ReviewSafeTextSchema, ReviewStoreLayoutSchema, createApprovedReviewRetriever, createReviewFeedbackStore, createReviewKnowledgeStore, createReviewStoreLayout, createReviewStores } from './review-stores.js'
 export type { ReviewFeedback, ReviewFeedbackStore, ReviewKnowledge, ReviewKnowledgeScope, ReviewKnowledgeScopeInput, ReviewKnowledgeStore, ReviewStoreLayout } from './review-stores.js'
+// The reviewing agent itself. Was never part of this package's public surface before
+// this export (predates release 0.31) -- every review-time option, including
+// verification.posture, rules.*, and context.grouping, lives on CodeReviewConfig and
+// was unreachable by an external consumer until now (see issue #275).
+export { builtInLenses, createCodeReviewAgent, ReviewDeadlineError, ReviewExecutionError, ReviewPreflightError } from '../agents/code-review/agent.js'
+export type {
+  Category, CodeReviewConfig, ContextPackEvidence, Finding, Lens, LensExecutionStats, Reporter,
+  ReviewEvidence, ReviewPlan, ReviewResult, ReviewTarget, Severity, Verdict,
+} from '../agents/code-review/agent.js'
+export {
+  githubInlineReporter, githubSummaryReporter, markdownReporter, renderGithubWalkthrough, renderMarkdown,
+  sarifReporter, scmReviewReporter,
+} from '../agents/code-review/reporters.js'
+export type { GithubCommentPolicy } from '../agents/code-review/reporters.js'
+// Local-CLI provider adapters. Same gap as createCodeReviewAgent above (issue #275):
+// none of these were reachable from the package root before this export, so pairing
+// createCodeReviewAgent with a real local-CLI provider required an internal import.
+export { codexCli } from './codex-adapter.js'
+export { claudeCode } from './claude-code-adapter.js'
+export { grokCli } from './grok-cli-adapter.js'
+export type { GrokCliOptions } from './grok-cli-adapter.js'
+export { opencodeCli } from './opencode-cli-adapter.js'
+export type { OpenCodeCliOptions } from './opencode-cli-adapter.js'
+export { ollamaReview } from './ollama-adapter.js'
+export type { OllamaReviewOptions } from './ollama-adapter.js'
+export { createAutoCliAdapter, createHeadlessCliAdapter } from './headless-cli-adapter.js'
+export type { HeadlessCliOptions } from './headless-cli-adapter.js'
+export type { LocalCliMode } from './local-cli-process.js'
