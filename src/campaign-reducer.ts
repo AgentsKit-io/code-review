@@ -14,10 +14,10 @@ import {
 export const CampaignEngineStateSchema = z.object({
   version: z.literal(1),
   campaign: CampaignContractSchema,
-  pullRequests: z.record(PullRequestRunContractSchema).readonly(),
-  reviewUnits: z.record(ReviewUnitContractSchema).readonly(),
-  unitEvidence: z.record(z.string().regex(/^[a-f0-9]{64}$/)).readonly(),
-  unitFailures: z.record(DomainFailureSchema).readonly(),
+  pullRequests: z.record(z.string(), PullRequestRunContractSchema).readonly(),
+  reviewUnits: z.record(z.string(), ReviewUnitContractSchema).readonly(),
+  unitEvidence: z.record(z.string(), z.string().regex(/^[a-f0-9]{64}$/)).readonly(),
+  unitFailures: z.record(z.string(), DomainFailureSchema).readonly(),
   lastSequence: z.number().int().min(-1),
 }).strict().readonly()
 

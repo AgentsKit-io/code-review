@@ -5,7 +5,6 @@ import { execFile } from 'node:child_process'
 import { randomBytes } from 'node:crypto'
 import { posix } from 'node:path'
 import { z } from 'zod'
-import { zodToJsonSchema } from 'zod-to-json-schema'
 import type { JSONSchema7 } from 'json-schema'
 import {
   consolidator,
@@ -379,9 +378,9 @@ const FindingSchema = z.object({
   rationale: z.string(),
   suggestion: z.string(),
   suggestedPatch: z.string().nullable().transform((value) => value ?? undefined),
-})
+}).strict()
 const CategorySchema = z.enum(['correctness', 'security', 'performance', 'maintainability', 'design', 'tests', 'conventions'])
-const LensSubmission = z.object({ findings: z.array(FindingSchema) })
+const LensSubmission = z.object({ findings: z.array(FindingSchema) }).strict()
 // Field order is load-bearing: `analysis` is declared (and so emitted in the JSON Schema
 // sent to the provider) before `findings`, so the model works through what it checked
 // before it commits to specific findings, instead of deciding first and rationalizing after.
@@ -389,20 +388,28 @@ const BatchedSubmission = z.object({
   completedCategories: z.array(CategorySchema),
   analysis: z.array(z.string().min(1)).min(1),
   findings: z.array(FindingSchema),
-})
+}).strict()
 // Same reasoning-before-commitment ordering: `analysis` precedes the `refuted` boolean it
 // justifies. A model that reasons "this is a protected subject, I should not remove it" in
 // the *later* field while `refuted: true` is already committed in an earlier field cannot
 // retract it; declaring `analysis` first closes that gap.
-const SkepticVerdict = z.object({ id: z.number().int().min(0), analysis: z.string().min(20), refuted: z.boolean() })
-const SkepticBatch = z.object({ verdicts: z.array(SkepticVerdict) })
-const Consolidation = z.object({ duplicateGroups: z.array(z.array(z.number())) })
+const SkepticVerdict = z.object({ id: z.number().int().min(0), analysis: z.string().min(20), refuted: z.boolean() }).strict()
+const SkepticBatch = z.object({ verdicts: z.array(SkepticVerdict) }).strict()
+const Consolidation = z.object({ duplicateGroups: z.array(z.array(z.number())) }).strict()
 // Files are referenced by integer index into the numbered list sent in the prompt, never
 // by path — an anti-hallucination measure: an invented path cannot slip through, since
 // only in-range integers are meaningful here.
-const FileGroupsSubmission = z.object({ groups: z.array(z.array(z.number().int().min(0))) })
+const FileGroupsSubmission = z.object({ groups: z.array(z.array(z.number().int().min(0))) }).strict()
 
-const toJson = (s: z.ZodTypeAny): JSONSchema7 => zodToJsonSchema(s) as JSONSchema7
+// zod-to-json-schema is gone (see the zod v4 migration changeset for why): its types still
+// import zod's v3 compat shim, not v4 native schemas. z.toJSONSchema needs target: 'draft-7'
+// to match the $schema string this codebase and its tests have always emitted, and io: 'input'
+// because FindingSchema's endLine/suggestedPatch use .transform() -- z.toJSONSchema throws on
+// a transform by default, describing the pre-transform (input) shape instead once io is set.
+// Every schema above is now explicitly .strict(): the old library defaulted every z.object()
+// to additionalProperties: false, but z.toJSONSchema only does that for a schema explicitly
+// marked strict -- omitting it here would silently loosen every tool-call schema's guarantee.
+const toJson = (s: z.ZodTypeAny): JSONSchema7 => z.toJSONSchema(s, { target: 'draft-7', io: 'input' }) as JSONSchema7
 const SEV_RANK: Record<Severity, number> = { blocker: 0, high: 1, med: 2, nit: 3 }
 
 export const DEFAULT_LENSES: Lens[] = [
