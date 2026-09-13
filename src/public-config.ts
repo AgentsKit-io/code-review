@@ -3,7 +3,6 @@ import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs'
 import { dirname, isAbsolute, join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { z } from 'zod'
-import { zodToJsonSchema } from 'zod-to-json-schema'
 import { ScmCheckPolicySchema } from './scm-contract.js'
 
 const authors = z.string().min(1).max(100)
@@ -59,7 +58,7 @@ export const ReviewConfigSchema = z.object({
       maxRelatedFiles: z.number().int().min(0).max(8).default(1),
       maxTokens: z.number().int().min(1).max(1_000_000).default(16_000),
       reserveForOutput: z.number().int().min(0).max(100_000).default(2_000),
-    }).strict().refine((value) => value.maxTokens > value.reserveForOutput, 'maxTokens must exceed reserveForOutput').default({}),
+    }).strict().refine((value) => value.maxTokens > value.reserveForOutput, 'maxTokens must exceed reserveForOutput').prefault({}),
   }).strict(),
   memory: z.object({
     enabled: z.boolean().default(true),
@@ -68,14 +67,14 @@ export const ReviewConfigSchema = z.object({
     retentionDays: z.number().int().min(1).max(3650).default(365),
     learnFromFeedback: z.boolean().default(true),
     autoPromoteRules: z.boolean().default(false),
-  }).strict().default({}),
+  }).strict().prefault({}),
   feedback: z.object({
     enabled: z.boolean().default(true),
     learnFromAcceptedFindings: z.boolean().default(true),
     learnFromRejectedFindings: z.boolean().default(true),
     learnFromFixedFindings: z.boolean().default(true),
     requireApprovalForRules: z.boolean().default(true),
-  }).strict().default({}),
+  }).strict().prefault({}),
   comments: z.object({
     renderer: z.enum(['github-inline', 'coderabbit-inspired', 'compact', 'detailed']).default('coderabbit-inspired'),
     language: z.string().min(2).max(20).default('en'),
@@ -86,14 +85,14 @@ export const ReviewConfigSchema = z.object({
     includeImpact: z.boolean().default(true),
     includeInstructions: z.boolean().default(true),
     includeEvidence: z.boolean().default(true),
-  }).strict().default({}),
+  }).strict().prefault({}),
   checks: ScmCheckPolicySchema.default({ mode: 'required', names: [] }),
   batches: z.object({
     enabled: z.boolean().default(true),
     size: z.number().int().min(1).max(100).default(10),
     requireCompleteCoverage: z.boolean().default(true),
     failOnUnreviewableFiles: z.boolean().default(true),
-  }).strict().default({}),
+  }).strict().prefault({}),
   merge: z.object({
     enabled: z.boolean().default(false),
     method: z.enum(['squash', 'merge', 'rebase']).default('squash'),
@@ -103,20 +102,20 @@ export const ReviewConfigSchema = z.object({
     requireNoChangesRequested: z.boolean().default(true),
     forbidAdmin: z.boolean().default(true),
     forbidForce: z.boolean().default(true),
-  }).strict().default({}),
+  }).strict().prefault({}),
   execution: z.object({
     continueAfterPerPrFailure: z.boolean().default(true),
     maxConcurrentPullRequests: z.number().int().min(1).max(16).default(1),
     resumeIncompleteRuns: z.boolean().default(true),
     cleanupTemporaryArtifacts: z.boolean().default(true),
     statePath: relativePath.default('.agentskit/review-state'),
-  }).strict().default({}),
+  }).strict().prefault({}),
   report: z.object({
     format: z.enum(['json', 'markdown', 'both']).default('json'),
     includeEveryDiscoveredPullRequest: z.boolean().default(true),
     failOnEmptyReport: z.boolean().default(true),
     redactSecrets: z.boolean().default(true),
-  }).strict().default({}),
+  }).strict().prefault({}),
 }).strict()
 
 export type ReviewProjectConfig = z.infer<typeof ReviewConfigSchema>
@@ -153,7 +152,12 @@ export function configFingerprint(config: ReviewProjectConfig): string {
 }
 
 export function generateConfigSchema(): Record<string, unknown> {
-  return zodToJsonSchema(ReviewConfigSchema, { name: 'AgentsKitCodeReviewConfig' }) as Record<string, unknown>
+  // zod-to-json-schema is gone (see the zod v4 migration changeset): its types still expect
+  // zod's v3 compat shim, not v4 native schemas. target: 'draft-7' keeps the $schema string
+  // this CLI has always emitted; .meta({ title }) replaces the old library's `name` option
+  // (a $ref-wrapped definition) with a plain `title` field -- scripts/review-cycle.mjs's
+  // preflight only checks the output contains this literal name, not the wrapper shape.
+  return z.toJSONSchema(ReviewConfigSchema.meta({ title: 'AgentsKitCodeReviewConfig' }), { target: 'draft-7' }) as Record<string, unknown>
 }
 
 export function toReviewConfig(config: ReviewProjectConfig): Record<string, unknown> {

@@ -45,7 +45,7 @@ const ReviewConfigSchema = z.object({
     maxFiles: positiveInt.max(500).optional(), maxBytes: positiveInt.max(25 * 1024 * 1024).optional(),
     maxTokens: positiveInt.max(1_000_000).optional(), maxCalls: positiveInt.max(1000).optional(), concurrency: positiveInt.max(32).optional(), deadlineMs: positiveInt.max(30 * 60 * 1000).optional(),
     reserveForOutput: nonNegativeInt.max(100_000).optional(), reserveForVerification: nonNegativeInt.max(100_000).optional(),
-    hierarchy: z.object({ campaign: z.record(z.unknown()).optional(), pullRequest: z.record(z.unknown()).optional(), contextPack: z.record(z.unknown()).optional(), analysis: z.record(z.unknown()).optional(), verification: z.record(z.unknown()).optional() }).strict().optional(),
+    hierarchy: z.object({ campaign: z.record(z.string(), z.unknown()).optional(), pullRequest: z.record(z.string(), z.unknown()).optional(), contextPack: z.record(z.string(), z.unknown()).optional(), analysis: z.record(z.string(), z.unknown()).optional(), verification: z.record(z.string(), z.unknown()).optional() }).strict().optional(),
   }).strict().optional(),
   worker: z.object({
     timeoutMs: positiveInt.max(ABSOLUTE_LOCAL_CLI_TIMEOUT_MS).optional(),
@@ -133,7 +133,10 @@ function diagnostic(error: z.ZodError): string {
   return error.issues.map((issue) => {
     const path = issue.path.join('.') || 'config'
     const label = path === 'budget.maxFiles' ? '--max-files' : path
-    const message = label === '--max-files' && issue.message.includes('greater than or equal to 1') ? 'must be a positive integer' : issue.message
+    // Match on the structured issue code/minimum, not the English message text: zod v4
+    // reworded its default "too small" message, which broke a prior substring match here.
+    const isMaxFilesTooSmall = label === '--max-files' && issue.code === 'too_small' && issue.minimum === 1
+    const message = isMaxFilesTooSmall ? 'must be a positive integer' : issue.message
     return label === '--max-files' ? `${label} ${message}` : `${label}: ${message}`
   }).join('; ')
 }

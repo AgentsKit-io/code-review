@@ -221,7 +221,7 @@
           "docs/OPERATIONS.md",
           "test/cli-smoke.test.mjs"
         ],
-        "sourceHash": "sha256:b04754338506c425a299b40e59c86fe378e405d02faa98f3188abb82deea4d68"
+        "sourceHash": "sha256:2ca78103f5b00c9ea336d7219d74cfd6200fc86333d61f69266fd94b8432ff49"
       },
       "exceptions": []
     }

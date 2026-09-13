@@ -125,8 +125,7 @@
     "@agentskit/tools": "^0.9.4",
     "esbuild": "^0.28.2",
     "tsx": "^4.23.13",
-    "zod": "^4.6.1",
-    "zod-to-json-schema": "^3.24.0"
+    "zod": "^4.6.1"
   },
   "optionalDependencies": {
     "@agentskit/doc-bridge": "^1.1.1"

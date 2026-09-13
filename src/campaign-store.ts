@@ -14,7 +14,7 @@ export const CampaignCheckpointSchema = z.object({
   campaign: CampaignContractSchema,
   events: z.array(CampaignEventSchema).readonly(),
   state: CampaignEngineStateSchema,
-  externalEffects: z.record(fingerprint).readonly(),
+  externalEffects: z.record(z.string(), fingerprint).readonly(),
   updatedAt: z.string().datetime(),
 }).strict().readonly()
 

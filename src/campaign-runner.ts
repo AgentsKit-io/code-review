@@ -34,7 +34,7 @@ const CampaignExecutionPayloadSchema = z.object(reportFields).strict().superRefi
 export const CampaignExecutionReportSchema = z.object({ ...reportFields, checkpointFingerprint: z.string().length(64) }).strict().superRefine((report, context) => {
   const { checkpointFingerprint, ...payload } = report
   const result = CampaignExecutionPayloadSchema.safeParse(payload)
-  if (!result.success) for (const issue of result.error.issues) context.addIssue(issue)
+  if (!result.success) for (const issue of result.error.issues) context.addIssue({ code: z.ZodIssueCode.custom, message: issue.message, path: issue.path })
   if (checkpointFingerprint !== stableFingerprint(payload)) context.addIssue({ code: z.ZodIssueCode.custom, message: 'campaign checkpoint fingerprint does not match', path: ['checkpointFingerprint'] })
 })
 
