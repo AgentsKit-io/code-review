@@ -249,7 +249,7 @@ async function main() {
     },
     })
   let source = await resolveSource(reviewConfig)
-  const githubAdapter = source.kind === 'github-pr' ? createGithubScmAdapter({ token: source.token }) : undefined
+  const githubAdapter = source.kind === 'github-pr' ? createGithubScmAdapter({ token: source.token, reviewStateChannel: reviewConfig.comments.summary ? 'summary' : 'review' }) : undefined
   const githubRef = source.kind === 'github-pr' ? { repository: `${source.owner}/${source.repo}`, id: String(source.number) } : undefined
   if (source.kind === 'github-pr' && githubAdapter) source = { ...source, adapter: githubAdapter }
   // Source credentials are captured in the source object above; providers must
@@ -260,10 +260,8 @@ async function main() {
   const requestedBatch = flag('batch-index')
   const resultFile = flag('result')
   const publishResult = flag('publish-result')
-  // A batched review has one logical policy even though the planner runs the
-  // full profile and workers run the bounded fast profile. Normalize every
-  // profile-derived field here, not only `profile`, so planner manifests and
-  // worker artifacts remain consolidatable under the same configuration.
+  // Planner, full-profile workers and publication share the same semantic policy.
+  // Only execution concurrency is excluded from its fingerprint.
   const policyFingerprint = reviewPolicyFingerprint(reviewConfig)
   const githubState = source.kind === 'github-pr' && (has('post') || requestedBatch !== undefined || resultFile !== undefined || publishResult !== undefined || flag('batch-manifest') !== undefined)
     ? await githubAdapter!.reviewState(githubRef!, policyFingerprint)
@@ -274,7 +272,7 @@ async function main() {
     process.exitCode = 2
     return
   }
-  if (has('post') && githubState?.alreadyPublished) {
+  if (has('post') && githubState?.alreadyPublished && !publishResult) {
     console.log(`SKIPPED: ${githubRef!.repository}#${githubRef!.id} already reviewed at ${githubState.headRevision} with the same fingerprint`)
     return
   }
@@ -290,9 +288,9 @@ async function main() {
     if (artifact.review.incomplete || artifact.review.unreviewed?.length || artifact.review.missingRequiredLenses?.length || artifact.review.execution.failed || artifact.review.execution.succeeded !== artifact.review.execution.attempted || artifact.review.evidence.deadlineExceeded) {
       throw new Error('consolidated result has incomplete review evidence')
     }
-    if (githubMetadata?.isFork || githubState.alreadyPublished) throw new Error('current PR cannot receive this consolidated result safely')
-    await scmReviewReporter({ adapter: githubAdapter!, ref: githubRef!, channel: 'review', headRevision: githubState.headRevision, fingerprint: policyFingerprint }).emit(artifact.review)
-    await scmReviewReporter({ adapter: githubAdapter!, ref: githubRef!, channel: 'summary', headRevision: githubState.headRevision, fingerprint: policyFingerprint }).emit(artifact.review)
+    if (githubMetadata?.isFork) throw new Error('current PR cannot receive this consolidated result safely')
+    await scmReviewReporter({ adapter: githubAdapter!, ref: githubRef!, channel: 'review', headRevision: githubState.headRevision, fingerprint: policyFingerprint, policy: reviewConfig.comments }).emit(artifact.review)
+    if (reviewConfig.comments.summary) await scmReviewReporter({ adapter: githubAdapter!, ref: githubRef!, channel: 'summary', headRevision: githubState.headRevision, fingerprint: policyFingerprint, policy: reviewConfig.comments }).emit(artifact.review)
     process.exit(artifact.review.blocking && !has('no-fail') ? 1 : 0)
   }
   const reporters: Reporter[] = [markdownReporter()]
@@ -301,7 +299,7 @@ async function main() {
   if (has('post') && source.kind === 'github-pr') {
     reporters.push(
       scmReviewReporter({ adapter: githubAdapter!, ref: githubRef!, channel: 'review', headRevision: githubState!.headRevision, fingerprint: policyFingerprint, policy: reviewConfig.comments }),
-      ...(reviewConfig.comments.summary ? [scmReviewReporter({ adapter: githubAdapter!, ref: githubRef!, channel: 'summary', headRevision: githubState!.headRevision, fingerprint: policyFingerprint })] : []),
+      ...(reviewConfig.comments.summary ? [scmReviewReporter({ adapter: githubAdapter!, ref: githubRef!, channel: 'summary', headRevision: githubState!.headRevision, fingerprint: policyFingerprint, policy: reviewConfig.comments })] : []),
     )
   }
 
