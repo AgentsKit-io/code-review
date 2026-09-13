@@ -14,7 +14,7 @@ test('release workflows publish versioned main commits with OIDC and remain idem
   const publish = read('.github/workflows/publish.yml')
 
   assert.match(version, /push:\n    branches: \[main\]/)
-  assert.match(version, /changesets\/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d/)
+  assert.match(version, /changesets\/action@ae32849d5ba541f9ae29e40e22a623bc13562f51/)
   assert.match(version, /pull-requests: write/)
   assert.match(version, /actions: write/)
   assert.match(version, /id: changesets/)
