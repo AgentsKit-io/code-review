@@ -10,9 +10,15 @@ Batch size is a maximum. Every batch is measured before execution, and a single 
 
 Review identity excludes execution concurrency: preflight and workers can schedule differently without creating a different semantic policy. Engine version, source SHA, review rules and substantive budgets still identify the review. Repeating a completed SHA/policy must skip before downloading source or calling a model.
 
+Publication failures do not invalidate completed analysis. The cycle retains its review and quality decision and reports the publication phase separately. After an uncertain GitHub write, the adapter checks bounded history for the exact marked body before accepting delivery; it never blindly repeats the POST. `--publish-result <consolidated.json> --post` validates the current SHA and complete policy before reconciling both configured channels, including a missing walkthrough. An unchanged repeat performs no POST or PATCH. Inline-only policies use review history for idempotency; disabling both channels produces no remote comments.
+
+On same-identity cycle resume, successful corpus and learning evaluations are reused only when their input/configuration, engine entry point, approved-rule context and artifact hashes match. Prior usage remains charged and the original cycle clock is not reset. Changed, missing or corrupt evidence is measured again within the remaining budget. Batched policy identity includes optional lenses, thresholds, comment settings and merge-check policy; changing any of these requires new evidence.
+
 Codex inference runs in a temporary directory with focused review instructions, ambient skills/plugins disabled, and no shell, delegation or web search. Read-only sandboxing and structured output remain enabled. This reduces unrelated agent context; actual usage is still measured.
 
 For changed HTML, SCM ingestion can include up to four unchanged local linked stylesheets (64 KiB each, within the source budget) at the same head SHA. They are context for analysis and skepticism, not extra reviewed files. Remote/sensitive paths are excluded and unavailable context is explicit. This is one-hop context, not a complete dependency graph: quality corpus scores do not replace auditing real findings against the surrounding application.
+
+Single-lens, multidimensional and skeptical review share the same evidence policy: generated API types do not prove missing runtime refinements or state-transition guards. Runtime findings need implementation evidence; generated files remain reviewable for actual type changes. The live corpus and memory A/B use the same full review profile as PR batches, including an unhinted dense API-report regression. These checks reduce known noise; they do not establish zero false positives in arbitrary PRs.
 
 | Provider class | Examples | Secret or login | Network boundary |
 |---|---|---|---|
@@ -57,6 +63,8 @@ contracts. The GitHub adapter owns ingestion, bounded review-state inspection,
 inline and summary publication, conservative merge readiness, and
 revision-locked normal/admin merge. GitLab is future work and is not supported
 until an adapter passes the same contract suite.
+
+Merge readiness also reads bounded review history. An outstanding request for changes blocks merging even when checks pass or its reviewed SHA predates the current commit. Comments do not clear a request; a later approval by that reviewer or dismissal of that request does. Missing decision identity or truncated history fails closed.
 
 ## First local setup
 
@@ -194,6 +202,53 @@ included ranges, expansion, estimated input tokens, and output reserve. All buil
 are enabled by default; correctness, security, and tests are required.
 The shared local worker also accepts bounded `timeoutMs` and `maxOutputBytes`
 settings; absolute ceilings are always enforced.
+
+## Library API
+
+`createCodeReviewAgent`, `builtInLenses`, and every reporter (`markdownReporter`,
+`sarifReporter`, `githubInlineReporter`, `githubSummaryReporter`, `scmReviewReporter`,
+`renderMarkdown`, `renderGithubWalkthrough`) are exported from the package root
+(`import { createCodeReviewAgent } from '@agentskit/code-review'`) — this only became
+true from `0.30.19` onward; earlier versions defined these but never added them to
+`src/index.ts`'s export list, so no external consumer could reach them (see issue #275).
+Every `createCodeReviewAgent({...})` option documented below — `rules`,
+`verification.posture`, `context.grouping` — is reachable this way, not only through the
+bundled CLI.
+
+## Semantic file grouping (opt-in)
+
+`createCodeReviewAgent({ context: { grouping: 'semantic' } })` replaces the default
+same-basename-test-pair/local-import heuristic with one model call that clusters changed
+files by index (paths and line counts only, never file content) before packing — for
+relationships the heuristic cannot see, such as a header and its implementation in a
+different-language pair, or a schema and its generated code. It only fires above
+`groupingMinFiles` (default 4) changed files and `groupingMinLines` (default 200)
+combined lines; below that, or on any failure of the grouping call itself, grouping
+falls back to the heuristic. **`--plan`/`--dry-run` always uses the heuristic**, even
+when `semantic` is configured and thresholds are met — the preflight plan is a
+documented, tested provider-free contract, and semantic grouping is a real model call;
+only an actual `review()`/CLI run performs it, so a `--plan --json` preview of pack
+membership is an approximation in that mode, not a guarantee of the exact packs the
+real run will use. Files referenced outside the valid index range, or duplicated across
+groups, are dropped rather than trusted — every real file still lands in exactly one
+group, defaulting to its own singleton group if the model omitted or mis-referenced it.
+
+## Per-language review rules (opt-in)
+
+`createCodeReviewAgent({ rules: { enabled: true } })` resolves a per-file review
+checklist by glob and injects it alongside `conventions` for every file in a context
+pack, deduplicated across files that share a language. Precedence: a `.agentskit-review/rules.json`
+in the project root, then `~/.agentskit-review/rules.json`, then a built-in system
+checklist (`agents/code-review/rules.ts` — TypeScript/JavaScript, Python, Go, Rust,
+Java/Kotlin, Terraform, GitHub Actions workflows, YAML, JSON, and a general default).
+A project/global rule file entry is `{ "rules": [{ "path": "<glob>", "rule": "<text>",
+"mergeSystemRule": false }] }`; `mergeSystemRule: false` (default: merged) replaces the
+matching system checklist instead of appending to it. `rules.maxChars` (default 4000)
+bounds the combined resolved-rules text per pack, with a truncation warning emitted the
+same way as an over-long `conventions` file. This option is **off by default** — enabling
+it changes prompt content (and cost) for every file, so it is not turned on silently on
+upgrade. `src/review-rules.ts`'s `resolveRuleForFile(path, layers)` can be called
+directly to see which rule, and from which layer, would apply to a given file.
 
 Risk classification is provider-free and records every contributing signal. Documentation and
 generated-only packs are `low`; ordinary source and tests are `normal`; public contracts, IO, and
@@ -358,6 +413,20 @@ Troubleshooting:
 - **Context overflow:** review narrower paths or a smaller branch diff; unreviewed files must remain visibly outside the result.
 - **No findings with exit 0:** inspect the summary and successful/failed lens counts; advisory output is not proof that every file was reviewed.
 
+## Incremental GitHub inline posting
+
+`githubInlineReporter` (`agents/code-review/reporters.ts`) fetches the PR's existing
+review comments before posting and drops any candidate whose line range overlaps one at
+or above `policy.incrementalOverlapThreshold` (default `0.6`, an IoU over `[startLine,
+endLine]`) — a second run on the same PR (a new commit, a re-triggered CI job) does not
+repeat a finding still standing from a previous run; the summary body notes how many were
+skipped this way. `policy.routeSeverityBelow` additionally folds findings at or below a
+given severity into the summary instead of posting them inline, independent of the
+overlap check. Fetching history is best-effort: a failure to read it (network error, rate
+limit) never blocks posting — it only skips the overlap filter for that run. Both options
+are library-level `GithubCommentPolicy` fields today, not yet exposed as CLI flags or
+`.agentskit-review.json` config keys.
+
 ## GitHub Action permissions
 
 The copy-ready workflow in [`examples/pull-request.yml`](../examples/pull-request.yml) requires:
@@ -408,6 +477,8 @@ Use `--plan --json` (or `--dry-run`) to run the source and budget preflight with
 
 For a PR that exceeds one review budget, use deterministic coverage batches instead of accepting an incomplete review. Run `--plan --json --batch-size <n> --batch-manifest <private-file>` to create a private manifest keyed by repository, PR, head SHA, and policy fingerprint. Each `--batch-index <n> --result <private-file>` run is deliberately incomplete by itself and rejects `--post`; its result artifact carries the same identity plus its exact file manifest. `--consolidate-manifest <manifest> --artifacts <comma-list> --result <private-file>` rejects a missing, duplicate, stale, mismatched, failed, deadline-exceeded, or required-lens-incomplete artifact. Only that consolidated artifact is accepted by `--publish-result <file> --pr owner/repo#N --post`, which rechecks current SHA and policy before creating the one GitHub review. Delete or replace the private state when the PR SHA or policy changes; never upload it as a CI artifact or commit it.
 
+Every `ReviewResult` (single run or consolidated batch) carries a `coverage: { totalFiles, reviewedFiles, unreviewedFiles }` denominator distinct from the `incomplete` boolean: `incomplete` folds every uncertainty (budget, deadline, unverified findings, missing lenses) into one flag, while `coverage` says how many of the eligible files this run actually reviewed — the Markdown reporter prints it as "N of M file(s) reviewed". For an in-progress batch run, `describeCoverage` (`src/batch-coverage.ts`) renders the same "N of M" line from a `BatchCoverageState` before every batch has landed, naming which batch indices are still pending.
+
 When one changed text file is larger than the context budget, the planner recursively
 partitions its projected source into deterministic line-range chunks before provider
 execution. Each chunk keeps the original file and source-line identity, contributes to
@@ -443,9 +514,36 @@ and cancellation are never retried. Repeated exhausted transient failures open
 the circuit, and cooldown permits one recovery probe. Completed sibling units
 remain valid when another unit fails. Incomplete evidence is never an approval.
 
+Before a context pack is dispatched, its estimated token cost is checked against the
+analysis budget (a running total across the packs already accepted in the same
+lookahead pass, so cumulative demand is bounded correctly, not just each pack in
+isolation) — a pack that cannot possibly fit is marked unreviewed with that reason
+directly, instead of occupying a concurrency slot only to fail moments later and abort
+sibling packs that already had real findings. A global deadline reached mid-analysis
+keeps whatever findings packs already produced before it fired: they flow into
+verification, where the same tripped deadline naturally marks them `verification:
+'unverified'` (surfaced, not silently discarded) rather than every candidate finding
+disappearing because one other pack was still in flight when time ran out.
+
+## Telemetry (opt-in)
+
+`createTelemetryObserver({ enabled: true, ... })` (`src/telemetry.ts`) exports every
+`progress` event — the same phase/status/timing stream a human-facing progress renderer
+consumes — as an OTLP-shaped span, and can be passed straight into `observers: [...]`.
+`exporter: 'console'` (the default once enabled) writes one JSON span per line;
+`exporter: 'otlp'` POSTs an OTLP/HTTP JSON trace payload to `otlpEndpoint` (best-effort:
+a collector being unreachable never fails or slows the review it is only observing).
+This is a direct OTLP/HTTP JSON emitter, not the official `@opentelemetry/sdk-node` —
+no new dependency is required. `contentLogging` (default `false`) controls whether a
+progress event's short `detail` note is included in its span; an `Observer` never has
+access to prompts, diffs, findings, or provider credentials in the first place,
+regardless of this setting. **Disabled by default** — like `rules.enabled` and
+`verification.posture`, this is a library-level option (no CLI flag or
+`.agentskit-review.json` key yet) that a caller opts into explicitly.
+
 ## SARIF
 
-`--sarif out.sarif` writes SARIF 2.1.0 alongside Markdown. Each surviving finding includes a `code-review/<category>` rule, severity level, message, file, and line. Uploading SARIF to GitHub code scanning requires the separate `security-events: write` permission and `github/codeql-action/upload-sarif`; the bundled Action does not request that permission or upload automatically.
+`--sarif out.sarif` writes SARIF 2.1.0 alongside Markdown. Each surviving finding includes a `code-review/<category>` rule, severity level, message, file, and line, plus a `partialFingerprints.primaryLocationLineHash` derived from the file, rule, and title only — deliberately excluding the line number, so GitHub Code Scanning still recognizes the same finding across runs even when an unrelated edit shifts it a few lines. `tool.driver` also reports the package `version` and an `informationUri`. Uploading SARIF to GitHub code scanning requires the separate `security-events: write` permission and `github/codeql-action/upload-sarif`; the bundled Action does not request that permission or upload automatically.
 
 SARIF can contain source paths and model-generated explanations. Apply the same retention and access policy as CI logs.
 
@@ -506,10 +604,10 @@ The default `added` filter limits inline feedback to changed lines. Choose a bro
 
 ## Releases and maturity
 
-The current package is `0.4.0` and the project is pre-v1:
+The current package is `0.31.0` and the project is pre-v1:
 
 - GitHub-source CLI commands can pin a commit SHA after `github:AgentsKit-io/code-review#<sha>`;
-- Actions should pin `@v0.4.0` or a full commit SHA;
+- Actions should pin `@v0.31.0` or a full commit SHA;
 - a moving `@main` reference is suitable only when that mutability is accepted;
 - the future `@v1` Action tag remains a separate stability milestone.
 
