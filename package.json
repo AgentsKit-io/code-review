@@ -118,14 +118,14 @@
     "readme:standard:refresh": "node scripts/refresh-readme-standard.mjs"
   },
   "dependencies": {
-    "@agentskit/adapters": "^0.12.2",
-    "@agentskit/core": "^1.9.0",
-    "@agentskit/ink": "0.10.9",
-    "@agentskit/runtime": "^0.7.3",
-    "@agentskit/tools": "^0.9.4",
+    "@agentskit/adapters": "^0.17.0",
+    "@agentskit/core": "^1.12.9",
+    "@agentskit/ink": "0.10.11",
+    "@agentskit/runtime": "^0.10.17",
+    "@agentskit/tools": "^0.13.8",
     "esbuild": "^0.28.2",
     "tsx": "^4.23.13",
-    "zod": "^4.6.1"
+    "zod": "^4.6.5"
   },
   "optionalDependencies": {
     "@agentskit/doc-bridge": "^1.1.1"
@@ -134,7 +134,7 @@
     "@changesets/changelog-github": "^1.0.1",
     "@changesets/cli": "^3.0.2",
     "@types/json-schema": "^7.0.15",
-    "@types/node": "^22.10.0",
+    "@types/node": "^22.20.3",
     "typescript": "^7.0.2"
   },
   "engines": {
