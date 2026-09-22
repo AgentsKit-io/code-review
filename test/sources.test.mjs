@@ -2,16 +2,18 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { loadTargets } from '../dist/agents/code-review/sources.js'
 
-test('local source directories normalize supported files and ignore Markdown', async () => {
+test('local source directories normalize supported files including Markdown', async () => {
   const targets = await loadTargets({ kind: 'paths', paths: ['test/fixtures/sources'] })
   const byFile = new Map(targets.map((target) => [target.file, target]))
 
   assert.deepEqual([...byFile.keys()].sort(), [
+    'test/fixtures/sources/README.md',
     'test/fixtures/sources/example.go',
     'test/fixtures/sources/example.py',
   ])
   assert.equal(byFile.get('test/fixtures/sources/example.go')?.language, 'go')
   assert.equal(byFile.get('test/fixtures/sources/example.py')?.language, 'py')
+  assert.equal(byFile.get('test/fixtures/sources/README.md')?.language, 'md')
   assert.equal(byFile.get('test/fixtures/sources/example.go')?.isChanged, false)
   assert.equal(byFile.get('test/fixtures/sources/example.py')?.isChanged, false)
   assert.equal(
