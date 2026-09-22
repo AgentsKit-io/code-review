@@ -1,9 +1,23 @@
 import { mkdirSync, mkdtempSync, rmSync } from 'node:fs'
-import { spawn, type ChildProcess } from 'node:child_process'
+import { type ChildProcess } from 'node:child_process'
+import crossSpawn from 'cross-spawn'
 import { createInterface } from 'node:readline'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { DEFAULT_LOCAL_CLI_TIMEOUT_MS, localCliTimeoutMs } from './local-cli-timeout.js'
+
+// Every local CLI provider (`claude`, `codex`, `grok`, ...) this module spawns by bare name is a
+// globally npm-installed Node CLI. On Windows, npm's only artifact for such a CLI is a `.cmd`
+// shim; CreateProcess cannot execute a `.cmd`/`.bat` file without a shell, so a plain
+// spawn(command, args, { ... }) (no shell option -> shell: false) fails with ENOENT/EINVAL for
+// every one of them regardless of the path given -- reproduced live via `doctor --provider
+// claude-cli`, which reported `{"name":"executable","status":"fail","detail":"not found"}` even
+// though `claude --version` succeeds in the same shell. `cross-spawn` detects this case and
+// re-execs through `cmd.exe /d /s /c` with the same argument escaping node's own shell: true uses,
+// so callers keep effectively-shell-free argv semantics (this module still never accepts a shell
+// string) on every platform. `terminateProcessTree`'s own `spawn('taskkill', ...)` below is
+// unaffected -- taskkill.exe ships as a real Windows executable, not an npm .cmd shim.
+const spawn = crossSpawn
 
 export { DEFAULT_LOCAL_CLI_TIMEOUT_MS }
 
@@ -86,6 +100,13 @@ function createEnvironment(mode: LocalCliMode, credential?: LocalCliOptions['pro
   return { env, tempRoot }
 }
 
+// stdio: ['pipe', 'pipe', 'pipe'] guarantees real streams; @types/cross-spawn's ChildProcess type
+// is not narrowed the way node:child_process's own spawn overloads are for a literal stdio tuple.
+function requireStream<T>(stream: T | null, name: string): T {
+  if (stream === null) throw new Error(`spawned child is missing ${name} (stdio must include 'pipe')`)
+  return stream
+}
+
 function boundedAppend(current: string, chunk: string, limit: number): { value: string; overflow: boolean } {
   const next = current + chunk
   if (Buffer.byteLength(next, 'utf8') <= limit) return { value: next, overflow: false }
@@ -106,6 +127,9 @@ export function runLocalCli(command: string, args: string[], options: LocalCliOp
       cwd: options.cwd ?? (mode === 'trusted-local' ? process.cwd() : join(tempRoot!, 'home')), env,
       detached: process.platform !== 'win32', stdio: ['pipe', 'pipe', 'pipe'],
     })
+    const childStdin = requireStream(child.stdin, 'stdin')
+    const childStdout = requireStream(child.stdout, 'stdout')
+    const childStderr = requireStream(child.stderr, 'stderr')
     let stdout = ''
     let stderr = ''
     let timedOut = false
@@ -134,8 +158,15 @@ export function runLocalCli(command: string, args: string[], options: LocalCliOp
       if (timedOut) { failure.code = 'ETIMEDOUT'; failure.message = `${command} timed out after ${timeoutMs}ms` }
       else if (aborted) { failure.code = 'ABORT_ERR'; failure.message = `${command} aborted` }
       else if (parentShutdown) { failure.code = 'PARENT_SHUTDOWN'; failure.message = `${command} stopped because the parent process is shutting down` }
-      failure.stdout = redactDiagnostic(stdout, secrets)
-      failure.stderr = redactDiagnostic(stderr, secrets)
+      // On Windows, cross-spawn resolves a bare/extension-less command by probing it through
+      // cmd.exe before it can confirm the command doesn't exist at all; that probe's own
+      // "not recognized" message can land in our stderr buffer before the synthesized ENOENT
+      // fires. The real target program never ran in that case, so that text is spawn-resolution
+      // noise, not program output -- keep this failure's diagnostics empty like a non-Windows
+      // ENOENT (which never spawns anything) already reports.
+      const isUnresolvedSpawn = failure.code === 'ENOENT' && !timedOut && !aborted && !parentShutdown
+      failure.stdout = isUnresolvedSpawn ? '' : redactDiagnostic(stdout, secrets)
+      failure.stderr = isUnresolvedSpawn ? '' : redactDiagnostic(stderr, secrets)
       reject(failure)
     }
     const stop = (reason: Error) => {
@@ -146,14 +177,14 @@ export function runLocalCli(command: string, args: string[], options: LocalCliOp
     }
     const onAbort = () => { aborted = true; stop(new Error(`${command} aborted`)) }
 
-    child.stdout.setEncoding('utf8')
-    child.stderr.setEncoding('utf8')
-    child.stdout.on('data', (chunk: string) => {
+    childStdout.setEncoding('utf8')
+    childStderr.setEncoding('utf8')
+    childStdout.on('data', (chunk: string) => {
       const next = boundedAppend(stdout, chunk, maxOutputBytes)
       stdout = next.value
       if (next.overflow) stop(new Error(`${command} stdout exceeded ${maxOutputBytes} bytes`))
     })
-    child.stderr.on('data', (chunk: string) => {
+    childStderr.on('data', (chunk: string) => {
       const next = boundedAppend(stderr, chunk, maxOutputBytes)
       stderr = next.value
       if (next.overflow) stop(new Error(`${command} stderr exceeded ${maxOutputBytes} bytes`))
@@ -168,8 +199,8 @@ export function runLocalCli(command: string, args: string[], options: LocalCliOp
       else finishError(new Error(`${command} exited with code ${code ?? 'unknown'}${signal ? ` (${signal})` : ''}`))
     })
     options.signal?.addEventListener('abort', onAbort, { once: true })
-    if (options.stdin !== undefined) child.stdin.end(options.stdin, 'utf8')
-    else child.stdin.end()
+    if (options.stdin !== undefined) childStdin.end(options.stdin, 'utf8')
+    else childStdin.end()
     timeout = setTimeout(() => { if (!settled) { timedOut = true; stop(new Error(`${command} timed out after ${timeoutMs}ms`)) } }, timeoutMs)
   })
 }
@@ -192,7 +223,10 @@ export function runLocalCliProtocol<T>(
     const { env, tempRoot } = createEnvironment(mode, options.providerCredential)
     const cwd = options.cwd ?? (mode === 'trusted-local' ? process.cwd() : join(tempRoot!, 'home'))
     const child = spawn(command, args, { cwd, env, detached: process.platform !== 'win32', stdio: ['pipe', 'pipe', 'pipe'] })
-    const rl = createInterface({ input: child.stdout })
+    const childStdin = requireStream(child.stdin, 'stdin')
+    const childStdout = requireStream(child.stdout, 'stdout')
+    const childStderr = requireStream(child.stderr, 'stderr')
+    const rl = createInterface({ input: childStdout })
     let stdout = ''
     let stderr = ''
     let lineQueue: string[] = []
@@ -218,17 +252,21 @@ export function runLocalCliProtocol<T>(
     const finishError = (error: Error): void => {
       if (settled) return
       settled = true
-      child.stdin.destroy()
-      child.stdout.destroy()
-      child.stderr.destroy()
+      childStdin.destroy()
+      childStdout.destroy()
+      childStderr.destroy()
       child.unref()
       cleanup()
       const failure = error as LocalCliError
       if (timedOut) { failure.code = 'ETIMEDOUT'; failure.message = `${command} timed out after ${timeoutMs}ms` }
       else if (aborted) { failure.code = 'ABORT_ERR'; failure.message = `${command} aborted` }
       else if (parentShutdown) { failure.code = 'PARENT_SHUTDOWN'; failure.message = `${command} stopped because the parent process is shutting down` }
-      failure.stdout = redactDiagnostic(stdout, secrets)
-      failure.stderr = redactDiagnostic(stderr, secrets)
+      // See the matching comment in runLocalCli: on Windows, cross-spawn's cmd.exe probe for an
+      // unresolved bare command can leak its own "not recognized" text into our stderr buffer
+      // before the synthesized ENOENT fires, even though the real target program never ran.
+      const isUnresolvedSpawn = failure.code === 'ENOENT' && !timedOut && !aborted && !parentShutdown
+      failure.stdout = isUnresolvedSpawn ? '' : redactDiagnostic(stdout, secrets)
+      failure.stderr = isUnresolvedSpawn ? '' : redactDiagnostic(stderr, secrets)
       reject(failure)
     }
     const stop = (reason: Error) => {
@@ -246,12 +284,12 @@ export function runLocalCliProtocol<T>(
       return new Promise((resolveLine, rejectLine) => { lineWaiter = resolveLine; lineRejecter = rejectLine })
     }
     const send = (message: unknown): void => {
-      if (settled || child.stdin.destroyed) throw new Error(`${command} stdin is closed`)
-      child.stdin.write(`${JSON.stringify(message)}\n`)
+      if (settled || childStdin.destroyed) throw new Error(`${command} stdin is closed`)
+      childStdin.write(`${JSON.stringify(message)}\n`)
     }
 
-    child.stdout.setEncoding('utf8')
-    child.stderr.setEncoding('utf8')
+    childStdout.setEncoding('utf8')
+    childStderr.setEncoding('utf8')
     rl.on('line', (line) => {
       const next = boundedAppend(stdout, `${line}\n`, maxOutputBytes)
       stdout = next.value
@@ -259,7 +297,7 @@ export function runLocalCliProtocol<T>(
       if (lineWaiter) { const waiter = lineWaiter; lineWaiter = undefined; waiter(line) }
       else lineQueue.push(line)
     })
-    child.stderr.on('data', (chunk: string) => {
+    childStderr.on('data', (chunk: string) => {
       const next = boundedAppend(stderr, chunk, maxOutputBytes)
       stderr = next.value
       if (next.overflow) stop(new Error(`${command} stderr exceeded ${maxOutputBytes} bytes`))
@@ -281,7 +319,7 @@ export function runLocalCliProtocol<T>(
       if (settled) return
       exchangeResult = result
       exchangeDone = true
-      child.stdin.end()
+      childStdin.end()
     }).catch((error: unknown) => stop(error instanceof Error ? error : new Error(String(error))))
   })
 }
