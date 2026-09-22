@@ -1,4 +1,7 @@
 import assert from 'node:assert/strict'
+import { mkdtempSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import test from 'node:test'
 import { runLocalCli } from '../dist/src/local-cli-process.js'
 
@@ -76,3 +79,21 @@ test('omitting stdin still closes it empty, unchanged from before', async () => 
   const result = await runLocalCli(node, ['-e', 'let data = ""; process.stdin.on("data", (c) => { data += c }); process.stdin.on("end", () => process.stdout.write(JSON.stringify({ length: data.length })))'])
   assert.equal(result.stdout, '{"length":0}')
 })
+// Every local CLI provider this module spawns by bare name (claude, codex, ...) is a globally
+// npm-installed Node CLI. On Windows, npm's only artifact for such a CLI is a `.cmd` shim;
+// CreateProcess cannot execute one without a shell, so a plain spawn(cmd, args, { ... }) (no shell
+// option given -> shell: false) failed with ENOENT/EINVAL for every one of them regardless of the
+// path given -- reproduced live via `agentskit-review doctor --provider claude-cli`, which
+// reported executable: not found even though `claude --version` succeeds in the same shell. Only
+// meaningful on the platform where the bug reproduces.
+if (process.platform === 'win32') {
+  test('runs a Windows .cmd file directly, with shell-free argv semantics preserved', async () => {
+    const dir = mkdtempSync(join(tmpdir(), 'agentskit-review-cmd-test-'))
+    const cmdPath = join(dir, 'greet.cmd')
+    // A shell-metacharacter (&) argument proves cross-spawn's cmd.exe re-quoting keeps this argv
+    // element intact end to end, the same way shell: false would for a real executable.
+    writeFileSync(cmdPath, '@echo off\r\necho hello %1\r\nexit /b 0\r\n')
+    const result = await runLocalCli(cmdPath, ['a & b'])
+    assert.match(result.stdout, /hello "a & b"/)
+  })
+}
