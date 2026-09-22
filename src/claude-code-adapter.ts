@@ -14,11 +14,16 @@ import { runLocalCli, type LocalCliMode } from "./local-cli-process.js";
  * stdin ("no stdin data received in 3s …") and fails. Locally stdin is a TTY so it
  * never showed. stderr is attached to the error for diagnosis.
  */
-async function runClaude(args: string[], signal?: AbortSignal, mode?: LocalCliMode, worker?: { timeoutMs?: number; maxOutputBytes?: number }, oauthToken?: string): Promise<string> {
+async function runClaude(args: string[], signal?: AbortSignal, mode?: LocalCliMode, worker?: { timeoutMs?: number; maxOutputBytes?: number }, oauthToken?: string, stdin?: string): Promise<string> {
   // Run from HOME (a trusted dir): the runner's checkout dir is untrusted and can
   // make claude exit without output (folder-trust). The file under review is in the
   // prompt, not read from cwd, so cwd is irrelevant to the result.
-  const { stdout } = await runLocalCli("claude", args, { signal, mode, providerCredential: oauthToken ? { name: "CLAUDE_CODE_OAUTH_TOKEN", value: oauthToken } : undefined, ...worker });
+  //
+  // `prompt` travels over stdin (see the `-p` args below), not as a CLI argument: a real file's
+  // content plus the review instructions routinely exceeds Windows' ~32K total command-line length,
+  // which failed every such call as `spawn ENAMETOOLONG` regardless of the file's own size — verified
+  // live. `claude -p` (bare, no literal argument) reads the prompt from stdin instead, with no such limit.
+  const { stdout } = await runLocalCli("claude", args, { signal, mode, providerCredential: oauthToken ? { name: "CLAUDE_CODE_OAUTH_TOKEN", value: oauthToken } : undefined, ...worker, stdin });
   return stdout;
 }
 
@@ -57,9 +62,9 @@ export function claudeCode(opts: { model?: string; mode?: LocalCliMode; oauthTok
             prompt += `\n\nReturn ONLY a JSON object that is the argument to the "${t.name}" tool, matching this JSON Schema exactly. No prose, no code fences:\n${JSON.stringify(t.schema)}`;
           }
 
-          const args = ["-p", prompt];
+          const args = ["-p"];
           if (opts.model) args.push("--model", opts.model);
-          const out = (await runClaude(args, controller.signal, opts.mode, opts.worker, opts.oauthToken)).trim();
+          const out = (await runClaude(args, controller.signal, opts.mode, opts.worker, opts.oauthToken, prompt)).trim();
 
           if (tools.length === 1) {
             yield { type: "tool_call", toolCall: { id: `tc-${Date.now()}`, name: tools[0]!.name, args: extractJson(out) } };

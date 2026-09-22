@@ -21,6 +21,13 @@ export interface LocalCliOptions {
   readonly mode?: LocalCliMode
   /** Explicitly selected provider credential; arbitrary project env is never copied in isolated mode. */
   readonly providerCredential?: { readonly name: string; readonly value: string }
+  /**
+   * Written to the child's stdin before closing it, instead of closing stdin empty. Lets a caller
+   * (e.g. the claude-code adapter) send a large prompt over stdin rather than as a CLI argument —
+   * Windows' ~32K total command-line length is otherwise exceeded by a real file's content plus
+   * review instructions, failing every such call as `spawn ENAMETOOLONG` regardless of file size.
+   */
+  readonly stdin?: string
 }
 
 export interface LocalCliProtocolChannel {
@@ -114,7 +121,10 @@ export function runLocalCli(command: string, args: string[], options: LocalCliOp
       if (timeout) clearTimeout(timeout)
       if (killFallback) clearTimeout(killFallback)
       options.signal?.removeEventListener('abort', onAbort)
-      if (tempRoot) rmSync(tempRoot, { recursive: true, force: true })
+      // maxRetries/retryDelay: on Windows, a just-exited child's handle on a file under tempRoot can
+      // linger briefly (AV scan, deferred handle close), racing this rmSync into `EBUSY: resource busy
+      // or locked` and crashing the whole run uncaught — verified live, every single invocation.
+      if (tempRoot) rmSync(tempRoot, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 })
     }
     const finishError = (error: Error): void => {
       if (settled) return
@@ -158,7 +168,8 @@ export function runLocalCli(command: string, args: string[], options: LocalCliOp
       else finishError(new Error(`${command} exited with code ${code ?? 'unknown'}${signal ? ` (${signal})` : ''}`))
     })
     options.signal?.addEventListener('abort', onAbort, { once: true })
-    child.stdin.end()
+    if (options.stdin !== undefined) child.stdin.end(options.stdin, 'utf8')
+    else child.stdin.end()
     timeout = setTimeout(() => { if (!settled) { timedOut = true; stop(new Error(`${command} timed out after ${timeoutMs}ms`)) } }, timeoutMs)
   })
 }
@@ -202,7 +213,7 @@ export function runLocalCliProtocol<T>(
       if (timeout) clearTimeout(timeout)
       options.signal?.removeEventListener('abort', onAbort)
       rl.close()
-      if (tempRoot) rmSync(tempRoot, { recursive: true, force: true })
+      if (tempRoot) rmSync(tempRoot, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 })
     }
     const finishError = (error: Error): void => {
       if (settled) return

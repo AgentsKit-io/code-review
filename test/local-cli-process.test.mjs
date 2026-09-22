@@ -62,3 +62,17 @@ test('rejects unsafe worker limits before spawning', async () => {
 test('missing executable remains a typed spawn failure without raw output', async () => {
   await assert.rejects(runLocalCli('agentskit-command-does-not-exist', []), (error) => error?.code === 'ENOENT' && error.stdout === '' && error.stderr === '')
 })
+
+// `stdin` exists so a caller (the claude-code adapter) can send a large prompt without it ever
+// becoming a CLI argument: Windows' ~32K total command-line length is exceeded by a real file's
+// content plus review instructions, which failed as `spawn ENAMETOOLONG` regardless of the file's
+// own size — a CLI argument was never going to scale for this, no matter how it was chunked.
+test('the stdin option writes content to the child before stdin closes', async () => {
+  const result = await runLocalCli(node, ['-e', 'let data = ""; process.stdin.on("data", (c) => { data += c }); process.stdin.on("end", () => process.stdout.write(data))'], { stdin: 'hello from the parent' })
+  assert.equal(result.stdout, 'hello from the parent')
+})
+
+test('omitting stdin still closes it empty, unchanged from before', async () => {
+  const result = await runLocalCli(node, ['-e', 'let data = ""; process.stdin.on("data", (c) => { data += c }); process.stdin.on("end", () => process.stdout.write(JSON.stringify({ length: data.length })))'])
+  assert.equal(result.stdout, '{"length":0}')
+})
