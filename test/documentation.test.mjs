@@ -15,7 +15,9 @@ test('README communicates pipeline, maturity, contribution, and ecosystem role',
   for (const url of ['www.agentskit.io/docs', 'registry.agentskit.io/docs', 'chat.agentskit.io/docs', 'playbook.agentskit.io/docs', 'doc-bridge.agentskit.io', 'code-review.agentskit.io']) {
     assert.ok(readme.includes(url), `README missing ${url}`)
   }
-  assert.ok(readme.includes('https://code-review.agentskit.io'))
+  const siteLink = readme.match(/\[Code Review\]\(([^)]+)\)/)
+  assert.ok(siteLink, 'README must link to Code Review')
+  assert.equal(new URL(siteLink[1]).origin, 'https://code-review.agentskit.io')
 })
 
 test('operations guide covers every required security and release topic', () => {
