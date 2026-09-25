@@ -1,3 +1,8 @@
+---
+title: Baseline protocol
+description: Reproduce the versioned baseline used to measure Code Review changes.
+---
+
 # v0.8.0 baseline protocol
 
 Issue #138 of PRD #137 establishes the reproducible comparison point for later engine work. It defines evidence and measurement; it does not claim semantic quality from fixtures.

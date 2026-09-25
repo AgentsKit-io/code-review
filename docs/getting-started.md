@@ -1,0 +1,535 @@
+---
+title: Getting started
+description: Install AgentsKit Code Review and complete a first review with your existing model.
+---
+
+<p align="center">
+  <img src="assets/agentskit-mark.svg" width="64" height="57" alt="AgentsKit" />
+</p>
+
+# AgentsKit Code Review
+
+Profile: <code>top-level-repository</code>
+
+**Deep, low-noise AI code review with the model you already use.**
+
+It is intended for developers and teams who want focused review feedback without changing their model subscription, and without adopting a separate chat product surface.
+
+[![CI](https://github.com/AgentsKit-io/code-review/actions/workflows/ci.yml/badge.svg)](https://github.com/AgentsKit-io/code-review/actions/workflows/ci.yml)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13866/baseline)](https://www.bestpractices.dev/projects/13866)
+[![License: MIT](https://img.shields.io/badge/License-MIT-0f766e.svg)](LICENSE)
+[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-339933?logo=node.js&logoColor=white)](package.json)
+
+**Tags:** `agentskit` · `ai-code-review` · `github-action` · `typescript` · `sarif` · `codex` · `claude` · `ollama`
+
+**Topics:** `ai-agents` · `code-review` · `developer-experience`
+
+**Ecosystem:** [AgentsKit](https://www.agentskit.io) · [Registry](https://registry.agentskit.io) · [Chat](https://chat.agentskit.io) · [Doc Bridge](https://doc-bridge.agentskit.io) · **Code Review** · [Harness](https://harness.agentskit.io) · [Playbook](https://playbook.agentskit.io)
+
+Run code review locally or on every pull request. Bring Claude, Codex, OpenAI, Gemini, Ollama, OpenRouter, or another supported AgentsKit adapter. Seven focused review lenses propose potential problems; adversarial verification filters weak findings before they reach your team.
+
+## Verified proof
+
+- Offline CLI discovery works without credentials (`--help`, `--list-providers`) — covered by `test/cli-smoke.test.mjs`.
+- A clean local Codex CLI fixture completes an offline stdin review — covered by the same smoke suite.
+- Documentation, Action contract, and Doc Bridge gates run through `npm run check`.
+- Machine-readable public map: [`llms.txt`](llms.txt) and [`docs/for-agents/code-review.md`](docs/for-agents/code-review.md).
+
+## Why this exists
+
+Most AI reviewers are easy to start and hard to trust: they produce long lists of stylistic opinions, repeat the same concern, and bury the issue that can actually break production.
+
+AgentsKit Code Review is built around a different contract:
+
+- **Bring your own model.** Use an existing CLI subscription, an API provider, a local model, or your own gateway.
+- **Low noise by design.** Findings are challenged by independent verification votes before they survive.
+- **Local first, CI ready.** Review a diff before pushing, inspect complete paths, read stdin, or comment directly on a GitHub PR.
+- **Control cost and policy.** Set file budgets, concurrency, thresholds, project conventions, and blocking severity.
+- **See the cost before execution.** Use `--plan --json` to inspect files, lenses, retries, concurrency, deadline, estimated provider calls, and every `UNREVIEWED` path with its reason without a model request. Estimates are always `best-effort` because primary lens demand is predictable but model output determines how many skeptical verification calls are needed; the runtime counter remains the hard ceiling.
+
+## Run your first review
+
+Open a terminal inside any Git repository and choose a provider you already use. You do not need to clone or install AgentsKit Code Review:
+
+<!-- readme-example:first-review -->
+```sh
+# Codex CLI — uses your existing login on a trusted local machine
+npx --yes github:AgentsKit-io/code-review --provider codex-cli --mode trusted-local
+
+# Claude CLI — uses your existing login
+npx --yes github:AgentsKit-io/code-review --provider claude-cli
+
+# OpenAI API
+OPENAI_API_KEY=... npx --yes github:AgentsKit-io/code-review \
+  --provider openai --model gpt-4o
+```
+
+The CLI reviews the current repository's diff against `origin/main` and prints the report in your terminal. Choose another base with `--base main`.
+
+For the Grok Build ACP worker, use `XAI_API_KEY` (or `--api-key`) in the default isolated mode. To reuse `grok login`, opt in explicitly with `--mode trusted-local`.
+
+Local `codex-cli` subprocesses have a 300-second deadline per model call; `claude-cli` and the other local workers use 120 seconds. Every run also has a global deadline (10 minutes for full, 2 minutes for `fast`) and a bounded Codex smoke check before analysis. Set `--deadline-ms` for a smaller explicit budget; timed-out calls fail explicitly and cannot turn an unreviewed file into an approval.
+
+Terminal provider authentication failures stop the remaining lenses immediately; the review still exits incomplete and never converts a credential failure into approval.
+
+The default `isolated` mode does not inherit an interactive CLI login. Use `--mode trusted-local` only on a machine or runner you trust with the provider's local session and environment.
+
+`grok-cli` is stable and uses Grok Build's ACP transport (`grok agent stdio`) by default. In the default isolated mode, pass `XAI_API_KEY`/`--api-key`; the key is injected into the isolated worker environment, never into command arguments. Existing `grok login` state is available only with explicit local-only `--mode trusted-local`. Isolated workers grant no filesystem write, terminal, MCP, plugin, or subagent capability and use a temporary working directory. `--transport headless` is available for explicit non-interactive runs, while `--transport auto` is local-only and reports an ACP fallback before trying headless.
+
+`opencode-cli` is stable and uses OpenCode's ACP transport (`opencode acp`) by default. In the default isolated mode, pass `OPENCODE_API_KEY`/`--api-key`; the selected key is injected into the isolated worker environment, never into command arguments. Existing OpenCode login/configuration state is available only with explicit local-only `--mode trusted-local`. OpenCode is not installed automatically. `--transport headless` is available for explicit non-interactive runs, while `--transport auto` is local-only and reports an ACP fallback before trying headless.
+
+Preflight refuses an over-budget run before the first provider call. For GitHub PR sources, the CLI automatically caps the reviewed files to the safe call budget when `--max-files` is omitted; the remaining files are marked `UNREVIEWED`, so the result stays incomplete and cannot approve the PR. Use `--max-files` to choose a smaller explicit scope. `--dry-run` and `--plan` print the cap and concrete reductions; `--json` makes the plan machine-readable. CLI providers default to concurrency `1`, while API providers retain concurrency `4`. Required-lens or source coverage failures always exit `2`, even with `--no-fail`.
+Use `--profile fast` when latency and provider budget matter more than the optional lenses: correctness, security, and tests run in one structured batch with one verification vote and no retry. Full reviews retry only transient provider failures with bounded backoff, reduce concurrency after instability, preserve successful sibling units, and use one controlled recovery probe after the circuit cooldown. Authentication and cancellation are never retried. The result records provider calls, failures, skips, elapsed time, circuit state, initial/final concurrency, and whether the deadline fired. Any incomplete evidence remains fail-closed.
+
+### Complete coverage for large PRs
+
+Do not silently cap a large PR and treat the partial result as clean. `--plan --json --batch-size <n>` exposes a stable, alphabetically ordered file manifest. With a GitHub PR, `--batch-manifest <private-file>` writes the immutable state that binds every batch to the exact head SHA and review-policy fingerprint. Run each batch with `--batch-index <n> --result <private-file>`; partial batches reject `--post` and their result files are private (`0600`). `--consolidate-manifest <manifest> --artifacts <comma-list> --result <private-file>` accepts only every planned batch with complete evidence. Its output is the only artifact accepted by `--publish-result <file> --pr owner/repo#N --post`; that command rechecks the current SHA and policy before creating one GitHub review. A new commit or policy change invalidates the artifacts and requires a new manifest.
+
+For scheduled operation, use the packaged cycle runner instead of scripting those
+steps independently:
+
+```sh
+npx --yes --package=@agentskit/code-review@latest agentskit-review-cycle \
+  --repository owner/repository --pull 42 \
+  --config /absolute/path/code-review.config.ts \
+  --run-dir /absolute/path/review-runs/42
+```
+
+It performs one aggregate preflight, deterministic replay, a single canary batch,
+crash-safe full batching, consolidation, memory checks, a live labelled quality
+evaluation, and an immutable quality matrix. It never creates a target worktree.
+Posting and merging are opt-in and remain forbidden unless the final matrix passes.
+
+Run every open pull request from one typed project configuration with the packaged
+campaign command. The command creates the SHA-bound Orca evidence for each worker
+run and forwards the explicit mutation flags; the automation does not need to
+write evidence or orchestrate individual PRs:
+
+```sh
+npx --yes --package=@agentskit/code-review@latest agentskit-review-campaign \
+  --config /absolute/path/code-review.config.ts \
+  --output /absolute/path/campaign-report.json \
+  --automation-id my-orca-automation \
+  --mode trusted-local \
+  --post --merge
+```
+
+Publication and merging are explicit command flags. Without `--post`, the
+campaign is read-only; `--merge` is accepted only when the validated project
+configuration enables safe merging and the cycle's quality and SCM gates pass.
+
+The command first performs a provider-free sweep. Dependabot,
+configured author exclusions, drafts, forks, wrong base branches, and previously
+reviewed SHA/policy pairs are skipped explicitly, and eligible requests receive a
+complete source and call-budget plan before execution. A bounded queue then runs
+only authorized requests through the existing single-PR cycle. Atomic checkpoints
+resume interrupted requests, completed work is not repeated, and one failed PR does
+not stop independent work by default. The final JSON contains every discovered PR
+exactly once with a deterministic terminal outcome.
+
+![AgentsKit Code Review showing an APPROVE result after all configured review dimensions complete](assets/code-review-terminal.png)
+
+The current command runs directly from GitHub. After the first npm release, the shorter form will be:
+
+```sh
+npx @agentskit/code-review --provider codex-cli
+```
+
+## Run through pre-commit
+
+The repository publishes a [`pre-commit`](https://pre-commit.com/) hook for teams that already use that framework. It is manual by default because a full adversarial review is slower and more expensive than a formatter or linter.
+
+Add this to `.pre-commit-config.yaml`:
+
+```yaml
+repos:
+  - repo: https://github.com/AgentsKit-io/code-review
+    rev: main # pre-release; pin a release tag when one contains the hook
+    hooks:
+      - id: agentskit-review
+        args: [--provider, codex-cli, --no-fail, --max-files, "20"]
+```
+
+Then run it when a change is ready for review:
+
+```sh
+pre-commit run --hook-stage manual agentskit-review
+```
+
+The hook reviews the repository diff against `origin/main`; it does not claim to review only staged files. Override `--base` when your integration branch differs. To run on every push, override the hook with `stages: [pre-push]` and install that hook type explicitly, but first choose cost, latency, provider, and blocking policies appropriate for the repository.
+
+### Review locally with Ollama
+
+Use Ollama when repository policy requires model inference to stay on a machine or self-hosted runner. Pull a tool-capable coding model that fits the available memory, start Ollama, and review a small branch diff first:
+
+```sh
+ollama pull qwen2.5-coder:7b
+
+npx --yes github:AgentsKit-io/code-review \
+  --provider ollama \
+  --model qwen2.5-coder:7b \
+  --base main \
+  --base-url http://localhost:11434 \
+  --max-files 10 \
+  --concurrency 1 \
+  --no-fail
+```
+
+This reviews committed changes between `main` and `HEAD`; it is not a staged-files-only hook. The selected model must support Ollama tool calling because every review lens submits a structured result. Requests have a 30-second default deadline. `--no-fail` keeps findings advisory, but connection, source, and execution errors still exit nonzero. No provider key is required. Local inference reduces code disclosure, but logs, SARIF files, caches, optional gateways, and observability exporters still need their own access and retention policy.
+
+See the [operations guide](docs/OPERATIONS.md#local-ollama-review) for model sizing, health checks, failure handling, and self-hosted CI guidance.
+
+## Use the GitHub Action
+
+Add `.github/workflows/code-review.yml` to any repository:
+
+```yaml
+name: Code Review
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: AgentsKit-io/code-review@v0.31.0
+        with:
+          provider: openai
+          model: gpt-4o
+          api-key: ${{ secrets.LLM_API_KEY }}
+          # max-files: '17'
+          # max-calls: '1000'
+          # max-findings-per-file: '7'
+          # profile: 'full' # or fast for required dimensions only
+          # deadline-ms: '600000'
+          # fail-on-block: 'true' # advisory by default
+          # block: high
+```
+
+The Action fetches the PR diff and posts one batched inline review plus a compact, persistent walkthrough. The walkthrough reports outcome and review evidence; actionable detail appears only on the relevant diff lines. Its defaults review at most 17 files, 7 findings per file, and 1,000 provider calls. It is advisory by default. Advisory mode affects findings only: source, provider, or execution failures still fail the check, and any reviewable file with zero successful primary lenses prevents approval. `codex-cli` requires a pre-authenticated `trusted-local` self-hosted runner; use an API provider with a secret on GitHub-hosted runners. Enable `fail-on-block` and branch protection when you are ready to use findings as a merge gate.
+
+The package also exports a provider-neutral SCM contract for discovery, diffs,
+review state/publication, merge readiness, and revision-locked merge. The
+GitHub implementation backs the CLI and scheduled cycle through that contract.
+GitLab is intentionally unsupported until an adapter passes the same tests.
+
+Building a conversational review experience? Use [AgentsKit Chat](https://chat.agentskit.io/docs) for the cross-framework application layer instead of embedding chat here. Need an issue-to-release SDLC loop? Explore [AgentsKit Harness](https://harness.agentskit.io).
+
+Pin the Action to an immutable release tag such as `@v0.31.0`; use a full commit SHA when your policy requires the strongest reproducibility.
+
+## Choose how to run
+
+| Mode | Provider examples | Credentials | Best for |
+|---|---|---|---|
+| Local CLI | `codex-cli`, `claude-cli`, `grok-cli`, `opencode-cli` | Existing CLI login | Local development or self-hosted runners |
+| Hosted API | `openai`, `anthropic`, `gemini`, `mistral`, `groq` | Provider API key | Managed CI |
+| Local model | `ollama` | Usually none | Privacy and predictable cost |
+| Gateway | `openrouter` or a custom `--base-url` | Gateway-specific | Central routing and policy |
+
+`grok` is the xAI API provider; `grok-cli` is the separate Grok Build CLI entry. `opencode-cli` is the OpenCode CLI entry. API providers are discovered from factories exported by [`@agentskit/adapters`](https://www.npmjs.com/package/@agentskit/adapters). Run `npx --yes github:AgentsKit-io/code-review --list-providers` to see IDs, support levels, transports, and model requirements.
+
+Credentials resolve in this order:
+
+1. `--api-key`
+2. `LLM_API_KEY`
+3. `<PROVIDER>_API_KEY`, such as `OPENAI_API_KEY`
+
+Secrets passed to the GitHub Action are forwarded through the environment, not included in command-line arguments.
+
+## How review works
+
+```mermaid
+flowchart LR
+  A["Diff · PR · paths · stdin"] --> B["Normalize targets"]
+  B --> C["1 structured pass · 7 dimensions"]
+  C --> D["Adversarial verification"]
+  D --> E["Thresholds + CI policy"]
+  E --> F["Markdown · GitHub · SARIF"]
+  D -. "weak finding" .-> G["Dropped with audit note"]
+```
+
+The review agent lives in `agents/code-review/` and is vendored from the [AgentsKit registry](https://github.com/AgentsKit-io/agentskit-registry/tree/main/registry/code-review). The CLI owns provider selection, input sources, policy, and reporting.
+
+## Common commands
+
+```sh
+# Tune verification and severity
+npx --yes github:AgentsKit-io/code-review --provider codex-cli \
+  --base main --votes 5 --min-severity high
+
+# Review a GitHub PR and post the result
+GITHUB_TOKEN=... OPENAI_API_KEY=... \
+  npx --yes github:AgentsKit-io/code-review --provider openai --model gpt-4o \
+  --pr owner/repo#42 --post
+
+# Review complete files or directories
+npx --yes github:AgentsKit-io/code-review --provider claude-cli \
+  --paths src --max-files 30
+
+# Review piped source and also write SARIF
+echo 'const x = a.b' | npx --yes github:AgentsKit-io/code-review \
+  --provider ollama --model llama3 \
+  --base-url http://localhost:11434 --stdin --lang ts --sarif out.sarif
+
+# After fetching the PR base and installing reviewdog, reuse its annotation transport
+REPORT_FILE="$(mktemp)"
+trap 'rm -f "${REPORT_FILE}"' EXIT
+npx --yes github:AgentsKit-io/code-review#3dfd7427640148281454d52846d369e5ddf85b11 \
+  --provider openai --model gpt-4o \
+  --base "origin/${BASE_REF}" --sarif "${REPORT_FILE}" --no-fail &&
+reviewdog -f=sarif -name=agentskit-review \
+  -reporter=github-pr-review -filter-mode=added -fail-level=error \
+  < "${REPORT_FILE}"
+```
+
+The reviewdog recipe needs no custom converter: Code Review emits SARIF 2.1.0 and reviewdog consumes SARIF natively. See the [complete GitHub Actions job](docs/OPERATIONS.md#route-findings-through-reviewdog) for pinned installation, base-branch checkout, permissions, severity mapping, and CI ownership of the failure threshold.
+
+## CLI reference
+
+### Providers
+
+Run these commands from the repository you want to review:
+
+| Provider | What you need | Model | Example |
+|---|---|---|---|
+| `codex-cli` | Codex CLI logged in | Optional | `npx --yes github:AgentsKit-io/code-review --provider codex-cli` |
+| `claude-cli` | Claude CLI logged in | Optional | `npx --yes github:AgentsKit-io/code-review --provider claude-cli` |
+| `grok-cli` | Grok Build CLI; stable ACP/headless | Optional | `... --provider grok-cli` |
+| `opencode-cli` | OpenCode CLI; stable ACP/headless | Optional | `... --provider opencode-cli` |
+| `openai` | `OPENAI_API_KEY` | Required | `... --provider openai --model gpt-4o` |
+| `anthropic` | `ANTHROPIC_API_KEY` | Required | `... --provider anthropic --model <model>` |
+| `gemini` | `GEMINI_API_KEY` | Required | `... --provider gemini --model <model>` |
+| `ollama` | Ollama running locally | Required | `... --provider ollama --model llama3 --base-url http://localhost:11434` |
+| `openrouter` | `OPENROUTER_API_KEY` | Required | `... --provider openrouter --model <model>` |
+| Other adapters | `<PROVIDER>_API_KEY` when applicable | Usually required | `... --provider <name> --model <model>` |
+
+In shortened examples, replace `...` with `npx --yes github:AgentsKit-io/code-review`.
+
+### Options
+
+| Flag | Meaning |
+|---|---|
+| `--provider <name>` | Required provider: local CLI or `@agentskit/adapters` factory |
+| `--model <id>` | Model id; required for API/local-server providers |
+| `--api-key <key>` | Provider key; environment variables are preferred |
+| `--base-url <url>` | Provider endpoint, local server, or gateway |
+| `--transport <name>` | Provider transport: `acp`, `headless`, or local-only `auto` where supported |
+| `--base <ref>` | Git diff base; default `origin/main` |
+| `--pr owner/repo#N` | GitHub PR source; requires `GITHUB_TOKEN` |
+| `--paths <p...>` | Complete files or directories |
+| `--stdin [--lang ts]` | Source read from stdin |
+| `--post` | Post a batched review when the source is a PR |
+| `--sarif <file>` | Also write SARIF |
+| `--votes <n>` | Adversarial verification votes; default `3` |
+| `--profile <full\|fast>` | All dimensions, or required dimensions only |
+| `--min-severity <level>` | Minimum reported severity |
+| `--min-confidence <n>` | Minimum reported confidence |
+| `--max-files <n>` | Positive file budget; over-budget runs are refused before the provider |
+| `--max-calls <n>` | Provider-call budget; absolute ceiling `1000` |
+| `--max-findings-per-file <n>` | Maximum verified findings per file; bounds adversarial verification calls |
+| `--concurrency <n>` | Parallel model calls; default `1` for CLI providers, `4` for API providers |
+| `--deadline-ms <n>` | Global run deadline; defaults to `600000` (`120000` for `fast`) |
+| `--health-check <auto\|off>` | Bounded provider smoke check before analysis |
+| `--plan`, `--dry-run` | Print provider-free preflight; add `--json` for machine output |
+| `--validate-patch` | Run `git apply --check` on suggested patches |
+| `--block <severity>` | CI gate floor; default `blocker` |
+| `--no-fail` | Keep findings advisory |
+| `--conventions <path>` | Inject project conventions |
+| `--config <path>` | Load a validated `code-review.config.ts`, `.mjs`, `.js`, or JSON config |
+| `--config-schema` | Print the JSON Schema for editor autocomplete |
+| `--allow-incomplete` | Local-only exception for a config that declares incomplete lens coverage |
+| `--allow-unredacted` | Local-only exception; rejected in CI |
+| `--api` | Back-compatible alias for `--provider anthropic` |
+| `doctor --provider <name>` | Offline provider diagnostics; no model request |
+| `doctor --live` | Explicit provider smoke-test mode |
+| `doctor --json` | Stable machine-readable diagnostics |
+| `--mode <mode>` | `isolated` (default) or explicit local-only `trusted-local` |
+| `--help` | Full command help |
+
+When no conventions path is supplied, the CLI looks for `CONVENTIONS.md`, `CONTRIBUTING.md`, `.cursorrules`, or `AGENTS.md`.
+
+### Versioned configuration
+
+For the best developer experience, use a typed `code-review.config.ts` and
+import `defineConfig` from the package. The loader validates it before any
+provider call and the CLI can print the editor schema with
+`agentskit-review --config-schema`.
+
+```ts
+import { defineConfig, presets } from "@agentskit/code-review";
+
+export default defineConfig({
+  target: { repository: "owner/repository" },
+  review: {
+    preset: presets.strict().review,
+    lenses: { security: true, tests: true },
+    context: { adjacentLines: 40, maxRelatedFiles: 1, maxTokens: 16000, reserveForOutput: 2000 },
+  },
+  comments: { renderer: "coderabbit-inspired", language: "en", inline: true },
+  // `required` blocks a merge with no reported checks; `named` requires the listed checks.
+  checks: { mode: "required" },
+});
+```
+
+Run it with `agentskit-review --config code-review.config.ts --provider codex-cli`.
+Credentials and trusted execution settings remain in the environment or
+explicit CLI flags; they are never accepted from the project config.
+
+Merge checks are fail-closed and deterministic. `required` requires at least one
+reported check and requires every reported check to finish successfully;
+`reported` validates every reported check but permits repositories with none;
+`named` requires each listed check by exact name; and `disabled` is an explicit
+non-mergeable policy. A check policy is locked into the review identity, so a
+policy change invalidates prior publication evidence.
+
+The repository may contain one strict `.agentskit-review.json` file. It must use
+`configVersion: 1`; unknown fields, secrets, unsupported values, and unsafe lens
+policies fail before provider execution with exit `2`. Every built-in lens is
+enabled by default, with `correctness`, `security`, and `tests` required. Flags
+override file values. A required lens may only be disabled in an explicitly
+declared `incompleteProfile`, which requires `--allow-incomplete` locally and is
+never accepted in CI.
+
+```json
+{
+  "configVersion": 1,
+  "profile": "full",
+  "lenses": {
+    "performance": { "enabled": false, "required": false }
+  },
+  "votes": 3,
+  "budget": {
+    "maxFiles": 20, "maxTokens": 100000, "maxCalls": 200, "concurrency": 1,
+    "deadlineMs": 600000, "reserveForOutput": 2000, "reserveForVerification": 2000,
+    "hierarchy": {
+      "campaign": { "maxTokens": 100000, "maxCalls": 200, "deadlineMs": 600000 },
+      "pullRequest": { "maxTokens": 76000, "maxCalls": 199, "deadlineMs": 600000 },
+      "contextPack": { "maxTokens": 16000, "maxCalls": 50, "deadlineMs": 600000 },
+      "analysis": { "maxTokens": 16000, "maxCalls": 50, "deadlineMs": 600000 },
+      "verification": { "maxTokens": 16000, "maxCalls": 50, "deadlineMs": 600000 }
+    }
+  },
+  "worker": { "timeoutMs": 120000, "maxOutputBytes": 20971520 },
+  "thresholds": { "minSeverity": "med", "minConfidence": 0.7 },
+  "context": {
+    "mode": "prompt",
+    "patterns": ["src/**"],
+    "adjacentLines": 40,
+    "maxRelatedFiles": 1,
+    "maxTokens": 16000,
+    "reserveForOutput": 2000
+  }
+}
+```
+
+Provider, model, transport, context trust, redaction, and permissions are
+trusted execution inputs; a project config cannot set them in CI. Put provider
+credentials only in the environment or provider login, never in this file.
+Remote and unknown provider boundaries redact high-confidence credential
+patterns before the model sees source. Unsafe, oversized, binary, or excluded
+paths are reported as `UNREVIEWED`; content is never silently truncated.
+
+### Programmatic campaign contracts
+
+The package root exports version-1 Zod schemas and inferred types for campaign,
+pull-request run, review-unit, event, budget, immutable review identity, terminal
+outcome, and typed failure records. `reviewIdentityFingerprint()` binds both
+source SHAs plus policy, prompt, configuration, model, and package identity.
+These contracts are provider-free; execution and persistence are added by later
+engine phases. `transitionCampaign()` is the pure lifecycle authority and
+`replayCampaign()` deterministically rebuilds state from an ordered event log.
+`saveCampaignCheckpoint()` persists the event log, derived state, evidence, and
+external-effect idempotency keys in one crash-safe snapshot. Acquire a
+campaign lease before writing; it excludes both the campaign and every included
+pull request. `loadCampaignCheckpoint()` rejects changed identities, while
+`pendingReviewUnitIds()` and `shouldApplyExternalEffect()` make resume explicit.
+
+### Doctor
+
+Run `doctor` before a review to check a registered provider’s executable, version, transport, model requirement, configuration mode, and credential presence. It is offline by default; `doctor --live` and normal Codex reviews use a bounded smoke check to catch authentication or hangs before analysis. API credentials are checked only for presence and values are never printed. Unknown local CLI versions warn locally and fail when `CI=true`. Exit `0` means healthy, `1` means a failed diagnostic, and `2` means invalid CLI usage.
+
+```sh
+npx --yes github:AgentsKit-io/code-review doctor --provider codex-cli
+npx --yes github:AgentsKit-io/code-review doctor --provider openai --model gpt-4o --json
+```
+
+## Cost and privacy
+
+A normal context pack contains bounded changed hunks plus adjacent lines and, when configured, directly related source/test files. It uses one structured analysis call covering every enabled review dimension, then independently verifies candidate findings. Before any model call, deterministic path and source evidence classifies each pack as `low`, `normal`, `high`, or `critical`. High-risk changes receive one additional specialized correctness pass; critical security, credential, authorization, or migration changes receive one combined correctness/security pass. Documentation and generated-only packs remain on the single-analysis low-cost path. A failed required specialized pass makes the review incomplete rather than clean.
+
+The plan and result record pack membership, included ranges, expansion, risk signals and selected depth, estimated tokens, and output reserve. AgentsKit token budgeting includes the system prompt and tool schema and rejects oversized requests before provider execution. Hierarchical budgets reserve campaign capacity for the current PR, output, and critical verification; every provider request reserves its estimated input before entering the concurrency gate. `ReviewEvidence.usage` preserves input, cached-input, output, reasoning, memory, retry, call, and wall-clock dimensions when the provider reports them; unavailable dimensions remain absent. Results explicitly report enabled, completed, and missing required dimensions. This replaces repeated full-file prompts and never duplicates unified patches beside numbered source. Control usage with the typed `review.context` policy, `review.budget` hierarchy, `--profile fast`, `--max-files`, `--max-calls`, `--votes`, `--deadline-ms`, `--concurrency`, paths, and workflow triggers. For sensitive code, use a local model or an approved private gateway; provider data policies still apply to hosted APIs.
+
+Self-hosted memory is split by lifecycle: campaign state and review cache remain operational stores, feedback is retained separately, and permanent knowledge contains only bounded, explicitly approved rules. Review runtimes do not write provider transcripts, prompts, complete source, or secrets into knowledge storage; malformed stores fail closed and concurrent local writes are serialized before atomic replacement.
+
+Approved rules enter review context through the AgentsKit `Retriever` contract.
+Each context pack filters them by repository, path, language, and category, then
+applies deterministic specificity ordering, deduplication, and a strict default
+rule/token bound. Repository-specific rules are excluded when the caller cannot
+provide repository scope.
+Feedback reconciliation is deterministic and resumable: it represents every supported outcome, deduplicates feedback, emits provenance-backed inactive candidates only after repeated accepted/fixed evidence, and never promotes a rule automatically.
+
+## Operations and machine-readable docs
+
+- [Product site](https://code-review.agentskit.io) — interactive configuration preview and curated guides.
+
+- [Operations guide](docs/OPERATIONS.md) — providers, permissions, secrets, cost controls, SARIF, failures, releases, and incident-safe defaults.
+- [Provider compatibility matrix](docs/provider-compatibility.json) — stable CLI transports and their offline fixtures.
+- [Agent handoff](docs/for-agents/code-review.md) — ownership, edit roots, verification commands, and change routes.
+- [`llms.txt`](llms.txt) — compact public source map for LLMs and coding agents.
+- [`llms-full.txt`](llms-full.txt) — complete README, operations, and agent-handoff corpus.
+- [`doc-bridge.config.json`](doc-bridge.config.json) — executable Doc Bridge corpus, ownership, and gate contract.
+
+`npm run check` builds the CLI, executes a full credential-free review fixture, validates the composite Action and documentation contract, runs Doc Bridge gates, checks CLI help, and enforces README Standard v1. Prove credential-free discovery with:
+
+```sh
+node examples/verify-readme.mjs
+```
+
+`npm pack --dry-run` verifies the release payload.
+
+## Maturity
+
+The repository is **pre-v1 (`0.31.x`)**. The CLI and Action are available for evaluation and advisory CI; use an exact release tag such as `@v0.31.0` or a commit SHA, and treat the future `v1` moving tag as a separate stability milestone. See [ROADMAP.md](ROADMAP.md) and the [release guidance](docs/OPERATIONS.md#releases-and-maturity).
+
+## Compatibility
+
+- **Node.js 20+** (see `engines` in `package.json`)
+- **TypeScript** source and compiled ESM distribution
+- **GitHub Actions** composite Action at repository root (`action.yml`)
+- Providers via local CLIs or [`@agentskit/adapters`](https://www.npmjs.com/package/@agentskit/adapters)
+
+## AgentsKit ecosystem
+
+Code Review is the verification step in the broader AgentsKit journey:
+
+| Need | Continue with |
+|---|---|
+| Build the agent or custom review adapter | [AgentsKit](https://www.agentskit.io/docs) |
+| Install the vendored review agent or explore ready agents | [Registry](https://registry.agentskit.io/docs) |
+| Deliver review through a conversational application | [AgentsKit Chat](https://chat.agentskit.io/docs) |
+| Apply engineering patterns before review | [Playbook](https://playbook.agentskit.io/docs) |
+| Generate ownership-aware documentation handoffs | [Doc Bridge](https://doc-bridge.agentskit.io) ([source](https://github.com/AgentsKit-io/doc-bridge)) |
+| Run a configurable issue-to-release loop | [AgentsKit Harness](https://harness.agentskit.io) |
+
+The product site at [code-review.agentskit.io](https://code-review.agentskit.io) pairs an interactive configuration preview with curated Fumadocs guides. The CLI and GitHub Action remain the product runtime.
+
+## Contributing
+
+Providers, review lenses, reporters, fixtures, documentation, and false-positive reductions are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md), browse issues labeled `good first issue`, or propose a new provider/lens with the issue templates.
+
+Please report vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
+Maintainer responsibilities, public decision-making, and the release process are
+documented in [GOVERNANCE.md](GOVERNANCE.md).
+
+## Roadmap
+
+The near-term roadmap focuses on a stable `v1` Action, npm distribution, provider smoke tests, better cost visibility, and more community-owned review lenses. See [ROADMAP.md](ROADMAP.md).
+
+## License
+
+[MIT](LICENSE) © AgentsKit contributors.

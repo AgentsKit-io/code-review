@@ -1,3 +1,8 @@
+---
+title: Continuous improvement
+description: Run evidence-based improvement cycles for Code Review quality.
+---
+
 # Continuous improvement cycles
 
 Each cycle improves one measurable review-process hypothesis. A cycle is not a request to remove every model suggestion from the repository.

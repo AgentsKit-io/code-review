@@ -12,10 +12,10 @@ test('README communicates pipeline, maturity, contribution, and ecosystem role',
   for (const marker of ['docs/assets/agentskit-mark.svg', '```mermaid', '## Maturity', '## AgentsKit ecosystem', 'CONTRIBUTING.md', 'SECURITY.md']) {
     assert.ok(readme.includes(marker), `README missing ${marker}`)
   }
-  for (const url of ['www.agentskit.io/docs', 'registry.agentskit.io/docs', 'chat.agentskit.io/docs', 'playbook.agentskit.io/docs', 'agentskit-io.github.io/doc-bridge', 'akos.agentskit.io/docs']) {
+  for (const url of ['www.agentskit.io/docs', 'registry.agentskit.io/docs', 'chat.agentskit.io/docs', 'playbook.agentskit.io/docs', 'doc-bridge.agentskit.io', 'code-review.agentskit.io']) {
     assert.ok(readme.includes(url), `README missing ${url}`)
   }
-  assert.match(readme, /no Fumadocs application and no embedded AgentsChat/i)
+  assert.match(readme, /code-review\.agentskit\.io/i)
 })
 
 test('operations guide covers every required security and release topic', () => {
@@ -150,22 +150,25 @@ test('the Action stays least-privilege, secret-safe, and advisory by default', (
 })
 
 test('machine-readable documentation and Doc Bridge ownership are committed', () => {
-  for (const path of ['AGENTS.md', 'doc-bridge.config.json', 'ecosystem.json', 'llms.txt', 'llms-full.txt', '.doc-bridge/index.json', '.doc-bridge/capabilities.json', 'docs/for-agents/index.md', 'docs/for-agents/code-review-cli.md']) {
+  for (const path of ['AGENTS.md', 'doc-bridge.config.json', 'ecosystem.json', 'llms.txt', 'llms-full.txt', '.doc-bridge/index.json', '.doc-bridge/capabilities.json', 'docs/for-agents/index.md', 'docs/for-agents/code-review.md']) {
     assert.ok(existsSync(join(root, path)), `${path} is missing`)
   }
   const config = JSON.parse(read('doc-bridge.config.json'))
-  assert.equal(config.routing.options.ownership['code-review-cli'].agentDoc, 'docs/for-agents/code-review-cli.md')
+  assert.equal(config.routing.options.ownership['code-review'].agentDoc, 'docs/for-agents/code-review.md')
   const index = JSON.parse(read('.doc-bridge/index.json'))
-  const handoff = index.handoffs['code-review-cli']
+  const handoff = index.handoffs['code-review']
   for (const path of handoff.readBeforeEditing) assert.ok(existsSync(join(root, path)), `handoff target ${path} is missing`)
-  const searchableBody = index.knowledge.map(entry => entry.body).join('\n')
+  // Doc Bridge indexes document identity and retrieval metadata, not source prose.
+  // Check the public discovery corpus and README for the canonical sibling links.
+  const searchableBody = `${read('llms.txt')}\n${read('README.md')}`
   for (const [product, url] of [
     ['AgentsKit', 'https://www.agentskit.io/docs'],
     ['Registry', 'https://registry.agentskit.io/docs'],
     ['AgentsKit Chat', 'https://chat.agentskit.io/docs'],
     ['Playbook', 'https://playbook.agentskit.io/docs'],
-    ['Doc Bridge', 'https://agentskit-io.github.io/doc-bridge/'],
-    ['AKOS', 'https://akos.agentskit.io/docs'],
+    ['Doc Bridge', 'https://doc-bridge.agentskit.io'],
+    ['Code Review', 'https://code-review.agentskit.io'],
+    ['Harness', 'https://harness.agentskit.io'],
   ]) {
     assert.ok(searchableBody.includes(product), `Doc Bridge index lost ecosystem product ${product}`)
     assert.ok(searchableBody.includes(url), `Doc Bridge index lost ecosystem route ${url}`)
@@ -186,13 +189,13 @@ test('machine-readable documentation and Doc Bridge ownership are committed', ()
 
 test('canonical ecosystem manifest exposes seven unique products and six Code Review siblings', () => {
   const manifest = JSON.parse(read('ecosystem.json'))
-  const expected = ['agentskit', 'registry', 'agentskit-chat', 'playbook', 'doc-bridge', 'code-review', 'akos']
+  const expected = ['agentskit', 'registry', 'agentskit-chat', 'doc-bridge', 'code-review', 'harness', 'playbook']
   assert.deepEqual(manifest.products.map(product => product.id), expected)
   assert.equal(new Set(expected).size, 7)
   assert.deepEqual(manifest.products.find(product => product.id === 'code-review').navigation.next, expected.filter(id => id !== 'code-review'))
   assert.ok(manifest.properties.every(product => expected.includes(product.id)))
   assert.equal(manifest.products.find(product => product.id === 'agentskit-chat').surfaces.documentation, 'fumadocs')
-  assert.equal(manifest.products.find(product => product.id === 'akos').maturity, 'stable')
+  assert.deepEqual(manifest.products.filter(product => product.navigation.showInBar).map(product => product.id), ['agentskit', 'registry', 'agentskit-chat', 'doc-bridge', 'code-review', 'harness'])
   for (const product of manifest.products) {
     assert.match(product.surfaces.home, /^https:\/\//)
     assert.match(product.surfaces.llms, /^https:\/\//)
@@ -220,7 +223,7 @@ test('published package keeps documentation generators and freshness enforcement
   ]) {
     assert.ok(manifest.files.includes(input), `published documentation input missing: ${input}`)
   }
-  assert.equal(manifest.optionalDependencies['@agentskit/doc-bridge'], '^1.1.1')
+  assert.equal(manifest.optionalDependencies['@agentskit/doc-bridge'], '^1.11.2')
   assert.ok(manifest.files.includes('docs/quality-matrix.md'))
   assert.ok(manifest.files.includes('scripts/evaluate-quality.mjs'))
   assert.match(manifest.scripts.prepack, /docs:gate/)
@@ -229,15 +232,16 @@ test('published package keeps documentation generators and freshness enforcement
 test('machine discovery links raw sources and every sibling while staying concise', () => {
   const llms = read('llms.txt')
   assert.ok(Buffer.byteLength(llms) < 12_000, 'llms.txt should remain a concise discovery surface')
-  for (const marker of ['raw.githubusercontent.com/AgentsKit-io/code-review/main/', 'AgentsKit Chat', 'Registry', 'Playbook', 'Doc Bridge', 'AKOS']) {
+  for (const marker of ['raw.githubusercontent.com/AgentsKit-io/code-review/main/', 'AgentsKit Chat', 'Registry', 'Playbook', 'Doc Bridge', 'Harness']) {
     assert.ok(llms.includes(marker), `llms.txt missing ${marker}`)
   }
 })
 
-test('repository-native scope has no Fumadocs or AgentsChat runtime dependency', () => {
+test('the CLI package stays separate from the Fumadocs website runtime', () => {
   const packageJson = read('package.json')
   assert.doesNotMatch(packageJson, /fumadocs/i)
   assert.doesNotMatch(packageJson, /agentskit-chat/i)
   assert.equal(existsSync(join(root, 'app')), false)
-  assert.equal(existsSync(join(root, 'apps')), false)
+  assert.ok(existsSync(join(root, 'apps/docs/app/page.tsx')))
+  assert.match(read('apps/docs/package.json'), /fumadocs/)
 })

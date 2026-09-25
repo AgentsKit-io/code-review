@@ -25,5 +25,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm run docs:index
+      - run: git diff --exit-code -- doc-bridge.config.json .doc-bridge llms-full.txt
       - run: npm run check
       - run: npm pack --dry-run

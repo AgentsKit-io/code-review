@@ -4,9 +4,10 @@ import { spawnSync } from 'node:child_process'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import test from 'node:test'
+import { fileURLToPath } from 'node:url'
 import { opencodeCli } from '../dist/src/opencode-cli-adapter.js'
 
-const root = new URL('.', import.meta.url).pathname.replace(/\/test\/$/, '')
+const root = fileURLToPath(new URL('../', import.meta.url))
 const fixturePath = join(root, 'test/fixtures/bin')
 const request = {
   messages: [{ id: '1', role: 'user', content: 'review this', status: 'complete', createdAt: new Date() }],

@@ -10,9 +10,15 @@ const rawBase = 'https://raw.githubusercontent.com/AgentsKit-io/code-review/main
 const blobBase = 'https://github.com/AgentsKit-io/code-review/blob/main/'
 const sources = [
   ['Public README', 'README.md'],
+  ['Product overview', 'docs/index.md'],
+  ['Getting started', 'docs/getting-started.md'],
   ['Operations guide', 'docs/OPERATIONS.md'],
+  ['Provider compatibility', 'docs/provider-compatibility.md'],
+  ['Review quality matrix', 'docs/quality-matrix.md'],
+  ['Baseline protocol', 'docs/baseline-protocol.md'],
+  ['Continuous improvement', 'docs/continuous-improvement.md'],
   ['Agent documentation index', 'docs/for-agents/index.md'],
-  ['Code Review agent handoff', 'docs/for-agents/code-review-cli.md'],
+  ['Code Review agent handoff', 'docs/for-agents/code-review.md'],
   ['Security policy', 'SECURITY.md'],
   ['Contributing guide', 'CONTRIBUTING.md'],
   ['Roadmap', 'ROADMAP.md'],

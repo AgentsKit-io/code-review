@@ -148,15 +148,6 @@
       "claims": []
     },
     {
-      "productId": "playbook",
-      "source": {
-        "type": "endpoint",
-        "url": "https://playbook.agentskit.io/api/stats.json"
-      },
-      "verification": "declared",
-      "claims": []
-    },
-    {
       "productId": "doc-bridge",
       "source": {
         "type": "repository",
@@ -175,10 +166,19 @@
       "claims": []
     },
     {
-      "productId": "akos",
+      "productId": "harness",
+      "source": {
+        "type": "repository",
+        "repo": "AgentsKit-io/harness"
+      },
+      "verification": "declared",
+      "claims": []
+    },
+    {
+      "productId": "playbook",
       "source": {
         "type": "endpoint",
-        "url": "https://akos.agentskit.io/api/stats.json"
+        "url": "https://playbook.agentskit.io/api/stats.json"
       },
       "verification": "declared",
       "claims": []
