@@ -10,7 +10,6 @@ Generated from the public repository documentation. Prefer llms.txt for concise 
 - Doc Bridge: https://doc-bridge.agentskit.io/
 - AgentsKit Code Review: https://code-review.agentskit.io/docs
 - AgentsKit Harness: https://harness.agentskit.io/docs
-- Agents Playbook: https://playbook.agentskit.io/docs
 
 ## Public README
 
@@ -37,7 +36,7 @@ It is intended for developers and teams who want focused review feedback without
 
 **Topics:** `ai-agents` · `code-review` · `developer-experience`
 
-**Ecosystem:** [AgentsKit](https://www.agentskit.io) · [Registry](https://registry.agentskit.io) · [Chat](https://chat.agentskit.io) · [Doc Bridge](https://doc-bridge.agentskit.io) · [Code Review](https://code-review.agentskit.io) · [Harness](https://harness.agentskit.io) · [Playbook](https://playbook.agentskit.io)
+**Ecosystem:** [AgentsKit](https://www.agentskit.io) · [Registry](https://registry.agentskit.io) · [Chat](https://chat.agentskit.io) · [Doc Bridge](https://doc-bridge.agentskit.io) · [Code Review](https://code-review.agentskit.io) · [Harness](https://harness.agentskit.io)
 
 Run code review locally or on every pull request. Bring Claude, Codex, OpenAI, Gemini, Ollama, OpenRouter, or another supported AgentsKit adapter. Seven focused review lenses propose potential problems; adversarial verification filters weak findings before they reach your team.
 
@@ -598,7 +597,7 @@ It is intended for developers and teams who want focused review feedback without
 
 **Topics:** `ai-agents` · `code-review` · `developer-experience`
 
-**Ecosystem:** [AgentsKit](https://www.agentskit.io) · [Registry](https://registry.agentskit.io) · [Chat](https://chat.agentskit.io) · [Doc Bridge](https://doc-bridge.agentskit.io) · **Code Review** · [Harness](https://harness.agentskit.io) · [Playbook](https://playbook.agentskit.io)
+**Ecosystem:** [AgentsKit](https://www.agentskit.io) · [Registry](https://registry.agentskit.io) · [Chat](https://chat.agentskit.io) · [Doc Bridge](https://doc-bridge.agentskit.io) · **Code Review** · [Harness](https://harness.agentskit.io)
 
 Run code review locally or on every pull request. Bring Claude, Codex, OpenAI, Gemini, Ollama, OpenRouter, or another supported AgentsKit adapter. Seven focused review lenses propose potential problems; adversarial verification filters weak findings before they reach your team.
 
@@ -2003,7 +2002,7 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 # Code Review agent docs
 
 - Code Review CLI handoff — ownership, change routes, security boundaries, and verification: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review.md
-- Concise machine map — discovery, raw sources, and all seven ecosystem products: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms.txt
+- Concise machine map — discovery, raw sources, and all six ecosystem products: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms.txt
 - Full machine corpus — public, operational, governance, maturity, and agent handoffs: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms-full.txt
 ## Code Review agent handoff
 

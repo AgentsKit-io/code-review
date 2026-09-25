@@ -189,16 +189,27 @@ test('machine-readable documentation and Doc Bridge ownership are committed', ()
   assert.deepEqual(relativeLinks, [], `llms-full.txt contains unresolved relative links: ${relativeLinks.join(', ')}`)
 })
 
-test('canonical ecosystem manifest exposes seven unique products and six Code Review siblings', () => {
+test('canonical ecosystem manifest exposes six unique products and five Code Review siblings', () => {
   const manifest = JSON.parse(read('ecosystem.json'))
-  const expected = ['agentskit', 'registry', 'agentskit-chat', 'doc-bridge', 'code-review', 'harness', 'playbook']
-  assert.deepEqual(manifest.products.map(product => product.id), expected)
-  assert.equal(new Set(expected).size, 7)
+  const expected = ['agentskit', 'registry', 'agentskit-chat', 'doc-bridge', 'code-review', 'harness']
+  // Playbook survives only as a hidden Doc Bridge 1.x compatibility record, never in navigation.
+  assert.deepEqual(manifest.products.map(product => product.id).filter(id => id !== 'playbook'), expected)
+  const playbook = manifest.products.find(product => product.id === 'playbook')
+  if (playbook) {
+    assert.equal(playbook.navigation.showInBar, false)
+    assert.equal(playbook.navigation.order, undefined)
+    assert.deepEqual(playbook.navigation.next, [])
+    assert.equal(playbook.showcase, undefined)
+  }
+  assert.equal(new Set(expected).size, 6)
   assert.deepEqual(manifest.products.find(product => product.id === 'code-review').navigation.next, expected.filter(id => id !== 'code-review'))
-  assert.ok(manifest.properties.every(product => expected.includes(product.id)))
+  assert.deepEqual(manifest.positioning.openSourceProductIds, expected)
+  assert.ok(manifest.properties.every(product => [...expected, 'playbook'].includes(product.id)))
   assert.equal(manifest.products.find(product => product.id === 'agentskit-chat').surfaces.documentation, 'fumadocs')
-  assert.deepEqual(manifest.products.filter(product => product.navigation.showInBar).map(product => product.id), ['agentskit', 'registry', 'agentskit-chat', 'doc-bridge', 'code-review', 'harness'])
+  assert.deepEqual(manifest.products.filter(product => product.navigation.showInBar).map(product => product.id), expected)
   for (const product of manifest.products) {
+    assert.ok(!product.navigation.next.includes('playbook'))
+    if (product.id === 'playbook') continue
     assert.match(product.surfaces.home, /^https:\/\//)
     assert.match(product.surfaces.llms, /^https:\/\//)
   }
@@ -234,7 +245,7 @@ test('published package keeps documentation generators and freshness enforcement
 test('machine discovery links raw sources and every sibling while staying concise', () => {
   const llms = read('llms.txt')
   assert.ok(Buffer.byteLength(llms) < 12_000, 'llms.txt should remain a concise discovery surface')
-  for (const marker of ['raw.githubusercontent.com/AgentsKit-io/code-review/main/', 'AgentsKit Chat', 'Registry', 'Playbook', 'Doc Bridge', 'Harness']) {
+  for (const marker of ['raw.githubusercontent.com/AgentsKit-io/code-review/main/', 'AgentsKit', 'AgentsKit Chat', 'Registry', 'Doc Bridge', 'Code Review', 'Harness']) {
     assert.ok(llms.includes(marker), `llms.txt missing ${marker}`)
   }
 })

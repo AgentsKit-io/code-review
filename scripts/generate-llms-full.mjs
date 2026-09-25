@@ -37,6 +37,7 @@ const rebaseRelativeLinks = (markdown, sourcePath) => markdown
 
 const ecosystem = JSON.parse(readFileSync(resolve(root, 'ecosystem.json'), 'utf8'))
 const productLines = ecosystem.products
+  .filter((product) => product.navigation.showInBar)
   .sort((left, right) => left.navigation.order - right.navigation.order)
   .map((product) => `- ${product.name}: ${product.surfaces.docs ?? product.surfaces.home}`)
 

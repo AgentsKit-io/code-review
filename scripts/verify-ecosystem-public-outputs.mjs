@@ -11,7 +11,14 @@ try {
   const visible = products.filter((product) => product.navigation?.showInBar).map((product) => product.id)
   if (JSON.stringify(visible) !== JSON.stringify(expected)) errors.push(`ecosystem.json header order must be ${expected.join(' → ')}; got ${visible.join(' → ')}`)
   if (products.some((product) => product.id === 'akos' || /akos/i.test(`${product.name} ${product.url ?? ''} ${product.surfaces?.home ?? ''}`))) errors.push('ecosystem.json contains public AKOS metadata')
-  if (products.find((product) => product.id === 'playbook')?.navigation?.showInBar !== false) errors.push('Playbook must remain directly available but have navigation.showInBar=false')
+  const ids = products.map((product) => product.id)
+  if (JSON.stringify(ids.filter((id) => expected.includes(id))) !== JSON.stringify(expected)) errors.push(`ecosystem.json must list the six canonical products in order ${expected.join(' → ')}; got ${ids.join(' → ')}`)
+  // Only a hidden Doc Bridge 1.x compatibility record may exist outside the canonical six.
+  const extra = products.filter((product) => !expected.includes(product.id))
+  if (extra.some((product) => product.id !== 'playbook')) errors.push(`ecosystem.json lists non-canonical products: ${extra.map((product) => product.id).join(', ')}`)
+  if (extra.some((product) => product.navigation?.showInBar !== false || product.navigation?.order !== undefined || product.navigation?.next?.length || product.showcase)) errors.push('Playbook may only remain as a hidden compatibility record (showInBar=false, no order, no next, no showcase)')
+  if (products.some((product) => product.navigation?.next?.includes('playbook'))) errors.push('no ecosystem product may route to Playbook')
+  if (manifest.positioning?.openSourceProductIds && JSON.stringify(manifest.positioning.openSourceProductIds) !== JSON.stringify(expected)) errors.push('positioning.openSourceProductIds must match the six canonical products')
   if (products.find((product) => product.id === 'code-review')?.navigation?.showInBar !== true) errors.push('Code Review must have navigation.showInBar=true')
 } catch (error) { errors.push(`cannot validate ecosystem.json: ${error.message}`) }
 
