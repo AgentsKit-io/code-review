@@ -1,71 +1,35 @@
-import { createElement } from 'react'
 import { HomeLayout } from 'fumadocs-ui/layouts/home'
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared'
 import { ReviewConfigDemo } from '@/components/review-config-demo'
-import { LiquidCursorGradient } from '@/components/liquid-cursor-gradient'
 import { ConfigurationSection, DeliverySection, ProviderSection } from '@/components/home-sections'
-
-const CODE_REVIEW_GITHUB = 'https://github.com/AgentsKit-io/code-review'
+import { SiteFooter } from '@/components/site-footer'
+import { baseOptions } from '@/lib/layout.shared'
+import { PRODUCT_GITHUB as CODE_REVIEW_GITHUB, PRODUCT_ID } from '@/lib/shell'
 
 const layoutOptions: BaseLayoutProps = {
-  nav: {
-    title: <span className="app-wordmark"><svg aria-hidden="true" viewBox="0 0 48 48"><path d="M8 35 24 8l16 27H8Z" fill="none" stroke="currentColor" strokeWidth="2"/><circle cx="24" cy="8" r="4" fill="currentColor"/><circle cx="8" cy="35" r="4" fill="currentColor"/><circle cx="40" cy="35" r="4" fill="currentColor"/></svg><span>AgentsKit <span className="app-wordmark-product">Code Review</span></span></span>,
-  },
+  ...baseOptions(),
   links: [
     { text: 'Overview', url: '/' },
     { text: 'Docs', url: '/docs' },
     { text: 'Getting started', url: '/docs/getting-started' },
   ],
-  githubUrl: CODE_REVIEW_GITHUB,
 }
 
-const products = [
-  { name: 'AgentsKit', href: 'https://www.agentskit.io' },
-  { name: 'Registry', href: 'https://registry.agentskit.io' },
-  { name: 'Chat', href: 'https://chat.agentskit.io' },
-  { name: 'Doc Bridge', href: 'https://doc-bridge.agentskit.io' },
-  { name: 'Code Review', href: 'https://code-review.agentskit.io' },
-  { name: 'Harness', href: 'https://harness.agentskit.io' },
-]
-
 function EcosystemTour() {
-  return createElement('agentskit-ecosystem', { current: 'code-review', 'data-visual': 'agentskit-home' },
+  return <agentskit-ecosystem current={PRODUCT_ID} data-visual="agentskit-home">
     <section className="ecosystem-fallback" aria-labelledby="ecosystem-title">
       <div className="ak-container journey-grid">
         <div><p className="ak-eyebrow">The AgentsKit ecosystem</p><h2 id="ecosystem-title" className="ak-display">Build the agent. Then take it all the way.</h2></div>
-        <p className="journey-copy">One connected toolkit to discover working agents, compose their foundation, deliver the experience, align teams, transfer knowledge, and operate in production.</p>
+        <p className="journey-copy">One connected toolkit to discover working agents, compose their foundation, deliver the experience, transfer knowledge, verify changes, and operate in production.</p>
       </div>
-    </section>,
-  )
-}
-
-function BrandMark() {
-  return <svg aria-hidden="true" viewBox="0 0 48 48"><path d="M8 35 24 8l16 27H8Z" fill="none" stroke="currentColor" strokeWidth="2"/><circle cx="24" cy="8" r="4" fill="currentColor"/><circle cx="8" cy="35" r="4" fill="currentColor"/><circle cx="40" cy="35" r="4" fill="currentColor"/></svg>
-}
-
-function SiteFooter() {
-  const columns = [
-    { title: 'Start', links: [{ text: 'Documentation', href: '/docs' }, { text: 'Getting started', href: '/docs/getting-started' }, { text: 'Operations', href: '/docs/operations' }] },
-    { title: 'Review', links: [{ text: 'Provider compatibility', href: '/docs/provider-compatibility' }, { text: 'Quality matrix', href: '/docs/quality-matrix' }, { text: 'Continuous improvement', href: '/docs/continuous-improvement' }] },
-    { title: 'Ecosystem', links: products.map(product => ({ text: product.name, href: product.href, current: product.name === 'Code Review' })) },
-    { title: 'Community', links: [{ text: 'GitHub', href: CODE_REVIEW_GITHUB }, { text: 'Contribute', href: `${CODE_REVIEW_GITHUB}/blob/main/CONTRIBUTING.md` }, { text: 'For agents · llms.txt', href: '/llms.txt' }] },
-  ]
-
-  return <footer className="ak-footer">
-    <div className="ak-container">
-      <div className="footer-grid">
-        <div className="footer-brand"><div className="footer-wordmark"><BrandMark /><strong>AgentsKit</strong></div><p>Provider-neutral code review that follows your standards, with findings you can trace to changed code.</p><div className="footer-badges"><a href={CODE_REVIEW_GITHUB}>GitHub</a><span>Open source</span></div></div>
-        {columns.map(column => <div className="footer-column" key={column.title}><h2>{column.title}</h2><ul>{column.links.map(link => <li key={link.text}><a href={link.href} aria-current={'current' in link && link.current ? 'page' : undefined}>{link.text}</a></li>)}</ul></div>)}
-      </div>
-      <div className="footer-bottom"><span>© AgentsKit Code Review · MIT</span><a href={CODE_REVIEW_GITHUB}>Built in the open <span aria-hidden="true">↗</span></a></div>
-    </div>
-  </footer>
+    </section>
+  </agentskit-ecosystem>
 }
 
 export default function HomePage() {
   return <HomeLayout {...layoutOptions}>
     <main id="main-content" className="code-review-home">
-      <LiquidCursorGradient />
+      <agentskit-aurora aria-hidden="true" />
       <div className="home-content">
         <section className="hero" aria-labelledby="home-title">
           <div className="ak-container hero-grid">
