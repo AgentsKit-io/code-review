@@ -25,7 +25,12 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # Doc Bridge uses a Git SHA for clean checkouts and a content hash for dirty ones.
+      # The committed index is content-addressed, so keep that revision mode through the gates.
+      - run: touch .doc-bridge/.ci-content-revision
       - run: npm run docs:index
       - run: git diff --exit-code -- doc-bridge.config.json .doc-bridge llms-full.txt
       - run: npm run check
       - run: npm pack --dry-run
+      - if: always()
+        run: rm -f .doc-bridge/.ci-content-revision
