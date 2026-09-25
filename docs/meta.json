@@ -1,0 +1,4 @@
+{
+  "title": "Documentation",
+  "pages": ["index", "getting-started", "operations", "provider-compatibility", "quality-matrix", "baseline-protocol", "continuous-improvement", "for-agents"]
+}

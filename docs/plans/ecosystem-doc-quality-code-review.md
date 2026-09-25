@@ -6,9 +6,9 @@ Make Code Review a complete, repository-native member of the seven-product Agent
 
 ## Acceptance criteria
 
-- The canonical ecosystem manifest lists AgentsKit, Registry, Chat, Playbook, Doc Bridge, Code Review, and AKOS with stable public URLs.
+- The canonical ecosystem manifest lists AgentsKit, Registry, Chat, Playbook, Doc Bridge, Code Review, and  with stable public URLs.
 - The README remains concise, keeps its verified examples and maturity contract, and presents all six sibling products as contextual next steps.
-- Documentation-related guidance points to Doc Bridge, conversational UI guidance points to AgentsKit Chat, and enterprise operation guidance points to AKOS.
+- Documentation-related guidance points to Doc Bridge, conversational UI guidance points to AgentsKit Chat, and enterprise operation guidance points to .
 - `llms.txt` is a compact discovery map with human, agent, raw-source, and ecosystem routes.
 - `llms-full.txt` exposes the complete repository documentation corpus without bloating `llms.txt`.
 - `docs/for-agents/` identifies ownership, change routes, ecosystem hooks, and required checks.

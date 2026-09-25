@@ -3,10 +3,11 @@ import { existsSync, readFileSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
 import { join } from 'node:path'
 import test from 'node:test'
+import { fileURLToPath } from 'node:url'
 import { providerRegistry } from '../dist/src/provider-registry.js'
 import { resolveReviewConfig } from '../dist/src/review-config.js'
 
-const root = new URL('.', import.meta.url).pathname.replace(/\/test\/$/, '')
+const root = fileURLToPath(new URL('../', import.meta.url))
 const matrix = JSON.parse(readFileSync(join(root, 'docs/provider-compatibility.json'), 'utf8'))
 
 test('stable CLI matrix is declarative, registry-backed, and fixture-backed', () => {

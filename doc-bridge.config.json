@@ -3,43 +3,60 @@
   "project": {
     "name": "AgentsKit Code Review"
   },
+  "safety": {
+    "exclude": [
+      "apps/docs/.source/**",
+      "apps/docs/next-env.d.ts",
+      "**/*.tsbuildinfo"
+    ]
+  },
   "corpus": {
     "agent": {
       "root": "docs/for-agents",
       "index": "docs/for-agents/index.md",
-      "include": ["**/*.md"]
+      "include": [
+        "**/*.md"
+      ]
     },
     "human": {
-      "plugin": "plain-markdown",
+      "plugin": "fumadocs",
       "options": {
-        "root": "docs",
-        "urlPrefix": null
+        "contentDir": "docs",
+        "urlPrefix": "/docs"
       }
     }
   },
   "routing": {
     "options": {
       "ownership": {
-        "code-review-cli": {
+        "code-review": {
           "path": ".",
-          "purpose": "Provider-neutral local and GitHub code review CLI, Action, reporters, and repository documentation.",
-          "checks": ["npm run check", "npm pack --dry-run"],
-          "agentDoc": "docs/for-agents/code-review-cli.md",
-          "humanDoc": "OPERATIONS"
+          "purpose": "Provider-neutral local and GitHub code review CLI, Action, reporters, Fumadocs site, and repository documentation.",
+          "checks": [
+            "npm run check",
+            "npm run docs:web:build",
+            "npm pack --dry-run"
+          ],
+          "agentDoc": "docs/for-agents/code-review.md",
+          "humanDoc": "https://code-review.agentskit.io/docs"
         }
       },
       "intents": [
         {
           "id": "understand-or-run-code-review",
           "title": "Understand or run Code Review",
-          "paths": ["README.md", "docs/OPERATIONS.md"]
+          "paths": [
+            "README.md",
+            "docs/OPERATIONS.md",
+            "docs/index.md"
+          ]
         }
       ],
       "changes": [
         {
           "id": "change-cli-provider-or-action",
           "title": "Change a CLI provider, flag, reporter, or Action input",
-          "startHere": "docs/for-agents/code-review-cli.md"
+          "startHere": "docs/for-agents/code-review.md"
         }
       ]
     }
@@ -49,7 +66,7 @@
     "llmsTxt": {
       "enabled": true,
       "outFile": "llms.txt",
-      "preamble": "AgentsKit Code Review is a pre-v1 provider-neutral CLI and GitHub Action for low-noise review using seven lenses and adversarial verification. It intentionally has no Fumadocs site or embedded chat.\n\n## Documentation surfaces\n\n- Full corpus: llms-full.txt\n- Public README: https://github.com/AgentsKit-io/code-review#readme\n- Operations: docs/OPERATIONS.md\n- For agents: docs/for-agents/index.md\n- Raw sources: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/\n\n## AgentsKit ecosystem\n\n- AgentsKit: https://www.agentskit.io/docs\n- Registry: https://registry.agentskit.io/docs\n- AgentsKit Chat: https://chat.agentskit.io/docs\n- Playbook: https://playbook.agentskit.io/docs\n- Doc Bridge: https://agentskit-io.github.io/doc-bridge/\n- Code Review: https://github.com/AgentsKit-io/code-review#readme\n- AKOS: https://akos.agentskit.io/docs"
+      "preamble": "AgentsKit Code Review is a provider-neutral CLI and GitHub Action for configurable, evidence-based code review. The product site and curated Fumadocs guides are at https://code-review.agentskit.io.\n\n## Documentation surfaces\n\n- Product site: https://code-review.agentskit.io\n- Product docs: https://code-review.agentskit.io/docs\n- Full machine corpus: https://code-review.agentskit.io/llms-full.txt\n- For agents: docs/for-agents/index.md\n- Raw sources: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/\n\n## AgentsKit ecosystem\n\n- AgentsKit: https://www.agentskit.io\n- Registry: https://registry.agentskit.io\n- AgentsKit Chat: https://chat.agentskit.io\n- Doc Bridge: https://doc-bridge.agentskit.io\n- Code Review: https://code-review.agentskit.io\n- Harness: https://harness.agentskit.io\n- Playbook: https://playbook.agentskit.io"
     },
     "capabilities": {
       "enabled": true,
@@ -60,23 +77,65 @@
     "documentationStandardV1": {
       "rawSources": [
         "README.md",
+        "docs/index.md",
         "docs/OPERATIONS.md",
-        "docs/for-agents/code-review-cli.md"
+        "docs/for-agents/code-review.md"
       ],
-      "contributionPaths": ["CONTRIBUTING.md"],
+      "contributionPaths": [
+        "CONTRIBUTING.md"
+      ],
       "metadata": [
         {
           "path": "README.md",
-          "contains": ["# AgentsKit Code Review", "Deep, low-noise AI code review"]
+          "contains": [
+            "# AgentsKit Code Review",
+            "Code Review"
+          ]
         }
       ],
       "links": [
-        { "url": "https://www.agentskit.io", "paths": ["README.md"] },
-        { "url": "https://registry.agentskit.io/docs", "paths": ["README.md"] },
-        { "url": "https://chat.agentskit.io/docs", "paths": ["README.md"] },
-        { "url": "https://playbook.agentskit.io/docs", "paths": ["README.md"] },
-        { "url": "https://agentskit-io.github.io/doc-bridge/", "paths": ["README.md"] },
-        { "url": "https://akos.agentskit.io/docs", "paths": ["README.md"] }
+        {
+          "url": "https://www.agentskit.io",
+          "paths": [
+            "README.md"
+          ]
+        },
+        {
+          "url": "https://registry.agentskit.io/docs",
+          "paths": [
+            "README.md"
+          ]
+        },
+        {
+          "url": "https://chat.agentskit.io/docs",
+          "paths": [
+            "README.md"
+          ]
+        },
+        {
+          "url": "https://playbook.agentskit.io/docs",
+          "paths": [
+            "README.md"
+          ]
+        },
+        {
+          "url": "https://doc-bridge.agentskit.io",
+          "paths": [
+            "README.md"
+          ]
+        },
+        {
+          "url": "https://code-review.agentskit.io",
+          "paths": [
+            "README.md"
+          ]
+        },
+        {
+          "url": "https://harness.agentskit.io",
+          "paths": [
+            "README.md"
+          ]
+        }
       ],
       "ecosystemContract": {
         "manifest": "ecosystem.json",
@@ -89,19 +148,30 @@
           "doc": "README.md",
           "test": "test/cli-smoke.test.mjs",
           "command": "npm run build && node --test test/cli-smoke.test.mjs",
-          "testContains": ["a clean local Codex CLI fixture completes an offline stdin review"]
+          "testContains": [
+            "a clean local Codex CLI fixture completes an offline stdin review"
+          ]
         }
       ],
-      "visuals": ["docs/assets/agentskit-mark.svg"],
+      "visuals": [
+        "docs/assets/agentskit-mark.svg"
+      ],
       "diagrams": [
-        { "path": "README.md", "contains": ["```mermaid"] }
+        {
+          "path": "README.md",
+          "contains": [
+            "```mermaid"
+          ]
+        }
       ],
       "exceptions": []
     }
   },
   "gates": {
     "preset": "standard",
-    "include": ["documentation-standard-v1"]
+    "include": [
+      "documentation-standard-v1"
+    ]
   },
   "surfaces": {
     "cli": {

@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict'
 import { join } from 'node:path'
 import test from 'node:test'
+import { fileURLToPath } from 'node:url'
 import { createCodeReviewAgent } from '../dist/agents/code-review/agent.js'
 import { codexCli } from '../dist/src/codex-adapter.js'
 
-const root = new URL('..', import.meta.url).pathname
+const root = fileURLToPath(new URL('../', import.meta.url))
 const fixtureBin = join(root, 'test/fixtures/bin')
 const source = `export function deleteAccount(store, token) {
   if (!token) throw new Error('unauthorized')

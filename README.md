@@ -19,7 +19,7 @@ It is intended for developers and teams who want focused review feedback without
 
 **Topics:** `ai-agents` · `code-review` · `developer-experience`
 
-**Ecosystem:** [AgentsKit](https://www.agentskit.io/docs) · [Registry](https://registry.agentskit.io/docs) · [Chat](https://chat.agentskit.io/docs) · [Playbook](https://playbook.agentskit.io/docs) · [Doc Bridge](https://agentskit-io.github.io/doc-bridge/) · **Code Review** · [AKOS](https://akos.agentskit.io/docs)
+**Ecosystem:** [AgentsKit](https://www.agentskit.io) · [Registry](https://registry.agentskit.io) · [Chat](https://chat.agentskit.io) · [Doc Bridge](https://doc-bridge.agentskit.io) · [Code Review](https://code-review.agentskit.io) · [Harness](https://harness.agentskit.io) · [Playbook](https://playbook.agentskit.io)
 
 Run code review locally or on every pull request. Bring Claude, Codex, OpenAI, Gemini, Ollama, OpenRouter, or another supported AgentsKit adapter. Seven focused review lenses propose potential problems; adversarial verification filters weak findings before they reach your team.
 
@@ -28,7 +28,7 @@ Run code review locally or on every pull request. Bring Claude, Codex, OpenAI, G
 - Offline CLI discovery works without credentials (`--help`, `--list-providers`) — covered by `test/cli-smoke.test.mjs`.
 - A clean local Codex CLI fixture completes an offline stdin review — covered by the same smoke suite.
 - Documentation, Action contract, and Doc Bridge gates run through `npm run check`.
-- Machine-readable public map: [`llms.txt`](llms.txt) and [`docs/for-agents/code-review-cli.md`](docs/for-agents/code-review-cli.md).
+- Machine-readable public map: [`llms.txt`](llms.txt) and [`docs/for-agents/code-review.md`](docs/for-agents/code-review.md).
 
 ## Why this exists
 
@@ -213,7 +213,7 @@ review state/publication, merge readiness, and revision-locked merge. The
 GitHub implementation backs the CLI and scheduled cycle through that contract.
 GitLab is intentionally unsupported until an adapter passes the same tests.
 
-Building a conversational review experience? Use [AgentsKit Chat](https://chat.agentskit.io/docs) for the cross-framework application layer instead of embedding chat here. Looking for organization-wide orchestration, governance, and production controls? Continue with [AKOS](https://akos.agentskit.io/docs).
+Building a conversational review experience? Use [AgentsKit Chat](https://chat.agentskit.io/docs) for the cross-framework application layer instead of embedding chat here. Need an issue-to-release SDLC loop? Explore [AgentsKit Harness](https://harness.agentskit.io).
 
 Pin the Action to an immutable release tag such as `@v0.31.0`; use a full commit SHA when your policy requires the strongest reproducibility.
 
@@ -470,9 +470,11 @@ Feedback reconciliation is deterministic and resumable: it represents every supp
 
 ## Operations and machine-readable docs
 
+- [Product site](https://code-review.agentskit.io) — interactive configuration preview and curated guides.
+
 - [Operations guide](docs/OPERATIONS.md) — providers, permissions, secrets, cost controls, SARIF, failures, releases, and incident-safe defaults.
 - [Provider compatibility matrix](docs/provider-compatibility.json) — stable CLI transports and their offline fixtures.
-- [Agent handoff](docs/for-agents/code-review-cli.md) — ownership, edit roots, verification commands, and change routes.
+- [Agent handoff](docs/for-agents/code-review.md) — ownership, edit roots, verification commands, and change routes.
 - [`llms.txt`](llms.txt) — compact public source map for LLMs and coding agents.
 - [`llms-full.txt`](llms-full.txt) — complete README, operations, and agent-handoff corpus.
 - [`doc-bridge.config.json`](doc-bridge.config.json) — executable Doc Bridge corpus, ownership, and gate contract.
@@ -506,10 +508,10 @@ Code Review is the verification step in the broader AgentsKit journey:
 | Install the vendored review agent or explore ready agents | [Registry](https://registry.agentskit.io/docs) |
 | Deliver review through a conversational application | [AgentsKit Chat](https://chat.agentskit.io/docs) |
 | Apply engineering patterns before review | [Playbook](https://playbook.agentskit.io/docs) |
-| Generate ownership-aware documentation handoffs | [Doc Bridge](https://agentskit-io.github.io/doc-bridge/) ([source](https://github.com/AgentsKit-io/doc-bridge)) |
-| Add enterprise orchestration and production governance | [AKOS](https://akos.agentskit.io/docs) |
+| Generate ownership-aware documentation handoffs | [Doc Bridge](https://doc-bridge.agentskit.io) ([source](https://github.com/AgentsKit-io/doc-bridge)) |
+| Run a configurable issue-to-release loop | [AgentsKit Harness](https://harness.agentskit.io) |
 
-This repository intentionally has **no Fumadocs application and no embedded AgentsChat**. Its public product surface is the CLI, GitHub Action, repository documentation, and machine-readable handoffs.
+The product site at [code-review.agentskit.io](https://code-review.agentskit.io) pairs an interactive configuration preview with curated Fumadocs guides. The CLI and GitHub Action remain the product runtime.
 
 ## Contributing
 

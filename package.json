@@ -106,16 +106,19 @@
     "campaign": "npm run build && node scripts/review-campaign.mjs",
     "docs:full": "node scripts/generate-llms-full.mjs",
     "docs:index": "ak-docs index && npm run docs:full",
-    "docs:gate": "ak-docs gate run && ak-docs conformance run documentation-standard-v1 --text && node scripts/generate-llms-full.mjs --check && node --test test/documentation.test.mjs",
+    "docs:gate": "ak-docs gate run && ak-docs conformance run documentation-standard-v1 --text && npm run docs:full -- --check && node --test test/documentation.test.mjs",
     "docs:doctor": "ak-docs doctor --text",
     "changeset": "changeset",
     "version-packages": "changeset version && npm version --no-git-tag-version --ignore-scripts --allow-same-version $(node -p \"require('./package.json').version\") && npm run docs:full && npm run readme:standard:refresh",
-    "check": "npm run typecheck && npm run test && npm run docs:gate && node dist/src/cli.js --help && npm run check:readme-standard",
+    "check": "npm run typecheck && npm run test && npm run docs:gate && npm run docs:web:typecheck && node dist/src/cli.js --help && npm run check:readme-standard",
     "prepare": "npm run build",
     "prepack": "npm run build && npm run docs:gate",
     "check:readme-standard": "node scripts/check-readme-standard.mjs",
     "test:readme-standard": "node --test scripts/readme-standard.test.mjs",
-    "readme:standard:refresh": "node scripts/refresh-readme-standard.mjs"
+    "readme:standard:refresh": "node scripts/refresh-readme-standard.mjs",
+    "docs:web:dev": "npm --prefix apps/docs run dev",
+    "docs:web:build": "npm --prefix apps/docs run build",
+    "docs:web:typecheck": "npm --prefix apps/docs run typecheck"
   },
   "dependencies": {
     "@agentskit/adapters": "^0.17.0",
@@ -129,7 +132,7 @@
     "zod": "^4.6.5"
   },
   "optionalDependencies": {
-    "@agentskit/doc-bridge": "^1.1.1"
+    "@agentskit/doc-bridge": "^1.11.2"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^1.0.1",

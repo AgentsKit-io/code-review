@@ -7,10 +7,10 @@ Generated from the public repository documentation. Prefer llms.txt for concise 
 - AgentsKit: https://www.agentskit.io/docs
 - AgentsKit Registry: https://registry.agentskit.io/docs
 - AgentsKit Chat: https://chat.agentskit.io/docs
+- Doc Bridge: https://doc-bridge.agentskit.io/
+- AgentsKit Code Review: https://code-review.agentskit.io/docs
+- AgentsKit Harness: https://harness.agentskit.io/docs
 - Agents Playbook: https://playbook.agentskit.io/docs
-- Doc Bridge: https://agentskit-io.github.io/doc-bridge/
-- AgentsKit Code Review: https://github.com/AgentsKit-io/code-review#readme
-- AgentsKit OS: https://akos.agentskit.io/docs
 
 ## Public README
 
@@ -37,7 +37,7 @@ It is intended for developers and teams who want focused review feedback without
 
 **Topics:** `ai-agents` · `code-review` · `developer-experience`
 
-**Ecosystem:** [AgentsKit](https://www.agentskit.io/docs) · [Registry](https://registry.agentskit.io/docs) · [Chat](https://chat.agentskit.io/docs) · [Playbook](https://playbook.agentskit.io/docs) · [Doc Bridge](https://agentskit-io.github.io/doc-bridge/) · **Code Review** · [AKOS](https://akos.agentskit.io/docs)
+**Ecosystem:** [AgentsKit](https://www.agentskit.io) · [Registry](https://registry.agentskit.io) · [Chat](https://chat.agentskit.io) · [Doc Bridge](https://doc-bridge.agentskit.io) · [Code Review](https://code-review.agentskit.io) · [Harness](https://harness.agentskit.io) · [Playbook](https://playbook.agentskit.io)
 
 Run code review locally or on every pull request. Bring Claude, Codex, OpenAI, Gemini, Ollama, OpenRouter, or another supported AgentsKit adapter. Seven focused review lenses propose potential problems; adversarial verification filters weak findings before they reach your team.
 
@@ -46,7 +46,7 @@ Run code review locally or on every pull request. Bring Claude, Codex, OpenAI, G
 - Offline CLI discovery works without credentials (`--help`, `--list-providers`) — covered by `test/cli-smoke.test.mjs`.
 - A clean local Codex CLI fixture completes an offline stdin review — covered by the same smoke suite.
 - Documentation, Action contract, and Doc Bridge gates run through `npm run check`.
-- Machine-readable public map: [`llms.txt`](https://github.com/AgentsKit-io/code-review/blob/main/llms.txt) and [`docs/for-agents/code-review-cli.md`](https://github.com/AgentsKit-io/code-review/blob/main/docs/for-agents/code-review-cli.md).
+- Machine-readable public map: [`llms.txt`](https://github.com/AgentsKit-io/code-review/blob/main/llms.txt) and [`docs/for-agents/code-review.md`](https://github.com/AgentsKit-io/code-review/blob/main/docs/for-agents/code-review.md).
 
 ## Why this exists
 
@@ -231,7 +231,7 @@ review state/publication, merge readiness, and revision-locked merge. The
 GitHub implementation backs the CLI and scheduled cycle through that contract.
 GitLab is intentionally unsupported until an adapter passes the same tests.
 
-Building a conversational review experience? Use [AgentsKit Chat](https://chat.agentskit.io/docs) for the cross-framework application layer instead of embedding chat here. Looking for organization-wide orchestration, governance, and production controls? Continue with [AKOS](https://akos.agentskit.io/docs).
+Building a conversational review experience? Use [AgentsKit Chat](https://chat.agentskit.io/docs) for the cross-framework application layer instead of embedding chat here. Need an issue-to-release SDLC loop? Explore [AgentsKit Harness](https://harness.agentskit.io).
 
 Pin the Action to an immutable release tag such as `@v0.31.0`; use a full commit SHA when your policy requires the strongest reproducibility.
 
@@ -488,9 +488,11 @@ Feedback reconciliation is deterministic and resumable: it represents every supp
 
 ## Operations and machine-readable docs
 
+- [Product site](https://code-review.agentskit.io) — interactive configuration preview and curated guides.
+
 - [Operations guide](https://github.com/AgentsKit-io/code-review/blob/main/docs/OPERATIONS.md) — providers, permissions, secrets, cost controls, SARIF, failures, releases, and incident-safe defaults.
 - [Provider compatibility matrix](https://github.com/AgentsKit-io/code-review/blob/main/docs/provider-compatibility.json) — stable CLI transports and their offline fixtures.
-- [Agent handoff](https://github.com/AgentsKit-io/code-review/blob/main/docs/for-agents/code-review-cli.md) — ownership, edit roots, verification commands, and change routes.
+- [Agent handoff](https://github.com/AgentsKit-io/code-review/blob/main/docs/for-agents/code-review.md) — ownership, edit roots, verification commands, and change routes.
 - [`llms.txt`](https://github.com/AgentsKit-io/code-review/blob/main/llms.txt) — compact public source map for LLMs and coding agents.
 - [`llms-full.txt`](https://github.com/AgentsKit-io/code-review/blob/main/llms-full.txt) — complete README, operations, and agent-handoff corpus.
 - [`doc-bridge.config.json`](https://github.com/AgentsKit-io/code-review/blob/main/doc-bridge.config.json) — executable Doc Bridge corpus, ownership, and gate contract.
@@ -524,10 +526,10 @@ Code Review is the verification step in the broader AgentsKit journey:
 | Install the vendored review agent or explore ready agents | [Registry](https://registry.agentskit.io/docs) |
 | Deliver review through a conversational application | [AgentsKit Chat](https://chat.agentskit.io/docs) |
 | Apply engineering patterns before review | [Playbook](https://playbook.agentskit.io/docs) |
-| Generate ownership-aware documentation handoffs | [Doc Bridge](https://agentskit-io.github.io/doc-bridge/) ([source](https://github.com/AgentsKit-io/doc-bridge)) |
-| Add enterprise orchestration and production governance | [AKOS](https://akos.agentskit.io/docs) |
+| Generate ownership-aware documentation handoffs | [Doc Bridge](https://doc-bridge.agentskit.io) ([source](https://github.com/AgentsKit-io/doc-bridge)) |
+| Run a configurable issue-to-release loop | [AgentsKit Harness](https://harness.agentskit.io) |
 
-This repository intentionally has **no Fumadocs application and no embedded AgentsChat**. Its public product surface is the CLI, GitHub Action, repository documentation, and machine-readable handoffs.
+The product site at [code-review.agentskit.io](https://code-review.agentskit.io) pairs an interactive configuration preview with curated Fumadocs guides. The CLI and GitHub Action remain the product runtime.
 
 ## Contributing
 
@@ -544,9 +546,575 @@ The near-term roadmap focuses on a stable `v1` Action, npm distribution, provide
 ## License
 
 [MIT](https://github.com/AgentsKit-io/code-review/blob/main/LICENSE) © AgentsKit contributors.
+## Product overview
+
+Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/index.md
+
+---
+title: Code Review
+description: Configure a focused, provider-neutral code review for the standards your team cares about.
+---
+
+# Code Review
+
+AgentsKit Code Review brings configurable, evidence-based review to local changes and GitHub pull requests. Choose review lenses, set the depth, and keep approval and publication under your control.
+
+- [Get started](https://github.com/docs/getting-started)
+- [Operations](https://github.com/docs/operations)
+- [Provider compatibility](https://github.com/docs/provider-compatibility)
+- [Review quality matrix](https://github.com/docs/quality-matrix)
+- [Baseline protocol](https://github.com/docs/baseline-protocol)
+- [Continuous improvement](https://github.com/docs/continuous-improvement)
+- [Agent handoff](https://github.com/docs/for-agents/code-review)
+
+The home page contains an illustrative configuration preview. It changes example findings only; it does not execute a review.
+## Getting started
+
+Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/getting-started.md
+
+---
+title: Getting started
+description: Install AgentsKit Code Review and complete a first review with your existing model.
+---
+
+<p align="center">
+  <img src="assets/agentskit-mark.svg" width="64" height="57" alt="AgentsKit" />
+</p>
+
+# AgentsKit Code Review
+
+Profile: <code>top-level-repository</code>
+
+**Deep, low-noise AI code review with the model you already use.**
+
+It is intended for developers and teams who want focused review feedback without changing their model subscription, and without adopting a separate chat product surface.
+
+[![CI](https://github.com/AgentsKit-io/code-review/actions/workflows/ci.yml/badge.svg)](https://github.com/AgentsKit-io/code-review/actions/workflows/ci.yml)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13866/baseline)](https://www.bestpractices.dev/projects/13866)
+[![License: MIT](https://img.shields.io/badge/License-MIT-0f766e.svg)](https://github.com/AgentsKit-io/code-review/blob/main/docs/LICENSE)
+[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-339933?logo=node.js&logoColor=white)](https://github.com/AgentsKit-io/code-review/blob/main/docs/package.json)
+
+**Tags:** `agentskit` · `ai-code-review` · `github-action` · `typescript` · `sarif` · `codex` · `claude` · `ollama`
+
+**Topics:** `ai-agents` · `code-review` · `developer-experience`
+
+**Ecosystem:** [AgentsKit](https://www.agentskit.io) · [Registry](https://registry.agentskit.io) · [Chat](https://chat.agentskit.io) · [Doc Bridge](https://doc-bridge.agentskit.io) · **Code Review** · [Harness](https://harness.agentskit.io) · [Playbook](https://playbook.agentskit.io)
+
+Run code review locally or on every pull request. Bring Claude, Codex, OpenAI, Gemini, Ollama, OpenRouter, or another supported AgentsKit adapter. Seven focused review lenses propose potential problems; adversarial verification filters weak findings before they reach your team.
+
+## Verified proof
+
+- Offline CLI discovery works without credentials (`--help`, `--list-providers`) — covered by `test/cli-smoke.test.mjs`.
+- A clean local Codex CLI fixture completes an offline stdin review — covered by the same smoke suite.
+- Documentation, Action contract, and Doc Bridge gates run through `npm run check`.
+- Machine-readable public map: [`llms.txt`](https://github.com/AgentsKit-io/code-review/blob/main/docs/llms.txt) and [`docs/for-agents/code-review.md`](https://github.com/AgentsKit-io/code-review/blob/main/docs/docs/for-agents/code-review.md).
+
+## Why this exists
+
+Most AI reviewers are easy to start and hard to trust: they produce long lists of stylistic opinions, repeat the same concern, and bury the issue that can actually break production.
+
+AgentsKit Code Review is built around a different contract:
+
+- **Bring your own model.** Use an existing CLI subscription, an API provider, a local model, or your own gateway.
+- **Low noise by design.** Findings are challenged by independent verification votes before they survive.
+- **Local first, CI ready.** Review a diff before pushing, inspect complete paths, read stdin, or comment directly on a GitHub PR.
+- **Control cost and policy.** Set file budgets, concurrency, thresholds, project conventions, and blocking severity.
+- **See the cost before execution.** Use `--plan --json` to inspect files, lenses, retries, concurrency, deadline, estimated provider calls, and every `UNREVIEWED` path with its reason without a model request. Estimates are always `best-effort` because primary lens demand is predictable but model output determines how many skeptical verification calls are needed; the runtime counter remains the hard ceiling.
+
+## Run your first review
+
+Open a terminal inside any Git repository and choose a provider you already use. You do not need to clone or install AgentsKit Code Review:
+
+<!-- readme-example:first-review -->
+```sh
+# Codex CLI — uses your existing login on a trusted local machine
+npx --yes github:AgentsKit-io/code-review --provider codex-cli --mode trusted-local
+
+# Claude CLI — uses your existing login
+npx --yes github:AgentsKit-io/code-review --provider claude-cli
+
+# OpenAI API
+OPENAI_API_KEY=... npx --yes github:AgentsKit-io/code-review \
+  --provider openai --model gpt-4o
+```
+
+The CLI reviews the current repository's diff against `origin/main` and prints the report in your terminal. Choose another base with `--base main`.
+
+For the Grok Build ACP worker, use `XAI_API_KEY` (or `--api-key`) in the default isolated mode. To reuse `grok login`, opt in explicitly with `--mode trusted-local`.
+
+Local `codex-cli` subprocesses have a 300-second deadline per model call; `claude-cli` and the other local workers use 120 seconds. Every run also has a global deadline (10 minutes for full, 2 minutes for `fast`) and a bounded Codex smoke check before analysis. Set `--deadline-ms` for a smaller explicit budget; timed-out calls fail explicitly and cannot turn an unreviewed file into an approval.
+
+Terminal provider authentication failures stop the remaining lenses immediately; the review still exits incomplete and never converts a credential failure into approval.
+
+The default `isolated` mode does not inherit an interactive CLI login. Use `--mode trusted-local` only on a machine or runner you trust with the provider's local session and environment.
+
+`grok-cli` is stable and uses Grok Build's ACP transport (`grok agent stdio`) by default. In the default isolated mode, pass `XAI_API_KEY`/`--api-key`; the key is injected into the isolated worker environment, never into command arguments. Existing `grok login` state is available only with explicit local-only `--mode trusted-local`. Isolated workers grant no filesystem write, terminal, MCP, plugin, or subagent capability and use a temporary working directory. `--transport headless` is available for explicit non-interactive runs, while `--transport auto` is local-only and reports an ACP fallback before trying headless.
+
+`opencode-cli` is stable and uses OpenCode's ACP transport (`opencode acp`) by default. In the default isolated mode, pass `OPENCODE_API_KEY`/`--api-key`; the selected key is injected into the isolated worker environment, never into command arguments. Existing OpenCode login/configuration state is available only with explicit local-only `--mode trusted-local`. OpenCode is not installed automatically. `--transport headless` is available for explicit non-interactive runs, while `--transport auto` is local-only and reports an ACP fallback before trying headless.
+
+Preflight refuses an over-budget run before the first provider call. For GitHub PR sources, the CLI automatically caps the reviewed files to the safe call budget when `--max-files` is omitted; the remaining files are marked `UNREVIEWED`, so the result stays incomplete and cannot approve the PR. Use `--max-files` to choose a smaller explicit scope. `--dry-run` and `--plan` print the cap and concrete reductions; `--json` makes the plan machine-readable. CLI providers default to concurrency `1`, while API providers retain concurrency `4`. Required-lens or source coverage failures always exit `2`, even with `--no-fail`.
+Use `--profile fast` when latency and provider budget matter more than the optional lenses: correctness, security, and tests run in one structured batch with one verification vote and no retry. Full reviews retry only transient provider failures with bounded backoff, reduce concurrency after instability, preserve successful sibling units, and use one controlled recovery probe after the circuit cooldown. Authentication and cancellation are never retried. The result records provider calls, failures, skips, elapsed time, circuit state, initial/final concurrency, and whether the deadline fired. Any incomplete evidence remains fail-closed.
+
+### Complete coverage for large PRs
+
+Do not silently cap a large PR and treat the partial result as clean. `--plan --json --batch-size <n>` exposes a stable, alphabetically ordered file manifest. With a GitHub PR, `--batch-manifest <private-file>` writes the immutable state that binds every batch to the exact head SHA and review-policy fingerprint. Run each batch with `--batch-index <n> --result <private-file>`; partial batches reject `--post` and their result files are private (`0600`). `--consolidate-manifest <manifest> --artifacts <comma-list> --result <private-file>` accepts only every planned batch with complete evidence. Its output is the only artifact accepted by `--publish-result <file> --pr owner/repo#N --post`; that command rechecks the current SHA and policy before creating one GitHub review. A new commit or policy change invalidates the artifacts and requires a new manifest.
+
+For scheduled operation, use the packaged cycle runner instead of scripting those
+steps independently:
+
+```sh
+npx --yes --package=@agentskit/code-review@latest agentskit-review-cycle \
+  --repository owner/repository --pull 42 \
+  --config /absolute/path/code-review.config.ts \
+  --run-dir /absolute/path/review-runs/42
+```
+
+It performs one aggregate preflight, deterministic replay, a single canary batch,
+crash-safe full batching, consolidation, memory checks, a live labelled quality
+evaluation, and an immutable quality matrix. It never creates a target worktree.
+Posting and merging are opt-in and remain forbidden unless the final matrix passes.
+
+Run every open pull request from one typed project configuration with the packaged
+campaign command. The command creates the SHA-bound Orca evidence for each worker
+run and forwards the explicit mutation flags; the automation does not need to
+write evidence or orchestrate individual PRs:
+
+```sh
+npx --yes --package=@agentskit/code-review@latest agentskit-review-campaign \
+  --config /absolute/path/code-review.config.ts \
+  --output /absolute/path/campaign-report.json \
+  --automation-id my-orca-automation \
+  --mode trusted-local \
+  --post --merge
+```
+
+Publication and merging are explicit command flags. Without `--post`, the
+campaign is read-only; `--merge` is accepted only when the validated project
+configuration enables safe merging and the cycle's quality and SCM gates pass.
+
+The command first performs a provider-free sweep. Dependabot,
+configured author exclusions, drafts, forks, wrong base branches, and previously
+reviewed SHA/policy pairs are skipped explicitly, and eligible requests receive a
+complete source and call-budget plan before execution. A bounded queue then runs
+only authorized requests through the existing single-PR cycle. Atomic checkpoints
+resume interrupted requests, completed work is not repeated, and one failed PR does
+not stop independent work by default. The final JSON contains every discovered PR
+exactly once with a deterministic terminal outcome.
+
+![AgentsKit Code Review showing an APPROVE result after all configured review dimensions complete](https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/assets/code-review-terminal.png)
+
+The current command runs directly from GitHub. After the first npm release, the shorter form will be:
+
+```sh
+npx @agentskit/code-review --provider codex-cli
+```
+
+## Run through pre-commit
+
+The repository publishes a [`pre-commit`](https://pre-commit.com/) hook for teams that already use that framework. It is manual by default because a full adversarial review is slower and more expensive than a formatter or linter.
+
+Add this to `.pre-commit-config.yaml`:
+
+```yaml
+repos:
+  - repo: https://github.com/AgentsKit-io/code-review
+    rev: main # pre-release; pin a release tag when one contains the hook
+    hooks:
+      - id: agentskit-review
+        args: [--provider, codex-cli, --no-fail, --max-files, "20"]
+```
+
+Then run it when a change is ready for review:
+
+```sh
+pre-commit run --hook-stage manual agentskit-review
+```
+
+The hook reviews the repository diff against `origin/main`; it does not claim to review only staged files. Override `--base` when your integration branch differs. To run on every push, override the hook with `stages: [pre-push]` and install that hook type explicitly, but first choose cost, latency, provider, and blocking policies appropriate for the repository.
+
+### Review locally with Ollama
+
+Use Ollama when repository policy requires model inference to stay on a machine or self-hosted runner. Pull a tool-capable coding model that fits the available memory, start Ollama, and review a small branch diff first:
+
+```sh
+ollama pull qwen2.5-coder:7b
+
+npx --yes github:AgentsKit-io/code-review \
+  --provider ollama \
+  --model qwen2.5-coder:7b \
+  --base main \
+  --base-url http://localhost:11434 \
+  --max-files 10 \
+  --concurrency 1 \
+  --no-fail
+```
+
+This reviews committed changes between `main` and `HEAD`; it is not a staged-files-only hook. The selected model must support Ollama tool calling because every review lens submits a structured result. Requests have a 30-second default deadline. `--no-fail` keeps findings advisory, but connection, source, and execution errors still exit nonzero. No provider key is required. Local inference reduces code disclosure, but logs, SARIF files, caches, optional gateways, and observability exporters still need their own access and retention policy.
+
+See the [operations guide](https://github.com/AgentsKit-io/code-review/blob/main/docs/docs/OPERATIONS.md#local-ollama-review) for model sizing, health checks, failure handling, and self-hosted CI guidance.
+
+## Use the GitHub Action
+
+Add `.github/workflows/code-review.yml` to any repository:
+
+```yaml
+name: Code Review
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: AgentsKit-io/code-review@v0.31.0
+        with:
+          provider: openai
+          model: gpt-4o
+          api-key: ${{ secrets.LLM_API_KEY }}
+          # max-files: '17'
+          # max-calls: '1000'
+          # max-findings-per-file: '7'
+          # profile: 'full' # or fast for required dimensions only
+          # deadline-ms: '600000'
+          # fail-on-block: 'true' # advisory by default
+          # block: high
+```
+
+The Action fetches the PR diff and posts one batched inline review plus a compact, persistent walkthrough. The walkthrough reports outcome and review evidence; actionable detail appears only on the relevant diff lines. Its defaults review at most 17 files, 7 findings per file, and 1,000 provider calls. It is advisory by default. Advisory mode affects findings only: source, provider, or execution failures still fail the check, and any reviewable file with zero successful primary lenses prevents approval. `codex-cli` requires a pre-authenticated `trusted-local` self-hosted runner; use an API provider with a secret on GitHub-hosted runners. Enable `fail-on-block` and branch protection when you are ready to use findings as a merge gate.
+
+The package also exports a provider-neutral SCM contract for discovery, diffs,
+review state/publication, merge readiness, and revision-locked merge. The
+GitHub implementation backs the CLI and scheduled cycle through that contract.
+GitLab is intentionally unsupported until an adapter passes the same tests.
+
+Building a conversational review experience? Use [AgentsKit Chat](https://chat.agentskit.io/docs) for the cross-framework application layer instead of embedding chat here. Need an issue-to-release SDLC loop? Explore [AgentsKit Harness](https://harness.agentskit.io).
+
+Pin the Action to an immutable release tag such as `@v0.31.0`; use a full commit SHA when your policy requires the strongest reproducibility.
+
+## Choose how to run
+
+| Mode | Provider examples | Credentials | Best for |
+|---|---|---|---|
+| Local CLI | `codex-cli`, `claude-cli`, `grok-cli`, `opencode-cli` | Existing CLI login | Local development or self-hosted runners |
+| Hosted API | `openai`, `anthropic`, `gemini`, `mistral`, `groq` | Provider API key | Managed CI |
+| Local model | `ollama` | Usually none | Privacy and predictable cost |
+| Gateway | `openrouter` or a custom `--base-url` | Gateway-specific | Central routing and policy |
+
+`grok` is the xAI API provider; `grok-cli` is the separate Grok Build CLI entry. `opencode-cli` is the OpenCode CLI entry. API providers are discovered from factories exported by [`@agentskit/adapters`](https://www.npmjs.com/package/@agentskit/adapters). Run `npx --yes github:AgentsKit-io/code-review --list-providers` to see IDs, support levels, transports, and model requirements.
+
+Credentials resolve in this order:
+
+1. `--api-key`
+2. `LLM_API_KEY`
+3. `<PROVIDER>_API_KEY`, such as `OPENAI_API_KEY`
+
+Secrets passed to the GitHub Action are forwarded through the environment, not included in command-line arguments.
+
+## How review works
+
+```mermaid
+flowchart LR
+  A["Diff · PR · paths · stdin"] --> B["Normalize targets"]
+  B --> C["1 structured pass · 7 dimensions"]
+  C --> D["Adversarial verification"]
+  D --> E["Thresholds + CI policy"]
+  E --> F["Markdown · GitHub · SARIF"]
+  D -. "weak finding" .-> G["Dropped with audit note"]
+```
+
+The review agent lives in `agents/code-review/` and is vendored from the [AgentsKit registry](https://github.com/AgentsKit-io/agentskit-registry/tree/main/registry/code-review). The CLI owns provider selection, input sources, policy, and reporting.
+
+## Common commands
+
+```sh
+# Tune verification and severity
+npx --yes github:AgentsKit-io/code-review --provider codex-cli \
+  --base main --votes 5 --min-severity high
+
+# Review a GitHub PR and post the result
+GITHUB_TOKEN=... OPENAI_API_KEY=... \
+  npx --yes github:AgentsKit-io/code-review --provider openai --model gpt-4o \
+  --pr owner/repo#42 --post
+
+# Review complete files or directories
+npx --yes github:AgentsKit-io/code-review --provider claude-cli \
+  --paths src --max-files 30
+
+# Review piped source and also write SARIF
+echo 'const x = a.b' | npx --yes github:AgentsKit-io/code-review \
+  --provider ollama --model llama3 \
+  --base-url http://localhost:11434 --stdin --lang ts --sarif out.sarif
+
+# After fetching the PR base and installing reviewdog, reuse its annotation transport
+REPORT_FILE="$(mktemp)"
+trap 'rm -f "${REPORT_FILE}"' EXIT
+npx --yes github:AgentsKit-io/code-review#3dfd7427640148281454d52846d369e5ddf85b11 \
+  --provider openai --model gpt-4o \
+  --base "origin/${BASE_REF}" --sarif "${REPORT_FILE}" --no-fail &&
+reviewdog -f=sarif -name=agentskit-review \
+  -reporter=github-pr-review -filter-mode=added -fail-level=error \
+  < "${REPORT_FILE}"
+```
+
+The reviewdog recipe needs no custom converter: Code Review emits SARIF 2.1.0 and reviewdog consumes SARIF natively. See the [complete GitHub Actions job](https://github.com/AgentsKit-io/code-review/blob/main/docs/docs/OPERATIONS.md#route-findings-through-reviewdog) for pinned installation, base-branch checkout, permissions, severity mapping, and CI ownership of the failure threshold.
+
+## CLI reference
+
+### Providers
+
+Run these commands from the repository you want to review:
+
+| Provider | What you need | Model | Example |
+|---|---|---|---|
+| `codex-cli` | Codex CLI logged in | Optional | `npx --yes github:AgentsKit-io/code-review --provider codex-cli` |
+| `claude-cli` | Claude CLI logged in | Optional | `npx --yes github:AgentsKit-io/code-review --provider claude-cli` |
+| `grok-cli` | Grok Build CLI; stable ACP/headless | Optional | `... --provider grok-cli` |
+| `opencode-cli` | OpenCode CLI; stable ACP/headless | Optional | `... --provider opencode-cli` |
+| `openai` | `OPENAI_API_KEY` | Required | `... --provider openai --model gpt-4o` |
+| `anthropic` | `ANTHROPIC_API_KEY` | Required | `... --provider anthropic --model <model>` |
+| `gemini` | `GEMINI_API_KEY` | Required | `... --provider gemini --model <model>` |
+| `ollama` | Ollama running locally | Required | `... --provider ollama --model llama3 --base-url http://localhost:11434` |
+| `openrouter` | `OPENROUTER_API_KEY` | Required | `... --provider openrouter --model <model>` |
+| Other adapters | `<PROVIDER>_API_KEY` when applicable | Usually required | `... --provider <name> --model <model>` |
+
+In shortened examples, replace `...` with `npx --yes github:AgentsKit-io/code-review`.
+
+### Options
+
+| Flag | Meaning |
+|---|---|
+| `--provider <name>` | Required provider: local CLI or `@agentskit/adapters` factory |
+| `--model <id>` | Model id; required for API/local-server providers |
+| `--api-key <key>` | Provider key; environment variables are preferred |
+| `--base-url <url>` | Provider endpoint, local server, or gateway |
+| `--transport <name>` | Provider transport: `acp`, `headless`, or local-only `auto` where supported |
+| `--base <ref>` | Git diff base; default `origin/main` |
+| `--pr owner/repo#N` | GitHub PR source; requires `GITHUB_TOKEN` |
+| `--paths <p...>` | Complete files or directories |
+| `--stdin [--lang ts]` | Source read from stdin |
+| `--post` | Post a batched review when the source is a PR |
+| `--sarif <file>` | Also write SARIF |
+| `--votes <n>` | Adversarial verification votes; default `3` |
+| `--profile <full\|fast>` | All dimensions, or required dimensions only |
+| `--min-severity <level>` | Minimum reported severity |
+| `--min-confidence <n>` | Minimum reported confidence |
+| `--max-files <n>` | Positive file budget; over-budget runs are refused before the provider |
+| `--max-calls <n>` | Provider-call budget; absolute ceiling `1000` |
+| `--max-findings-per-file <n>` | Maximum verified findings per file; bounds adversarial verification calls |
+| `--concurrency <n>` | Parallel model calls; default `1` for CLI providers, `4` for API providers |
+| `--deadline-ms <n>` | Global run deadline; defaults to `600000` (`120000` for `fast`) |
+| `--health-check <auto\|off>` | Bounded provider smoke check before analysis |
+| `--plan`, `--dry-run` | Print provider-free preflight; add `--json` for machine output |
+| `--validate-patch` | Run `git apply --check` on suggested patches |
+| `--block <severity>` | CI gate floor; default `blocker` |
+| `--no-fail` | Keep findings advisory |
+| `--conventions <path>` | Inject project conventions |
+| `--config <path>` | Load a validated `code-review.config.ts`, `.mjs`, `.js`, or JSON config |
+| `--config-schema` | Print the JSON Schema for editor autocomplete |
+| `--allow-incomplete` | Local-only exception for a config that declares incomplete lens coverage |
+| `--allow-unredacted` | Local-only exception; rejected in CI |
+| `--api` | Back-compatible alias for `--provider anthropic` |
+| `doctor --provider <name>` | Offline provider diagnostics; no model request |
+| `doctor --live` | Explicit provider smoke-test mode |
+| `doctor --json` | Stable machine-readable diagnostics |
+| `--mode <mode>` | `isolated` (default) or explicit local-only `trusted-local` |
+| `--help` | Full command help |
+
+When no conventions path is supplied, the CLI looks for `CONVENTIONS.md`, `CONTRIBUTING.md`, `.cursorrules`, or `AGENTS.md`.
+
+### Versioned configuration
+
+For the best developer experience, use a typed `code-review.config.ts` and
+import `defineConfig` from the package. The loader validates it before any
+provider call and the CLI can print the editor schema with
+`agentskit-review --config-schema`.
+
+```ts
+import { defineConfig, presets } from "@agentskit/code-review";
+
+export default defineConfig({
+  target: { repository: "owner/repository" },
+  review: {
+    preset: presets.strict().review,
+    lenses: { security: true, tests: true },
+    context: { adjacentLines: 40, maxRelatedFiles: 1, maxTokens: 16000, reserveForOutput: 2000 },
+  },
+  comments: { renderer: "coderabbit-inspired", language: "en", inline: true },
+  // `required` blocks a merge with no reported checks; `named` requires the listed checks.
+  checks: { mode: "required" },
+});
+```
+
+Run it with `agentskit-review --config code-review.config.ts --provider codex-cli`.
+Credentials and trusted execution settings remain in the environment or
+explicit CLI flags; they are never accepted from the project config.
+
+Merge checks are fail-closed and deterministic. `required` requires at least one
+reported check and requires every reported check to finish successfully;
+`reported` validates every reported check but permits repositories with none;
+`named` requires each listed check by exact name; and `disabled` is an explicit
+non-mergeable policy. A check policy is locked into the review identity, so a
+policy change invalidates prior publication evidence.
+
+The repository may contain one strict `.agentskit-review.json` file. It must use
+`configVersion: 1`; unknown fields, secrets, unsupported values, and unsafe lens
+policies fail before provider execution with exit `2`. Every built-in lens is
+enabled by default, with `correctness`, `security`, and `tests` required. Flags
+override file values. A required lens may only be disabled in an explicitly
+declared `incompleteProfile`, which requires `--allow-incomplete` locally and is
+never accepted in CI.
+
+```json
+{
+  "configVersion": 1,
+  "profile": "full",
+  "lenses": {
+    "performance": { "enabled": false, "required": false }
+  },
+  "votes": 3,
+  "budget": {
+    "maxFiles": 20, "maxTokens": 100000, "maxCalls": 200, "concurrency": 1,
+    "deadlineMs": 600000, "reserveForOutput": 2000, "reserveForVerification": 2000,
+    "hierarchy": {
+      "campaign": { "maxTokens": 100000, "maxCalls": 200, "deadlineMs": 600000 },
+      "pullRequest": { "maxTokens": 76000, "maxCalls": 199, "deadlineMs": 600000 },
+      "contextPack": { "maxTokens": 16000, "maxCalls": 50, "deadlineMs": 600000 },
+      "analysis": { "maxTokens": 16000, "maxCalls": 50, "deadlineMs": 600000 },
+      "verification": { "maxTokens": 16000, "maxCalls": 50, "deadlineMs": 600000 }
+    }
+  },
+  "worker": { "timeoutMs": 120000, "maxOutputBytes": 20971520 },
+  "thresholds": { "minSeverity": "med", "minConfidence": 0.7 },
+  "context": {
+    "mode": "prompt",
+    "patterns": ["src/**"],
+    "adjacentLines": 40,
+    "maxRelatedFiles": 1,
+    "maxTokens": 16000,
+    "reserveForOutput": 2000
+  }
+}
+```
+
+Provider, model, transport, context trust, redaction, and permissions are
+trusted execution inputs; a project config cannot set them in CI. Put provider
+credentials only in the environment or provider login, never in this file.
+Remote and unknown provider boundaries redact high-confidence credential
+patterns before the model sees source. Unsafe, oversized, binary, or excluded
+paths are reported as `UNREVIEWED`; content is never silently truncated.
+
+### Programmatic campaign contracts
+
+The package root exports version-1 Zod schemas and inferred types for campaign,
+pull-request run, review-unit, event, budget, immutable review identity, terminal
+outcome, and typed failure records. `reviewIdentityFingerprint()` binds both
+source SHAs plus policy, prompt, configuration, model, and package identity.
+These contracts are provider-free; execution and persistence are added by later
+engine phases. `transitionCampaign()` is the pure lifecycle authority and
+`replayCampaign()` deterministically rebuilds state from an ordered event log.
+`saveCampaignCheckpoint()` persists the event log, derived state, evidence, and
+external-effect idempotency keys in one crash-safe snapshot. Acquire a
+campaign lease before writing; it excludes both the campaign and every included
+pull request. `loadCampaignCheckpoint()` rejects changed identities, while
+`pendingReviewUnitIds()` and `shouldApplyExternalEffect()` make resume explicit.
+
+### Doctor
+
+Run `doctor` before a review to check a registered provider’s executable, version, transport, model requirement, configuration mode, and credential presence. It is offline by default; `doctor --live` and normal Codex reviews use a bounded smoke check to catch authentication or hangs before analysis. API credentials are checked only for presence and values are never printed. Unknown local CLI versions warn locally and fail when `CI=true`. Exit `0` means healthy, `1` means a failed diagnostic, and `2` means invalid CLI usage.
+
+```sh
+npx --yes github:AgentsKit-io/code-review doctor --provider codex-cli
+npx --yes github:AgentsKit-io/code-review doctor --provider openai --model gpt-4o --json
+```
+
+## Cost and privacy
+
+A normal context pack contains bounded changed hunks plus adjacent lines and, when configured, directly related source/test files. It uses one structured analysis call covering every enabled review dimension, then independently verifies candidate findings. Before any model call, deterministic path and source evidence classifies each pack as `low`, `normal`, `high`, or `critical`. High-risk changes receive one additional specialized correctness pass; critical security, credential, authorization, or migration changes receive one combined correctness/security pass. Documentation and generated-only packs remain on the single-analysis low-cost path. A failed required specialized pass makes the review incomplete rather than clean.
+
+The plan and result record pack membership, included ranges, expansion, risk signals and selected depth, estimated tokens, and output reserve. AgentsKit token budgeting includes the system prompt and tool schema and rejects oversized requests before provider execution. Hierarchical budgets reserve campaign capacity for the current PR, output, and critical verification; every provider request reserves its estimated input before entering the concurrency gate. `ReviewEvidence.usage` preserves input, cached-input, output, reasoning, memory, retry, call, and wall-clock dimensions when the provider reports them; unavailable dimensions remain absent. Results explicitly report enabled, completed, and missing required dimensions. This replaces repeated full-file prompts and never duplicates unified patches beside numbered source. Control usage with the typed `review.context` policy, `review.budget` hierarchy, `--profile fast`, `--max-files`, `--max-calls`, `--votes`, `--deadline-ms`, `--concurrency`, paths, and workflow triggers. For sensitive code, use a local model or an approved private gateway; provider data policies still apply to hosted APIs.
+
+Self-hosted memory is split by lifecycle: campaign state and review cache remain operational stores, feedback is retained separately, and permanent knowledge contains only bounded, explicitly approved rules. Review runtimes do not write provider transcripts, prompts, complete source, or secrets into knowledge storage; malformed stores fail closed and concurrent local writes are serialized before atomic replacement.
+
+Approved rules enter review context through the AgentsKit `Retriever` contract.
+Each context pack filters them by repository, path, language, and category, then
+applies deterministic specificity ordering, deduplication, and a strict default
+rule/token bound. Repository-specific rules are excluded when the caller cannot
+provide repository scope.
+Feedback reconciliation is deterministic and resumable: it represents every supported outcome, deduplicates feedback, emits provenance-backed inactive candidates only after repeated accepted/fixed evidence, and never promotes a rule automatically.
+
+## Operations and machine-readable docs
+
+- [Product site](https://code-review.agentskit.io) — interactive configuration preview and curated guides.
+
+- [Operations guide](https://github.com/AgentsKit-io/code-review/blob/main/docs/docs/OPERATIONS.md) — providers, permissions, secrets, cost controls, SARIF, failures, releases, and incident-safe defaults.
+- [Provider compatibility matrix](https://github.com/AgentsKit-io/code-review/blob/main/docs/docs/provider-compatibility.json) — stable CLI transports and their offline fixtures.
+- [Agent handoff](https://github.com/AgentsKit-io/code-review/blob/main/docs/docs/for-agents/code-review.md) — ownership, edit roots, verification commands, and change routes.
+- [`llms.txt`](https://github.com/AgentsKit-io/code-review/blob/main/docs/llms.txt) — compact public source map for LLMs and coding agents.
+- [`llms-full.txt`](https://github.com/AgentsKit-io/code-review/blob/main/docs/llms-full.txt) — complete README, operations, and agent-handoff corpus.
+- [`doc-bridge.config.json`](https://github.com/AgentsKit-io/code-review/blob/main/docs/doc-bridge.config.json) — executable Doc Bridge corpus, ownership, and gate contract.
+
+`npm run check` builds the CLI, executes a full credential-free review fixture, validates the composite Action and documentation contract, runs Doc Bridge gates, checks CLI help, and enforces README Standard v1. Prove credential-free discovery with:
+
+```sh
+node examples/verify-readme.mjs
+```
+
+`npm pack --dry-run` verifies the release payload.
+
+## Maturity
+
+The repository is **pre-v1 (`0.31.x`)**. The CLI and Action are available for evaluation and advisory CI; use an exact release tag such as `@v0.31.0` or a commit SHA, and treat the future `v1` moving tag as a separate stability milestone. See [ROADMAP.md](https://github.com/AgentsKit-io/code-review/blob/main/docs/ROADMAP.md) and the [release guidance](https://github.com/AgentsKit-io/code-review/blob/main/docs/docs/OPERATIONS.md#releases-and-maturity).
+
+## Compatibility
+
+- **Node.js 20+** (see `engines` in `package.json`)
+- **TypeScript** source and compiled ESM distribution
+- **GitHub Actions** composite Action at repository root (`action.yml`)
+- Providers via local CLIs or [`@agentskit/adapters`](https://www.npmjs.com/package/@agentskit/adapters)
+
+## AgentsKit ecosystem
+
+Code Review is the verification step in the broader AgentsKit journey:
+
+| Need | Continue with |
+|---|---|
+| Build the agent or custom review adapter | [AgentsKit](https://www.agentskit.io/docs) |
+| Install the vendored review agent or explore ready agents | [Registry](https://registry.agentskit.io/docs) |
+| Deliver review through a conversational application | [AgentsKit Chat](https://chat.agentskit.io/docs) |
+| Apply engineering patterns before review | [Playbook](https://playbook.agentskit.io/docs) |
+| Generate ownership-aware documentation handoffs | [Doc Bridge](https://doc-bridge.agentskit.io) ([source](https://github.com/AgentsKit-io/doc-bridge)) |
+| Run a configurable issue-to-release loop | [AgentsKit Harness](https://harness.agentskit.io) |
+
+The product site at [code-review.agentskit.io](https://code-review.agentskit.io) pairs an interactive configuration preview with curated Fumadocs guides. The CLI and GitHub Action remain the product runtime.
+
+## Contributing
+
+Providers, review lenses, reporters, fixtures, documentation, and false-positive reductions are welcome. Start with [CONTRIBUTING.md](https://github.com/AgentsKit-io/code-review/blob/main/docs/CONTRIBUTING.md), browse issues labeled `good first issue`, or propose a new provider/lens with the issue templates.
+
+Please report vulnerabilities privately as described in [SECURITY.md](https://github.com/AgentsKit-io/code-review/blob/main/docs/SECURITY.md).
+Maintainer responsibilities, public decision-making, and the release process are
+documented in [GOVERNANCE.md](https://github.com/AgentsKit-io/code-review/blob/main/docs/GOVERNANCE.md).
+
+## Roadmap
+
+The near-term roadmap focuses on a stable `v1` Action, npm distribution, provider smoke tests, better cost visibility, and more community-owned review lenses. See [ROADMAP.md](https://github.com/AgentsKit-io/code-review/blob/main/docs/ROADMAP.md).
+
+## License
+
+[MIT](https://github.com/AgentsKit-io/code-review/blob/main/docs/LICENSE) © AgentsKit contributors.
 ## Operations guide
 
 Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/OPERATIONS.md
+
+---
+title: Operations guide
+description: Configure and operate AgentsKit Code Review locally and in CI.
+---
 
 # Code Review operations guide
 
@@ -1187,25 +1755,265 @@ The publish workflow has no manual dispatch path: only a merged, title-matched C
 
 Start with [`CONTRIBUTING.md`](https://github.com/AgentsKit-io/code-review/blob/main/CONTRIBUTING.md). Provider integrations must preserve the AgentsKit adapter contract and keep secrets out of arguments/logs. Review lenses need reproducible evidence and false-positive fixtures. Report vulnerabilities privately through [`SECURITY.md`](https://github.com/AgentsKit-io/code-review/blob/main/SECURITY.md).
 
-For adjacent work, use [AgentsKit](https://www.agentskit.io/docs) for runtime and adapters, [Registry](https://registry.agentskit.io/docs) for the vendored agent, [AgentsKit Chat](https://chat.agentskit.io/docs) when review belongs inside a conversational application, [Playbook](https://playbook.agentskit.io/docs) for engineering patterns, [Doc Bridge](https://agentskit-io.github.io/doc-bridge/) for documentation ownership handoffs, and [AKOS](https://akos.agentskit.io/docs) for enterprise orchestration and production governance.
+For adjacent work, use [AgentsKit](https://www.agentskit.io/docs) for runtime and adapters, [Registry](https://registry.agentskit.io/docs) for the vendored agent, [AgentsKit Chat](https://chat.agentskit.io/docs) when review belongs inside a conversational application, [Playbook](https://playbook.agentskit.io/docs) for engineering patterns, [Doc Bridge](https://doc-bridge.agentskit.io) for documentation ownership handoffs, and [AgentsKit Harness](https://harness.agentskit.io) for the configurable issue-to-release SDLC loop.
 
 Machine readers should start with [`llms.txt`](https://github.com/AgentsKit-io/code-review/blob/main/llms.txt), escalate to [`llms-full.txt`](https://github.com/AgentsKit-io/code-review/blob/main/llms-full.txt) only when the complete corpus is required, and use [`docs/for-agents`](https://github.com/AgentsKit-io/code-review/blob/main/docs/for-agents/index.md) before changing an owned module.
+## Provider compatibility
+
+Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/provider-compatibility.md
+
+---
+title: Provider compatibility
+description: Provider routing and capability boundaries for AgentsKit Code Review.
+---
+
+# Provider compatibility
+
+Code Review runs against supported local coding-agent CLIs or configured model providers. Provider capabilities and safe execution defaults are maintained in the [compatibility source](https://github.com/AgentsKit-io/code-review/blob/main/compatibility/providers.json) and validated before review work starts.
+
+The package uses the provider already configured for the selected adapter. Provider execution is bounded by the review's call, token, and time budgets. Authentication failures and unsupported capabilities stop the affected work before a review can be approved.
+
+See [provider adapters in the repository](https://github.com/AgentsKit-io/code-review/blob/main/docs/for-agents/code-review.md) for implementation ownership, and run `npm run check` before publishing changes to provider routing.
+## Review quality matrix
+
+Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/quality-matrix.md
+
+---
+title: Review quality matrix
+description: Understand the evidence and release gates used to evaluate Code Review quality.
+---
+
+# Review quality matrix
+
+The versioned baseline evidence classes and v0.8.0 reproduction command are defined in [the baseline protocol](https://github.com/AgentsKit-io/code-review/blob/main/docs/baseline-protocol.md).
+
+The quality matrix is the release gate for continuous improvement of the review process. It measures the result of a real review run or campaign; it does not turn a benchmark pass, a file count, or a rendered report into evidence of semantic correctness.
+
+## Decision rule
+
+Skipped PRs count toward terminal coverage but not review failures. Retry overhead compares retried batches to batch attempts and wasted provider calls to provider calls, separately. Corpus matches are scored within each labelled case. Codex cache/reasoning counts are subsets of input/output totals, not additional consumption. Early failures emit a current blocked matrix with unmeasured areas; running campaign report pointers must never display a prior run as current.
+
+`evaluateQuality()` returns `PASS` only when every area has a measured score of at least 3/4 and every absolute gate passes. A missing metric is `not-measured` and blocks the run. The minimum score is intentionally fixed at 3: no area may be below 3. `evaluateCampaignQuality()` produces the same matrix for every campaign outcome, bounds each area by its pull-request results, and blocks when any discovered pull request lacks a terminal outcome or completed quality matrix.
+
+The absolute gates require complete file/lens coverage, no secret leak, unsafe action, fail-open event, stale artifact, incomplete acceptance, invalid inline comment, or silent failure. Campaign matrices additionally require terminal coverage and one quality matrix for every completed pull request. `agentskit-review-campaign` writes this matrix as `quality-matrix.json` beside the campaign state (or to `--quality-output`), keeping the strict campaign execution report contract backward-compatible.
+
+## Reproducible evaluation
+
+Build the package, then evaluate a JSON artifact produced by the Orca run:
+
+```sh
+npm run quality:matrix -- --input ./artifacts/quality-input.json \
+  --baseline ./artifacts/quality-baseline.json \
+  --output ./artifacts/quality-report.json \
+  --max-score-drop 1
+
+# From an installed package (for Orca and other external runners):
+npx --yes --package=@agentskit/code-review@latest agentskit-quality \
+  --input ./artifacts/quality-input.json \
+  --baseline ./artifacts/quality-baseline.json \
+  --output ./artifacts/quality-report.json
+```
+
+The command exits `0` only for `PASS` and exits `2` for `BLOCKED`. The report includes the run ID, library version, source revision, every area score, gate details, and baseline regressions. `--max-score-drop` controls the material-regression threshold and defaults to one score point. The input must be tied to the reviewed PR SHA and exact library/configuration versions; manually estimated values are not valid evidence.
+
+The matrix separates process evidence from review correctness. Every input declares `evidence.kind` as `synthetic`, `real-run`, or `real-campaign`; synthetic corpus metrics cannot be presented as operational evidence. `expected`, `detectedExpected`, `falsePositives`, `severityMatches`, and `inlineValid` come from the versioned labelled corpus executed with the same live provider and policy. A clean target PR is still useful operational evidence, but it cannot substitute for known-positive detection cases.
+
+The CLI validates the complete `QualityInput` shape before scoring. A malformed or incompatible runner artifact produces a structured `BLOCKED` report with `inputError` and a failed `valid-quality-input` gate, and exits with code `2`; it never becomes an uncaught runtime exception or a partial pass.
+
+## Input contract
+
+The JSON shape is the `QualityInput` type exported from the package root. It contains coverage, findings, comments, security, reliability, performance, tokens, batches, memory, configuration, and integration groups. A complete example is kept in `test/quality-matrix.test.mjs`.
+
+Memory and feedback are measured only when enabled. If memory is enabled, persistence, loading, malformed-input rejection, feedback recording, and approval gating all require evidence. A live A/B canary also runs the same labelled case with and without one explicitly approved memory rule. Memory passes only when the rule creates a detection lift without false positives or duplicates and keeps tokens per provider call within 10% of the memory-off arm. This normalization accounts for the required skeptic call that only a detected finding triggers. Operational state, review cache, feedback, and permanent knowledge have separate schemas and lifecycles. The knowledge store is allow-list shaped: only bounded approved rules can enter it, so source, prompts, secrets, and raw provider transcripts are not retained as knowledge.
+
+Review-unit reuse is recorded in the optional `cache` input group: `hits`, `misses`, miss reasons, and `savedTokens`. These are evidence fields, not a license to accept stale work. A cache hit must still pass the current artifact validator, and only the complete identity fingerprint can select a record.
+
+Budget evidence is retained in `tokens.accounting` when the provider reports it. The fields distinguish input, cached input, output, reasoning, memory, retry, and total token usage; missing provider dimensions are omitted rather than guessed. When complete accounting is available, every token class contributes to token efficiency. Retries, wasted provider calls, provider-call baselines, and complete wall-clock baselines contribute to batch and speed scores, so a fast but wasteful run cannot pass as efficient. A quality run must also retain the resolved campaign, pull-request, context-pack, analysis, and verification limits so a passing result cannot hide a child scope that consumed a parent reserve.
+
+## Baselines and regressions
+
+Use the same labelled corpus and comparable PR shape when creating a baseline. Token efficiency uses tokens per changed line for similarly sized PRs; when the current and baseline PR sizes differ by more than 2x, it uses tokens per provider call to avoid treating fixed prompt/context overhead as a semantic regression. The report records the comparison basis and both measured dimensions. `compareQuality()` reports score regressions, material regressions, and improvements by area. `evaluateQualityAgainstBaseline()` adds a release gate for configured material regressions; by default a one-point jitter is tolerated because it can still leave the area at the required 3/4 floor. A regression to 2 or a newly missing area blocks publication even if the aggregate result looks better. Use `--max-score-drop 1` for a stricter baseline-specific policy.
+
+The deterministic `npm run benchmark:cycle` remains a process-safety benchmark. It is complementary to this matrix and cannot provide the semantic ground truth needed for detection or precision.
+
+## Versioned semantic evals
+
+`quality/evals/default.json` is the small labelled corpus used by the credential-free eval test. It contains both known-positive defects and clean cases, and is intentionally separate from local real-provider artifacts. Run the packaged checks with:
+
+```sh
+npm run build
+node --test --test-concurrency=1 test/quality-evals.test.mjs
+```
+
+The fixture proves the evaluator wiring, coverage accounting, expected detection, precision, severity, actionability, and fail-closed coverage gates. It does not claim that a fixture is equivalent to a live model. A production quality report must rerun the same corpus with the configured provider and retain its SHA, package, configuration, prompt, and model evidence outside the repository.
+
+Skeptical verification is deterministic and adaptive: candidates are sent in bounded batches; blocker/high findings and low-confidence medium findings receive a second vote; a third vote is requested only after disagreement. Missing, malformed, or failed batch evidence removes the affected findings and marks the review incomplete, so it cannot approve. `ReviewEvidence` records candidate, request, vote, failure, and unverified counts for the quality matrix.
+## Baseline protocol
+
+Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/baseline-protocol.md
+
+---
+title: Baseline protocol
+description: Reproduce the versioned baseline used to measure Code Review changes.
+---
+
+# v0.8.0 baseline protocol
+
+Issue #138 of PRD #137 establishes the reproducible comparison point for later engine work. It defines evidence and measurement; it does not claim semantic quality from fixtures.
+
+## Release 0.31 pre-change baseline (issue #250)
+
+Before any 0.31 change lands, issue #250 expands the labelled corpus so every later 0.31
+issue (#251, #252, ...) has a fixed comparison point instead of a moving `main`.
+
+- **[`quality/evals/default.json`](https://github.com/AgentsKit-io/code-review/blob/main/quality/evals/default.json)** grew from 6 to 20
+  cases: 8 plain positive (detectable real bugs), 4 protected-subject positive
+  (`concurrency`, `behavioral-change`, `unused-parameter`, `memory-safety` — the subjects
+  #252's asymmetric-loss skeptic vetoes before assessing correctness), and 8 clean (no
+  findings). `test/quality-evals.test.mjs` exercises every case through the fixture-backed
+  agent and asserts the corpus balance.
+- The v0.30.17 fixture baseline itself is captured the same way as every other baseline in
+  this protocol — external to the repository, never committed (see below). It is the
+  reference point every later 0.31 change (skeptic posture, per-language rules, semantic
+  grouping) is compared against with `npm run quality:matrix -- --baseline <path>`.
+- **Recalibrated against a real `codex-cli` run (0.30.19).** A full 20-case pass against a
+  live provider (not the fixture) surfaced two corpus issues, both fixed here: the
+  `hardcoded-api-key` secret literal read as `NOT-A-REAL-SECRET-...`, which a real model
+  reasonably declined to flag as a credential — replaced with an opaque-looking token that
+  still avoids matching a known secret-scanner format. And `silent-behavior-change-rounding`
+  / `unused-required-parameter` were labelled `high`; a real model consistently, and
+  defensibly, called both `med` (a doc/behavior inconsistency and a silently-disabled
+  discount, neither an active security or data-integrity emergency) — the corpus now
+  expects `med` for these two, and the fixture in `test/fixtures/bin/codex` was updated to
+  match. `off-by-one-loop` and `unhandled-promise-rejection`'s `titleIncludes` word lists
+  were also broadened: a real model found the correct bug in both but phrased the title
+  differently than the original narrow keyword list expected.
+
+Reproduce the 0.31 pre-change snapshot:
+
+```sh
+npm ci
+npm run benchmark:baseline -- --library-version 0.30.17 --output /absolute/path/0.30.17.json
+```
+
+The resulting `baselineId` and `policyFingerprint`/`promptFingerprint` are the fixed
+reference for 0.31. A later issue (e.g. #251's `analysis`-first schema change, #252's
+verification-posture rewrite) is expected to change those fingerprints in a *new*,
+separately captured baseline — this snapshot stays the fixed point from before those
+changes.
+
+## Evidence classes
+
+- **Synthetic process evidence** proves deterministic fail-closed behavior without credentials.
+- **Real pull-request evidence** measures one SHA-bound review, including semantic quality, complete tokens, memory behavior, and wall-clock components.
+- **Real campaign evidence** measures discovery, terminal outcomes, retries, cache reuse, publication, merge, total tokens, and complete wall-clock time.
+
+Synthetic and real evidence are distinct in schema version 2. Missing provider token or duration dimensions are `null` (unmeasured), never zero.
+
+## Reproduce the v0.8.0 fixture baseline
+
+```sh
+npm ci
+npm run benchmark:baseline -- --library-version 0.8.0
+```
+
+The stable baseline identity includes library and source version, policy fingerprint, prompt fingerprint, and model identity. The command wraps the existing credential-free cycle benchmark. Use `--output /absolute/path/baseline.json` only for a path outside the repository; `validateStudyOutputPath` (`src/quality-baseline.ts`) refuses an in-repo path by design, for the v0.30.17 snapshot above as much as for any other baseline capture.
+
+Real canary and campaign matrices are local study artifacts. Store them outside the repository and do not commit or publish them with the package.
+
+## Comparison targets
+
+Using the same corpus and real canary, later releases must preserve expected detections and precision while delivering at least 75% lower total token usage, three times fewer model calls, and three times lower small-PR wall-clock time than v0.8.0. The quality evaluator and regression policy are delivered in later PRD phases.
+## Continuous improvement
+
+Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/continuous-improvement.md
+
+---
+title: Continuous improvement
+description: Run evidence-based improvement cycles for Code Review quality.
+---
+
+# Continuous improvement cycles
+
+Each cycle improves one measurable review-process hypothesis. A cycle is not a request to remove every model suggestion from the repository.
+
+## Cycle contract
+
+Before changing behavior, record one hypothesis, its acceptance criteria, a fixed benchmark set, and the decision rule. A confirmed high-severity finding in the cycle scope, incomplete coverage, or a failed gate blocks publication. Medium and low findings outside the hypothesis enter the backlog.
+
+## Baseline benchmark
+
+Run these deterministic, credential-free cases before and after every process change:
+
+| Case | Fixture | Expected evidence |
+| --- | --- | --- |
+| Clean review | `test/fixtures/review/good.ts` | Complete `APPROVE`, all enabled lenses succeed. |
+| Lens failure | `CODEX_FIXTURE_FAIL_CATEGORY=security` | Incomplete, fail-closed result with missing required-lens evidence. |
+| Deadline | `CODEX_FIXTURE_HANG=1` | Incomplete, blocking result artifact; no candidate finding is accepted without skeptical verification. |
+
+The benchmark records elapsed time, provider calls, failed/skipped calls, execution coverage, verdict, incomplete state, and deadline state. It is run with the fixture provider; representative live runs are a separate acceptance check, never a replacement for this baseline.
+
+Run it with `npm run benchmark:cycle`. To capture the stable schema-v2 comparison point, run `npm run benchmark:baseline -- --library-version 0.8.0`; see [the baseline protocol](https://github.com/AgentsKit-io/code-review/blob/main/docs/baseline-protocol.md). Both commands exit non-zero when a case stops preserving its fail-closed behavior.
+
+## Quality matrix
+
+The benchmark proves process safety; it does not prove that model findings are correct. `agentskit-review-cycle` therefore runs the versioned labelled corpus with the live provider in addition to the real PR, then emits a SHA-bound `QualityInput` and immutable matrix. The matrix requires every area to score at least 3/4 and enforces absolute safety, completeness, inline-comment, and silent-failure gates. See `docs/quality-matrix.md` for the evidence contract.
+
+Enabled learning also requires a live A/B canary. The memory-on arm must apply an explicitly approved rule and detect the labelled policy violation; the memory-off arm must not invent that project policy. Precision and bounded token overhead remain gates. Persisting transcripts or pending feedback alone is not evidence of learning. Runtime state, review cache, feedback, and permanent knowledge are separate local stores; the knowledge store accepts only bounded approved rules and never stores source, prompts, secrets, or provider transcripts.
+
+Feedback reconciliation is deterministic and resumable. It represents accepted, fixed, rejected, unresolved, obsolete, and pending outcomes, deduplicates by stable feedback identity, and emits provenance-backed candidate rules only after repeated compatible accepted/fixed evidence. Candidates are always inactive and require explicit approval before entering permanent knowledge; pull-request content alone cannot promote a rule.
+
+Permanent rules are injected through the AgentsKit `Retriever` contract with a
+bounded scope for repository, path, language, and review category. Context packs
+receive only matching, deduplicated rules within the configured rule/token
+limits; an absent repository scope fails closed for repository-specific rules.
+
+Completed review units are also cached locally by an immutable fingerprint over the source, diff, base revision, policy, prompt, model, and relevant knowledge identities. Only schema-valid, passed records are reusable; corruption, stale identity, and unvalidated records fail closed. Cycle summaries and quality inputs report cache hits, misses, and saved tokens so reuse is measurable rather than assumed.
+
+Every live cycle also compiles a hierarchical budget before execution. Campaign and pull-request scopes retain capacity for output and critical verification; context-pack, analysis, and verification calls reserve their estimated input before concurrent execution. Provider usage is copied into the evidence and quality matrix by dimension when available, while missing dimensions stay explicitly unavailable.
+
+`review.maxTokens` limits a child review invocation; `review.globalMaxTokens`
+(default 10,000,000) limits the entire single-PR cycle, including failed attempts,
+the labelled corpus, and both learning A/B arms. `usage.json` reserves capacity
+before each child starts and settles it using reported input plus output tokens.
+Cached input and reasoning are subsets, never additional charges. Missing usage
+retains its reservation and makes recorded totals unavailable. Crash recovery
+keeps that journal; cached artifacts retain their original evidence but incur no
+new provider charge. `cycle-summary.json` includes full-cycle wall time, including
+preflight and publication. The default live corpus includes positive, clean,
+reduced-motion, and generated-declaration regression cases.
+
+## Closed cycle
+
+1. Run and store the baseline benchmark.
+2. Diagnose one root cause and define the smallest change set.
+3. Implement the change with a regression test.
+4. Re-run the same benchmark and compare the listed evidence.
+5. Run `npm run check`, `npm pack --dry-run`, and `ak-verify run --config .codex/verification.json --json`; record its run ID and require its current state to be `COMPLETE`.
+6. Review only the cycle diff. Confirmed highs in scope block; unrelated medium/low findings enter backlog.
+7. Add a Changeset for public behavior, open/merge the version PR, then let trusted publishing create the npm package and GitHub release.
+
+## Release boundary
+
+A cycle can be locally validated without publishing. Publishing requires the repository workflow to be pushed, GitHub Actions to be allowed to create the Changesets version PR, npm Trusted Publishing to be configured, and the version PR to merge. These are external prerequisites; they are reported separately from benchmark evidence.
 ## Agent documentation index
 
 Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/index.md
 
 # Code Review agent docs
 
-- Code Review CLI handoff — ownership, change routes, security boundaries, and verification: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review-cli.md
+- Code Review CLI handoff — ownership, change routes, security boundaries, and verification: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review.md
 - Concise machine map — discovery, raw sources, and all seven ecosystem products: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms.txt
 - Full machine corpus — public, operational, governance, maturity, and agent handoffs: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms-full.txt
 ## Code Review agent handoff
 
-Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review-cli.md
+Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review.md
 
 ---
 type: package
-package: code-review-cli
+package: code-review
+title: Code Review agent handoff
+description: Ownership, change routes, checks, and security boundaries for the Code Review repository.
 editRoot: .
 checks: [npm run check, npm pack --dry-run]
 ---
@@ -1247,7 +2055,7 @@ Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and
 - Depend on AgentsKit adapter/runtime/tool contracts; do not create a second model abstraction.
 - Preserve provider neutrality and advisory-by-default Action behavior.
 - Never expose provider keys in arguments, docs fixtures, logs, or PR output.
-- This product intentionally has no Fumadocs site and no embedded AgentsChat.
+- The Fumadocs site provides curated documentation only; the product runtime remains the CLI and GitHub Action. Do not add an embedded AgentsKit Chat runtime here.
 - The vendored review agent tracks the AgentsKit Registry source; keep divergences explicit.
 
 ## Change routes
@@ -1278,8 +2086,9 @@ npm pack --dry-run
 - Registry — ready-made agent source: https://registry.agentskit.io/docs
 - AgentsKit Chat — conversational delivery; do not embed a chat runtime here: https://chat.agentskit.io/docs
 - Playbook — engineering discipline before verification: https://playbook.agentskit.io/docs
-- Doc Bridge — documentation ownership, freshness, and handoff generation: https://agentskit-io.github.io/doc-bridge/
-- AKOS — enterprise orchestration and production governance: https://akos.agentskit.io/docs
+- Doc Bridge — documentation ownership, freshness, and handoff generation: https://doc-bridge.agentskit.io
+- Code Review — configurable, evidence-based review: https://code-review.agentskit.io
+- AgentsKit Harness — configurable issue-to-release SDLC: https://harness.agentskit.io
 
 Use `llms.txt` for discovery and `llms-full.txt` only when the complete public, operational, and agent-handoff context is required.
 

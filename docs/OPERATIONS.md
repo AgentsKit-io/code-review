@@ -1,3 +1,8 @@
+---
+title: Operations guide
+description: Configure and operate AgentsKit Code Review locally and in CI.
+---
+
 # Code Review operations guide
 
 This guide is the repository-native reference for running AgentsKit Code Review locally and in CI. The CLI is the source of truth for flags; run `agentskit-review --help` against the version or commit you use.
@@ -637,6 +642,6 @@ The publish workflow has no manual dispatch path: only a merged, title-matched C
 
 Start with [`CONTRIBUTING.md`](../CONTRIBUTING.md). Provider integrations must preserve the AgentsKit adapter contract and keep secrets out of arguments/logs. Review lenses need reproducible evidence and false-positive fixtures. Report vulnerabilities privately through [`SECURITY.md`](../SECURITY.md).
 
-For adjacent work, use [AgentsKit](https://www.agentskit.io/docs) for runtime and adapters, [Registry](https://registry.agentskit.io/docs) for the vendored agent, [AgentsKit Chat](https://chat.agentskit.io/docs) when review belongs inside a conversational application, [Playbook](https://playbook.agentskit.io/docs) for engineering patterns, [Doc Bridge](https://agentskit-io.github.io/doc-bridge/) for documentation ownership handoffs, and [AKOS](https://akos.agentskit.io/docs) for enterprise orchestration and production governance.
+For adjacent work, use [AgentsKit](https://www.agentskit.io/docs) for runtime and adapters, [Registry](https://registry.agentskit.io/docs) for the vendored agent, [AgentsKit Chat](https://chat.agentskit.io/docs) when review belongs inside a conversational application, [Playbook](https://playbook.agentskit.io/docs) for engineering patterns, [Doc Bridge](https://doc-bridge.agentskit.io) for documentation ownership handoffs, and [AgentsKit Harness](https://harness.agentskit.io) for the configurable issue-to-release SDLC loop.
 
 Machine readers should start with [`llms.txt`](../llms.txt), escalate to [`llms-full.txt`](../llms-full.txt) only when the complete corpus is required, and use [`docs/for-agents`](./for-agents/index.md) before changing an owned module.

@@ -164,8 +164,7 @@
           "chat.agentskit.io/docs",
           "playbook.agentskit.io",
           "Doc Bridge",
-          "akos.agentskit.io/docs",
-          "no Fumadocs"
+          "code-review.agentskit.io"
         ]
       },
       "visuals": [
@@ -217,11 +216,11 @@
           "doc-bridge.config.json",
           "examples/first-review.sh",
           "examples/verify-readme.mjs",
-          "docs/for-agents/code-review-cli.md",
+          "docs/for-agents/code-review.md",
           "docs/OPERATIONS.md",
           "test/cli-smoke.test.mjs"
         ],
-        "sourceHash": "sha256:127a850799e25fa7b4286ec14edcc5d8e86547c9515e26454f545dc60d89cdfb"
+        "sourceHash": "sha256:af628b663697427563114429ac7cf28b30a901e9c73fff354b054107166a9f1c"
       },
       "exceptions": []
     }

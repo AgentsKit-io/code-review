@@ -1,3 +1,8 @@
+---
+title: Review quality matrix
+description: Understand the evidence and release gates used to evaluate Code Review quality.
+---
+
 # Review quality matrix
 
 The versioned baseline evidence classes and v0.8.0 reproduction command are defined in [the baseline protocol](baseline-protocol.md).

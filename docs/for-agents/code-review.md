@@ -1,6 +1,8 @@
 ---
 type: package
-package: code-review-cli
+package: code-review
+title: Code Review agent handoff
+description: Ownership, change routes, checks, and security boundaries for the Code Review repository.
 editRoot: .
 checks: [npm run check, npm pack --dry-run]
 ---
@@ -42,7 +44,7 @@ Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and
 - Depend on AgentsKit adapter/runtime/tool contracts; do not create a second model abstraction.
 - Preserve provider neutrality and advisory-by-default Action behavior.
 - Never expose provider keys in arguments, docs fixtures, logs, or PR output.
-- This product intentionally has no Fumadocs site and no embedded AgentsChat.
+- The Fumadocs site provides curated documentation only; the product runtime remains the CLI and GitHub Action. Do not add an embedded AgentsKit Chat runtime here.
 - The vendored review agent tracks the AgentsKit Registry source; keep divergences explicit.
 
 ## Change routes
@@ -73,8 +75,9 @@ npm pack --dry-run
 - Registry — ready-made agent source: https://registry.agentskit.io/docs
 - AgentsKit Chat — conversational delivery; do not embed a chat runtime here: https://chat.agentskit.io/docs
 - Playbook — engineering discipline before verification: https://playbook.agentskit.io/docs
-- Doc Bridge — documentation ownership, freshness, and handoff generation: https://agentskit-io.github.io/doc-bridge/
-- AKOS — enterprise orchestration and production governance: https://akos.agentskit.io/docs
+- Doc Bridge — documentation ownership, freshness, and handoff generation: https://doc-bridge.agentskit.io
+- Code Review — configurable, evidence-based review: https://code-review.agentskit.io
+- AgentsKit Harness — configurable issue-to-release SDLC: https://harness.agentskit.io
 
 Use `llms.txt` for discovery and `llms-full.txt` only when the complete public, operational, and agent-handoff context is required.
 
