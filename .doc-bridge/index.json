@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "631f569fc5fc82629d80c2ab5403c4cc79ebf560ab919127ed3190b48bc9708a",
+  "contentHash": "5e398ff37f113220f3e3f7cbd80a095e45befd78c4e4d25fbaa05ae8459b68c8",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-09-25T03:50:42.790Z",
+  "generatedAt": "2026-09-25T12:45:15.244Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -785,18 +785,6 @@
       "contentHash": "c43c334b52a1097ade13a0b48cf6b0d90632fc5ef02aebf28ab60bff65fbe7d8"
     },
     {
-      "id": "module:apps/docs/next-env.d.ts",
-      "type": "module",
-      "title": "next-env.d.ts",
-      "path": "apps/docs/next-env.d.ts",
-      "tags": [
-        "module",
-        "ts",
-        "docs"
-      ],
-      "contentHash": "f9ed026ba8a9c875d0b5baad64f0e18d68fdf32c3cd25d049ebfe26236fddf7e"
-    },
-    {
       "id": "module:apps/docs/next.config.mjs",
       "type": "module",
       "title": "next.config.mjs",
@@ -1032,7 +1020,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "68ca7e19d138ccd4bdf886ca01e7568c0b2400c2ffe62ead5d74796e05a94b81"
+      "contentHash": "b5bcdfa13d63454f47be454a6f6778bf7f1b4f9da7bf709bb9691f927ffccecb"
     },
     {
       "id": "module:src/acp-cli-adapter.ts",
@@ -2343,7 +2331,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "22510b6b86116780c8fb02afa60a39100830d8fc419e2d6660390c5ec06c1dda"
+      "contentHash": "9b0efba5f153ffecd881b3efcf61dbe4a380434a8d43314bf7259ca8b6e1d707"
     },
     {
       "id": "module:test/domain-contracts.test.mjs",
@@ -2930,8 +2918,8 @@
     }
   },
   "inputs": {
-    "hash": "cbc225c3894067da78b6f4cd426ad156d30f59066d5b9f1a30fc399ee8bb1935",
-    "fileCount": 181,
+    "hash": "4fba01f8424b493056999d5f30c16abe0fd5c411f38b84bd81e560d109d9c1ff",
+    "fileCount": 180,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -2953,11 +2941,11 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "018608ec60be8fe962e8e31c2d0cabc0d611af636501c23fc1023547177ebd69",
+    "contentHash": "1d7aaac6dfa72baf4b3f56ab1bc80850337362181ef826c71caa69b5e34e6371",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "584ecd67318a7ffdd67beb1f62cd537c578571cd18cd0614fc48fa59a76f2d7c",
+    "snapshotHash": "c1d632c44712bd8bb1f3c19b35f55d4bc3a5b9fe36743c348f754341f87c9b99",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
-    "configurationHash": "2cec98bbf8818a3bd7fdc8b456b2deaf362c12f82736108b24e8eb421bf08987",
+    "configurationHash": "c963ca74d6a72e77542636a9dda5c27677c96ac3828604a86a7150655668772e",
     "lexiconVersion": 1,
     "graphMetricsVersion": "1.0.0",
     "weights": {
@@ -2975,7 +2963,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 180,
+      "documentCount": 179,
       "fieldNames": [
         "aliases",
         "body",
@@ -2986,13 +2974,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.9055555555555554,
-        "body": 50.611111111111114,
-        "headings": 3.888888888888889,
-        "path": 5.611111111111111,
-        "summary": 3.316666666666667,
-        "symbols": 14.055555555555555,
-        "title": 4.305555555555555
+        "aliases": 2.905027932960894,
+        "body": 50.89385474860335,
+        "headings": 3.910614525139665,
+        "path": 5.608938547486034,
+        "summary": 3.335195530726257,
+        "symbols": 14.134078212290502,
+        "title": 4.307262569832402
       }
     },
     "entries": [
@@ -3062,7 +3050,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "fe7b2e45d1f9e02ad52bbc55a6350e0fa5c1da63003a8bf79c395205f6702f03",
+        "contentHash": "286377cf3e3e43f38a906714a08b648d1b88eb863b6e34777898cc9b431bf901",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6821,40 +6809,6 @@
         "confidence": "observed"
       },
       {
-        "id": "module:apps/docs/next-env.d.ts",
-        "kind": "module",
-        "path": "apps/docs/next-env.d.ts",
-        "title": "next-env.d.ts",
-        "aliases": [],
-        "tags": [
-          "module",
-          "ts",
-          "docs"
-        ],
-        "fields": {
-          "title": "next-env.d.ts",
-          "headings": "",
-          "path": "apps/docs/next-env.d.ts",
-          "symbols": "",
-          "summary": "",
-          "body": "",
-          "aliases": "module ts docs"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "areaId": "area:apps/docs",
-          "packageId": "package:@agentskit/code-review",
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "f9ed026ba8a9c875d0b5baad64f0e18d68fdf32c3cd25d049ebfe26236fddf7e",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
         "id": "module:apps/docs/next.config.mjs",
         "kind": "module",
         "path": "apps/docs/next.config.mjs",
@@ -7532,7 +7486,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "68ca7e19d138ccd4bdf886ca01e7568c0b2400c2ffe62ead5d74796e05a94b81",
+        "contentHash": "b5bcdfa13d63454f47be454a6f6778bf7f1b4f9da7bf709bb9691f927ffccecb",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -11557,7 +11511,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "22510b6b86116780c8fb02afa60a39100830d8fc419e2d6660390c5ec06c1dda",
+        "contentHash": "9b0efba5f153ffecd881b3efcf61dbe4a380434a8d43314bf7259ca8b6e1d707",
         "provenance": "observed",
         "confidence": "observed"
       },

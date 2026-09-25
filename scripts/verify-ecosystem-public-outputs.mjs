@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync, statSync } from 'node:fs'
+import { readFileSync, readdirSync } from 'node:fs'
 import { join, relative } from 'node:path'
 
 const root = process.cwd()
@@ -18,26 +18,28 @@ try {
 const roots = ['README.md', 'CONTRIBUTING.md', 'ecosystem.json', 'llms.txt', 'llms-full.txt', 'public', 'docs', 'app', 'apps']
 const skip = new Set(['node_modules', '.git', '.next', 'dist', 'build', 'coverage', '.doc-bridge', '.codex'])
 const publicExtensions = new Set(['.md', '.mdx', '.txt', '.json', '.html', '.ts', '.tsx', '.js', '.mjs', '.yaml', '.yml'])
-function visit(path) {
-  let st
-  try { st = statSync(path) } catch { return }
-  if (st.isDirectory()) {
+function visit(path, isDirectory = false) {
+  if (isDirectory) {
     if (skip.has(path.split('/').at(-1))) return
-    for (const entry of readdirSync(path)) visit(join(path, entry))
+    let entries
+    try { entries = readdirSync(path, { withFileTypes: true }) } catch { return }
+    for (const entry of entries) {
+      if (entry.isDirectory()) visit(join(path, entry.name), true)
+      else if (entry.isFile()) visit(join(path, entry.name))
+    }
     return
   }
   const name = path.split('/').at(-1)
   const ext = name.slice(name.lastIndexOf('.'))
   if (!publicExtensions.has(ext) || /\.(test|spec)\./.test(name)) return
   const rel = relative(root, path)
-  const content = readFileSync(path, 'utf8')
+  let content
+  try { content = readFileSync(path, 'utf8') } catch { return }
   if (/\bAKOS\b|akos\.agentskit\.io|agentskit-os/i.test(content)) errors.push(`${rel} exposes a retired AKOS reference`)
   if (/AgentsKit-io\/code-review-cli|code-review-cli/i.test(content)) errors.push(`${rel} exposes the retired code-review-cli repository name`)
 }
-for (const path of roots) {
-  const full = join(root, path)
-  try { if (statSync(full).isDirectory()) visit(full); else visit(full) } catch {}
-}
+const directories = new Set(['public', 'docs', 'app', 'apps'])
+for (const path of roots) visit(join(root, path), directories.has(path))
 const result = { status: errors.length ? 'failed' : 'passed', criteria: ['ecosystem-standardization'], repository: root, expectedHeaderOrder: expected, errors }
 console.log(JSON.stringify(result))
 if (errors.length) process.exitCode = 1

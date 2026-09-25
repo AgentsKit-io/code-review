@@ -6,6 +6,7 @@
   "safety": {
     "exclude": [
       "apps/docs/.source/**",
+      "apps/docs/next-env.d.ts",
       "**/*.tsbuildinfo"
     ]
   },
