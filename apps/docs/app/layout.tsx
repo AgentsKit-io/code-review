@@ -1,10 +1,10 @@
 import type { Metadata, Viewport } from 'next'
-import Script from 'next/script'
 import { RootProvider } from 'fumadocs-ui/provider/next'
 import { Inter, JetBrains_Mono, Space_Grotesk } from 'next/font/google'
 import './globals.css'
+import { PRODUCT_ID, PRODUCT_REPO, SHELL_CSS, SHELL_JS, SITE_URL } from '@/lib/shell'
 
-const site = 'https://code-review.agentskit.io'
+const site = SITE_URL
 const inter = Inter({ subsets: ['latin'], variable: '--font-body' })
 const jetbrains = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' })
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-display' })
@@ -24,5 +24,11 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { colorScheme: 'dark', themeColor: '#0d1117' }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en" suppressHydrationWarning className={`${inter.variable} ${jetbrains.variable} ${spaceGrotesk.variable}`}><body><Script src="/ecosystem-bar.js" strategy="afterInteractive" data-current="code-review" /><RootProvider>{children}</RootProvider></body></html>
+  return <html lang="en" suppressHydrationWarning className={`${inter.variable} ${jetbrains.variable} ${spaceGrotesk.variable}`}>
+    <head>
+      <link rel="stylesheet" href={SHELL_CSS} />
+      <script src={SHELL_JS} data-current={PRODUCT_ID} data-current-repo={PRODUCT_REPO} defer />
+    </head>
+    <body><RootProvider>{children}</RootProvider></body>
+  </html>
 }

@@ -24,7 +24,7 @@ It is intended for developers and teams who want focused review feedback without
 
 **Topics:** `ai-agents` · `code-review` · `developer-experience`
 
-**Ecosystem:** [AgentsKit](https://www.agentskit.io) · [Registry](https://registry.agentskit.io) · [Chat](https://chat.agentskit.io) · [Doc Bridge](https://doc-bridge.agentskit.io) · **Code Review** · [Harness](https://harness.agentskit.io) · [Playbook](https://playbook.agentskit.io)
+**Ecosystem:** [AgentsKit](https://www.agentskit.io) · [Registry](https://registry.agentskit.io) · [Chat](https://chat.agentskit.io) · [Doc Bridge](https://doc-bridge.agentskit.io) · **Code Review** · [Harness](https://harness.agentskit.io)
 
 Run code review locally or on every pull request. Bring Claude, Codex, OpenAI, Gemini, Ollama, OpenRouter, or another supported AgentsKit adapter. Seven focused review lenses propose potential problems; adversarial verification filters weak findings before they reach your team.
 

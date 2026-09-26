@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "$comment": "Canonical seven-product AgentsKit catalog. The three-entry properties array is the legacy v1 compatibility projection; shared navigation is derived from products[].",
+  "$comment": "Canonical six-product AgentsKit catalog: the shared bar, tour, and footer list only the six products with navigation.showInBar=true. The playbook entry is a hidden compatibility record required by the Doc Bridge 1.x ecosystem-contract validator (legacy three-entry properties shim); it is never linked from navigation and must be removed once Doc Bridge accepts a six-product manifest.",
   "parentBrand": {
     "id": "agentskit",
     "name": "AgentsKit"
@@ -15,8 +15,7 @@
       "agentskit-chat",
       "doc-bridge",
       "code-review",
-      "harness",
-      "playbook"
+      "harness"
     ],
     "managedProductIds": []
   },
@@ -133,8 +132,7 @@
           "agentskit-chat",
           "doc-bridge",
           "code-review",
-          "harness",
-          "playbook"
+          "harness"
         ]
       }
     },
@@ -205,8 +203,7 @@
           "agentskit-chat",
           "doc-bridge",
           "code-review",
-          "harness",
-          "playbook"
+          "harness"
         ]
       }
     },
@@ -274,8 +271,7 @@
           "registry",
           "doc-bridge",
           "code-review",
-          "harness",
-          "playbook"
+          "harness"
         ]
       }
     },
@@ -348,8 +344,7 @@
           "registry",
           "agentskit-chat",
           "code-review",
-          "harness",
-          "playbook"
+          "harness"
         ]
       }
     },
@@ -380,8 +375,7 @@
           "registry",
           "agentskit-chat",
           "doc-bridge",
-          "harness",
-          "playbook"
+          "harness"
         ]
       },
       "showcase": {
@@ -479,8 +473,7 @@
           "registry",
           "agentskit-chat",
           "doc-bridge",
-          "code-review",
-          "playbook"
+          "code-review"
         ]
       }
     },
@@ -496,48 +489,6 @@
       "maturity": "stable",
       "repo": "AgentsKit-io/agents-playbook",
       "accent": "#8B5CF6",
-      "showcase": {
-        "stage": "Standardize",
-        "headline": "Engineering standards agents can execute.",
-        "detail": "Turn repeatable practices into guidance that coding agents can follow in every repository.",
-        "proof": "Convention → executable guidance",
-        "sales": {
-          "kind": "standards-flow",
-          "headline": "Your standards. Every agent. Every repository.",
-          "metric": "1×",
-          "metricLabel": "define · reuse everywhere",
-          "logos": [
-            {
-              "id": "architecture",
-              "label": "Architecture"
-            },
-            {
-              "id": "tests",
-              "label": "Tests"
-            },
-            {
-              "id": "security",
-              "label": "Security"
-            },
-            {
-              "id": "style",
-              "label": "Style"
-            }
-          ],
-          "capabilities": [
-            "Repository rules",
-            "Review criteria",
-            "Agent guidance",
-            "Team conventions"
-          ],
-          "steps": [
-            "Define the standard once",
-            "Agents receive executable guidance",
-            "Review consistent output"
-          ]
-        },
-        "cta": "Explore the Playbook"
-      },
       "surfaces": {
         "home": "https://playbook.agentskit.io",
         "docs": "https://playbook.agentskit.io/docs",
@@ -548,15 +499,7 @@
       },
       "navigation": {
         "showInBar": false,
-        "order": 6,
-        "next": [
-          "agentskit",
-          "registry",
-          "agentskit-chat",
-          "doc-bridge",
-          "code-review",
-          "harness"
-        ]
+        "next": []
       }
     }
   ],

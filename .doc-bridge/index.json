@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "4a718f49b961d407bf8c9a47541a9eb2a393d8d25aa4ce232d860246427ecd46",
+  "contentHash": "93ba6eb68987decbb04a8749df253fbbdc130c9d8a1c7caa83a16baa1fc5fdff",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-09-25T12:58:17.767Z",
+  "generatedAt": "2026-09-26T01:04:42.303Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -20,7 +20,7 @@
       "type": "agent-doc",
       "title": "Code Review agent docs",
       "path": "docs/for-agents/index.md",
-      "description": "- Code Review CLI handoff — ownership, change routes, security boundaries, and verification: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review.md - Concise machine map — discovery, raw sources, and all seven ecosystem products: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms.txt - Full machine corpus — public, operational, governance,"
+      "description": "- Code Review CLI handoff — ownership, change routes, security boundaries, and verification: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review.md - Concise machine map — discovery, raw sources, and all six ecosystem products: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms.txt - Full machine corpus — public, operational, governance,"
     },
     {
       "id": "document:.changeset/easy-pianos-joke.md",
@@ -319,7 +319,7 @@
         "document",
         "human"
       ],
-      "contentHash": "ead9eacd2c4721631857bdb81a88fea575da7668fa6847608e899f327cc44a73"
+      "contentHash": "1cc05f8a42256efddfd25e3f31c1dab9b49885044ce4c8254060003e74214f21"
     },
     {
       "id": "document:docs/index.md",
@@ -403,7 +403,7 @@
         "document",
         "project"
       ],
-      "contentHash": "b18b5c18ae8d908ea39d3674ae6cccd64d1523db06e6e5b60dc9f5561dd3e8eb"
+      "contentHash": "c0abc05a0c9f3bec4bf5e32ded3c35197e6d09fa192235a28fb1aec9b4e0adfe"
     },
     {
       "id": "document:ROADMAP.md",
@@ -611,7 +611,7 @@
         "tsx",
         "[[...slug]]"
       ],
-      "contentHash": "9f21f1100e237ab6b902103b1019c2dc5bafa38d904433d90f8fde61ec417e56"
+      "contentHash": "a7ad6acd193c9b6bc05e859c8df681e596ed757528db42bd55c6ae40125d157e"
     },
     {
       "id": "module:apps/docs/app/docs/layout.tsx",
@@ -626,7 +626,7 @@
         "tsx",
         "docs"
       ],
-      "contentHash": "77fed76a9bafd2ad3020599436bb44cc7e1275cb52a17a7507dccb4c40ed23a1"
+      "contentHash": "3735605d48c2b7d4ec5c38ae2fc550f7de358640a9ef3f081aef2c38b8d9a12c"
     },
     {
       "id": "module:apps/docs/app/layout.tsx",
@@ -643,7 +643,7 @@
         "tsx",
         "app"
       ],
-      "contentHash": "a0a131adfe2950b6e996cf5bfcee01560800286adc59ed9272998091c4bf89a4"
+      "contentHash": "3ff7701d87e5896955f35552d99ca34b829883df2d319e78c233b7e598dc421f"
     },
     {
       "id": "module:apps/docs/app/opengraph-image.tsx",
@@ -675,7 +675,7 @@
         "tsx",
         "app"
       ],
-      "contentHash": "0198c9a1e9d20b6012dbe7df678d710456a246c7a6997c36930b90921dce67d2"
+      "contentHash": "c301cf96c3ff9e71b3bcafb59cf3131972434a262ac3cbd0a0381660bede7a9d"
     },
     {
       "id": "module:apps/docs/app/robots.ts",
@@ -690,7 +690,7 @@
         "ts",
         "app"
       ],
-      "contentHash": "6a8715e53897d4dfb823aeb5a4cd592deab16b253e1c98e72288c948f90a2231"
+      "contentHash": "0ba39c3abb8caaf82b9f29028d003d8ddc2b3e8ff2b9f4464d0ad3d87bd2ca4b"
     },
     {
       "id": "module:apps/docs/app/sitemap.ts",
@@ -705,7 +705,7 @@
         "ts",
         "app"
       ],
-      "contentHash": "492cd8458be9c856982a1509c7d64a9672aa72006af24779b07f148ecb80bacf"
+      "contentHash": "f500b56b7d8f0a20b207a1e58246d25e0a2e33a0d4464950a6d59a4cd65e45b8"
     },
     {
       "id": "module:apps/docs/components/home-sections.tsx",
@@ -725,21 +725,6 @@
       "contentHash": "a3ebaaa5a452950e4982ec23d512fee4cf785aaaef8e82fc3d78426598ff7518"
     },
     {
-      "id": "module:apps/docs/components/liquid-cursor-gradient.tsx",
-      "type": "module",
-      "title": "liquid-cursor-gradient.tsx",
-      "path": "apps/docs/components/liquid-cursor-gradient.tsx",
-      "symbols": [
-        "LiquidCursorGradient"
-      ],
-      "tags": [
-        "module",
-        "tsx",
-        "components"
-      ],
-      "contentHash": "cb7aa7f8247ccef9b0348fa96de9a74c46767c1d00b1b346172751f302105f6f"
-    },
-    {
       "id": "module:apps/docs/components/review-config-demo.tsx",
       "type": "module",
       "title": "review-config-demo.tsx",
@@ -753,6 +738,59 @@
         "components"
       ],
       "contentHash": "cee3ee4d428de415db8a692ee7325b324d0aed0c6fcc13300f8a54d23c8e05f9"
+    },
+    {
+      "id": "module:apps/docs/components/site-footer.tsx",
+      "type": "module",
+      "title": "site-footer.tsx",
+      "path": "apps/docs/components/site-footer.tsx",
+      "symbols": [
+        "SiteFooter"
+      ],
+      "tags": [
+        "module",
+        "tsx",
+        "components"
+      ],
+      "contentHash": "4327011688be0f010026b6d4d92f46d19bba634d0c810dd0dd5287dabefc0539"
+    },
+    {
+      "id": "module:apps/docs/lib/layout.shared.tsx",
+      "type": "module",
+      "title": "layout.shared.tsx",
+      "path": "apps/docs/lib/layout.shared.tsx",
+      "symbols": [
+        "ProductWordmark",
+        "baseOptions"
+      ],
+      "tags": [
+        "module",
+        "tsx",
+        "lib"
+      ],
+      "contentHash": "851b073547dced8fb13ed14f543a00f5af3f55b4891b89da4a0cc4c203b847a3"
+    },
+    {
+      "id": "module:apps/docs/lib/shell.ts",
+      "type": "module",
+      "title": "shell.ts",
+      "path": "apps/docs/lib/shell.ts",
+      "symbols": [
+        "ECOSYSTEM_PRODUCTS",
+        "PRODUCT_GITHUB",
+        "PRODUCT_ID",
+        "PRODUCT_REPO",
+        "SHELL_CSS",
+        "SHELL_JS",
+        "SHELL_ORIGIN",
+        "SITE_URL"
+      ],
+      "tags": [
+        "module",
+        "ts",
+        "lib"
+      ],
+      "contentHash": "1915a521e72806e9bf3f16628d4fdeb7ddf4f56f656980e4ba18630a85731dfc"
     },
     {
       "id": "module:apps/docs/lib/source.ts",
@@ -815,18 +853,6 @@
       "contentHash": "86e5307895a6424e166106895f17f5f33451ebfee23fee0be313dca0993ee034"
     },
     {
-      "id": "module:apps/docs/public/ecosystem-bar.js",
-      "type": "module",
-      "title": "ecosystem-bar.js",
-      "path": "apps/docs/public/ecosystem-bar.js",
-      "tags": [
-        "module",
-        "js",
-        "public"
-      ],
-      "contentHash": "a7921d11bd53b8db6b187f084c198cbc57ac82f3aa45b2d0ef615810e5c1de0d"
-    },
-    {
       "id": "module:apps/docs/source.config.ts",
       "type": "module",
       "title": "source.config.ts",
@@ -841,6 +867,18 @@
         "docs"
       ],
       "contentHash": "42cc493b55c80515933c2a76b0d33da0a25a05cb585c2f49c3e24e2245276a4f"
+    },
+    {
+      "id": "module:apps/docs/types/agentskit-shell.d.ts",
+      "type": "module",
+      "title": "agentskit-shell.d.ts",
+      "path": "apps/docs/types/agentskit-shell.d.ts",
+      "tags": [
+        "module",
+        "ts",
+        "types"
+      ],
+      "contentHash": "8ed05388b236b1b7c8434f635720d685773a7071bc3cf90eee26c647b8c474f2"
     },
     {
       "id": "module:examples/verify-readme.mjs",
@@ -900,7 +938,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "12fc83e1618e0d24aea822cdb1d136230b2361b1c5e423fa6de3838ee0487d3a"
+      "contentHash": "9dd507f782491e88e72b6848794893d063cabe41a6057e5bdf042b6dd88d9bc9"
     },
     {
       "id": "module:scripts/lib/readme-standard.mjs",
@@ -1020,7 +1058,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "b5bcdfa13d63454f47be454a6f6778bf7f1b4f9da7bf709bb9691f927ffccecb"
+      "contentHash": "8267ead5962d3d7e0bd567134461c00c82cf788b085008374536f0efcc438cc3"
     },
     {
       "id": "module:src/acp-cli-adapter.ts",
@@ -2331,7 +2369,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "0fd1b431b434ed0c1142a8e3524c86070c4d5d3a5960c5ac75e97f06a422fe85"
+      "contentHash": "4124e390310e4d98502fb1cbb03e4f77918e23e819b3d132a280fd02bbe7177f"
     },
     {
       "id": "module:test/domain-contracts.test.mjs",
@@ -2918,8 +2956,8 @@
     }
   },
   "inputs": {
-    "hash": "03c6f7879eb3b92e67506cdeda939640372b39f48a289e1c16d724c047138328",
-    "fileCount": 180,
+    "hash": "a46b357805068a2090cb7a3b2a7726b3f41d4a29fdba02a23e3df666b6cba3f2",
+    "fileCount": 182,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -2941,11 +2979,11 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "bfa343a22645e33ec1f400b8dba5a188df84c6ce3c441ec91456c3163a977afa",
+    "contentHash": "591774ed3e90fb6095a7389c50de7938080f84b1b73ef3655f389f2228f94175",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "d4b37bd93e299ed831083f9d78aaa0563bd49ba65474c3de2403586d7f6c295f",
+    "snapshotHash": "42138fefca3de1dd1ae2882a7f07c75f63e7ef2301c6e26767ce42e6840d59e2",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
-    "configurationHash": "c963ca74d6a72e77542636a9dda5c27677c96ac3828604a86a7150655668772e",
+    "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
     "graphMetricsVersion": "1.0.0",
     "weights": {
@@ -2963,7 +3001,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 179,
+      "documentCount": 181,
       "fieldNames": [
         "aliases",
         "body",
@@ -2974,13 +3012,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.905027932960894,
-        "body": 50.89385474860335,
-        "headings": 3.910614525139665,
-        "path": 5.608938547486034,
-        "summary": 3.335195530726257,
-        "symbols": 14.134078212290502,
-        "title": 4.307262569832402
+        "aliases": 2.9060773480662982,
+        "body": 50.331491712707184,
+        "headings": 3.867403314917127,
+        "path": 5.613259668508287,
+        "summary": 3.298342541436464,
+        "symbols": 14.138121546961326,
+        "title": 4.281767955801105
       }
     },
     "entries": [
@@ -3050,7 +3088,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "286377cf3e3e43f38a906714a08b648d1b88eb863b6e34777898cc9b431bf901",
+        "contentHash": "f43ce2243d0d95b5ce55086db67d68c8e787d5ad0fc520e0808a1982ea64edab",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -4712,7 +4750,7 @@
         "kind": "document",
         "path": "docs/for-agents/index.md",
         "title": "Code Review agent docs",
-        "summary": "- Code Review CLI handoff — ownership, change routes, security boundaries, and verification: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review.md - Concise machine map — discovery, raw sources, and all seven ecosystem products: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms.txt - Full machine corpus — public, operational, governance,",
+        "summary": "- Code Review CLI handoff — ownership, change routes, security boundaries, and verification: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review.md - Concise machine map — discovery, raw sources, and all six ecosystem products: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms.txt - Full machine corpus — public, operational, governance,",
         "audience": "agent",
         "aliases": [
           "index"
@@ -4726,8 +4764,8 @@
           "headings": "Code Review agent docs",
           "path": "docs/for-agents/index.md",
           "symbols": "",
-          "summary": "- Code Review CLI handoff — ownership, change routes, security boundaries, and verification: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review.md - Concise machine map — discovery, raw sources, and all seven ecosystem products: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms.txt - Full machine corpus — public, operational, governance,",
-          "body": "Code Review agent docs - Code Review CLI handoff — ownership, change routes, security boundaries, and verification: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review.md - Concise machine map — discovery, raw sources, and all seven ecosystem products: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms.txt - Full machine corpus — public, operational, governance, maturity, and agent handoffs: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms-full.txt",
+          "summary": "- Code Review CLI handoff — ownership, change routes, security boundaries, and verification: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review.md - Concise machine map — discovery, raw sources, and all six ecosystem products: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms.txt - Full machine corpus — public, operational, governance,",
+          "body": "Code Review agent docs - Code Review CLI handoff — ownership, change routes, security boundaries, and verification: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review.md - Concise machine map — discovery, raw sources, and all six ecosystem products: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms.txt - Full machine corpus — public, operational, governance, maturity, and agent handoffs: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms-full.txt",
           "aliases": "index document agent"
         },
         "graph": {
@@ -4757,7 +4795,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "768ec46b1ba6d42b60a9414be0eecfc48849fa8eb2bdc13909b5c141eacd01ed",
+        "contentHash": "6855fb0e99c295ad58021aa669a00da39f2210b9025130f95a240aa0ed28a8cc",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -4779,7 +4817,7 @@
           "path": "docs/getting-started.md",
           "symbols": "",
           "summary": "Profile: <code>top-level-repository</code>",
-          "body": "<p align=\"center\" <img src=\"assets/agentskit-mark.svg\" width=\"64\" height=\"57\" alt=\"AgentsKit\" / </p AgentsKit Code Review Profile: <code top-level-repository</code Deep, low-noise AI code review with the model you already use. It is intended for developers and teams who want focused review feedback without changing their model subscription, and without adopting a separate chat product surface. Tags: agentskit · ai-code-review · github-action · typescript · sarif · codex · claude · ollama Topics: ai-agents · code-review · developer-experience Ecosystem: · · · · Code Review · · Run code review locally or on every pull request. Bring Claude, Codex, OpenAI, Gemini, Ollama, OpenRouter, or another supported AgentsKit adapter. Seven focused review lenses propose potential problems; adversarial verification filters weak findings before they reach your team. Verified proof - Offline CLI discovery works without credentials ( --help , --list-providers ) — covered by test/cli-smoke.test.mjs . - A clean local Codex CLI fixture completes an offline stdin review — covered by the same smoke suite. - Documentation, Action contract, and Doc Bridge gates run through npm run check . - Machine-readable public map: and . Why this exists Most AI reviewers are easy to start and hard to trust: they produce long lists of stylistic opinions, repeat the same concern, and bury the issue that can actually break production. AgentsKit Code Review is built around a different contract: - Bring your own model. Use an existing CLI subscription, an API provider, a local model, or your own gateway. - Low noise by design. Findings are challenged by independent verification votes before they survive. - Local first, CI ready. Review a diff before pushing, inspect complete paths, read stdin, or comment directly on a GitHub PR. - Control cost and policy. Set file budgets, concurrency, thresholds, project conventions, and blocking severity. - See the cost before execution. Use --plan --json to inspect files, lenses, retries, concurrency, deadline, estimated provider calls, and every UNREVIEWED path with its reason without a model request. Estimates are always best-effort because primary lens demand is predictable but model output determines how many skeptical verification calls are needed; the runtime counter remains the hard ceiling. Run your first review Open a terminal inside any Git repository and choose a provider you already use. You do not need to clone or install AgentsKit Code Review: <!-- readme-example:first-review -- The CLI reviews the current repository's diff against origin/main and prints the report in your terminal. Choose another base with --base main . For the Grok Build ACP worker, use XAI API KEY (or --api-key ) in the default isolated mode. To reuse grok login , opt in explicitly with --mode trusted-local . Local codex-cli subprocesses have a 300-second deadline per model call; claude-cli and the other local workers use 120 seconds. Every run also has a global deadline (10 minutes for full, 2 minutes for fast ) and a bounded Codex smoke check before analysis. Set --deadline-ms for a smaller explicit budget; timed-out calls fail explicitly and cannot turn an unreviewed file into an approval. Terminal provider authentication failures stop the remaining lenses immediately; the review still exits incomplete and never converts a credential failure into approval. The default isolated mode does not inherit an interactive CLI login. Use --mode trusted-local only on a machine or runner you trust with the provider's local session and environment. grok-cli is stable and uses Grok Build's ACP transport ( grok agent stdio ) by default. In the default isolated mode, pass XAI API KEY / --api-key ; the key is injected into the isolated worker environment, never into command arguments. Existing grok login state is available only with explicit local-only --mode trusted-local . Isolated workers grant no filesystem write, terminal, MCP, plugin, or subagent capability ",
+          "body": "<p align=\"center\" <img src=\"assets/agentskit-mark.svg\" width=\"64\" height=\"57\" alt=\"AgentsKit\" / </p AgentsKit Code Review Profile: <code top-level-repository</code Deep, low-noise AI code review with the model you already use. It is intended for developers and teams who want focused review feedback without changing their model subscription, and without adopting a separate chat product surface. Tags: agentskit · ai-code-review · github-action · typescript · sarif · codex · claude · ollama Topics: ai-agents · code-review · developer-experience Ecosystem: · · · · Code Review · Run code review locally or on every pull request. Bring Claude, Codex, OpenAI, Gemini, Ollama, OpenRouter, or another supported AgentsKit adapter. Seven focused review lenses propose potential problems; adversarial verification filters weak findings before they reach your team. Verified proof - Offline CLI discovery works without credentials ( --help , --list-providers ) — covered by test/cli-smoke.test.mjs . - A clean local Codex CLI fixture completes an offline stdin review — covered by the same smoke suite. - Documentation, Action contract, and Doc Bridge gates run through npm run check . - Machine-readable public map: and . Why this exists Most AI reviewers are easy to start and hard to trust: they produce long lists of stylistic opinions, repeat the same concern, and bury the issue that can actually break production. AgentsKit Code Review is built around a different contract: - Bring your own model. Use an existing CLI subscription, an API provider, a local model, or your own gateway. - Low noise by design. Findings are challenged by independent verification votes before they survive. - Local first, CI ready. Review a diff before pushing, inspect complete paths, read stdin, or comment directly on a GitHub PR. - Control cost and policy. Set file budgets, concurrency, thresholds, project conventions, and blocking severity. - See the cost before execution. Use --plan --json to inspect files, lenses, retries, concurrency, deadline, estimated provider calls, and every UNREVIEWED path with its reason without a model request. Estimates are always best-effort because primary lens demand is predictable but model output determines how many skeptical verification calls are needed; the runtime counter remains the hard ceiling. Run your first review Open a terminal inside any Git repository and choose a provider you already use. You do not need to clone or install AgentsKit Code Review: <!-- readme-example:first-review -- The CLI reviews the current repository's diff against origin/main and prints the report in your terminal. Choose another base with --base main . For the Grok Build ACP worker, use XAI API KEY (or --api-key ) in the default isolated mode. To reuse grok login , opt in explicitly with --mode trusted-local . Local codex-cli subprocesses have a 300-second deadline per model call; claude-cli and the other local workers use 120 seconds. Every run also has a global deadline (10 minutes for full, 2 minutes for fast ) and a bounded Codex smoke check before analysis. Set --deadline-ms for a smaller explicit budget; timed-out calls fail explicitly and cannot turn an unreviewed file into an approval. Terminal provider authentication failures stop the remaining lenses immediately; the review still exits incomplete and never converts a credential failure into approval. The default isolated mode does not inherit an interactive CLI login. Use --mode trusted-local only on a machine or runner you trust with the provider's local session and environment. grok-cli is stable and uses Grok Build's ACP transport ( grok agent stdio ) by default. In the default isolated mode, pass XAI API KEY / --api-key ; the key is injected into the isolated worker environment, never into command arguments. Existing grok login state is available only with explicit local-only --mode trusted-local . Isolated workers grant no filesystem write, terminal, MCP, plugin, or subagent capability an",
           "aliases": "document human"
         },
         "graph": {
@@ -4847,7 +4885,7 @@
             }
           ]
         },
-        "contentHash": "ead9eacd2c4721631857bdb81a88fea575da7668fa6847608e899f327cc44a73",
+        "contentHash": "1cc05f8a42256efddfd25e3f31c1dab9b49885044ce4c8254060003e74214f21",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -5376,7 +5414,7 @@
           "path": "README.md",
           "symbols": "",
           "summary": "Profile: <code>top-level-repository</code>",
-          "body": "<p align=\"center\" <img src=\"docs/assets/agentskit-mark.svg\" width=\"64\" height=\"57\" alt=\"AgentsKit\" / </p AgentsKit Code Review Profile: <code top-level-repository</code Deep, low-noise AI code review with the model you already use. It is intended for developers and teams who want focused review feedback without changing their model subscription, and without adopting a separate chat product surface. Tags: agentskit · ai-code-review · github-action · typescript · sarif · codex · claude · ollama Topics: ai-agents · code-review · developer-experience Ecosystem: · · · · · · Run code review locally or on every pull request. Bring Claude, Codex, OpenAI, Gemini, Ollama, OpenRouter, or another supported AgentsKit adapter. Seven focused review lenses propose potential problems; adversarial verification filters weak findings before they reach your team. Verified proof - Offline CLI discovery works without credentials ( --help , --list-providers ) — covered by test/cli-smoke.test.mjs . - A clean local Codex CLI fixture completes an offline stdin review — covered by the same smoke suite. - Documentation, Action contract, and Doc Bridge gates run through npm run check . - Machine-readable public map: and . Why this exists Most AI reviewers are easy to start and hard to trust: they produce long lists of stylistic opinions, repeat the same concern, and bury the issue that can actually break production. AgentsKit Code Review is built around a different contract: - Bring your own model. Use an existing CLI subscription, an API provider, a local model, or your own gateway. - Low noise by design. Findings are challenged by independent verification votes before they survive. - Local first, CI ready. Review a diff before pushing, inspect complete paths, read stdin, or comment directly on a GitHub PR. - Control cost and policy. Set file budgets, concurrency, thresholds, project conventions, and blocking severity. - See the cost before execution. Use --plan --json to inspect files, lenses, retries, concurrency, deadline, estimated provider calls, and every UNREVIEWED path with its reason without a model request. Estimates are always best-effort because primary lens demand is predictable but model output determines how many skeptical verification calls are needed; the runtime counter remains the hard ceiling. Run your first review Open a terminal inside any Git repository and choose a provider you already use. You do not need to clone or install AgentsKit Code Review: <!-- readme-example:first-review -- The CLI reviews the current repository's diff against origin/main and prints the report in your terminal. Choose another base with --base main . For the Grok Build ACP worker, use XAI API KEY (or --api-key ) in the default isolated mode. To reuse grok login , opt in explicitly with --mode trusted-local . Local codex-cli subprocesses have a 300-second deadline per model call; claude-cli and the other local workers use 120 seconds. Every run also has a global deadline (10 minutes for full, 2 minutes for fast ) and a bounded Codex smoke check before analysis. Set --deadline-ms for a smaller explicit budget; timed-out calls fail explicitly and cannot turn an unreviewed file into an approval. Terminal provider authentication failures stop the remaining lenses immediately; the review still exits incomplete and never converts a credential failure into approval. The default isolated mode does not inherit an interactive CLI login. Use --mode trusted-local only on a machine or runner you trust with the provider's local session and environment. grok-cli is stable and uses Grok Build's ACP transport ( grok agent stdio ) by default. In the default isolated mode, pass XAI API KEY / --api-key ; the key is injected into the isolated worker environment, never into command arguments. Existing grok login state is available only with explicit local-only --mode trusted-local . Isolated workers grant no filesystem write, terminal, MCP, plugin, or subagent capability and use",
+          "body": "<p align=\"center\" <img src=\"docs/assets/agentskit-mark.svg\" width=\"64\" height=\"57\" alt=\"AgentsKit\" / </p AgentsKit Code Review Profile: <code top-level-repository</code Deep, low-noise AI code review with the model you already use. It is intended for developers and teams who want focused review feedback without changing their model subscription, and without adopting a separate chat product surface. Tags: agentskit · ai-code-review · github-action · typescript · sarif · codex · claude · ollama Topics: ai-agents · code-review · developer-experience Ecosystem: · · · · · Run code review locally or on every pull request. Bring Claude, Codex, OpenAI, Gemini, Ollama, OpenRouter, or another supported AgentsKit adapter. Seven focused review lenses propose potential problems; adversarial verification filters weak findings before they reach your team. Verified proof - Offline CLI discovery works without credentials ( --help , --list-providers ) — covered by test/cli-smoke.test.mjs . - A clean local Codex CLI fixture completes an offline stdin review — covered by the same smoke suite. - Documentation, Action contract, and Doc Bridge gates run through npm run check . - Machine-readable public map: and . Why this exists Most AI reviewers are easy to start and hard to trust: they produce long lists of stylistic opinions, repeat the same concern, and bury the issue that can actually break production. AgentsKit Code Review is built around a different contract: - Bring your own model. Use an existing CLI subscription, an API provider, a local model, or your own gateway. - Low noise by design. Findings are challenged by independent verification votes before they survive. - Local first, CI ready. Review a diff before pushing, inspect complete paths, read stdin, or comment directly on a GitHub PR. - Control cost and policy. Set file budgets, concurrency, thresholds, project conventions, and blocking severity. - See the cost before execution. Use --plan --json to inspect files, lenses, retries, concurrency, deadline, estimated provider calls, and every UNREVIEWED path with its reason without a model request. Estimates are always best-effort because primary lens demand is predictable but model output determines how many skeptical verification calls are needed; the runtime counter remains the hard ceiling. Run your first review Open a terminal inside any Git repository and choose a provider you already use. You do not need to clone or install AgentsKit Code Review: <!-- readme-example:first-review -- The CLI reviews the current repository's diff against origin/main and prints the report in your terminal. Choose another base with --base main . For the Grok Build ACP worker, use XAI API KEY (or --api-key ) in the default isolated mode. To reuse grok login , opt in explicitly with --mode trusted-local . Local codex-cli subprocesses have a 300-second deadline per model call; claude-cli and the other local workers use 120 seconds. Every run also has a global deadline (10 minutes for full, 2 minutes for fast ) and a bounded Codex smoke check before analysis. Set --deadline-ms for a smaller explicit budget; timed-out calls fail explicitly and cannot turn an unreviewed file into an approval. Terminal provider authentication failures stop the remaining lenses immediately; the review still exits incomplete and never converts a credential failure into approval. The default isolated mode does not inherit an interactive CLI login. Use --mode trusted-local only on a machine or runner you trust with the provider's local session and environment. grok-cli is stable and uses Grok Build's ACP transport ( grok agent stdio ) by default. In the default isolated mode, pass XAI API KEY / --api-key ; the key is injected into the isolated worker environment, never into command arguments. Existing grok login state is available only with explicit local-only --mode trusted-local . Isolated workers grant no filesystem write, terminal, MCP, plugin, or subagent capability and use a",
           "aliases": "document project"
         },
         "graph": {
@@ -5487,7 +5525,7 @@
             }
           ]
         },
-        "contentHash": "b18b5c18ae8d908ea39d3674ae6cccd64d1523db06e6e5b60dc9f5561dd3e8eb",
+        "contentHash": "c0abc05a0c9f3bec4bf5e32ded3c35197e6d09fa192235a28fb1aec9b4e0adfe",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6377,7 +6415,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "9f21f1100e237ab6b902103b1019c2dc5bafa38d904433d90f8fde61ec417e56",
+        "contentHash": "a7ad6acd193c9b6bc05e859c8df681e596ed757528db42bd55c6ae40125d157e",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6414,7 +6452,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "77fed76a9bafd2ad3020599436bb44cc7e1275cb52a17a7507dccb4c40ed23a1",
+        "contentHash": "3735605d48c2b7d4ec5c38ae2fc550f7de358640a9ef3f081aef2c38b8d9a12c",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6453,7 +6491,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "a0a131adfe2950b6e996cf5bfcee01560800286adc59ed9272998091c4bf89a4",
+        "contentHash": "3ff7701d87e5896955f35552d99ca34b829883df2d319e78c233b7e598dc421f",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6529,7 +6567,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "0198c9a1e9d20b6012dbe7df678d710456a246c7a6997c36930b90921dce67d2",
+        "contentHash": "c301cf96c3ff9e71b3bcafb59cf3131972434a262ac3cbd0a0381660bede7a9d",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6566,7 +6604,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "6a8715e53897d4dfb823aeb5a4cd592deab16b253e1c98e72288c948f90a2231",
+        "contentHash": "0ba39c3abb8caaf82b9f29028d003d8ddc2b3e8ff2b9f4464d0ad3d87bd2ca4b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6603,7 +6641,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "492cd8458be9c856982a1509c7d64a9672aa72006af24779b07f148ecb80bacf",
+        "contentHash": "f500b56b7d8f0a20b207a1e58246d25e0a2e33a0d4464950a6d59a4cd65e45b8",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6647,43 +6685,6 @@
         "confidence": "observed"
       },
       {
-        "id": "module:apps/docs/components/liquid-cursor-gradient.tsx",
-        "kind": "module",
-        "path": "apps/docs/components/liquid-cursor-gradient.tsx",
-        "title": "liquid-cursor-gradient.tsx",
-        "aliases": [],
-        "symbols": [
-          "LiquidCursorGradient"
-        ],
-        "tags": [
-          "module",
-          "tsx",
-          "components"
-        ],
-        "fields": {
-          "title": "liquid-cursor-gradient.tsx",
-          "headings": "",
-          "path": "apps/docs/components/liquid-cursor-gradient.tsx",
-          "symbols": "LiquidCursorGradient",
-          "summary": "",
-          "body": "",
-          "aliases": "module tsx components"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "areaId": "area:apps/docs",
-          "packageId": "package:@agentskit/code-review",
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "cb7aa7f8247ccef9b0348fa96de9a74c46767c1d00b1b346172751f302105f6f",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
         "id": "module:apps/docs/components/review-config-demo.tsx",
         "kind": "module",
         "path": "apps/docs/components/review-config-demo.tsx",
@@ -6717,6 +6718,125 @@
           "outbound": []
         },
         "contentHash": "cee3ee4d428de415db8a692ee7325b324d0aed0c6fcc13300f8a54d23c8e05f9",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:apps/docs/components/site-footer.tsx",
+        "kind": "module",
+        "path": "apps/docs/components/site-footer.tsx",
+        "title": "site-footer.tsx",
+        "aliases": [],
+        "symbols": [
+          "SiteFooter"
+        ],
+        "tags": [
+          "module",
+          "tsx",
+          "components"
+        ],
+        "fields": {
+          "title": "site-footer.tsx",
+          "headings": "",
+          "path": "apps/docs/components/site-footer.tsx",
+          "symbols": "SiteFooter",
+          "summary": "",
+          "body": "",
+          "aliases": "module tsx components"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:apps/docs",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "4327011688be0f010026b6d4d92f46d19bba634d0c810dd0dd5287dabefc0539",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:apps/docs/lib/layout.shared.tsx",
+        "kind": "module",
+        "path": "apps/docs/lib/layout.shared.tsx",
+        "title": "layout.shared.tsx",
+        "aliases": [],
+        "symbols": [
+          "ProductWordmark",
+          "baseOptions"
+        ],
+        "tags": [
+          "module",
+          "tsx",
+          "lib"
+        ],
+        "fields": {
+          "title": "layout.shared.tsx",
+          "headings": "",
+          "path": "apps/docs/lib/layout.shared.tsx",
+          "symbols": "ProductWordmark baseOptions",
+          "summary": "",
+          "body": "",
+          "aliases": "module tsx lib"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:apps/docs",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "851b073547dced8fb13ed14f543a00f5af3f55b4891b89da4a0cc4c203b847a3",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:apps/docs/lib/shell.ts",
+        "kind": "module",
+        "path": "apps/docs/lib/shell.ts",
+        "title": "shell.ts",
+        "aliases": [],
+        "symbols": [
+          "ECOSYSTEM_PRODUCTS",
+          "PRODUCT_GITHUB",
+          "PRODUCT_ID",
+          "PRODUCT_REPO",
+          "SHELL_CSS",
+          "SHELL_JS",
+          "SHELL_ORIGIN",
+          "SITE_URL"
+        ],
+        "tags": [
+          "module",
+          "ts",
+          "lib"
+        ],
+        "fields": {
+          "title": "shell.ts",
+          "headings": "",
+          "path": "apps/docs/lib/shell.ts",
+          "symbols": "ECOSYSTEM_PRODUCTS PRODUCT_GITHUB PRODUCT_ID PRODUCT_REPO SHELL_CSS SHELL_JS SHELL_ORIGIN SITE_URL",
+          "summary": "",
+          "body": "",
+          "aliases": "module ts lib"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:apps/docs",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "1915a521e72806e9bf3f16628d4fdeb7ddf4f56f656980e4ba18630a85731dfc",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6883,40 +7003,6 @@
         "confidence": "observed"
       },
       {
-        "id": "module:apps/docs/public/ecosystem-bar.js",
-        "kind": "module",
-        "path": "apps/docs/public/ecosystem-bar.js",
-        "title": "ecosystem-bar.js",
-        "aliases": [],
-        "tags": [
-          "module",
-          "js",
-          "public"
-        ],
-        "fields": {
-          "title": "ecosystem-bar.js",
-          "headings": "",
-          "path": "apps/docs/public/ecosystem-bar.js",
-          "symbols": "",
-          "summary": "",
-          "body": "",
-          "aliases": "module js public"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "areaId": "area:apps/docs",
-          "packageId": "package:@agentskit/code-review",
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "a7921d11bd53b8db6b187f084c198cbc57ac82f3aa45b2d0ef615810e5c1de0d",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
         "id": "module:apps/docs/source.config.ts",
         "kind": "module",
         "path": "apps/docs/source.config.ts",
@@ -6951,6 +7037,40 @@
           "outbound": []
         },
         "contentHash": "42cc493b55c80515933c2a76b0d33da0a25a05cb585c2f49c3e24e2245276a4f",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:apps/docs/types/agentskit-shell.d.ts",
+        "kind": "module",
+        "path": "apps/docs/types/agentskit-shell.d.ts",
+        "title": "agentskit-shell.d.ts",
+        "aliases": [],
+        "tags": [
+          "module",
+          "ts",
+          "types"
+        ],
+        "fields": {
+          "title": "agentskit-shell.d.ts",
+          "headings": "",
+          "path": "apps/docs/types/agentskit-shell.d.ts",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module ts types"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:apps/docs",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "8ed05388b236b1b7c8434f635720d685773a7071bc3cf90eee26c647b8c474f2",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -7126,7 +7246,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "12fc83e1618e0d24aea822cdb1d136230b2361b1c5e423fa6de3838ee0487d3a",
+        "contentHash": "9dd507f782491e88e72b6848794893d063cabe41a6057e5bdf042b6dd88d9bc9",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -7486,7 +7606,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "b5bcdfa13d63454f47be454a6f6778bf7f1b4f9da7bf709bb9691f927ffccecb",
+        "contentHash": "8267ead5962d3d7e0bd567134461c00c82cf788b085008374536f0efcc438cc3",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -11511,7 +11631,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "0fd1b431b434ed0c1142a8e3524c86070c4d5d3a5960c5ac75e97f06a422fe85",
+        "contentHash": "4124e390310e4d98502fb1cbb03e4f77918e23e819b3d132a280fd02bbe7177f",
         "provenance": "observed",
         "confidence": "observed"
       },
