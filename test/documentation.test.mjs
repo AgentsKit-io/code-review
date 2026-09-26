@@ -37,7 +37,7 @@ test('Changesets release automation is tokenless, gated, and recoverable', () =>
   assert.equal(manifest.devDependencies['@changesets/cli'], '^3.0.2')
   assert.equal(manifest.devDependencies['@changesets/changelog-github'], '^1.0.1')
   assert.equal(manifest.scripts.changeset, 'changeset')
-  assert.match(manifest.scripts['version-packages'], /^changeset version && npm version --no-git-tag-version --ignore-scripts --allow-same-version .* && npm run docs:full && npm run readme:standard:refresh$/)
+  assert.match(manifest.scripts['version-packages'], /^changeset version && npm version --no-git-tag-version --ignore-scripts --allow-same-version .* && npm run docs:index && npm run readme:standard:refresh$/)
   assert.equal(changesets.baseBranch, 'main')
   assert.deepEqual(changesets.changelog, ['@changesets/changelog-github', { repo: 'AgentsKit-io/code-review' }])
   assert.match(versionWorkflow, /changesets\/action@ae32849d5ba541f9ae29e40e22a623bc13562f51/)
