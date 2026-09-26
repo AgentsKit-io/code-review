@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "$comment": "Canonical six-product AgentsKit catalog: the shared bar, tour, and footer list only the six products with navigation.showInBar=true. The playbook entry is a hidden compatibility record required by the Doc Bridge 1.x ecosystem-contract validator (legacy three-entry properties shim); it is never linked from navigation and must be removed once Doc Bridge accepts a six-product manifest.",
+  "$comment": "Canonical six-product AgentsKit catalog: the shared bar, tour, and footer list only the six products with navigation.showInBar=true. The playbook entry is a hidden record (showInBar=false, no order, no next, no showcase) kept only so Doc Bridge conformance can validate the README's Playbook cross-link against the manifest; it is never linked from navigation. The two-entry properties array is the legacy v1 compatibility projection.",
   "parentBrand": {
     "id": "agentskit",
     "name": "AgentsKit"
@@ -517,20 +517,6 @@
       "showInBar": true,
       "llms": "https://www.agentskit.io/llms.txt",
       "stats": "https://www.agentskit.io/api/stats.json"
-    },
-    {
-      "id": "playbook",
-      "name": "Agents Playbook",
-      "barLabel": "Playbook",
-      "domain": "playbook.agentskit.io",
-      "url": "https://playbook.agentskit.io",
-      "repo": "AgentsKit-io/agents-playbook",
-      "tagline": "Make agents ship code a human would actually merge.",
-      "kind": "methodology",
-      "accent": "#8B5CF6",
-      "showInBar": false,
-      "llms": "https://playbook.agentskit.io/llms.txt",
-      "stats": "https://playbook.agentskit.io/api/stats.json"
     },
     {
       "id": "registry",

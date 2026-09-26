@@ -56,8 +56,8 @@ importers:
         version: 7.0.2
     optionalDependencies:
       '@agentskit/doc-bridge':
-        specifier: ^1.11.2
-        version: 1.11.2(@agentskit/adapters@0.17.0)(@agentskit/core@1.12.9)(@agentskit/ink@0.10.11(react@19.3.0))(graphology-types@0.24.8)(react@19.3.0)(supports-color@7.2.0)
+        specifier: ^1.12.0
+        version: 1.12.0(@agentskit/adapters@0.17.0)(@agentskit/core@1.12.9)(@agentskit/ink@0.10.11(react@19.3.0))(graphology-types@0.24.8)(react@19.3.0)(supports-color@7.2.0)
 
 packages:
 
@@ -78,8 +78,8 @@ packages:
   '@agentskit/core@1.12.9':
     resolution: {integrity: sha512-Ou6WB9cDB9o85XpUZKWGfC699OuPzgnP8oXekVRktYBHj+Ww7FX5o10nHVPiG/2a7mJ9paQdyvUbNe5n+RZSlg==}
 
-  '@agentskit/doc-bridge@1.11.2':
-    resolution: {integrity: sha512-izYQmC+wW6DjraTjNrrRQJW6noRUGm5wwbl+MAOiThN6WKb/79UQoxofva/PgTjoONnoqv24Z+CrLkBS0qKPew==}
+  '@agentskit/doc-bridge@1.12.0':
+    resolution: {integrity: sha512-Hft7ekdi1cCjn0HDWjYkD1FPLugQXrS+rgxarNAAIGU8sp32I+Q6Dp9dRIQRYkvvckjJI43ckCPy/NdjkbGuTg==}
     engines: {node: '>=22'}
     hasBin: true
     peerDependencies:
@@ -1106,6 +1106,10 @@ packages:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
     engines: {node: '>=0.10.0'}
 
+  ignore@7.0.10:
+    resolution: {integrity: sha512-HpbUakT7xp5miBUywCHf36ZEuAJNklBJDDsGpUIjMzOSmM8ELSfA9Sa/QDPeNeqeoN31u+UTCkL4klCOVvRm4Q==}
+    engines: {node: '>= 4'}
+
   import-meta-resolve@4.2.0:
     resolution: {integrity: sha512-Iqv2fzaTQN28s/FwZAoFq0ZSs/7hMAHJVX+w8PZl3cY19Pxk6jFFalxQoIfW2826i/fDLXv8IiEZRIT0lDuWcg==}
 
@@ -1663,7 +1667,7 @@ snapshots:
 
   '@agentskit/core@1.12.9': {}
 
-  '@agentskit/doc-bridge@1.11.2(@agentskit/adapters@0.17.0)(@agentskit/core@1.12.9)(@agentskit/ink@0.10.11(react@19.3.0))(graphology-types@0.24.8)(react@19.3.0)(supports-color@7.2.0)':
+  '@agentskit/doc-bridge@1.12.0(@agentskit/adapters@0.17.0)(@agentskit/core@1.12.9)(@agentskit/ink@0.10.11(react@19.3.0))(graphology-types@0.24.8)(react@19.3.0)(supports-color@7.2.0)':
     dependencies:
       '@agentskit/harness': 0.11.0
       github-slugger: 2.0.0
@@ -1672,6 +1676,7 @@ snapshots:
       graphology-dag: 0.4.1(graphology-types@0.24.8)
       graphology-metrics: 2.4.2(graphology-types@0.24.8)
       graphology-shortest-path: 2.1.0(graphology-types@0.24.8)
+      ignore: 7.0.10
       knap: 0.5.1
       mdast-util-to-string: 4.0.0
       mermaid: 11.17.2
@@ -2784,6 +2789,9 @@ snapshots:
   iconv-lite@0.6.3:
     dependencies:
       safer-buffer: 2.1.2
+    optional: true
+
+  ignore@7.0.10:
     optional: true
 
   import-meta-resolve@4.2.0: {}
