@@ -8,6 +8,9 @@
   --ak-font-mono: var(--font-mono);
 }
 
+/* Light-theme muted text (sidebar, search): Fumadocs' default sits just under WCAG AA 4.5:1. */
+:root:not(.dark) { --color-fd-muted-foreground: hsl(0, 0%, 38%); }
+
 /* The home page is dark-only; docs follow the Fumadocs theme (light tokens come from brand-tokens.css). */
 .dark,
 body:has(.code-review-home) {
@@ -34,6 +37,26 @@ button, a { font: inherit; }
 .ak-cta:hover { border-color: var(--ak-blue); }
 .ak-cta-primary { border-color: var(--ak-fg); background: var(--ak-fg); color: var(--ak-bg); font-weight: 600; }
 .ak-cta-primary:hover { border-color: white; background: white; color: var(--ak-bg); }
+/* The home header sits over the dark-only home, so it always uses Fumadocs' dark palette (light mode included). */
+body:has(.code-review-home) #nd-nav {
+  color-scheme: dark;
+  --color-fd-background: hsl(0, 0%, 2%);
+  --color-fd-foreground: hsl(0, 0%, 98%);
+  --color-fd-muted: hsl(0, 0%, 8%);
+  --color-fd-muted-foreground: hsl(0, 0%, 60%);
+  --color-fd-popover: hsl(0, 0%, 4%);
+  --color-fd-popover-foreground: hsl(0, 0%, 98%);
+  --color-fd-card: hsl(0, 0%, 4%);
+  --color-fd-card-foreground: hsl(0, 0%, 98%);
+  --color-fd-border: hsl(0, 0%, 50%, 0.2);
+  --color-fd-primary: hsl(0, 0%, 98%);
+  --color-fd-primary-foreground: hsl(0, 0%, 9%);
+  --color-fd-secondary: hsl(0, 0%, 12.9%);
+  --color-fd-secondary-foreground: hsl(0, 0%, 98%);
+  --color-fd-accent: hsl(0, 0%, 15%);
+  --color-fd-accent-foreground: hsl(0, 0%, 100%);
+  --color-fd-ring: hsl(0, 0%, 34.9%);
+}
 body:has(.code-review-home) #nd-nav > div {
   background: color-mix(in srgb, var(--ak-bg) 56%, transparent) !important;
   border-color: color-mix(in srgb, var(--ak-border) 78%, transparent);
