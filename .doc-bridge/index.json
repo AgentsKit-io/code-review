@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "73ef929c63549704c480935f318e4c894086553718c8eb1809d863617b2b083c",
+  "contentHash": "f1e5108b1664c6fec155214b7b00d0d7aa69ba5e5282fbc93f7afff0de83b380",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-09-26T13:34:21.540Z",
+  "generatedAt": "2026-09-26T13:45:32.940Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -21,29 +21,6 @@
       "title": "Code Review agent docs",
       "path": "docs/for-agents/index.md",
       "description": "- Code Review CLI handoff — ownership, change routes, security boundaries, and verification: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review.md - Concise machine map — discovery, raw sources, and all six ecosystem products: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms.txt - Full machine corpus — public, operational, governance,"
-    },
-    {
-      "id": "document:.changeset/easy-pianos-joke.md",
-      "type": "document",
-      "title": "easy-pianos-joke.md",
-      "path": ".changeset/easy-pianos-joke.md",
-      "tags": [
-        "document",
-        "unclassified"
-      ],
-      "contentHash": "03bc77b454814d85fa079bae752092234ee0cbc81cc2b83be70395eb41b5133f"
-    },
-    {
-      "id": "document:.changeset/fix-windows-cmd-shim-spawn.md",
-      "type": "document",
-      "title": "fix-windows-cmd-shim-spawn.md",
-      "path": ".changeset/fix-windows-cmd-shim-spawn.md",
-      "description": "Fix local CLI providers (claude-cli, codex-cli, ...) failing to spawn on Windows. npm's global install of any Node CLI produces a .cmd shim there, and Windows' CreateProcess cannot execute one without a shell, so the previous plain child_process.spawn failed with ENOENT/EINVAL for every local provider regardless of the configured path — reproduced live via doctor --provider claude-cli, which",
-      "tags": [
-        "document",
-        "unclassified"
-      ],
-      "contentHash": "ad1d08f906a09e8457f8cd724fbc8d0f3101da1332dd17a7315ea0ba774bb339"
     },
     {
       "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
@@ -110,12 +87,12 @@
       "type": "document",
       "title": "Changelog",
       "path": "CHANGELOG.md",
-      "description": "#284 7aba7df Thanks @EmersonBraun! - Migrate from zod v3 to zod v4, and drop zod-to-json-schema in favor of zod v4's native z.toJSONSchema(). zod-to-json-schema@3.25.2 declares zod v4 support in its peer dependencies, but its published types still import zod/v3 internally — passing it a native v4 schema fails to typecheck, so bumping the library alone doesn't work; the dependency has to go.",
+      "description": "#295 57d62f7 Thanks @rembradtech! - Fix local CLI providers (claude-cli, codex-cli, ...) failing to spawn on Windows. npm's global install of any Node CLI produces a .cmd shim there, and Windows' CreateProcess cannot execute one without a shell, so the previous plain child_process.spawn failed with ENOENT/EINVAL for every local provider regardless of the configured path — reproduced live via",
       "tags": [
         "document",
         "project"
       ],
-      "contentHash": "3a211c63ff5506199735c456d53aa1bbddd2e4d0d0b2185347e6203dfae3dcad"
+      "contentHash": "b430938e5a8ca3406d099fbd2530973fed9518a5e682945cea27515948a94981"
     },
     {
       "id": "document:CODE_OF_CONDUCT.md",
@@ -2956,8 +2933,8 @@
     }
   },
   "inputs": {
-    "hash": "22ace21af74b6069eb99e5ec325b14e0ce1d9469a96d75377f656b7353825ee7",
-    "fileCount": 182,
+    "hash": "e3c8f295358194471aa993067f3fa713a840e95bf16b2b08b18ef9dd2bc591d4",
+    "fileCount": 180,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -2979,9 +2956,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "e249ca337b5fb0d468ea35fa31c5c61239612309fc3a7b309176eed596e9b17a",
+    "contentHash": "afddaebfe9d6eca9e64bb6d82a4ba64e91194fd731300d6245ad3edea775785b",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "6759b8d317eefc03e8f2334a51e2973932c8fa70649ec167615a12f65b091943",
+    "snapshotHash": "76903b127fa621b309e1964e7c53fcfac433f52140dfe690f98b20ce1de30d66",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
@@ -3001,7 +2978,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 181,
+      "documentCount": 179,
       "fieldNames": [
         "aliases",
         "body",
@@ -3012,13 +2989,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.9060773480662982,
-        "body": 50.331491712707184,
-        "headings": 3.867403314917127,
-        "path": 5.613259668508287,
-        "summary": 3.298342541436464,
-        "symbols": 14.138121546961326,
-        "title": 4.281767955801105
+        "aliases": 2.916201117318436,
+        "body": 50.374301675977655,
+        "headings": 3.910614525139665,
+        "path": 5.597765363128492,
+        "summary": 3.022346368715084,
+        "symbols": 14.296089385474861,
+        "title": 4.262569832402234
       }
     },
     "entries": [
@@ -3241,69 +3218,6 @@
         "confidence": "declared"
       },
       {
-        "id": "document:.changeset/easy-pianos-joke.md",
-        "kind": "document",
-        "path": ".changeset/easy-pianos-joke.md",
-        "title": "easy-pianos-joke.md",
-        "aliases": [],
-        "tags": [
-          "document",
-          "unclassified"
-        ],
-        "fields": {
-          "title": "easy-pianos-joke.md",
-          "headings": "",
-          "path": ".changeset/easy-pianos-joke.md",
-          "symbols": "",
-          "summary": "",
-          "body": "",
-          "aliases": "document unclassified"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "03bc77b454814d85fa079bae752092234ee0cbc81cc2b83be70395eb41b5133f",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
-        "id": "document:.changeset/fix-windows-cmd-shim-spawn.md",
-        "kind": "document",
-        "path": ".changeset/fix-windows-cmd-shim-spawn.md",
-        "title": "fix-windows-cmd-shim-spawn.md",
-        "summary": "Fix local CLI providers (claude-cli, codex-cli, ...) failing to spawn on Windows. npm's global install of any Node CLI produces a .cmd shim there, and Windows' CreateProcess cannot execute one without a shell, so the previous plain child_process.spawn failed with ENOENT/EINVAL for every local provider regardless of the configured path — reproduced live via doctor --provider claude-cli, which",
-        "aliases": [],
-        "tags": [
-          "document",
-          "unclassified"
-        ],
-        "fields": {
-          "title": "fix-windows-cmd-shim-spawn.md",
-          "headings": "",
-          "path": ".changeset/fix-windows-cmd-shim-spawn.md",
-          "symbols": "",
-          "summary": "Fix local CLI providers (claude-cli, codex-cli, ...) failing to spawn on Windows. npm's global install of any Node CLI produces a .cmd shim there, and Windows' CreateProcess cannot execute one without a shell, so the previous plain child_process.spawn failed with ENOENT/EINVAL for every local provider regardless of the configured path — reproduced live via doctor --provider claude-cli, which",
-          "body": "Fix local CLI providers ( claude-cli , codex-cli , ...) failing to spawn on Windows. npm's global install of any Node CLI produces a .cmd shim there, and Windows' CreateProcess cannot execute one without a shell, so the previous plain child process.spawn failed with ENOENT / EINVAL for every local provider regardless of the configured path — reproduced live via doctor --provider claude-cli , which reported executable: not found even though the CLI ran fine directly in the same shell. Switched to cross-spawn , which detects this case and re-execs through cmd.exe with the same argument escaping Node's own shell: true uses.",
-          "aliases": "document unclassified"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "ad1d08f906a09e8457f8cd724fbc8d0f3101da1332dd17a7315ea0ba774bb339",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
         "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
         "kind": "document",
         "path": ".github/PULL_REQUEST_TEMPLATE.md",
@@ -3508,7 +3422,7 @@
         "kind": "document",
         "path": "CHANGELOG.md",
         "title": "Changelog",
-        "summary": "#284 7aba7df Thanks @EmersonBraun! - Migrate from zod v3 to zod v4, and drop zod-to-json-schema in favor of zod v4's native z.toJSONSchema(). zod-to-json-schema@3.25.2 declares zod v4 support in its peer dependencies, but its published types still import zod/v3 internally — passing it a native v4 schema fails to typecheck, so bumping the library alone doesn't work; the dependency has to go.",
+        "summary": "#295 57d62f7 Thanks @rembradtech! - Fix local CLI providers (claude-cli, codex-cli, ...) failing to spawn on Windows. npm's global install of any Node CLI produces a .cmd shim there, and Windows' CreateProcess cannot execute one without a shell, so the previous plain child_process.spawn failed with ENOENT/EINVAL for every local provider regardless of the configured path — reproduced live via",
         "audience": "human",
         "aliases": [],
         "tags": [
@@ -3517,11 +3431,11 @@
         ],
         "fields": {
           "title": "Changelog",
-          "headings": "Changelog 0.32.0 Minor Changes 0.31.0 Minor Changes Patch Changes 0.30.19 Patch Changes 0.30.18 Patch Changes 0.30.17 Patch Changes 0.30.16 Patch Changes 0.30.15 Patch Changes 0.30.14 Patch Changes 0.30.13 Patch Changes 0.30.12 Patch Changes 0.30.11 Patch Changes 0.30.10 Patch Changes 0.30.9 Patch Changes 0.30.8 Patch Changes 0.30.7 Patch Changes 0.30.6 Patch Changes 0.30.5 Patch Changes 0.30.4 Patch Changes 0.30.3 Patch Changes 0.30.2 Patch Changes 0.30.1 Patch Changes 0.30.0 Minor Changes 0.29.0 Minor Changes 0.28.0 Minor Changes 0.27.0 Minor Changes 0.26.0 Minor Changes 0.25.0 Minor Changes 0.24.0 Minor Changes 0.23.0 Minor Changes 0.22.0 Minor Changes 0.21.3 Patch Changes",
+          "headings": "Changelog 0.32.1 Patch Changes 0.32.0 Minor Changes 0.31.0 Minor Changes Patch Changes 0.30.19 Patch Changes 0.30.18 Patch Changes 0.30.17 Patch Changes 0.30.16 Patch Changes 0.30.15 Patch Changes 0.30.14 Patch Changes 0.30.13 Patch Changes 0.30.12 Patch Changes 0.30.11 Patch Changes 0.30.10 Patch Changes 0.30.9 Patch Changes 0.30.8 Patch Changes 0.30.7 Patch Changes 0.30.6 Patch Changes 0.30.5 Patch Changes 0.30.4 Patch Changes 0.30.3 Patch Changes 0.30.2 Patch Changes 0.30.1 Patch Changes 0.30.0 Minor Changes 0.29.0 Minor Changes 0.28.0 Minor Changes 0.27.0 Minor Changes 0.26.0 Minor Changes 0.25.0 Minor Changes 0.24.0 Minor Changes 0.23.0 Minor Changes 0.22.0 Minor Changes",
           "path": "CHANGELOG.md",
           "symbols": "",
-          "summary": "#284 7aba7df Thanks @EmersonBraun! - Migrate from zod v3 to zod v4, and drop zod-to-json-schema in favor of zod v4's native z.toJSONSchema(). zod-to-json-schema@3.25.2 declares zod v4 support in its peer dependencies, but its published types still import zod/v3 internally — passing it a native v4 schema fails to typecheck, so bumping the library alone doesn't work; the dependency has to go.",
-          "body": "Changelog 0.32.0 Minor Changes - Thanks ! - Migrate from zod v3 to zod v4, and drop zod-to-json-schema in favor of zod v4's native z.toJSONSchema() . zod-to-json-schema@3.25.2 declares zod v4 support in its peer dependencies, but its published types still import zod/v3 internally — passing it a native v4 schema fails to typecheck, so bumping the library alone doesn't work; the dependency has to go. This surfaced a real, pre-existing fragility during the migration: every structured tool-call schema in agents/code-review/agent.ts ( submit batched findings , submit verdicts , etc.) relied on zod-to-json-schema 's implicit default of additionalProperties: false for every z.object() , strict or not. z.toJSONSchema() only sets that when a schema is explicitly .strict() . Every one of those schemas is now .strict() by name, and a new test ( test/tool-schema-order.test.mjs ) locks additionalProperties: false in at every nesting level of the real tool-call schemas sent to providers, so this can't silently regress again. Other consequences of the migration: - generateConfigSchema() (the CLI's --config-schema output) keeps its $schema: \"http://json-schema.org/draft-07/schema \" value via z.toJSONSchema 's target: 'draft-7' option, and keeps the AgentsKitCodeReviewConfig name via .meta({ title }) instead of the old library's name option — the output is now a flat schema instead of a $ref -wrapped definitions entry, which is a JSON Schema shape change for anything that inspected that wrapper specifically (nothing in this repo did). - z.record(valueSchema) calls became z.record(z.string(), valueSchema) (zod v4 requires an explicit key schema) across campaign-store.ts , campaign-reducer.ts , and review-config.ts . - .strict().default({}) on optional config sections in public-config.ts became .strict().prefault({}) — zod v4's .default() now requires the already-resolved output shape as its argument, while .prefault() keeps the old \"apply {} then let nested field defaults fill in\" behavior. - A custom z.ZodError issue was being re-added via context.addIssue(issue) in campaign-runner.ts with the full upstream issue object; zod v4's addIssue expects its own narrower shape, so this now rebuilds { code: 'custom', message, path } explicitly. - A CLI error-message check in review-config.ts matched zod v3's exact default message text for a too small violation; zod v4 reworded that message, so the check now matches on the structured issue.code / issue.minimum instead of English text. Full test suite (311 tests, one new) and the full local check gate pass. 0.31.0 Minor Changes - Thanks ! - Promote conservative to the default verification.posture on createCodeReviewAgent , replacing strict . This closes out ADR-0008's pending live A/B: run against all 20 cases in quality/evals/default.json (including the corpus recalibration from the previous release) through a real codex-cli provider, conservative detected 10/12 positive cases versus strict 's 9/12 (+8.3 points), at a precision cost of only 1.2 points (41.7% vs 42.9%), with zero false positives on clean-code cases under either posture. This meets the promotion criterion set in ADR-0008 (detection gain ≥5 points, precision drop ≤3 points). strict remains fully available — pass verification: { posture: 'strict' } explicitly to keep the prior behavior. This is a minor version bump because it changes default review output (a caller relying on the exact prior finding set from an unconfigured verification.posture will see different results, typically catching more real issues at a small, measured precision cost) even though no public API signature changed. Patch Changes - Thanks ! - Export codexCli , claudeCode , grokCli , opencodeCli , ollamaReview , createAutoCliAdapter , createHeadlessCliAdapter , and their associated types ( GrokCliOptions , OpenCodeCliOptions , OllamaReviewOptions , HeadlessCliOptions , LocalCliMode ) from the package root. Same gap as createCodeReviewAgent (0.30.19): none of these local",
+          "summary": "#295 57d62f7 Thanks @rembradtech! - Fix local CLI providers (claude-cli, codex-cli, ...) failing to spawn on Windows. npm's global install of any Node CLI produces a .cmd shim there, and Windows' CreateProcess cannot execute one without a shell, so the previous plain child_process.spawn failed with ENOENT/EINVAL for every local provider regardless of the configured path — reproduced live via",
+          "body": "Changelog 0.32.1 Patch Changes - Thanks ! - Fix local CLI providers ( claude-cli , codex-cli , ...) failing to spawn on Windows. npm's global install of any Node CLI produces a .cmd shim there, and Windows' CreateProcess cannot execute one without a shell, so the previous plain child process.spawn failed with ENOENT / EINVAL for every local provider regardless of the configured path — reproduced live via doctor --provider claude-cli , which reported executable: not found even though the CLI ran fine directly in the same shell. Switched to cross-spawn , which detects this case and re-execs through cmd.exe with the same argument escaping Node's own shell: true uses. 0.32.0 Minor Changes - Thanks ! - Migrate from zod v3 to zod v4, and drop zod-to-json-schema in favor of zod v4's native z.toJSONSchema() . zod-to-json-schema@3.25.2 declares zod v4 support in its peer dependencies, but its published types still import zod/v3 internally — passing it a native v4 schema fails to typecheck, so bumping the library alone doesn't work; the dependency has to go. This surfaced a real, pre-existing fragility during the migration: every structured tool-call schema in agents/code-review/agent.ts ( submit batched findings , submit verdicts , etc.) relied on zod-to-json-schema 's implicit default of additionalProperties: false for every z.object() , strict or not. z.toJSONSchema() only sets that when a schema is explicitly .strict() . Every one of those schemas is now .strict() by name, and a new test ( test/tool-schema-order.test.mjs ) locks additionalProperties: false in at every nesting level of the real tool-call schemas sent to providers, so this can't silently regress again. Other consequences of the migration: - generateConfigSchema() (the CLI's --config-schema output) keeps its $schema: \"http://json-schema.org/draft-07/schema \" value via z.toJSONSchema 's target: 'draft-7' option, and keeps the AgentsKitCodeReviewConfig name via .meta({ title }) instead of the old library's name option — the output is now a flat schema instead of a $ref -wrapped definitions entry, which is a JSON Schema shape change for anything that inspected that wrapper specifically (nothing in this repo did). - z.record(valueSchema) calls became z.record(z.string(), valueSchema) (zod v4 requires an explicit key schema) across campaign-store.ts , campaign-reducer.ts , and review-config.ts . - .strict().default({}) on optional config sections in public-config.ts became .strict().prefault({}) — zod v4's .default() now requires the already-resolved output shape as its argument, while .prefault() keeps the old \"apply {} then let nested field defaults fill in\" behavior. - A custom z.ZodError issue was being re-added via context.addIssue(issue) in campaign-runner.ts with the full upstream issue object; zod v4's addIssue expects its own narrower shape, so this now rebuilds { code: 'custom', message, path } explicitly. - A CLI error-message check in review-config.ts matched zod v3's exact default message text for a too small violation; zod v4 reworded that message, so the check now matches on the structured issue.code / issue.minimum instead of English text. Full test suite (311 tests, one new) and the full local check gate pass. 0.31.0 Minor Changes - Thanks ! - Promote conservative to the default verification.posture on createCodeReviewAgent , replacing strict . This closes out ADR-0008's pending live A/B: run against all 20 cases in quality/evals/default.json (including the corpus recalibration from the previous release) through a real codex-cli provider, conservative detected 10/12 positive cases versus strict 's 9/12 (+8.3 points), at a precision cost of only 1.2 points (41.7% vs 42.9%), with zero false positives on clean-code cases under either posture. This meets the promotion criterion set in ADR-0008 (detection gain ≥5 points, precision drop ≤3 points). strict remains fully available — pass verification: { posture: 'strict' } explicitly to keep the prior behavior. Thi",
           "aliases": "document project"
         },
         "graph": {
@@ -3656,7 +3570,7 @@
             }
           ]
         },
-        "contentHash": "3a211c63ff5506199735c456d53aa1bbddd2e4d0d0b2185347e6203dfae3dcad",
+        "contentHash": "b430938e5a8ca3406d099fbd2530973fed9518a5e682945cea27515948a94981",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13182,7 +13096,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "e0291628167bfaff1458fedbe55c90b9270c4881a59e65dd2db8e032712d9922",
+        "contentHash": "52dd2bf638cb8f4c9190c6f8deb1c817fb417ced86a38867e53f52d8aaf56ca7",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
