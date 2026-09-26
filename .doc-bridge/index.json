@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "147ea27db84bd14b71e59c48d2a3706fd442e19c97a3410763eb68d2431f6f64",
+  "contentHash": "7d1838a94473e11ea0260012a66ce28033041abc5d83b1ee0287c6b6ef877c44",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-09-26T14:18:36.823Z",
+  "generatedAt": "2026-09-26T14:23:02.346Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -21,18 +21,6 @@
       "title": "Code Review agent docs",
       "path": "docs/for-agents/index.md",
       "description": "- Code Review CLI handoff — ownership, change routes, security boundaries, and verification: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review.md - Concise machine map — discovery, raw sources, and all six ecosystem products: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms.txt - Full machine corpus — public, operational, governance,"
-    },
-    {
-      "id": "document:.changeset/publish-docs-dependencies.md",
-      "type": "document",
-      "title": "publish-docs-dependencies.md",
-      "path": ".changeset/publish-docs-dependencies.md",
-      "description": "Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies (fumadocs-mdx: not found). The workflow now installs apps/docs dependencies before npm run check, matching CI.",
-      "tags": [
-        "document",
-        "unclassified"
-      ],
-      "contentHash": "5ef847d47118b35c7c8e8128f7551237581ae9b38c8033e2572e8a0440697a05"
     },
     {
       "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
@@ -99,12 +87,12 @@
       "type": "document",
       "title": "Changelog",
       "path": "CHANGELOG.md",
-      "description": "#295 57d62f7 Thanks @rembradtech! - Fix local CLI providers (claude-cli, codex-cli, ...) failing to spawn on Windows. npm's global install of any Node CLI produces a .cmd shim there, and Windows' CreateProcess cannot execute one without a shell, so the previous plain child_process.spawn failed with ENOENT/EINVAL for every local provider regardless of the configured path — reproduced live via",
+      "description": "#308 c660bcf Thanks @EmersonBraun! - Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies (fumadocs-mdx: not found). The workflow now installs apps/docs dependencies before npm run check, matching CI.",
       "tags": [
         "document",
         "project"
       ],
-      "contentHash": "b430938e5a8ca3406d099fbd2530973fed9518a5e682945cea27515948a94981"
+      "contentHash": "d1fe04494854dc775b4e5391ae818ea26a2b3b5e3219b69be4221bbdf99549ee"
     },
     {
       "id": "document:CODE_OF_CONDUCT.md",
@@ -2945,8 +2933,8 @@
     }
   },
   "inputs": {
-    "hash": "348129e56d1de7cf6cde044e1a219e51684435b1f9ddf0c8012576e59b7f01e3",
-    "fileCount": 181,
+    "hash": "9e1d82dbb76f7f8791453877bce0a2228ea7ac215eed486bed9d0cd19b3f407b",
+    "fileCount": 180,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -2968,9 +2956,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "647cb189a804adb054eda394f23355159782a6730efb3d8bc675572b43457f40",
+    "contentHash": "b8344bb6c3c7e220aaa613fdecb660276372573a1e004a294a8d6f3ab49c2ede",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "622ad3b149fa4b43362fc0d65c162df8f4d2f628082f511884f1f0dc78b29326",
+    "snapshotHash": "f57eaf9fc43af3d5613521a856c86047265f4d66182833216fb305a96f57ce79",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
@@ -2990,7 +2978,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 180,
+      "documentCount": 179,
       "fieldNames": [
         "aliases",
         "body",
@@ -3001,13 +2989,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.911111111111111,
-        "body": 50.3,
-        "headings": 3.888888888888889,
-        "path": 5.6,
-        "summary": 3.2111111111111112,
-        "symbols": 14.216666666666667,
-        "title": 4.266666666666667
+        "aliases": 2.916201117318436,
+        "body": 50.391061452513966,
+        "headings": 3.910614525139665,
+        "path": 5.597765363128492,
+        "summary": 2.9608938547486034,
+        "symbols": 14.296089385474861,
+        "title": 4.262569832402234
       }
     },
     "entries": [
@@ -3065,19 +3053,19 @@
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
-            "document:.changeset/publish-docs-dependencies.md",
-            "document:apps/docs/README.md"
+            "document:apps/docs/README.md",
+            "document:CHANGELOG.md"
           ],
           "packageId": "package:@agentskit/code-review",
           "inbound": [
             {
               "kind": "mentions",
-              "id": "document:.changeset/publish-docs-dependencies.md",
+              "id": "document:apps/docs/README.md",
               "confidence": "observed"
             },
             {
               "kind": "mentions",
-              "id": "document:apps/docs/README.md",
+              "id": "document:CHANGELOG.md",
               "confidence": "observed"
             }
           ],
@@ -3234,44 +3222,6 @@
         "contentHash": "715edae67cdb05fb982dca41177f0c420f83422cf5af868a51e74d9e4fb42b41",
         "provenance": "declared",
         "confidence": "declared"
-      },
-      {
-        "id": "document:.changeset/publish-docs-dependencies.md",
-        "kind": "document",
-        "path": ".changeset/publish-docs-dependencies.md",
-        "title": "publish-docs-dependencies.md",
-        "summary": "Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies (fumadocs-mdx: not found). The workflow now installs apps/docs dependencies before npm run check, matching CI.",
-        "aliases": [],
-        "tags": [
-          "document",
-          "unclassified"
-        ],
-        "fields": {
-          "title": "publish-docs-dependencies.md",
-          "headings": "",
-          "path": ".changeset/publish-docs-dependencies.md",
-          "symbols": "",
-          "summary": "Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies (fumadocs-mdx: not found). The workflow now installs apps/docs dependencies before npm run check, matching CI.",
-          "body": "Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies ( fumadocs-mdx: not found ). The workflow now installs apps/docs dependencies before npm run check , matching CI.",
-          "aliases": "document unclassified"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
-          "outbound": [
-            {
-              "kind": "mentions",
-              "id": "area:apps/docs",
-              "confidence": "observed"
-            }
-          ]
-        },
-        "contentHash": "5ef847d47118b35c7c8e8128f7551237581ae9b38c8033e2572e8a0440697a05",
-        "provenance": "observed",
-        "confidence": "observed"
       },
       {
         "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
@@ -3478,7 +3428,7 @@
         "kind": "document",
         "path": "CHANGELOG.md",
         "title": "Changelog",
-        "summary": "#295 57d62f7 Thanks @rembradtech! - Fix local CLI providers (claude-cli, codex-cli, ...) failing to spawn on Windows. npm's global install of any Node CLI produces a .cmd shim there, and Windows' CreateProcess cannot execute one without a shell, so the previous plain child_process.spawn failed with ENOENT/EINVAL for every local provider regardless of the configured path — reproduced live via",
+        "summary": "#308 c660bcf Thanks @EmersonBraun! - Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies (fumadocs-mdx: not found). The workflow now installs apps/docs dependencies before npm run check, matching CI.",
         "audience": "human",
         "aliases": [],
         "tags": [
@@ -3487,11 +3437,11 @@
         ],
         "fields": {
           "title": "Changelog",
-          "headings": "Changelog 0.32.1 Patch Changes 0.32.0 Minor Changes 0.31.0 Minor Changes Patch Changes 0.30.19 Patch Changes 0.30.18 Patch Changes 0.30.17 Patch Changes 0.30.16 Patch Changes 0.30.15 Patch Changes 0.30.14 Patch Changes 0.30.13 Patch Changes 0.30.12 Patch Changes 0.30.11 Patch Changes 0.30.10 Patch Changes 0.30.9 Patch Changes 0.30.8 Patch Changes 0.30.7 Patch Changes 0.30.6 Patch Changes 0.30.5 Patch Changes 0.30.4 Patch Changes 0.30.3 Patch Changes 0.30.2 Patch Changes 0.30.1 Patch Changes 0.30.0 Minor Changes 0.29.0 Minor Changes 0.28.0 Minor Changes 0.27.0 Minor Changes 0.26.0 Minor Changes 0.25.0 Minor Changes 0.24.0 Minor Changes 0.23.0 Minor Changes 0.22.0 Minor Changes",
+          "headings": "Changelog 0.32.2 Patch Changes 0.32.1 Patch Changes 0.32.0 Minor Changes 0.31.0 Minor Changes Patch Changes 0.30.19 Patch Changes 0.30.18 Patch Changes 0.30.17 Patch Changes 0.30.16 Patch Changes 0.30.15 Patch Changes 0.30.14 Patch Changes 0.30.13 Patch Changes 0.30.12 Patch Changes 0.30.11 Patch Changes 0.30.10 Patch Changes 0.30.9 Patch Changes 0.30.8 Patch Changes 0.30.7 Patch Changes 0.30.6 Patch Changes 0.30.5 Patch Changes 0.30.4 Patch Changes 0.30.3 Patch Changes 0.30.2 Patch Changes 0.30.1 Patch Changes 0.30.0 Minor Changes 0.29.0 Minor Changes 0.28.0 Minor Changes 0.27.0 Minor Changes 0.26.0 Minor Changes 0.25.0 Minor Changes 0.24.0 Minor Changes 0.23.0 Minor Changes",
           "path": "CHANGELOG.md",
           "symbols": "",
-          "summary": "#295 57d62f7 Thanks @rembradtech! - Fix local CLI providers (claude-cli, codex-cli, ...) failing to spawn on Windows. npm's global install of any Node CLI produces a .cmd shim there, and Windows' CreateProcess cannot execute one without a shell, so the previous plain child_process.spawn failed with ENOENT/EINVAL for every local provider regardless of the configured path — reproduced live via",
-          "body": "Changelog 0.32.1 Patch Changes - Thanks ! - Fix local CLI providers ( claude-cli , codex-cli , ...) failing to spawn on Windows. npm's global install of any Node CLI produces a .cmd shim there, and Windows' CreateProcess cannot execute one without a shell, so the previous plain child process.spawn failed with ENOENT / EINVAL for every local provider regardless of the configured path — reproduced live via doctor --provider claude-cli , which reported executable: not found even though the CLI ran fine directly in the same shell. Switched to cross-spawn , which detects this case and re-execs through cmd.exe with the same argument escaping Node's own shell: true uses. 0.32.0 Minor Changes - Thanks ! - Migrate from zod v3 to zod v4, and drop zod-to-json-schema in favor of zod v4's native z.toJSONSchema() . zod-to-json-schema@3.25.2 declares zod v4 support in its peer dependencies, but its published types still import zod/v3 internally — passing it a native v4 schema fails to typecheck, so bumping the library alone doesn't work; the dependency has to go. This surfaced a real, pre-existing fragility during the migration: every structured tool-call schema in agents/code-review/agent.ts ( submit batched findings , submit verdicts , etc.) relied on zod-to-json-schema 's implicit default of additionalProperties: false for every z.object() , strict or not. z.toJSONSchema() only sets that when a schema is explicitly .strict() . Every one of those schemas is now .strict() by name, and a new test ( test/tool-schema-order.test.mjs ) locks additionalProperties: false in at every nesting level of the real tool-call schemas sent to providers, so this can't silently regress again. Other consequences of the migration: - generateConfigSchema() (the CLI's --config-schema output) keeps its $schema: \"http://json-schema.org/draft-07/schema \" value via z.toJSONSchema 's target: 'draft-7' option, and keeps the AgentsKitCodeReviewConfig name via .meta({ title }) instead of the old library's name option — the output is now a flat schema instead of a $ref -wrapped definitions entry, which is a JSON Schema shape change for anything that inspected that wrapper specifically (nothing in this repo did). - z.record(valueSchema) calls became z.record(z.string(), valueSchema) (zod v4 requires an explicit key schema) across campaign-store.ts , campaign-reducer.ts , and review-config.ts . - .strict().default({}) on optional config sections in public-config.ts became .strict().prefault({}) — zod v4's .default() now requires the already-resolved output shape as its argument, while .prefault() keeps the old \"apply {} then let nested field defaults fill in\" behavior. - A custom z.ZodError issue was being re-added via context.addIssue(issue) in campaign-runner.ts with the full upstream issue object; zod v4's addIssue expects its own narrower shape, so this now rebuilds { code: 'custom', message, path } explicitly. - A CLI error-message check in review-config.ts matched zod v3's exact default message text for a too small violation; zod v4 reworded that message, so the check now matches on the structured issue.code / issue.minimum instead of English text. Full test suite (311 tests, one new) and the full local check gate pass. 0.31.0 Minor Changes - Thanks ! - Promote conservative to the default verification.posture on createCodeReviewAgent , replacing strict . This closes out ADR-0008's pending live A/B: run against all 20 cases in quality/evals/default.json (including the corpus recalibration from the previous release) through a real codex-cli provider, conservative detected 10/12 positive cases versus strict 's 9/12 (+8.3 points), at a precision cost of only 1.2 points (41.7% vs 42.9%), with zero false positives on clean-code cases under either posture. This meets the promotion criterion set in ADR-0008 (detection gain ≥5 points, precision drop ≤3 points). strict remains fully available — pass verification: { posture: 'strict' } explicitly to keep the prior behavior. Thi",
+          "summary": "#308 c660bcf Thanks @EmersonBraun! - Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies (fumadocs-mdx: not found). The workflow now installs apps/docs dependencies before npm run check, matching CI.",
+          "body": "Changelog 0.32.2 Patch Changes - Thanks ! - Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies ( fumadocs-mdx: not found ). The workflow now installs apps/docs dependencies before npm run check , matching CI. 0.32.1 Patch Changes - Thanks ! - Fix local CLI providers ( claude-cli , codex-cli , ...) failing to spawn on Windows. npm's global install of any Node CLI produces a .cmd shim there, and Windows' CreateProcess cannot execute one without a shell, so the previous plain child process.spawn failed with ENOENT / EINVAL for every local provider regardless of the configured path — reproduced live via doctor --provider claude-cli , which reported executable: not found even though the CLI ran fine directly in the same shell. Switched to cross-spawn , which detects this case and re-execs through cmd.exe with the same argument escaping Node's own shell: true uses. 0.32.0 Minor Changes - Thanks ! - Migrate from zod v3 to zod v4, and drop zod-to-json-schema in favor of zod v4's native z.toJSONSchema() . zod-to-json-schema@3.25.2 declares zod v4 support in its peer dependencies, but its published types still import zod/v3 internally — passing it a native v4 schema fails to typecheck, so bumping the library alone doesn't work; the dependency has to go. This surfaced a real, pre-existing fragility during the migration: every structured tool-call schema in agents/code-review/agent.ts ( submit batched findings , submit verdicts , etc.) relied on zod-to-json-schema 's implicit default of additionalProperties: false for every z.object() , strict or not. z.toJSONSchema() only sets that when a schema is explicitly .strict() . Every one of those schemas is now .strict() by name, and a new test ( test/tool-schema-order.test.mjs ) locks additionalProperties: false in at every nesting level of the real tool-call schemas sent to providers, so this can't silently regress again. Other consequences of the migration: - generateConfigSchema() (the CLI's --config-schema output) keeps its $schema: \"http://json-schema.org/draft-07/schema \" value via z.toJSONSchema 's target: 'draft-7' option, and keeps the AgentsKitCodeReviewConfig name via .meta({ title }) instead of the old library's name option — the output is now a flat schema instead of a $ref -wrapped definitions entry, which is a JSON Schema shape change for anything that inspected that wrapper specifically (nothing in this repo did). - z.record(valueSchema) calls became z.record(z.string(), valueSchema) (zod v4 requires an explicit key schema) across campaign-store.ts , campaign-reducer.ts , and review-config.ts . - .strict().default({}) on optional config sections in public-config.ts became .strict().prefault({}) — zod v4's .default() now requires the already-resolved output shape as its argument, while .prefault() keeps the old \"apply {} then let nested field defaults fill in\" behavior. - A custom z.ZodError issue was being re-added via context.addIssue(issue) in campaign-runner.ts with the full upstream issue object; zod v4's addIssue expects its own narrower shape, so this now rebuilds { code: 'custom', message, path } explicitly. - A CLI error-message check in review-config.ts matched zod v3's exact default message text for a too small violation; zod v4 reworded that message, so the check now matches on the structured issue.code / issue.minimum instead of English text. Full test suite (311 tests, one new) and the full local check gate pass. 0.31.0 Minor Changes - Thanks ! - Promote conservative to the default verification.posture on createCodeReviewAgent , replacing strict . This closes out ADR-0008's pending live A/B: run against all 20 cases in quality/evals/default.json (including the corpus recalibration from the previous release) through a real codex-cli provider, conservative detected 10/12 positive cases versus strict 's 9/12 (+8.3 points), at a precision cost ",
           "aliases": "document project"
         },
         "graph": {
@@ -3514,6 +3464,11 @@
             }
           ],
           "outbound": [
+            {
+              "kind": "mentions",
+              "id": "area:apps/docs",
+              "confidence": "observed"
+            },
             {
               "kind": "mentions",
               "id": "document:docs/adr/0008-verification-posture.md",
@@ -3626,7 +3581,7 @@
             }
           ]
         },
-        "contentHash": "b430938e5a8ca3406d099fbd2530973fed9518a5e682945cea27515948a94981",
+        "contentHash": "d1fe04494854dc775b4e5391ae818ea26a2b3b5e3219b69be4221bbdf99549ee",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13152,7 +13107,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "52dd2bf638cb8f4c9190c6f8deb1c817fb417ced86a38867e53f52d8aaf56ca7",
+        "contentHash": "bd606f6a8ad2e5d7db2724ccab76d2a240f02e017b3d2fe3806171a518c5ac51",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"

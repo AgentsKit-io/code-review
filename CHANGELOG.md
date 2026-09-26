@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.32.2
+
+### Patch Changes
+
+- [#308](https://github.com/AgentsKit-io/code-review/pull/308) [`c660bcf`](https://github.com/AgentsKit-io/code-review/commit/c660bcfbe4c2cfc163f6b2f02dbb7cc2dfed9846) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies (`fumadocs-mdx: not found`). The workflow now installs `apps/docs` dependencies before `npm run check`, matching CI.
+
 ## 0.32.1
 
 ### Patch Changes
