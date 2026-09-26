@@ -197,12 +197,7 @@ body:has(.code-review-home) #nd-nav > div {
 @keyframes provider-roll { to { transform: translateX(-100%); } }
 
 
-.cr-footer-fallback { padding: clamp(2.5rem, 6vw, 4rem) 1rem 1.5rem; border-top: 1px solid color-mix(in srgb, var(--ak-border) 76%, transparent); color: var(--ak-muted); font-size: .8rem; text-align: center; }
-.cr-footer-fallback ul { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem 1.25rem; margin: 0; padding: 0; list-style: none; }
-.cr-footer-fallback a { color: var(--ak-muted); text-decoration: none; }
-.cr-footer-fallback a:hover, .cr-footer-fallback a[aria-current="page"] { color: var(--ak-fg); }
-.cr-footer-fallback p { margin: 1rem 0 0; }
-agentskit-ecosystem, agentskit-footer { display: block; }
+agentskit-ecosystem { display: block; }
 
 @keyframes review-arrive { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 

@@ -29,6 +29,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <link rel="stylesheet" href={SHELL_CSS} />
       <script src={SHELL_JS} data-current={PRODUCT_ID} data-current-repo={PRODUCT_REPO} defer />
     </head>
-    <body><RootProvider>{children}</RootProvider></body>
+    <body><RootProvider theme={{ forcedTheme: 'dark', defaultTheme: 'dark', enableSystem: false }}>{children}</RootProvider></body>
   </html>
 }
