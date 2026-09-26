@@ -8,145 +8,1150 @@
   ],
   "contract": {
     "intent": "Validate the versioned semantic evaluation corpus, adaptive verification, and immutable review-unit reuse, failing closed when required evidence is incomplete.",
+    "scope": {
+      "inScope": [
+        "CLI, GitHub Action, reporters, providers, review stores, campaign, and quality-evaluation behaviour covered by the checks below",
+        "Package, documentation, and release gates"
+      ],
+      "outOfScope": [
+        "The Fumadocs presentation site (apps/docs), which runs no reviews",
+        "Live provider calls and publishing to npm or GitHub"
+      ]
+    },
+    "ambiguities": [],
     "outcomes": [
-      { "id": "batch-manifest", "statement": "The CLI exposes a deterministic reviewable-file manifest, batch plan, and private SHA/policy-bound manifest without model execution.", "checks": ["batch-regression", "repo-check"] },
-      { "id": "batch-artifact", "statement": "A partial batch writes a private artifact bound to the exact PR SHA, policy fingerprint, index, and file manifest; it cannot post to GitHub.", "checks": ["batch-regression", "repo-check"] },
-      { "id": "batch-consolidation", "statement": "Only every matching, successful batch artifact can consolidate to a publishable review; stale, duplicate, incomplete, or mismatched artifacts fail closed.", "checks": ["batch-regression", "repo-check"] },
-      { "id": "reviewable-formats", "statement": "HTML, CSS, Markdown, and MDX changes are reviewable rather than silently left outside coverage.", "checks": ["batch-regression", "repo-check"] },
-      { "id": "inline-guidance", "statement": "GitHub inline findings explain why a correction is needed, the required change, an acceptance check, and confidence.", "checks": ["batch-regression", "repo-check"] },
-      { "id": "action-budget", "statement": "The GitHub Action defaults stay within the provider-call ceiling and expose max-calls and max-findings-per-file controls.", "checks": ["regression", "repo-check"] },
-      { "id": "provider-auth", "statement": "CI gives local CLI providers an explicit safe authentication path and fails early when Codex cannot use the selected isolated mode.", "checks": ["repo-check"] },
-      { "id": "fingerprint", "statement": "Review idempotency fingerprints use the installed package version rather than a stale hardcoded version.", "checks": ["repo-check"] },
-      { "id": "comment-pagination", "statement": "Review state and summary updates inspect bounded comment history and fail closed before posting when history is truncated.", "checks": ["repo-check"] },
-      { "id": "bounded-http", "statement": "GitHub API and reporter responses have shared size limits, deadlines, and transient GET retry behavior.", "checks": ["repo-check"] },
-      { "id": "integration-regressions", "statement": "Integration coverage exercises Action defaults, authentication routing, pagination overflow, bounded response bodies, and existing provider failures.", "checks": ["repo-check"] },
-      { "id": "repo-gates", "statement": "The package typechecks, tests, documentation gates, and packs successfully.", "checks": ["repo-check", "package"] },
-      { "id": "auth-fail-fast", "statement": "Terminal provider authentication failures stop additional provider calls while preserving fail-closed review semantics.", "checks": ["regression", "repo-check"] },
-      { "id": "provider-health", "statement": "Normal Codex runs execute one bounded provider smoke check before fan-out and fail early on authentication or timeout errors.", "checks": ["regression", "repo-check"] },
-      { "id": "global-deadline", "statement": "A review-wide deadline propagates cancellation to active adapters and prevents queued provider calls from starting after expiry.", "checks": ["regression", "repo-check"] },
-      { "id": "fast-profile", "statement": "The explicit fast profile batches correctness, security, and tests with one vote and no retry, while preserving required-lens fail-closed semantics.", "checks": ["regression", "repo-check"] },
-      { "id": "circuit-breaker", "statement": "Repeated transient provider failures and terminal provider failures stop unnecessary fan-out and expose skipped-call evidence.", "checks": ["repo-check"] },
-      { "id": "execution-evidence", "statement": "Completed reports expose profile, provider calls, failures, skips, elapsed time, deadline status, and circuit state.", "checks": ["regression", "repo-check"] },
-      { "id": "continuous-improvement-benchmark", "statement": "A deterministic, credential-free benchmark proves clean approval, required-lens failure, and deadline fail-closed behavior with machine-readable evidence.", "checks": ["cycle-benchmark", "repo-check"] },
-      { "id": "release-version", "statement": "Package metadata, lockfile, public examples, changelog, npm publication, and immutable release tag agree on the current Changesets version.", "checks": ["repo-check", "docs-gate", "package"] },
-      { "id": "changesets-release", "statement": "Changesets creates a reviewable version pull request on main, and only its bot-authored merge can trigger a validated OIDC npm publication and immutable GitHub release without a long-lived npm token.", "checks": ["release-workflow", "repo-check", "package"] },
-      { "id": "self-hosted-memory", "statement": "The public memory configuration creates a bounded repository-local AgentsKit ChatMemory, persists messages, applies retention, and fails closed on malformed records.", "checks": ["repo-check", "package"] },
-      { "id": "separated-review-stores", "statement": "Operational state, review cache, feedback, and permanent knowledge use separate schemas and local lifecycles; knowledge accepts only bounded approved rules and never provider transcripts or source payloads.", "checks": ["review-stores", "repo-check", "package"] },
-      { "id": "feedback-reconciliation", "statement": "Feedback outcomes reconcile deterministically and resumably into provenance-backed inactive candidate rules only after repeated accepted/fixed evidence; no active rule is created automatically.", "checks": ["feedback-reconciliation", "repo-check", "package"] },
-      { "id": "scoped-knowledge-retrieval", "statement": "Approved review knowledge is injected through the AgentsKit Retriever with deterministic repository, path, language, category, rule-count, token, deduplication, and fail-closed scope enforcement.", "checks": ["knowledge-retrieval", "repo-check", "package"] },
-      { "id": "memory-learning-effectiveness", "statement": "Only explicitly approved bounded memory rules enter review context, and a live A/B canary proves detection lift without precision or token regression before memory-learning can pass.", "checks": ["memory-learning", "repo-check", "package"] },
-      { "id": "comment-policy", "statement": "The public comment configuration reaches GitHub reporters and controls inline output, summary output, language labels, and detail sections without weakening non-approving fallback behavior.", "checks": ["batch-regression", "repo-check"] }
-      ,{ "id": "quality-matrix", "statement": "The exported quality matrix scores every approved review-quality area, blocks any unmeasured or sub-three area, and enforces absolute safety, completeness, inline-comment, stale-artifact, and silent-failure gates.", "checks": ["quality-matrix", "repo-check"] }
-      ,{ "id": "campaign-quality-matrix", "statement": "Every campaign outcome produces a matrix that keeps synthetic evidence separate, accounts for every discovered pull request, charges retries, wasted calls, wall-clock, and token classes, and blocks configured material regressions.", "checks": ["quality-matrix", "repo-check", "package"] }
-      ,{ "id": "quality-cli", "statement": "The quality-matrix CLI evaluates a SHA-bound JSON artifact, compares an optional baseline, writes a private report, and returns exit code 2 for BLOCKED results.", "checks": ["quality-matrix", "repo-check", "package"] }
-      ,{ "id": "deterministic-cycle", "statement": "One packaged command owns blocker collection, contract lock, replay, canary, crash-safe batch resume, consolidation, quality reports, safe posting and merge gates, and always emits cycle-summary.json.", "checks": ["cycle-runner", "repo-check", "package"] }
-      ,{ "id": "baseline-v2-contract", "statement": "Version 2 baseline contracts distinguish synthetic process evidence, real pull-request evidence, and real campaign evidence while representing missing token and duration dimensions as unmeasured rather than zero.", "checks": ["baseline-contract", "repo-check", "package"] }
-      ,{ "id": "reproducible-v080-baseline", "statement": "A credential-free command wraps the existing deterministic cycle benchmark in a stable v0.8.0 baseline identity and rejects repository-local study output paths.", "checks": ["baseline-contract", "baseline-command", "repo-check", "package"] }
-      ,{ "id": "architecture-decisions", "statement": "Accepted ADRs document the deterministic engine, provider and SCM adapter boundaries, diff-first token strategy, and separated safe learning memory, with explicit trade-offs and PRD references.", "checks": ["architecture-docs", "docs-gate", "repo-check", "package"] }
-      ,{ "id": "local-study-boundary", "statement": "Real-run quality matrices and measurements remain local study artifacts and are neither required nor shipped in the npm package.", "checks": ["baseline-contract", "architecture-docs", "package"] }
-      ,{ "id": "domain-terminal-outcomes", "statement": "Versioned campaign and pull-request contracts expose exhaustive terminal outcome sets and reject inconsistent terminal state.", "checks": ["domain-contracts", "repo-check", "package"] }
-      ,{ "id": "domain-failures", "statement": "Typed failure contracts distinguish terminal, retryable, replannable, and cancelled dispositions with disposition-specific metadata.", "checks": ["domain-contracts", "repo-check", "package"] }
-      ,{ "id": "immutable-review-identity", "statement": "The immutable review identity binds source SHAs, policy, prompt, model, configuration, and package version to a stable fingerprint.", "checks": ["domain-contracts", "repo-check", "package"] }
-      ,{ "id": "offline-domain-roundtrip", "statement": "Campaign, pull-request run, review-unit, event, budget, failure, and identity contracts validate and JSON-roundtrip without provider or GitHub access.", "checks": ["domain-contracts", "repo-check", "package"] }
-      ,{ "id": "pure-lifecycle-reducer", "statement": "Every allowed campaign, pull-request, and review-unit transition is deterministic, immutable, and controlled by one reducer.", "checks": ["campaign-reducer", "repo-check", "package"] }
-      ,{ "id": "invalid-transition-safety", "statement": "Wrong sequence, wrong campaign, skipped stage, duplicate identity, premature completion, and post-terminal events fail closed.", "checks": ["campaign-reducer", "repo-check", "package"] }
-      ,{ "id": "offline-event-flow", "statement": "A complete offline review reaches approval and campaign completion through ordered events only.", "checks": ["campaign-reducer", "repo-check", "package"] }
-      ,{ "id": "deterministic-replay", "statement": "Replaying the same event log from the same contract produces the identical final state.", "checks": ["campaign-reducer", "repo-check", "package"] }
-      ,{ "id": "atomic-checkpoints", "statement": "Versioned state, event, evidence, and external-effect records commit atomically and an interrupted commit leaves the prior checkpoint readable.", "checks": ["campaign-store", "repo-check", "package"] }
-      ,{ "id": "exclusive-leases", "statement": "Atomic leases prevent concurrent ownership of the same campaign or pull request and safely replace expired ownership.", "checks": ["campaign-store", "repo-check"] }
-      ,{ "id": "identity-bound-resume", "statement": "Resume deterministically replays the last valid checkpoint and rejects a changed immutable identity.", "checks": ["campaign-store", "repo-check"] }
-      ,{ "id": "resume-without-repetition", "statement": "Completed review units and persisted idempotent external effects are identified and not repeated after resume.", "checks": ["campaign-store", "repo-check"] }
-      ,{ "id": "provider-capability-contract", "statement": "Known providers expose validated structured-output, usage, cancellation, prompt-cache, context, session, timeout, and safe-concurrency metadata.", "checks": ["provider-capabilities", "repo-check", "package"] }
-      ,{ "id": "agentskit-adapter-boundary", "statement": "AgentsKit AdapterFactory remains the model abstraction and its explicit capability hints refine registry policy without a wrapper model interface.", "checks": ["provider-capabilities", "repo-check"] }
-      ,{ "id": "conservative-unknown-provider", "statement": "Unknown provider metadata disables unsupported optimizations, leaves limits unknown, and limits concurrency to one.", "checks": ["provider-capabilities", "repo-check"] }
-      ,{ "id": "provider-neutral-execution-defaults", "statement": "Review concurrency and timeout defaults derive from capability metadata without provider-name branches.", "checks": ["provider-capabilities", "repo-check"] }
-      ,{ "id": "typed-provider-failures", "statement": "Timeout, rate-limit, server, authentication, malformed-output, cancellation, and unknown provider failures normalize to explicit retryable, terminal, or cancelled dispositions.", "checks": ["provider-execution", "repo-check", "package"] }
-      ,{ "id": "bounded-provider-retry", "statement": "Only retryable provider failures receive bounded exponential backoff with jitter; authentication and cancellation fail without retry.", "checks": ["provider-execution", "regression", "repo-check"] }
-      ,{ "id": "adaptive-provider-concurrency", "statement": "Provider instability lowers live concurrency without exceeding capability-derived maximums, and sustained success cautiously restores capacity.", "checks": ["provider-execution", "provider-capabilities", "repo-check"] }
-      ,{ "id": "provider-circuit-recovery", "statement": "Repeated provider instability stops fan-out and, after cooldown, admits exactly one controlled recovery probe.", "checks": ["provider-execution", "repo-check"] }
-      ,{ "id": "provider-unit-isolation", "statement": "A failed review unit does not discard successful sibling evidence, and queued work cancels immediately without starting provider execution.", "checks": ["provider-execution", "regression", "repo-check"] }
-      ,{ "id": "scm-contract-coverage", "statement": "Normalized SCM contracts cover change-request discovery, metadata, complete diffs, review state, inline and summary publication, merge readiness, and revision-locked merge without platform payloads.", "checks": ["scm-contract", "repo-check", "package"] }
-      ,{ "id": "scm-complete-fake-flow", "statement": "A deterministic in-memory SCM fake executes one complete discover-to-merge lifecycle through the public contract.", "checks": ["scm-contract", "repo-check"] }
-      ,{ "id": "scm-unsupported-explicit", "statement": "An adapter lacking a requested capability fails with an explicit typed error, and GitLab remains documented as future work.", "checks": ["scm-contract", "docs-gate", "repo-check"] }
-      ,{ "id": "github-scm-routing", "statement": "CLI and scheduled-cycle GitHub source acquisition, review-state inspection, publication, merge readiness, and merge mutation route through the common SCM adapter.", "checks": ["github-scm", "regression", "cycle-runner", "repo-check", "package"] }
-      ,{ "id": "github-safety-preserved", "statement": "GitHub request deadlines, bounded reads and history, safe raw-content hosts, redaction, idempotency markers, complete-check evidence, and advisory fallback remain enforced.", "checks": ["github-scm", "batch-regression", "repo-check"] }
-      ,{ "id": "github-output-compatibility", "statement": "Public inline and summary reporter APIs preserve rendering, language, sections, marker idempotency, and non-approving fallback behavior through adapter-backed wrappers.", "checks": ["github-scm", "batch-regression", "repo-check"] }
-      ,{ "id": "github-safe-merge", "statement": "Normal and administrative merges are revision-locked and fail closed unless draft, mergeability, check-run completeness, configured check policy, checks, and commit status are acceptable.", "checks": ["github-scm", "repo-check"] }
-      ,{ "id": "github-check-policy", "statement": "Required, reported, named, and explicitly disabled check policies are schema-validated and deterministically enforced by the SCM merge-readiness gate.", "checks": ["github-scm", "repo-check", "package"] }
-      ,{ "id": "campaign-discovery", "statement": "One validated project configuration drives provider-neutral discovery and includes every discovered change request exactly once in stable order.", "checks": ["campaign-preflight", "repo-check", "package"] }
-      ,{ "id": "campaign-eligibility", "statement": "Dependabot, configured authors, drafts, forks, closed requests, and previously reviewed SHA-policy pairs receive explicit deterministic eligibility outcomes.", "checks": ["campaign-preflight", "repo-check"] }
-      ,{ "id": "campaign-preflight", "statement": "Every eligible change request receives complete diff, changed-file, source-coverage, and budget preflight evidence before execution.", "checks": ["campaign-preflight", "repo-check"] }
-      ,{ "id": "provider-free-sweep", "statement": "Campaign preflight collects all discoverable blockers without model analysis or worktree creation and always emits a machine-readable report.", "checks": ["campaign-preflight", "repo-check", "package"] }
-      ,{ "id": "campaign-terminal-coverage", "statement": "Every discovered pull request appears exactly once with a schema-validated terminal outcome, including skipped and preflight-blocked requests.", "checks": ["campaign-runner", "repo-check", "package"] }
-      ,{ "id": "campaign-bounded-isolation", "statement": "Campaign execution never exceeds configured concurrency and one pull-request failure does not prevent independent work from reaching a terminal outcome by default.", "checks": ["campaign-runner", "repo-check"] }
-      ,{ "id": "campaign-resume", "statement": "Atomic leased campaign checkpoints reuse terminal work and safely requeue an interrupted in-flight pull request without duplicate completion.", "checks": ["campaign-runner", "campaign-store", "repo-check"] }
-      ,{ "id": "campaign-deterministic-outcome", "statement": "Complete, partial, blocked, and cancelled campaign outcomes are derived by deterministic code without an LLM orchestration decision.", "checks": ["campaign-runner", "repo-check", "package"] }
-      ,{ "id": "multidimensional-single-call", "statement": "One normal context pack uses one initial structured provider call across every enabled review dimension.", "checks": ["multidimensional-analysis", "repo-check"] }
-      ,{ "id": "multidimensional-evidence", "statement": "Review results explicitly report enabled and completed categories, and a missing required category makes the result incomplete and non-approving.", "checks": ["multidimensional-analysis", "repo-check", "package"] }
-      ,{ "id": "multidimensional-quality", "statement": "The fixed quality corpus preserves every expected detection through multidimensional analysis.", "checks": ["multidimensional-analysis", "repo-check"] }
-      ,{ "id": "multidimensional-efficiency", "statement": "Automated evidence shows fewer provider calls and tokens than the equivalent seven-lens baseline.", "checks": ["multidimensional-analysis", "repo-check"] }
-      ,{ "id": "diff-first-large-file", "statement": "Eligible changed hunks remain reviewable when the complete file exceeds the former per-file prompt limit.", "checks": ["context-packs", "repo-check"] }
-      ,{ "id": "diff-first-no-duplication", "statement": "A context pack contains one numbered changed-source projection and never repeats the unified patch beside it.", "checks": ["context-packs", "repo-check"] }
-      ,{ "id": "related-context-grouping", "statement": "Small directly related source and test files share one deterministic context pack without duplicate file coverage.", "checks": ["context-packs", "repo-check"] }
-      ,{ "id": "bounded-expansion-evidence", "statement": "Adjacent-line and related-file expansion is explicitly configured, bounded, and recorded in plan and review evidence.", "checks": ["context-packs", "repo-check", "package"] }
-      ,{ "id": "agentskit-token-budget", "statement": "AgentsKit compileBudget measures every context pack including system prompt and tool schema and rejects oversized packs before provider execution.", "checks": ["context-packs", "repo-check", "package"] }
-      ,{ "id": "risk-provider-free", "statement": "Context-pack risk classification is deterministic and makes no provider call.", "checks": ["risk-depth", "repo-check"] }
-      ,{ "id": "risk-elevated-depth", "statement": "Security, authorization, credential, migration, IO, repository-control, and public-contract evidence selects elevated specialized review depth.", "checks": ["risk-depth", "repo-check"] }
-      ,{ "id": "risk-low-cost", "statement": "Documentation and generated-only context packs follow explicit low-risk single-analysis policy.", "checks": ["risk-depth", "repo-check"] }
-      ,{ "id": "risk-artifact-evidence", "statement": "Every context-pack plan and completed result records risk level, contributing evidence, and specialized categories.", "checks": ["risk-depth", "repo-check", "package"] }
-      ,{ "id": "risk-critical-quality", "statement": "Critical security defects preserve the approved fixed-corpus detection level under risk-based specialization.", "checks": ["risk-depth", "multidimensional-analysis", "repo-check"] }
-      ,{ "id": "semantic-evals", "statement": "A versioned evaluation corpus exercises known-positive and clean cases and measures detection, precision, severity, actionability, and coverage against the current review engine.", "checks": ["quality-evals", "repo-check", "package"] }
-      ,{ "id": "matrix-coverage-gate", "statement": "The quality matrix cannot pass when any required lens execution is missing, even if file coverage is complete.", "checks": ["quality-evals", "quality-matrix", "repo-check"] }
-      ,{ "id": "verification-batching", "statement": "Multiple findings share bounded skeptical-verification requests without duplicating source context.", "checks": ["adaptive-verification", "repo-check"] }
-      ,{ "id": "verification-adaptive-policy", "statement": "Medium, high, and blocker findings receive deterministic vote depth based on severity and confidence, with a third vote only after configured disagreement.", "checks": ["adaptive-verification", "repo-check"] }
-      ,{ "id": "verification-fail-closed", "statement": "Missing or malformed required verification evidence makes the review incomplete and cannot create an approved review or a verified finding.", "checks": ["adaptive-verification", "repo-check"] }
-      ,{ "id": "verification-efficiency", "statement": "The fixed quality corpus preserves expected findings while using fewer verification provider calls than one request per finding and vote.", "checks": ["adaptive-verification", "quality-evals", "repo-check"] }
-      ,{ "id": "review-cache-identity", "statement": "Completed review units are keyed by source, diff, base, policy, prompt, model, and relevant knowledge identities.", "checks": ["review-cache", "repo-check", "package"] }
-      ,{ "id": "review-cache-reuse", "statement": "An identical second execution reuses validated cache entries without provider calls and emits cache-hit and saved-token metrics.", "checks": ["review-cache", "repo-check"] }
-      ,{ "id": "review-cache-fail-closed", "statement": "Relevant identity changes, corrupt records, stale records, and unvalidated records cannot be reused as review evidence.", "checks": ["review-cache", "repo-check", "package"] }
-      ,{ "id": "review-cache-provenance", "statement": "Cache records preserve source provenance, token usage, validation status, and are replaced atomically without raw source content.", "checks": ["review-cache", "repo-check", "package"] }
-      ,{ "id": "hierarchical-budget-contract", "statement": "Campaign, pull-request, context-pack, analysis, and verification budgets are schema-validated with explicit output and critical-verification reserves.", "checks": ["budgeting", "repo-check", "package"] }
-      ,{ "id": "budgeted-provider-requests", "statement": "Every provider request reserves its estimated input and output capacity before execution, including concurrent and retry attempts.", "checks": ["budgeting", "regression", "repo-check"] }
-      ,{ "id": "budget-isolation", "statement": "A pull-request budget cannot consume the campaign reserve, and child scope call/token limits cannot exceed their parent capacity.", "checks": ["budgeting", "repo-check"] }
-      ,{ "id": "budget-accounting", "statement": "Review evidence and quality inputs preserve input, cached-input, output, reasoning, memory, retry, provider-call, and wall-clock dimensions, leaving unsupported dimensions explicitly unavailable.", "checks": ["budgeting", "quality-matrix", "repo-check", "package"] }
-      ,{ "id": "budget-provider-free-blockers", "statement": "Impossible minimum budgets fail during provider-free planning without creating a worktree or starting a provider request.", "checks": ["budgeting", "campaign-preflight", "repo-check"] }
+      {
+        "id": "batch-manifest",
+        "statement": "The CLI exposes a deterministic reviewable-file manifest, batch plan, and private SHA/policy-bound manifest without model execution.",
+        "checks": [
+          "batch-regression",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "batch-artifact",
+        "statement": "A partial batch writes a private artifact bound to the exact PR SHA, policy fingerprint, index, and file manifest; it cannot post to GitHub.",
+        "checks": [
+          "batch-regression",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "batch-consolidation",
+        "statement": "Only every matching, successful batch artifact can consolidate to a publishable review; stale, duplicate, incomplete, or mismatched artifacts fail closed.",
+        "checks": [
+          "batch-regression",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "reviewable-formats",
+        "statement": "HTML, CSS, Markdown, and MDX changes are reviewable rather than silently left outside coverage.",
+        "checks": [
+          "batch-regression",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "inline-guidance",
+        "statement": "GitHub inline findings explain why a correction is needed, the required change, an acceptance check, and confidence.",
+        "checks": [
+          "batch-regression",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "action-budget",
+        "statement": "The GitHub Action defaults stay within the provider-call ceiling and expose max-calls and max-findings-per-file controls.",
+        "checks": [
+          "regression",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "provider-auth",
+        "statement": "CI gives local CLI providers an explicit safe authentication path and fails early when Codex cannot use the selected isolated mode.",
+        "checks": [
+          "repo-check"
+        ]
+      },
+      {
+        "id": "fingerprint",
+        "statement": "Review idempotency fingerprints use the installed package version rather than a stale hardcoded version.",
+        "checks": [
+          "repo-check"
+        ]
+      },
+      {
+        "id": "comment-pagination",
+        "statement": "Review state and summary updates inspect bounded comment history and fail closed before posting when history is truncated.",
+        "checks": [
+          "repo-check"
+        ]
+      },
+      {
+        "id": "bounded-http",
+        "statement": "GitHub API and reporter responses have shared size limits, deadlines, and transient GET retry behavior.",
+        "checks": [
+          "repo-check"
+        ]
+      },
+      {
+        "id": "integration-regressions",
+        "statement": "Integration coverage exercises Action defaults, authentication routing, pagination overflow, bounded response bodies, and existing provider failures.",
+        "checks": [
+          "repo-check"
+        ]
+      },
+      {
+        "id": "repo-gates",
+        "statement": "The package typechecks, tests, documentation gates, and packs successfully.",
+        "checks": [
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "auth-fail-fast",
+        "statement": "Terminal provider authentication failures stop additional provider calls while preserving fail-closed review semantics.",
+        "checks": [
+          "regression",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "provider-health",
+        "statement": "Normal Codex runs execute one bounded provider smoke check before fan-out and fail early on authentication or timeout errors.",
+        "checks": [
+          "regression",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "global-deadline",
+        "statement": "A review-wide deadline propagates cancellation to active adapters and prevents queued provider calls from starting after expiry.",
+        "checks": [
+          "regression",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "fast-profile",
+        "statement": "The explicit fast profile batches correctness, security, and tests with one vote and no retry, while preserving required-lens fail-closed semantics.",
+        "checks": [
+          "regression",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "circuit-breaker",
+        "statement": "Repeated transient provider failures and terminal provider failures stop unnecessary fan-out and expose skipped-call evidence.",
+        "checks": [
+          "repo-check"
+        ]
+      },
+      {
+        "id": "execution-evidence",
+        "statement": "Completed reports expose profile, provider calls, failures, skips, elapsed time, deadline status, and circuit state.",
+        "checks": [
+          "regression",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "continuous-improvement-benchmark",
+        "statement": "A deterministic, credential-free benchmark proves clean approval, required-lens failure, and deadline fail-closed behavior with machine-readable evidence.",
+        "checks": [
+          "cycle-benchmark",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "release-version",
+        "statement": "Package metadata, lockfile, public examples, changelog, npm publication, and immutable release tag agree on the current Changesets version.",
+        "checks": [
+          "repo-check",
+          "docs-gate",
+          "package"
+        ]
+      },
+      {
+        "id": "changesets-release",
+        "statement": "Changesets creates a reviewable version pull request on main, and only its bot-authored merge can trigger a validated OIDC npm publication and immutable GitHub release without a long-lived npm token.",
+        "checks": [
+          "release-workflow",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "self-hosted-memory",
+        "statement": "The public memory configuration creates a bounded repository-local AgentsKit ChatMemory, persists messages, applies retention, and fails closed on malformed records.",
+        "checks": [
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "separated-review-stores",
+        "statement": "Operational state, review cache, feedback, and permanent knowledge use separate schemas and local lifecycles; knowledge accepts only bounded approved rules and never provider transcripts or source payloads.",
+        "checks": [
+          "review-stores",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "feedback-reconciliation",
+        "statement": "Feedback outcomes reconcile deterministically and resumably into provenance-backed inactive candidate rules only after repeated accepted/fixed evidence; no active rule is created automatically.",
+        "checks": [
+          "feedback-reconciliation",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "scoped-knowledge-retrieval",
+        "statement": "Approved review knowledge is injected through the AgentsKit Retriever with deterministic repository, path, language, category, rule-count, token, deduplication, and fail-closed scope enforcement.",
+        "checks": [
+          "knowledge-retrieval",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "memory-learning-effectiveness",
+        "statement": "Only explicitly approved bounded memory rules enter review context, and a live A/B canary proves detection lift without precision or token regression before memory-learning can pass.",
+        "checks": [
+          "memory-learning",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "comment-policy",
+        "statement": "The public comment configuration reaches GitHub reporters and controls inline output, summary output, language labels, and detail sections without weakening non-approving fallback behavior.",
+        "checks": [
+          "batch-regression",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "quality-matrix",
+        "statement": "The exported quality matrix scores every approved review-quality area, blocks any unmeasured or sub-three area, and enforces absolute safety, completeness, inline-comment, stale-artifact, and silent-failure gates.",
+        "checks": [
+          "quality-matrix",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "campaign-quality-matrix",
+        "statement": "Every campaign outcome produces a matrix that keeps synthetic evidence separate, accounts for every discovered pull request, charges retries, wasted calls, wall-clock, and token classes, and blocks configured material regressions.",
+        "checks": [
+          "quality-matrix",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "quality-cli",
+        "statement": "The quality-matrix CLI evaluates a SHA-bound JSON artifact, compares an optional baseline, writes a private report, and returns exit code 2 for BLOCKED results.",
+        "checks": [
+          "quality-matrix",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "deterministic-cycle",
+        "statement": "One packaged command owns blocker collection, contract lock, replay, canary, crash-safe batch resume, consolidation, quality reports, safe posting and merge gates, and always emits cycle-summary.json.",
+        "checks": [
+          "cycle-runner",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "baseline-v2-contract",
+        "statement": "Version 2 baseline contracts distinguish synthetic process evidence, real pull-request evidence, and real campaign evidence while representing missing token and duration dimensions as unmeasured rather than zero.",
+        "checks": [
+          "baseline-contract",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "reproducible-v080-baseline",
+        "statement": "A credential-free command wraps the existing deterministic cycle benchmark in a stable v0.8.0 baseline identity and rejects repository-local study output paths.",
+        "checks": [
+          "baseline-contract",
+          "baseline-command",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "architecture-decisions",
+        "statement": "Accepted ADRs document the deterministic engine, provider and SCM adapter boundaries, diff-first token strategy, and separated safe learning memory, with explicit trade-offs and PRD references.",
+        "checks": [
+          "architecture-docs",
+          "docs-gate",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "local-study-boundary",
+        "statement": "Real-run quality matrices and measurements remain local study artifacts and are neither required nor shipped in the npm package.",
+        "checks": [
+          "baseline-contract",
+          "architecture-docs",
+          "package"
+        ]
+      },
+      {
+        "id": "domain-terminal-outcomes",
+        "statement": "Versioned campaign and pull-request contracts expose exhaustive terminal outcome sets and reject inconsistent terminal state.",
+        "checks": [
+          "domain-contracts",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "domain-failures",
+        "statement": "Typed failure contracts distinguish terminal, retryable, replannable, and cancelled dispositions with disposition-specific metadata.",
+        "checks": [
+          "domain-contracts",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "immutable-review-identity",
+        "statement": "The immutable review identity binds source SHAs, policy, prompt, model, configuration, and package version to a stable fingerprint.",
+        "checks": [
+          "domain-contracts",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "offline-domain-roundtrip",
+        "statement": "Campaign, pull-request run, review-unit, event, budget, failure, and identity contracts validate and JSON-roundtrip without provider or GitHub access.",
+        "checks": [
+          "domain-contracts",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "pure-lifecycle-reducer",
+        "statement": "Every allowed campaign, pull-request, and review-unit transition is deterministic, immutable, and controlled by one reducer.",
+        "checks": [
+          "campaign-reducer",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "invalid-transition-safety",
+        "statement": "Wrong sequence, wrong campaign, skipped stage, duplicate identity, premature completion, and post-terminal events fail closed.",
+        "checks": [
+          "campaign-reducer",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "offline-event-flow",
+        "statement": "A complete offline review reaches approval and campaign completion through ordered events only.",
+        "checks": [
+          "campaign-reducer",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "deterministic-replay",
+        "statement": "Replaying the same event log from the same contract produces the identical final state.",
+        "checks": [
+          "campaign-reducer",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "atomic-checkpoints",
+        "statement": "Versioned state, event, evidence, and external-effect records commit atomically and an interrupted commit leaves the prior checkpoint readable.",
+        "checks": [
+          "campaign-store",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "exclusive-leases",
+        "statement": "Atomic leases prevent concurrent ownership of the same campaign or pull request and safely replace expired ownership.",
+        "checks": [
+          "campaign-store",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "identity-bound-resume",
+        "statement": "Resume deterministically replays the last valid checkpoint and rejects a changed immutable identity.",
+        "checks": [
+          "campaign-store",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "resume-without-repetition",
+        "statement": "Completed review units and persisted idempotent external effects are identified and not repeated after resume.",
+        "checks": [
+          "campaign-store",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "provider-capability-contract",
+        "statement": "Known providers expose validated structured-output, usage, cancellation, prompt-cache, context, session, timeout, and safe-concurrency metadata.",
+        "checks": [
+          "provider-capabilities",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "agentskit-adapter-boundary",
+        "statement": "AgentsKit AdapterFactory remains the model abstraction and its explicit capability hints refine registry policy without a wrapper model interface.",
+        "checks": [
+          "provider-capabilities",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "conservative-unknown-provider",
+        "statement": "Unknown provider metadata disables unsupported optimizations, leaves limits unknown, and limits concurrency to one.",
+        "checks": [
+          "provider-capabilities",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "provider-neutral-execution-defaults",
+        "statement": "Review concurrency and timeout defaults derive from capability metadata without provider-name branches.",
+        "checks": [
+          "provider-capabilities",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "typed-provider-failures",
+        "statement": "Timeout, rate-limit, server, authentication, malformed-output, cancellation, and unknown provider failures normalize to explicit retryable, terminal, or cancelled dispositions.",
+        "checks": [
+          "provider-execution",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "bounded-provider-retry",
+        "statement": "Only retryable provider failures receive bounded exponential backoff with jitter; authentication and cancellation fail without retry.",
+        "checks": [
+          "provider-execution",
+          "regression",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "adaptive-provider-concurrency",
+        "statement": "Provider instability lowers live concurrency without exceeding capability-derived maximums, and sustained success cautiously restores capacity.",
+        "checks": [
+          "provider-execution",
+          "provider-capabilities",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "provider-circuit-recovery",
+        "statement": "Repeated provider instability stops fan-out and, after cooldown, admits exactly one controlled recovery probe.",
+        "checks": [
+          "provider-execution",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "provider-unit-isolation",
+        "statement": "A failed review unit does not discard successful sibling evidence, and queued work cancels immediately without starting provider execution.",
+        "checks": [
+          "provider-execution",
+          "regression",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "scm-contract-coverage",
+        "statement": "Normalized SCM contracts cover change-request discovery, metadata, complete diffs, review state, inline and summary publication, merge readiness, and revision-locked merge without platform payloads.",
+        "checks": [
+          "scm-contract",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "scm-complete-fake-flow",
+        "statement": "A deterministic in-memory SCM fake executes one complete discover-to-merge lifecycle through the public contract.",
+        "checks": [
+          "scm-contract",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "scm-unsupported-explicit",
+        "statement": "An adapter lacking a requested capability fails with an explicit typed error, and GitLab remains documented as future work.",
+        "checks": [
+          "scm-contract",
+          "docs-gate",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "github-scm-routing",
+        "statement": "CLI and scheduled-cycle GitHub source acquisition, review-state inspection, publication, merge readiness, and merge mutation route through the common SCM adapter.",
+        "checks": [
+          "github-scm",
+          "regression",
+          "cycle-runner",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "github-safety-preserved",
+        "statement": "GitHub request deadlines, bounded reads and history, safe raw-content hosts, redaction, idempotency markers, complete-check evidence, and advisory fallback remain enforced.",
+        "checks": [
+          "github-scm",
+          "batch-regression",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "github-output-compatibility",
+        "statement": "Public inline and summary reporter APIs preserve rendering, language, sections, marker idempotency, and non-approving fallback behavior through adapter-backed wrappers.",
+        "checks": [
+          "github-scm",
+          "batch-regression",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "github-safe-merge",
+        "statement": "Normal and administrative merges are revision-locked and fail closed unless draft, mergeability, check-run completeness, configured check policy, checks, and commit status are acceptable.",
+        "checks": [
+          "github-scm",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "github-check-policy",
+        "statement": "Required, reported, named, and explicitly disabled check policies are schema-validated and deterministically enforced by the SCM merge-readiness gate.",
+        "checks": [
+          "github-scm",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "campaign-discovery",
+        "statement": "One validated project configuration drives provider-neutral discovery and includes every discovered change request exactly once in stable order.",
+        "checks": [
+          "campaign-preflight",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "campaign-eligibility",
+        "statement": "Dependabot, configured authors, drafts, forks, closed requests, and previously reviewed SHA-policy pairs receive explicit deterministic eligibility outcomes.",
+        "checks": [
+          "campaign-preflight",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "campaign-preflight",
+        "statement": "Every eligible change request receives complete diff, changed-file, source-coverage, and budget preflight evidence before execution.",
+        "checks": [
+          "campaign-preflight",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "provider-free-sweep",
+        "statement": "Campaign preflight collects all discoverable blockers without model analysis or worktree creation and always emits a machine-readable report.",
+        "checks": [
+          "campaign-preflight",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "campaign-terminal-coverage",
+        "statement": "Every discovered pull request appears exactly once with a schema-validated terminal outcome, including skipped and preflight-blocked requests.",
+        "checks": [
+          "campaign-runner",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "campaign-bounded-isolation",
+        "statement": "Campaign execution never exceeds configured concurrency and one pull-request failure does not prevent independent work from reaching a terminal outcome by default.",
+        "checks": [
+          "campaign-runner",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "campaign-resume",
+        "statement": "Atomic leased campaign checkpoints reuse terminal work and safely requeue an interrupted in-flight pull request without duplicate completion.",
+        "checks": [
+          "campaign-runner",
+          "campaign-store",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "campaign-deterministic-outcome",
+        "statement": "Complete, partial, blocked, and cancelled campaign outcomes are derived by deterministic code without an LLM orchestration decision.",
+        "checks": [
+          "campaign-runner",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "multidimensional-single-call",
+        "statement": "One normal context pack uses one initial structured provider call across every enabled review dimension.",
+        "checks": [
+          "multidimensional-analysis",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "multidimensional-evidence",
+        "statement": "Review results explicitly report enabled and completed categories, and a missing required category makes the result incomplete and non-approving.",
+        "checks": [
+          "multidimensional-analysis",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "multidimensional-quality",
+        "statement": "The fixed quality corpus preserves every expected detection through multidimensional analysis.",
+        "checks": [
+          "multidimensional-analysis",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "multidimensional-efficiency",
+        "statement": "Automated evidence shows fewer provider calls and tokens than the equivalent seven-lens baseline.",
+        "checks": [
+          "multidimensional-analysis",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "diff-first-large-file",
+        "statement": "Eligible changed hunks remain reviewable when the complete file exceeds the former per-file prompt limit.",
+        "checks": [
+          "context-packs",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "diff-first-no-duplication",
+        "statement": "A context pack contains one numbered changed-source projection and never repeats the unified patch beside it.",
+        "checks": [
+          "context-packs",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "related-context-grouping",
+        "statement": "Small directly related source and test files share one deterministic context pack without duplicate file coverage.",
+        "checks": [
+          "context-packs",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "bounded-expansion-evidence",
+        "statement": "Adjacent-line and related-file expansion is explicitly configured, bounded, and recorded in plan and review evidence.",
+        "checks": [
+          "context-packs",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "agentskit-token-budget",
+        "statement": "AgentsKit compileBudget measures every context pack including system prompt and tool schema and rejects oversized packs before provider execution.",
+        "checks": [
+          "context-packs",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "risk-provider-free",
+        "statement": "Context-pack risk classification is deterministic and makes no provider call.",
+        "checks": [
+          "risk-depth",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "risk-elevated-depth",
+        "statement": "Security, authorization, credential, migration, IO, repository-control, and public-contract evidence selects elevated specialized review depth.",
+        "checks": [
+          "risk-depth",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "risk-low-cost",
+        "statement": "Documentation and generated-only context packs follow explicit low-risk single-analysis policy.",
+        "checks": [
+          "risk-depth",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "risk-artifact-evidence",
+        "statement": "Every context-pack plan and completed result records risk level, contributing evidence, and specialized categories.",
+        "checks": [
+          "risk-depth",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "risk-critical-quality",
+        "statement": "Critical security defects preserve the approved fixed-corpus detection level under risk-based specialization.",
+        "checks": [
+          "risk-depth",
+          "multidimensional-analysis",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "semantic-evals",
+        "statement": "A versioned evaluation corpus exercises known-positive and clean cases and measures detection, precision, severity, actionability, and coverage against the current review engine.",
+        "checks": [
+          "quality-evals",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "matrix-coverage-gate",
+        "statement": "The quality matrix cannot pass when any required lens execution is missing, even if file coverage is complete.",
+        "checks": [
+          "quality-evals",
+          "quality-matrix",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "verification-batching",
+        "statement": "Multiple findings share bounded skeptical-verification requests without duplicating source context.",
+        "checks": [
+          "adaptive-verification",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "verification-adaptive-policy",
+        "statement": "Medium, high, and blocker findings receive deterministic vote depth based on severity and confidence, with a third vote only after configured disagreement.",
+        "checks": [
+          "adaptive-verification",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "verification-fail-closed",
+        "statement": "Missing or malformed required verification evidence makes the review incomplete and cannot create an approved review or a verified finding.",
+        "checks": [
+          "adaptive-verification",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "verification-efficiency",
+        "statement": "The fixed quality corpus preserves expected findings while using fewer verification provider calls than one request per finding and vote.",
+        "checks": [
+          "adaptive-verification",
+          "quality-evals",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "review-cache-identity",
+        "statement": "Completed review units are keyed by source, diff, base, policy, prompt, model, and relevant knowledge identities.",
+        "checks": [
+          "review-cache",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "review-cache-reuse",
+        "statement": "An identical second execution reuses validated cache entries without provider calls and emits cache-hit and saved-token metrics.",
+        "checks": [
+          "review-cache",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "review-cache-fail-closed",
+        "statement": "Relevant identity changes, corrupt records, stale records, and unvalidated records cannot be reused as review evidence.",
+        "checks": [
+          "review-cache",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "review-cache-provenance",
+        "statement": "Cache records preserve source provenance, token usage, validation status, and are replaced atomically without raw source content.",
+        "checks": [
+          "review-cache",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "hierarchical-budget-contract",
+        "statement": "Campaign, pull-request, context-pack, analysis, and verification budgets are schema-validated with explicit output and critical-verification reserves.",
+        "checks": [
+          "budgeting",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "budgeted-provider-requests",
+        "statement": "Every provider request reserves its estimated input and output capacity before execution, including concurrent and retry attempts.",
+        "checks": [
+          "budgeting",
+          "regression",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "budget-isolation",
+        "statement": "A pull-request budget cannot consume the campaign reserve, and child scope call/token limits cannot exceed their parent capacity.",
+        "checks": [
+          "budgeting",
+          "repo-check"
+        ]
+      },
+      {
+        "id": "budget-accounting",
+        "statement": "Review evidence and quality inputs preserve input, cached-input, output, reasoning, memory, retry, provider-call, and wall-clock dimensions, leaving unsupported dimensions explicitly unavailable.",
+        "checks": [
+          "budgeting",
+          "quality-matrix",
+          "repo-check",
+          "package"
+        ]
+      },
+      {
+        "id": "budget-provider-free-blockers",
+        "statement": "Impossible minimum budgets fail during provider-free planning without creating a worktree or starting a provider request.",
+        "checks": [
+          "budgeting",
+          "campaign-preflight",
+          "repo-check"
+        ]
+      }
     ]
   },
-  "surfaces": { "logic": true, "cli": true, "docs": true },
+  "surfaces": {
+    "logic": true,
+    "cli": true,
+    "docs": true
+  },
   "checks": [
-    { "id": "batch-regression", "category": "logic", "execution": "real", "command": "npm run build && node --test test/batch-coverage.test.mjs test/cli-smoke.test.mjs test/sources.test.mjs test/reporters.test.mjs", "timeoutMs": 240000 },
-    { "id": "regression", "category": "logic", "execution": "real", "command": "npm run build && node --test test/cli-smoke.test.mjs", "timeoutMs": 180000 },
-    { "id": "cycle-benchmark", "category": "logic", "execution": "real", "command": "npm run benchmark:cycle", "timeoutMs": 60000 },
-    { "id": "release-workflow", "category": "cli", "execution": "real", "command": "npm run build && node --test test/release-workflow.test.mjs", "timeoutMs": 60000 },
-    { "id": "repo-check", "category": "logic", "execution": "real", "command": "npm run check", "timeoutMs": 300000 },
-    { "id": "docs-gate", "category": "docs", "execution": "real", "command": "npm run docs:gate", "timeoutMs": 180000 },
-    { "id": "package", "category": "cli", "execution": "real", "command": "npm pack --dry-run", "timeoutMs": 180000 }
-    ,{ "id": "quality-matrix", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/quality-matrix.test.mjs test/quality-matrix-cli.test.mjs", "timeoutMs": 60000 }
-    ,{ "id": "cycle-runner", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/harness.test.mjs test/review-cycle.test.mjs", "timeoutMs": 180000 }
-    ,{ "id": "memory-learning", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/file-memory.test.mjs test/review-learning.test.mjs test/quality-matrix.test.mjs", "timeoutMs": 60000 }
-    ,{ "id": "review-stores", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/review-stores.test.mjs test/review-config.test.mjs", "timeoutMs": 60000 }
-    ,{ "id": "feedback-reconciliation", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/review-feedback.test.mjs test/review-stores.test.mjs", "timeoutMs": 60000 }
-    ,{ "id": "knowledge-retrieval", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/review-learning.test.mjs test/review-stores.test.mjs", "timeoutMs": 60000 }
-    ,{ "id": "baseline-contract", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/quality-baseline.test.mjs", "timeoutMs": 60000 }
-    ,{ "id": "baseline-command", "category": "cli", "execution": "real", "command": "npm run benchmark:baseline -- --library-version 0.8.0", "timeoutMs": 60000 }
-    ,{ "id": "architecture-docs", "category": "docs", "execution": "real", "command": "node --test --test-concurrency=1 test/architecture-baseline-docs.test.mjs", "timeoutMs": 60000 }
-    ,{ "id": "domain-contracts", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/domain-contracts.test.mjs", "timeoutMs": 60000 }
-    ,{ "id": "campaign-reducer", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/campaign-reducer.test.mjs", "timeoutMs": 60000 }
-    ,{ "id": "campaign-store", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/campaign-store.test.mjs", "timeoutMs": 60000 }
-    ,{ "id": "provider-capabilities", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/provider-registry.test.mjs test/review-config.test.mjs", "timeoutMs": 120000 }
-    ,{ "id": "provider-execution", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/provider-execution.test.mjs test/provider-circuit-breaker.test.mjs test/cli-smoke.test.mjs", "timeoutMs": 180000 }
-    ,{ "id": "scm-contract", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/scm-contract.test.mjs", "timeoutMs": 60000 }
-    ,{ "id": "github-scm", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/github-scm-adapter.test.mjs test/github-review-state.test.mjs test/sources.test.mjs test/reporters.test.mjs test/review-cycle.test.mjs", "timeoutMs": 120000 }
-    ,{ "id": "campaign-preflight", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/campaign-preflight.test.mjs", "timeoutMs": 120000 }
-    ,{ "id": "campaign-runner", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/campaign-runner.test.mjs test/campaign-preflight.test.mjs test/campaign-store.test.mjs", "timeoutMs": 120000 }
-    ,{ "id": "multidimensional-analysis", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/multidimensional-analysis.test.mjs test/cli-smoke.test.mjs", "timeoutMs": 120000 }
-    ,{ "id": "context-packs", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/context-packs.test.mjs test/sources.test.mjs test/review-config.test.mjs", "timeoutMs": 120000 }
-    ,{ "id": "risk-depth", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/risk-depth.test.mjs test/multidimensional-analysis.test.mjs", "timeoutMs": 120000 }
-    ,{ "id": "quality-evals", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/quality-evals.test.mjs", "timeoutMs": 120000 }
-    ,{ "id": "adaptive-verification", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/adaptive-verification.test.mjs test/multidimensional-analysis.test.mjs test/review-config.test.mjs", "timeoutMs": 120000 }
-    ,{ "id": "review-cache", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/review-cache.test.mjs", "timeoutMs": 60000 }
-    ,{ "id": "budgeting", "category": "logic", "execution": "real", "command": "npm run build && node --test --test-concurrency=1 test/budget.test.mjs", "timeoutMs": 60000 }
+    {
+      "id": "batch-regression",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test test/batch-coverage.test.mjs test/cli-smoke.test.mjs test/sources.test.mjs test/reporters.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"batch-manifest\", \"batch-artifact\", \"batch-consolidation\", \"reviewable-formats\", \"inline-guidance\", \"comment-policy\", \"github-safety-preserved\", \"github-output-compatibility\"]}))'",
+      "timeoutMs": 240000
+    },
+    {
+      "id": "regression",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test test/cli-smoke.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"action-budget\", \"auth-fail-fast\", \"provider-health\", \"global-deadline\", \"fast-profile\", \"execution-evidence\", \"bounded-provider-retry\", \"provider-unit-isolation\", \"github-scm-routing\", \"budgeted-provider-requests\"]}))'",
+      "timeoutMs": 180000
+    },
+    {
+      "id": "cycle-benchmark",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run benchmark:cycle) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"continuous-improvement-benchmark\"]}))'",
+      "timeoutMs": 60000
+    },
+    {
+      "id": "release-workflow",
+      "evidence": "structured",
+      "category": "cli",
+      "execution": "real",
+      "command": "(npm run build && node --test test/release-workflow.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"changesets-release\"]}))'",
+      "timeoutMs": 60000
+    },
+    {
+      "id": "repo-check",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run check) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"batch-manifest\", \"batch-artifact\", \"batch-consolidation\", \"reviewable-formats\", \"inline-guidance\", \"action-budget\", \"provider-auth\", \"fingerprint\", \"comment-pagination\", \"bounded-http\", \"integration-regressions\", \"repo-gates\", \"auth-fail-fast\", \"provider-health\", \"global-deadline\", \"fast-profile\", \"circuit-breaker\", \"execution-evidence\", \"continuous-improvement-benchmark\", \"release-version\", \"changesets-release\", \"self-hosted-memory\", \"separated-review-stores\", \"feedback-reconciliation\", \"scoped-knowledge-retrieval\", \"memory-learning-effectiveness\", \"comment-policy\", \"quality-matrix\", \"campaign-quality-matrix\", \"quality-cli\", \"deterministic-cycle\", \"baseline-v2-contract\", \"reproducible-v080-baseline\", \"architecture-decisions\", \"domain-terminal-outcomes\", \"domain-failures\", \"immutable-review-identity\", \"offline-domain-roundtrip\", \"pure-lifecycle-reducer\", \"invalid-transition-safety\", \"offline-event-flow\", \"deterministic-replay\", \"atomic-checkpoints\", \"exclusive-leases\", \"identity-bound-resume\", \"resume-without-repetition\", \"provider-capability-contract\", \"agentskit-adapter-boundary\", \"conservative-unknown-provider\", \"provider-neutral-execution-defaults\", \"typed-provider-failures\", \"bounded-provider-retry\", \"adaptive-provider-concurrency\", \"provider-circuit-recovery\", \"provider-unit-isolation\", \"scm-contract-coverage\", \"scm-complete-fake-flow\", \"scm-unsupported-explicit\", \"github-scm-routing\", \"github-safety-preserved\", \"github-output-compatibility\", \"github-safe-merge\", \"github-check-policy\", \"campaign-discovery\", \"campaign-eligibility\", \"campaign-preflight\", \"provider-free-sweep\", \"campaign-terminal-coverage\", \"campaign-bounded-isolation\", \"campaign-resume\", \"campaign-deterministic-outcome\", \"multidimensional-single-call\", \"multidimensional-evidence\", \"multidimensional-quality\", \"multidimensional-efficiency\", \"diff-first-large-file\", \"diff-first-no-duplication\", \"related-context-grouping\", \"bounded-expansion-evidence\", \"agentskit-token-budget\", \"risk-provider-free\", \"risk-elevated-depth\", \"risk-low-cost\", \"risk-artifact-evidence\", \"risk-critical-quality\", \"semantic-evals\", \"matrix-coverage-gate\", \"verification-batching\", \"verification-adaptive-policy\", \"verification-fail-closed\", \"verification-efficiency\", \"review-cache-identity\", \"review-cache-reuse\", \"review-cache-fail-closed\", \"review-cache-provenance\", \"hierarchical-budget-contract\", \"budgeted-provider-requests\", \"budget-isolation\", \"budget-accounting\", \"budget-provider-free-blockers\"]}))'",
+      "timeoutMs": 300000
+    },
+    {
+      "id": "docs-gate",
+      "evidence": "structured",
+      "category": "docs",
+      "execution": "real",
+      "command": "(npm run docs:gate) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"release-version\", \"architecture-decisions\", \"scm-unsupported-explicit\"]}))'",
+      "timeoutMs": 180000
+    },
+    {
+      "id": "package",
+      "evidence": "structured",
+      "category": "cli",
+      "execution": "real",
+      "command": "(npm pack --dry-run) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"repo-gates\", \"release-version\", \"changesets-release\", \"self-hosted-memory\", \"separated-review-stores\", \"feedback-reconciliation\", \"scoped-knowledge-retrieval\", \"memory-learning-effectiveness\", \"campaign-quality-matrix\", \"quality-cli\", \"deterministic-cycle\", \"baseline-v2-contract\", \"reproducible-v080-baseline\", \"architecture-decisions\", \"local-study-boundary\", \"domain-terminal-outcomes\", \"domain-failures\", \"immutable-review-identity\", \"offline-domain-roundtrip\", \"pure-lifecycle-reducer\", \"invalid-transition-safety\", \"offline-event-flow\", \"deterministic-replay\", \"atomic-checkpoints\", \"provider-capability-contract\", \"typed-provider-failures\", \"scm-contract-coverage\", \"github-scm-routing\", \"github-check-policy\", \"campaign-discovery\", \"provider-free-sweep\", \"campaign-terminal-coverage\", \"campaign-deterministic-outcome\", \"multidimensional-evidence\", \"bounded-expansion-evidence\", \"agentskit-token-budget\", \"risk-artifact-evidence\", \"semantic-evals\", \"review-cache-identity\", \"review-cache-fail-closed\", \"review-cache-provenance\", \"hierarchical-budget-contract\", \"budget-accounting\"]}))'",
+      "timeoutMs": 180000
+    },
+    {
+      "id": "quality-matrix",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test --test-concurrency=1 test/quality-matrix.test.mjs test/quality-matrix-cli.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"quality-matrix\", \"campaign-quality-matrix\", \"quality-cli\", \"matrix-coverage-gate\", \"budget-accounting\"]}))'",
+      "timeoutMs": 60000
+    },
+    {
+      "id": "cycle-runner",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test --test-concurrency=1 test/harness.test.mjs test/review-cycle.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"deterministic-cycle\", \"github-scm-routing\"]}))'",
+      "timeoutMs": 180000
+    },
+    {
+      "id": "memory-learning",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test --test-concurrency=1 test/file-memory.test.mjs test/review-learning.test.mjs test/quality-matrix.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"memory-learning-effectiveness\"]}))'",
+      "timeoutMs": 60000
+    },
+    {
+      "id": "review-stores",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test --test-concurrency=1 test/review-stores.test.mjs test/review-config.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"separated-review-stores\"]}))'",
+      "timeoutMs": 60000
+    },
+    {
+      "id": "feedback-reconciliation",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test --test-concurrency=1 test/review-feedback.test.mjs test/review-stores.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"feedback-reconciliation\"]}))'",
+      "timeoutMs": 60000
+    },
+    {
+      "id": "knowledge-retrieval",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test --test-concurrency=1 test/review-learning.test.mjs test/review-stores.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"scoped-knowledge-retrieval\"]}))'",
+      "timeoutMs": 60000
+    },
+    {
+      "id": "baseline-contract",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test --test-concurrency=1 test/quality-baseline.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"baseline-v2-contract\", \"reproducible-v080-baseline\", \"local-study-boundary\"]}))'",
+      "timeoutMs": 60000
+    },
+    {
+      "id": "baseline-command",
+      "evidence": "structured",
+      "category": "cli",
+      "execution": "real",
+      "command": "(npm run benchmark:baseline -- --library-version 0.8.0) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"reproducible-v080-baseline\"]}))'",
+      "timeoutMs": 60000
+    },
+    {
+      "id": "architecture-docs",
+      "evidence": "structured",
+      "category": "docs",
+      "execution": "real",
+      "command": "(node --test --test-concurrency=1 test/architecture-baseline-docs.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"architecture-decisions\", \"local-study-boundary\"]}))'",
+      "timeoutMs": 60000
+    },
+    {
+      "id": "domain-contracts",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test --test-concurrency=1 test/domain-contracts.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"domain-terminal-outcomes\", \"domain-failures\", \"immutable-review-identity\", \"offline-domain-roundtrip\"]}))'",
+      "timeoutMs": 60000
+    },
+    {
+      "id": "campaign-reducer",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test --test-concurrency=1 test/campaign-reducer.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"pure-lifecycle-reducer\", \"invalid-transition-safety\", \"offline-event-flow\", \"deterministic-replay\"]}))'",
+      "timeoutMs": 60000
+    },
+    {
+      "id": "campaign-store",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test --test-concurrency=1 test/campaign-store.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"atomic-checkpoints\", \"exclusive-leases\", \"identity-bound-resume\", \"resume-without-repetition\", \"campaign-resume\"]}))'",
+      "timeoutMs": 60000
+    },
+    {
+      "id": "provider-capabilities",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test --test-concurrency=1 test/provider-registry.test.mjs test/review-config.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"provider-capability-contract\", \"agentskit-adapter-boundary\", \"conservative-unknown-provider\", \"provider-neutral-execution-defaults\", \"adaptive-provider-concurrency\"]}))'",
+      "timeoutMs": 120000
+    },
+    {
+      "id": "provider-execution",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test --test-concurrency=1 test/provider-execution.test.mjs test/provider-circuit-breaker.test.mjs test/cli-smoke.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"typed-provider-failures\", \"bounded-provider-retry\", \"adaptive-provider-concurrency\", \"provider-circuit-recovery\", \"provider-unit-isolation\"]}))'",
+      "timeoutMs": 180000
+    },
+    {
+      "id": "scm-contract",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test --test-concurrency=1 test/scm-contract.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"scm-contract-coverage\", \"scm-complete-fake-flow\", \"scm-unsupported-explicit\"]}))'",
+      "timeoutMs": 60000
+    },
+    {
+      "id": "github-scm",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test --test-concurrency=1 test/github-scm-adapter.test.mjs test/github-review-state.test.mjs test/sources.test.mjs test/reporters.test.mjs test/review-cycle.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"github-scm-routing\", \"github-safety-preserved\", \"github-output-compatibility\", \"github-safe-merge\", \"github-check-policy\"]}))'",
+      "timeoutMs": 120000
+    },
+    {
+      "id": "campaign-preflight",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test --test-concurrency=1 test/campaign-preflight.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"campaign-discovery\", \"campaign-eligibility\", \"campaign-preflight\", \"provider-free-sweep\", \"budget-provider-free-blockers\"]}))'",
+      "timeoutMs": 120000
+    },
+    {
+      "id": "campaign-runner",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test --test-concurrency=1 test/campaign-runner.test.mjs test/campaign-preflight.test.mjs test/campaign-store.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"campaign-terminal-coverage\", \"campaign-bounded-isolation\", \"campaign-resume\", \"campaign-deterministic-outcome\"]}))'",
+      "timeoutMs": 120000
+    },
+    {
+      "id": "multidimensional-analysis",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test --test-concurrency=1 test/multidimensional-analysis.test.mjs test/cli-smoke.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"multidimensional-single-call\", \"multidimensional-evidence\", \"multidimensional-quality\", \"multidimensional-efficiency\", \"risk-critical-quality\"]}))'",
+      "timeoutMs": 120000
+    },
+    {
+      "id": "context-packs",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test --test-concurrency=1 test/context-packs.test.mjs test/sources.test.mjs test/review-config.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"diff-first-large-file\", \"diff-first-no-duplication\", \"related-context-grouping\", \"bounded-expansion-evidence\", \"agentskit-token-budget\"]}))'",
+      "timeoutMs": 120000
+    },
+    {
+      "id": "risk-depth",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test --test-concurrency=1 test/risk-depth.test.mjs test/multidimensional-analysis.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"risk-provider-free\", \"risk-elevated-depth\", \"risk-low-cost\", \"risk-artifact-evidence\", \"risk-critical-quality\"]}))'",
+      "timeoutMs": 120000
+    },
+    {
+      "id": "quality-evals",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test --test-concurrency=1 test/quality-evals.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"semantic-evals\", \"matrix-coverage-gate\", \"verification-efficiency\"]}))'",
+      "timeoutMs": 120000
+    },
+    {
+      "id": "adaptive-verification",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test --test-concurrency=1 test/adaptive-verification.test.mjs test/multidimensional-analysis.test.mjs test/review-config.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"verification-batching\", \"verification-adaptive-policy\", \"verification-fail-closed\", \"verification-efficiency\"]}))'",
+      "timeoutMs": 120000
+    },
+    {
+      "id": "review-cache",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test --test-concurrency=1 test/review-cache.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"review-cache-identity\", \"review-cache-reuse\", \"review-cache-fail-closed\", \"review-cache-provenance\"]}))'",
+      "timeoutMs": 60000
+    },
+    {
+      "id": "budgeting",
+      "evidence": "structured",
+      "category": "logic",
+      "execution": "real",
+      "command": "(npm run build && node --test --test-concurrency=1 test/budget.test.mjs) && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"hierarchical-budget-contract\", \"budgeted-provider-requests\", \"budget-isolation\", \"budget-accounting\", \"budget-provider-free-blockers\"]}))'",
+      "timeoutMs": 60000
+    }
   ],
-  "tracking": { "required": false, "reason": "The human authorized a release PR; its URL will be recorded in the release report. Publication remains blocked until the PR is merged and a stable GitHub Release exists." },
-  "cleanup": { "roots": [".codex/verification/tmp"] }
+  "tracking": {
+    "required": false,
+    "reason": "The human authorized a release PR; its URL will be recorded in the release report. Publication remains blocked until the PR is merged and a stable GitHub Release exists."
+  },
+  "cleanup": {
+    "roots": [
+      ".codex/verification/tmp"
+    ]
+  }
 }
