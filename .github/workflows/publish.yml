@@ -46,7 +46,9 @@ jobs:
           NODE
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci
+          npm ci --prefix apps/docs
 
       - name: Run release checks
         run: npm run check
