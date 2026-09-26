@@ -4,6 +4,13 @@
 @import './brand-tokens.css';
 
 :root {
+  --ak-font-body: var(--font-body);
+  --ak-font-mono: var(--font-mono);
+}
+
+/* The home page is dark-only; docs follow the Fumadocs theme (light tokens come from brand-tokens.css). */
+.dark,
+body:has(.code-review-home) {
   --ak-bg: #0d1117;
   --ak-surface: #161b22;
   --ak-border: #30363d;
@@ -12,8 +19,6 @@
   --ak-blue: #58a6ff;
   --ak-green: #2ea043;
   --ak-red: #f85149;
-  --ak-font-body: var(--font-body);
-  --ak-font-mono: var(--font-mono);
   color-scheme: dark;
 }
 

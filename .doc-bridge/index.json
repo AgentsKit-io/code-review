@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "758ffa6363ccedb2a3d222cf3f6a656366ef48e5f23847bb9771f7a39c2cd7d3",
+  "contentHash": "8c5c30fa7aeb5b5375c12a0353a1c117d789160aa9414577c3773443f5ed3cda",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-09-26T00:07:31.674Z",
+  "generatedAt": "2026-09-26T00:44:12.647Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -643,7 +643,7 @@
         "tsx",
         "app"
       ],
-      "contentHash": "a131d0e59825bec1250ac4700e40a79d5308e3cfc54e8e77d34e2c1bc5db22c9"
+      "contentHash": "3ff7701d87e5896955f35552d99ca34b829883df2d319e78c233b7e598dc421f"
     },
     {
       "id": "module:apps/docs/app/opengraph-image.tsx",
@@ -768,7 +768,7 @@
         "tsx",
         "lib"
       ],
-      "contentHash": "783d3923f8b9dc2ead3fe926ad283f46a168d99b84bd04bf11cadadad319ba2f"
+      "contentHash": "851b073547dced8fb13ed14f543a00f5af3f55b4891b89da4a0cc4c203b847a3"
     },
     {
       "id": "module:apps/docs/lib/shell.ts",
@@ -2956,7 +2956,7 @@
     }
   },
   "inputs": {
-    "hash": "a1b8b41c7a6229f8a448d34ccbb1570440896f0bfc5c8dd209eaae7846d95901",
+    "hash": "e83f8dd8d753a732fc9331066889e33b1626557a232b43437bba0c3c4166819b",
     "fileCount": 182,
     "projectionVersion": 2
   },
@@ -2979,9 +2979,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "ae30161ff94e9d0d9cb4ecfe7303216e216a0e13a23e36a3e71acb1329566f3d",
+    "contentHash": "75c342a2e9c8a75f6e47a3fe2ce7bad8539dc64c6d31a3597a0f8c425e291b19",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "91fc91da4762a1e4cf3eb92f934b71ebd361a766069ed5a4b063b70caa60b463",
+    "snapshotHash": "d7f9ba6f35f425d7aa42a8518447ea9a2f8144478370642cbe275bdee336e54e",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
@@ -6491,7 +6491,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "a131d0e59825bec1250ac4700e40a79d5308e3cfc54e8e77d34e2c1bc5db22c9",
+        "contentHash": "3ff7701d87e5896955f35552d99ca34b829883df2d319e78c233b7e598dc421f",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6792,7 +6792,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "783d3923f8b9dc2ead3fe926ad283f46a168d99b84bd04bf11cadadad319ba2f",
+        "contentHash": "851b073547dced8fb13ed14f543a00f5af3f55b4891b89da4a0cc4c203b847a3",
         "provenance": "observed",
         "confidence": "observed"
       },
