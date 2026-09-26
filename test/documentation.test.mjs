@@ -193,7 +193,7 @@ test('machine-readable documentation and Doc Bridge ownership are committed', ()
 test('canonical ecosystem manifest exposes six unique products and five Code Review siblings', () => {
   const manifest = JSON.parse(read('ecosystem.json'))
   const expected = ['agentskit', 'registry', 'agentskit-chat', 'doc-bridge', 'code-review', 'harness']
-  // Playbook survives only as a hidden Doc Bridge 1.x compatibility record, never in navigation.
+  // Playbook survives only as a hidden record so Doc Bridge can validate the README cross-link; never in navigation.
   assert.deepEqual(manifest.products.map(product => product.id).filter(id => id !== 'playbook'), expected)
   const playbook = manifest.products.find(product => product.id === 'playbook')
   if (playbook) {
@@ -205,7 +205,7 @@ test('canonical ecosystem manifest exposes six unique products and five Code Rev
   assert.equal(new Set(expected).size, 6)
   assert.deepEqual(manifest.products.find(product => product.id === 'code-review').navigation.next, expected.filter(id => id !== 'code-review'))
   assert.deepEqual(manifest.positioning.openSourceProductIds, expected)
-  assert.ok(manifest.properties.every(product => [...expected, 'playbook'].includes(product.id)))
+  assert.ok((manifest.properties ?? []).every(product => expected.includes(product.id)))
   assert.equal(manifest.products.find(product => product.id === 'agentskit-chat').surfaces.documentation, 'fumadocs')
   assert.deepEqual(manifest.products.filter(product => product.navigation.showInBar).map(product => product.id), expected)
   for (const product of manifest.products) {
@@ -237,7 +237,7 @@ test('published package keeps documentation generators and freshness enforcement
   ]) {
     assert.ok(manifest.files.includes(input), `published documentation input missing: ${input}`)
   }
-  assert.equal(manifest.optionalDependencies['@agentskit/doc-bridge'], '^1.11.2')
+  assert.equal(manifest.optionalDependencies['@agentskit/doc-bridge'], '^1.12.0')
   assert.ok(manifest.files.includes('docs/quality-matrix.md'))
   assert.ok(manifest.files.includes('scripts/evaluate-quality.mjs'))
   assert.match(manifest.scripts.prepack, /docs:gate/)

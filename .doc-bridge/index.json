@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "38d506a004af5eded3d418d52a70c21f1a2c0e1bd8d726fa3fffb15769c34d7d",
+  "contentHash": "395c53fb523359bd88637cdac392f2c849ca2d64804028dedd317c0a9b8ff641",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-09-26T15:34:05.338Z",
+  "generatedAt": "2026-09-26T16:10:36.228Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -1054,7 +1054,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "8267ead5962d3d7e0bd567134461c00c82cf788b085008374536f0efcc438cc3"
+      "contentHash": "dce77b9550ac95b776a533058d55b1166b259248bfec7bb101cb3ad47e1727a9"
     },
     {
       "id": "module:src/acp-cli-adapter.ts",
@@ -2365,7 +2365,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "eb59a718e980fcca3c48fc5652f84882330320037dedac2800581c5c8d5547be"
+      "contentHash": "5d927caebbbff76636283c9b1fd5b951ef1549c11717955cc77149ba228bf862"
     },
     {
       "id": "module:test/domain-contracts.test.mjs",
@@ -2952,7 +2952,7 @@
     }
   },
   "inputs": {
-    "hash": "53e0ece833b423f73d584f9d183ad7d6288004b710703f94fff6247029ffe4ac",
+    "hash": "3875139abcfa3b59b49d54f6cf6d478168e4d6cb641c4aaef76bf3a941edb77b",
     "fileCount": 181,
     "projectionVersion": 2
   },
@@ -2975,9 +2975,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "88c28ef3d041812c7df82273738d0349498d3e0f2ceea2f38753775c96d1b78c",
+    "contentHash": "e3d1231e63aeee5e6c663a9582817cfc00663f98942d516da7362e3fed330e09",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "6e864e0ad3686cfcf318510c249159be658fa0303458485429a894e8f4a3c893",
+    "snapshotHash": "f9bc2829a62f72c46f2a3b64b1e766868b0e7822873942b57233312f708098bd",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
@@ -7678,7 +7678,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "8267ead5962d3d7e0bd567134461c00c82cf788b085008374536f0efcc438cc3",
+        "contentHash": "dce77b9550ac95b776a533058d55b1166b259248bfec7bb101cb3ad47e1727a9",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -11709,7 +11709,7 @@
             }
           ]
         },
-        "contentHash": "eb59a718e980fcca3c48fc5652f84882330320037dedac2800581c5c8d5547be",
+        "contentHash": "5d927caebbbff76636283c9b1fd5b951ef1549c11717955cc77149ba228bf862",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13260,7 +13260,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "bd606f6a8ad2e5d7db2724ccab76d2a240f02e017b3d2fe3806171a518c5ac51",
+        "contentHash": "49b85aec0750f3e1d59407ca73b05a8187bdae45c84de5084de1bd5c5833e62f",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
