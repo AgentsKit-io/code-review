@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "93ba6eb68987decbb04a8749df253fbbdc130c9d8a1c7caa83a16baa1fc5fdff",
+  "contentHash": "73ef929c63549704c480935f318e4c894086553718c8eb1809d863617b2b083c",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-09-26T01:04:42.303Z",
+  "generatedAt": "2026-09-26T13:34:21.540Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -2369,7 +2369,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "4124e390310e4d98502fb1cbb03e4f77918e23e819b3d132a280fd02bbe7177f"
+      "contentHash": "652b746e1995524f4e8cf2503a46008b0668cc8b4b715ccb2dd3cc50a71d63d9"
     },
     {
       "id": "module:test/domain-contracts.test.mjs",
@@ -2702,7 +2702,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "3ef427dfd2b69bbdc80a962e19d5b3223820daa74d52a5538f3eae29976142ad"
+      "contentHash": "289da78ddc9db48d932e84d6ce3b8960235efdbfb78fc75cc3d5de682cdcd4e4"
     },
     {
       "id": "module:test/reporters.test.mjs",
@@ -2956,7 +2956,7 @@
     }
   },
   "inputs": {
-    "hash": "a46b357805068a2090cb7a3b2a7726b3f41d4a29fdba02a23e3df666b6cba3f2",
+    "hash": "22ace21af74b6069eb99e5ec325b14e0ce1d9469a96d75377f656b7353825ee7",
     "fileCount": 182,
     "projectionVersion": 2
   },
@@ -2979,9 +2979,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "591774ed3e90fb6095a7389c50de7938080f84b1b73ef3655f389f2228f94175",
+    "contentHash": "e249ca337b5fb0d468ea35fa31c5c61239612309fc3a7b309176eed596e9b17a",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "42138fefca3de1dd1ae2882a7f07c75f63e7ef2301c6e26767ce42e6840d59e2",
+    "snapshotHash": "6759b8d317eefc03e8f2334a51e2973932c8fa70649ec167615a12f65b091943",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
@@ -11631,7 +11631,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "4124e390310e4d98502fb1cbb03e4f77918e23e819b3d132a280fd02bbe7177f",
+        "contentHash": "652b746e1995524f4e8cf2503a46008b0668cc8b4b715ccb2dd3cc50a71d63d9",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -12582,7 +12582,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "3ef427dfd2b69bbdc80a962e19d5b3223820daa74d52a5538f3eae29976142ad",
+        "contentHash": "289da78ddc9db48d932e84d6ce3b8960235efdbfb78fc75cc3d5de682cdcd4e4",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13182,7 +13182,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "caebcf5f52c1cfccd7215edc3ed718b3c574954fdada4c41b6459e44b58c3cc6",
+        "contentHash": "e0291628167bfaff1458fedbe55c90b9270c4881a59e65dd2db8e032712d9922",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
