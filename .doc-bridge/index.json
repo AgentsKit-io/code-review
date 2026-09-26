@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "7d1838a94473e11ea0260012a66ce28033041abc5d83b1ee0287c6b6ef877c44",
+  "contentHash": "852f152963258489eb2b92a1c3115a972d2dc80bcbaf427ed66ec374d51f59e9",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-09-26T14:23:02.346Z",
+  "generatedAt": "2026-09-26T14:51:40.081Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -296,7 +296,7 @@
         "document",
         "human"
       ],
-      "contentHash": "1cc05f8a42256efddfd25e3f31c1dab9b49885044ce4c8254060003e74214f21"
+      "contentHash": "29ef205847c4a6f02400d4255866dcc792c9c88420ee4db753daa566670f460d"
     },
     {
       "id": "document:docs/index.md",
@@ -344,7 +344,7 @@
         "document",
         "human"
       ],
-      "contentHash": "bf95391d3ba6a92041ec13a6aaf5087ab86d63491dfc155ae7908778417ea48b"
+      "contentHash": "6c9886374f1501d36b7226762a41e48e376c2ec70018491b1646d2c09e019bbf"
     },
     {
       "id": "document:docs/quality-matrix.md",
@@ -748,6 +748,25 @@
       "contentHash": "851b073547dced8fb13ed14f543a00f5af3f55b4891b89da4a0cc4c203b847a3"
     },
     {
+      "id": "module:apps/docs/lib/repo-links.mjs",
+      "type": "module",
+      "title": "repo-links.mjs",
+      "path": "apps/docs/lib/repo-links.mjs",
+      "symbols": [
+        "REPO_BLOB_BASE",
+        "docRoute",
+        "existsExact",
+        "remarkRepoLinks",
+        "resolveDocLink"
+      ],
+      "tags": [
+        "module",
+        "mjs",
+        "lib"
+      ],
+      "contentHash": "e0115baefe1c4c483de1b0fb9499ba3dc23e7dffed9aa2f3c619f675c8b19495"
+    },
+    {
       "id": "module:apps/docs/lib/shell.ts",
       "type": "module",
       "title": "shell.ts",
@@ -782,7 +801,7 @@
         "ts",
         "lib"
       ],
-      "contentHash": "8866ebf361b081f51faccef450b0ac048f89701fcdd81dc22f75c1c630df7a64"
+      "contentHash": "0a9e9b780320e23f2ae3eba1bb317463a10994426906b9dd5c65ceb3a19cca54"
     },
     {
       "id": "module:apps/docs/mdx-components.tsx",
@@ -843,7 +862,7 @@
         "ts",
         "docs"
       ],
-      "contentHash": "42cc493b55c80515933c2a76b0d33da0a25a05cb585c2f49c3e24e2245276a4f"
+      "contentHash": "665dd6bd51eafe90eb57ee3876db2e4962c26dd44f3c58b0d1d2b39cfdba07d8"
     },
     {
       "id": "module:apps/docs/types/agentskit-shell.d.ts",
@@ -2346,7 +2365,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "652b746e1995524f4e8cf2503a46008b0668cc8b4b715ccb2dd3cc50a71d63d9"
+      "contentHash": "eb59a718e980fcca3c48fc5652f84882330320037dedac2800581c5c8d5547be"
     },
     {
       "id": "module:test/domain-contracts.test.mjs",
@@ -2933,8 +2952,8 @@
     }
   },
   "inputs": {
-    "hash": "9e1d82dbb76f7f8791453877bce0a2228ea7ac215eed486bed9d0cd19b3f407b",
-    "fileCount": 180,
+    "hash": "c69a8a49e5273a7b6acc7c1fc5d093304b1a4d56942dc2a77041d0756f57b4f3",
+    "fileCount": 181,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -2956,9 +2975,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "b8344bb6c3c7e220aaa613fdecb660276372573a1e004a294a8d6f3ab49c2ede",
+    "contentHash": "167350a0ea33d6a8d20754dd91a14429a5f03d56be9e3327c63ac8fd96ba06c3",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "f57eaf9fc43af3d5613521a856c86047265f4d66182833216fb305a96f57ce79",
+    "snapshotHash": "5f71ded320c9f0dd4e2b8d12d9ac341791a2f17ff8b3cf06e23dfaf436178cab",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
@@ -2978,7 +2997,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 179,
+      "documentCount": 180,
       "fieldNames": [
         "aliases",
         "body",
@@ -2989,13 +3008,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.916201117318436,
-        "body": 50.391061452513966,
-        "headings": 3.910614525139665,
-        "path": 5.597765363128492,
-        "summary": 2.9608938547486034,
-        "symbols": 14.296089385474861,
-        "title": 4.262569832402234
+        "aliases": 2.9166666666666665,
+        "body": 50.111111111111114,
+        "headings": 3.888888888888889,
+        "path": 5.605555555555555,
+        "summary": 2.9444444444444446,
+        "symbols": 14.316666666666666,
+        "title": 4.261111111111111
       }
     },
     "entries": [
@@ -3071,7 +3090,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "f43ce2243d0d95b5ce55086db67d68c8e787d5ad0fc520e0808a1982ea64edab",
+        "contentHash": "7be079ac284ef5e393127aa3b5bc428521b9293e26f931dca51849f549af49fa",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3276,7 +3295,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.023873,
+          "pagerank": 0.022925,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -3445,7 +3464,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.027026,
+          "pagerank": 0.026284,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -3606,7 +3625,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.053375,
+          "pagerank": 0.054674,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -3657,8 +3676,8 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.029925,
-          "inboundLinks": 5,
+          "pagerank": 0.03219,
+          "inboundLinks": 6,
           "coveredBy": [],
           "mentionedBy": [
             "document:docs/getting-started.md",
@@ -3666,6 +3685,11 @@
             "document:README.md"
           ],
           "inbound": [
+            {
+              "kind": "links-to",
+              "id": "document:docs/getting-started.md",
+              "confidence": "observed"
+            },
             {
               "kind": "links-to",
               "id": "document:docs/OPERATIONS.md",
@@ -3778,7 +3802,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.025903,
+          "pagerank": 0.024874,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -3843,7 +3867,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.025903,
+          "pagerank": 0.024874,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -3882,7 +3906,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.025903,
+          "pagerank": 0.024874,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -3921,7 +3945,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.025903,
+          "pagerank": 0.024874,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -3960,7 +3984,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.025903,
+          "pagerank": 0.024874,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -3999,7 +4023,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.029055,
+          "pagerank": 0.028233,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4043,7 +4067,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.025903,
+          "pagerank": 0.024874,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4082,7 +4106,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.025903,
+          "pagerank": 0.024874,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -4149,7 +4173,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.025903,
+          "pagerank": 0.024874,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4219,7 +4243,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.025903,
+          "pagerank": 0.024874,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4274,7 +4298,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.023873,
+          "pagerank": 0.022925,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4358,7 +4382,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.074965,
+          "pagerank": 0.07227,
           "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [
@@ -4430,7 +4454,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.029925,
+          "pagerank": 0.029068,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4498,8 +4522,8 @@
           "aliases": "code-review document agent package"
         },
         "graph": {
-          "pagerank": 0.077864,
-          "inboundLinks": 7,
+          "pagerank": 0.08083,
+          "inboundLinks": 8,
           "coveredBy": [],
           "mentionedBy": [
             "document:AGENTS.md",
@@ -4510,6 +4534,11 @@
             {
               "kind": "links-to",
               "id": "document:AGENTS.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "links-to",
+              "id": "document:docs/getting-started.md",
               "confidence": "observed"
             },
             {
@@ -4694,7 +4723,7 @@
           "aliases": "index document agent"
         },
         "graph": {
-          "pagerank": 0.027026,
+          "pagerank": 0.026284,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -4746,7 +4775,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.026772,
+          "pagerank": 0.025709,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4758,6 +4787,41 @@
             }
           ],
           "outbound": [
+            {
+              "kind": "links-to",
+              "id": "document:CONTRIBUTING.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "links-to",
+              "id": "document:docs/for-agents/code-review.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "links-to",
+              "id": "document:docs/OPERATIONS.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "links-to",
+              "id": "document:docs/provider-compatibility.md",
+              "confidence": "fuzzy"
+            },
+            {
+              "kind": "links-to",
+              "id": "document:GOVERNANCE.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "links-to",
+              "id": "document:ROADMAP.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "links-to",
+              "id": "document:SECURITY.md",
+              "confidence": "observed"
+            },
             {
               "kind": "mentions",
               "id": "document:AGENTS.md",
@@ -4810,7 +4874,7 @@
             }
           ]
         },
-        "contentHash": "1cc05f8a42256efddfd25e3f31c1dab9b49885044ce4c8254060003e74214f21",
+        "contentHash": "29ef205847c4a6f02400d4255866dcc792c9c88420ee4db753daa566670f460d",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -4836,7 +4900,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.023873,
+          "pagerank": 0.022925,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4905,8 +4969,8 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.029671,
-          "inboundLinks": 5,
+          "pagerank": 0.031615,
+          "inboundLinks": 6,
           "coveredBy": [],
           "mentionedBy": [
             "document:docs/for-agents/code-review.md",
@@ -4914,6 +4978,11 @@
             "document:SECURITY.md"
           ],
           "inbound": [
+            {
+              "kind": "links-to",
+              "id": "document:docs/getting-started.md",
+              "confidence": "observed"
+            },
             {
               "kind": "links-to",
               "id": "document:docs/index.md",
@@ -5138,11 +5207,16 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.032824,
-          "inboundLinks": 3,
+          "pagerank": 0.034974,
+          "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [],
           "inbound": [
+            {
+              "kind": "links-to",
+              "id": "document:docs/getting-started.md",
+              "confidence": "fuzzy"
+            },
             {
               "kind": "links-to",
               "id": "document:docs/index.md",
@@ -5167,7 +5241,7 @@
             }
           ]
         },
-        "contentHash": "bf95391d3ba6a92041ec13a6aaf5087ab86d63491dfc155ae7908778417ea48b",
+        "contentHash": "6c9886374f1501d36b7226762a41e48e376c2ec70018491b1646d2c09e019bbf",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -5193,7 +5267,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.026772,
+          "pagerank": 0.025709,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -5259,8 +5333,8 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.03949,
-          "inboundLinks": 5,
+          "pagerank": 0.042512,
+          "inboundLinks": 6,
           "coveredBy": [],
           "mentionedBy": [
             "document:CONTRIBUTING.md",
@@ -5271,6 +5345,11 @@
             {
               "kind": "links-to",
               "id": "document:CONTRIBUTING.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "links-to",
+              "id": "document:docs/getting-started.md",
               "confidence": "observed"
             },
             {
@@ -5343,7 +5422,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.023873,
+          "pagerank": 0.022925,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -5475,8 +5554,8 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.029925,
-          "inboundLinks": 5,
+          "pagerank": 0.03219,
+          "inboundLinks": 6,
           "coveredBy": [],
           "mentionedBy": [
             "document:docs/getting-started.md",
@@ -5484,6 +5563,11 @@
             "document:README.md"
           ],
           "inbound": [
+            {
+              "kind": "links-to",
+              "id": "document:docs/getting-started.md",
+              "confidence": "observed"
+            },
             {
               "kind": "links-to",
               "id": "document:docs/OPERATIONS.md",
@@ -5544,8 +5628,8 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.046708,
-          "inboundLinks": 7,
+          "pagerank": 0.050258,
+          "inboundLinks": 8,
           "coveredBy": [],
           "mentionedBy": [
             "document:docs/getting-started.md",
@@ -5554,6 +5638,11 @@
             "document:README.md"
           ],
           "inbound": [
+            {
+              "kind": "links-to",
+              "id": "document:docs/getting-started.md",
+              "confidence": "observed"
+            },
             {
               "kind": "links-to",
               "id": "document:docs/OPERATIONS.md",
@@ -6722,6 +6811,58 @@
         "confidence": "observed"
       },
       {
+        "id": "module:apps/docs/lib/repo-links.mjs",
+        "kind": "module",
+        "path": "apps/docs/lib/repo-links.mjs",
+        "title": "repo-links.mjs",
+        "aliases": [],
+        "symbols": [
+          "REPO_BLOB_BASE",
+          "docRoute",
+          "existsExact",
+          "remarkRepoLinks",
+          "resolveDocLink"
+        ],
+        "tags": [
+          "module",
+          "mjs",
+          "lib"
+        ],
+        "fields": {
+          "title": "repo-links.mjs",
+          "headings": "",
+          "path": "apps/docs/lib/repo-links.mjs",
+          "symbols": "REPO_BLOB_BASE docRoute existsExact remarkRepoLinks resolveDocLink",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs lib"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:apps/docs",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "imports",
+              "id": "module:apps/docs/source.config.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
+              "id": "module:test/documentation.test.mjs",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "e0115baefe1c4c483de1b0fb9499ba3dc23e7dffed9aa2f3c619f675c8b19495",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:apps/docs/lib/shell.ts",
         "kind": "module",
         "path": "apps/docs/lib/shell.ts",
@@ -6812,7 +6953,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "8866ebf361b081f51faccef450b0ac048f89701fcdd81dc22f75c1c630df7a64",
+        "contentHash": "0a9e9b780320e23f2ae3eba1bb317463a10994426906b9dd5c65ceb3a19cca54",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6959,9 +7100,15 @@
           "areaId": "area:apps/docs",
           "packageId": "package:@agentskit/code-review",
           "inbound": [],
-          "outbound": []
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:apps/docs/lib/repo-links.mjs",
+              "confidence": "observed"
+            }
+          ]
         },
-        "contentHash": "42cc493b55c80515933c2a76b0d33da0a25a05cb585c2f49c3e24e2245276a4f",
+        "contentHash": "665dd6bd51eafe90eb57ee3876db2e4962c26dd44f3c58b0d1d2b39cfdba07d8",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -11554,9 +11701,15 @@
           "areaId": "area:test",
           "packageId": "package:@agentskit/code-review",
           "inbound": [],
-          "outbound": []
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:apps/docs/lib/repo-links.mjs",
+              "confidence": "observed"
+            }
+          ]
         },
-        "contentHash": "652b746e1995524f4e8cf2503a46008b0668cc8b4b715ccb2dd3cc50a71d63d9",
+        "contentHash": "eb59a718e980fcca3c48fc5652f84882330320037dedac2800581c5c8d5547be",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13060,7 +13213,7 @@
           "aliases": "code-review @agentskit/code-review package ownership"
         },
         "graph": {
-          "pagerank": 0.090059,
+          "pagerank": 0.091631,
           "inboundLinks": 6,
           "coveredBy": [
             "document:docs/for-agents/code-review.md"

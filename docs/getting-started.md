@@ -17,8 +17,8 @@ It is intended for developers and teams who want focused review feedback without
 
 [![CI](https://github.com/AgentsKit-io/code-review/actions/workflows/ci.yml/badge.svg)](https://github.com/AgentsKit-io/code-review/actions/workflows/ci.yml)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13866/baseline)](https://www.bestpractices.dev/projects/13866)
-[![License: MIT](https://img.shields.io/badge/License-MIT-0f766e.svg)](LICENSE)
-[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-339933?logo=node.js&logoColor=white)](package.json)
+[![License: MIT](https://img.shields.io/badge/License-MIT-0f766e.svg)](../LICENSE)
+[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-339933?logo=node.js&logoColor=white)](../package.json)
 
 **Tags:** `agentskit` · `ai-code-review` · `github-action` · `typescript` · `sarif` · `codex` · `claude` · `ollama`
 
@@ -33,7 +33,7 @@ Run code review locally or on every pull request. Bring Claude, Codex, OpenAI, G
 - Offline CLI discovery works without credentials (`--help`, `--list-providers`) — covered by `test/cli-smoke.test.mjs`.
 - A clean local Codex CLI fixture completes an offline stdin review — covered by the same smoke suite.
 - Documentation, Action contract, and Doc Bridge gates run through `npm run check`.
-- Machine-readable public map: [`llms.txt`](llms.txt) and [`docs/for-agents/code-review.md`](docs/for-agents/code-review.md).
+- Machine-readable public map: [`llms.txt`](../llms.txt) and [`docs/for-agents/code-review.md`](for-agents/code-review.md).
 
 ## Why this exists
 
@@ -177,7 +177,7 @@ npx --yes github:AgentsKit-io/code-review \
 
 This reviews committed changes between `main` and `HEAD`; it is not a staged-files-only hook. The selected model must support Ollama tool calling because every review lens submits a structured result. Requests have a 30-second default deadline. `--no-fail` keeps findings advisory, but connection, source, and execution errors still exit nonzero. No provider key is required. Local inference reduces code disclosure, but logs, SARIF files, caches, optional gateways, and observability exporters still need their own access and retention policy.
 
-See the [operations guide](docs/OPERATIONS.md#local-ollama-review) for model sizing, health checks, failure handling, and self-hosted CI guidance.
+See the [operations guide](OPERATIONS.md#local-ollama-review) for model sizing, health checks, failure handling, and self-hosted CI guidance.
 
 ## Use the GitHub Action
 
@@ -287,7 +287,7 @@ reviewdog -f=sarif -name=agentskit-review \
   < "${REPORT_FILE}"
 ```
 
-The reviewdog recipe needs no custom converter: Code Review emits SARIF 2.1.0 and reviewdog consumes SARIF natively. See the [complete GitHub Actions job](docs/OPERATIONS.md#route-findings-through-reviewdog) for pinned installation, base-branch checkout, permissions, severity mapping, and CI ownership of the failure threshold.
+The reviewdog recipe needs no custom converter: Code Review emits SARIF 2.1.0 and reviewdog consumes SARIF natively. See the [complete GitHub Actions job](OPERATIONS.md#route-findings-through-reviewdog) for pinned installation, base-branch checkout, permissions, severity mapping, and CI ownership of the failure threshold.
 
 ## CLI reference
 
@@ -477,12 +477,12 @@ Feedback reconciliation is deterministic and resumable: it represents every supp
 
 - [Product site](https://code-review.agentskit.io) — interactive configuration preview and curated guides.
 
-- [Operations guide](docs/OPERATIONS.md) — providers, permissions, secrets, cost controls, SARIF, failures, releases, and incident-safe defaults.
-- [Provider compatibility matrix](docs/provider-compatibility.json) — stable CLI transports and their offline fixtures.
-- [Agent handoff](docs/for-agents/code-review.md) — ownership, edit roots, verification commands, and change routes.
-- [`llms.txt`](llms.txt) — compact public source map for LLMs and coding agents.
-- [`llms-full.txt`](llms-full.txt) — complete README, operations, and agent-handoff corpus.
-- [`doc-bridge.config.json`](doc-bridge.config.json) — executable Doc Bridge corpus, ownership, and gate contract.
+- [Operations guide](OPERATIONS.md) — providers, permissions, secrets, cost controls, SARIF, failures, releases, and incident-safe defaults.
+- [Provider compatibility matrix](provider-compatibility.json) — stable CLI transports and their offline fixtures.
+- [Agent handoff](for-agents/code-review.md) — ownership, edit roots, verification commands, and change routes.
+- [`llms.txt`](../llms.txt) — compact public source map for LLMs and coding agents.
+- [`llms-full.txt`](../llms-full.txt) — complete README, operations, and agent-handoff corpus.
+- [`doc-bridge.config.json`](../doc-bridge.config.json) — executable Doc Bridge corpus, ownership, and gate contract.
 
 `npm run check` builds the CLI, executes a full credential-free review fixture, validates the composite Action and documentation contract, runs Doc Bridge gates, checks CLI help, and enforces README Standard v1. Prove credential-free discovery with:
 
@@ -494,7 +494,7 @@ node examples/verify-readme.mjs
 
 ## Maturity
 
-The repository is **pre-v1 (`0.31.x`)**. The CLI and Action are available for evaluation and advisory CI; use an exact release tag such as `@v0.31.0` or a commit SHA, and treat the future `v1` moving tag as a separate stability milestone. See [ROADMAP.md](ROADMAP.md) and the [release guidance](docs/OPERATIONS.md#releases-and-maturity).
+The repository is **pre-v1 (`0.31.x`)**. The CLI and Action are available for evaluation and advisory CI; use an exact release tag such as `@v0.31.0` or a commit SHA, and treat the future `v1` moving tag as a separate stability milestone. See [ROADMAP.md](../ROADMAP.md) and the [release guidance](OPERATIONS.md#releases-and-maturity).
 
 ## Compatibility
 
@@ -520,16 +520,16 @@ The product site at [code-review.agentskit.io](https://code-review.agentskit.io)
 
 ## Contributing
 
-Providers, review lenses, reporters, fixtures, documentation, and false-positive reductions are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md), browse issues labeled `good first issue`, or propose a new provider/lens with the issue templates.
+Providers, review lenses, reporters, fixtures, documentation, and false-positive reductions are welcome. Start with [CONTRIBUTING.md](../CONTRIBUTING.md), browse issues labeled `good first issue`, or propose a new provider/lens with the issue templates.
 
-Please report vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
+Please report vulnerabilities privately as described in [SECURITY.md](../SECURITY.md).
 Maintainer responsibilities, public decision-making, and the release process are
-documented in [GOVERNANCE.md](GOVERNANCE.md).
+documented in [GOVERNANCE.md](../GOVERNANCE.md).
 
 ## Roadmap
 
-The near-term roadmap focuses on a stable `v1` Action, npm distribution, provider smoke tests, better cost visibility, and more community-owned review lenses. See [ROADMAP.md](ROADMAP.md).
+The near-term roadmap focuses on a stable `v1` Action, npm distribution, provider smoke tests, better cost visibility, and more community-owned review lenses. See [ROADMAP.md](../ROADMAP.md).
 
 ## License
 
-[MIT](LICENSE) © AgentsKit contributors.
+[MIT](../LICENSE) © AgentsKit contributors.

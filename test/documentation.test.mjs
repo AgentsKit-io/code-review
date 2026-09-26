@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join, resolve } from 'node:path'
 import test from 'node:test'
+import { existsExact, resolveDocLink } from '../apps/docs/lib/repo-links.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const read = path => readFileSync(join(root, path), 'utf8')
@@ -257,4 +258,29 @@ test('the CLI package stays separate from the Fumadocs website runtime', () => {
   assert.equal(existsSync(join(root, 'app')), false)
   assert.ok(existsSync(join(root, 'apps/docs/app/page.tsx')))
   assert.match(read('apps/docs/package.json'), /fumadocs/)
+})
+
+test('published site docs exist with exact file-name casing', () => {
+  const publicDocs = JSON.parse(read('apps/docs/public-docs.json'))
+  for (const doc of publicDocs) assert.ok(existsExact(join(root, 'docs', doc)), `apps/docs/public-docs.json lists missing docs/${doc} (casing must match for the Linux build)`)
+})
+
+test('every relative link in the published docs resolves on GitHub and on the site', () => {
+  const publicDocs = JSON.parse(read('apps/docs/public-docs.json'))
+  const options = { docsDir: join(root, 'docs'), repoRoot: root, publicDocs }
+  const broken = []
+  for (const doc of publicDocs) {
+    const source = read(join('docs', doc)).replace(/^(```|~~~)[\s\S]*?^\1/gm, '')
+    for (const [, url] of source.matchAll(/\]\(<?([^)\s>]+)>?(?:\s+"[^"]*")?\)/g)) {
+      const result = resolveDocLink(url, { ...options, docFile: join(root, 'docs', doc) })
+      if (result.kind === 'missing') broken.push(`docs/${doc} → ${url}`)
+      if (result.kind === 'repo' || result.kind === 'route') assert.match(result.href, /^(?:\/docs|https:\/\/github\.com\/AgentsKit-io\/code-review\/blob\/main\/)/, `docs/${doc} → ${url} must render as an absolute site or GitHub URL`)
+    }
+  }
+  assert.deepEqual(broken, [], `relative links must be written relative to their source file:\n${broken.join('\n')}`)
+  const fromGettingStarted = { ...options, docFile: join(root, 'docs/getting-started.md') }
+  assert.equal(resolveDocLink('../LICENSE', fromGettingStarted).href, 'https://github.com/AgentsKit-io/code-review/blob/main/LICENSE')
+  assert.equal(resolveDocLink('../package.json', fromGettingStarted).href, 'https://github.com/AgentsKit-io/code-review/blob/main/package.json')
+  assert.equal(resolveDocLink('OPERATIONS.md#releases-and-maturity', fromGettingStarted).href, '/docs/operations#releases-and-maturity')
+  assert.equal(resolveDocLink('LICENSE', fromGettingStarted).kind, 'missing')
 })
