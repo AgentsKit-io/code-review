@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "f1e5108b1664c6fec155214b7b00d0d7aa69ba5e5282fbc93f7afff0de83b380",
+  "contentHash": "147ea27db84bd14b71e59c48d2a3706fd442e19c97a3410763eb68d2431f6f64",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-09-26T13:45:32.940Z",
+  "generatedAt": "2026-09-26T14:18:36.823Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -21,6 +21,18 @@
       "title": "Code Review agent docs",
       "path": "docs/for-agents/index.md",
       "description": "- Code Review CLI handoff — ownership, change routes, security boundaries, and verification: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review.md - Concise machine map — discovery, raw sources, and all six ecosystem products: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms.txt - Full machine corpus — public, operational, governance,"
+    },
+    {
+      "id": "document:.changeset/publish-docs-dependencies.md",
+      "type": "document",
+      "title": "publish-docs-dependencies.md",
+      "path": ".changeset/publish-docs-dependencies.md",
+      "description": "Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies (fumadocs-mdx: not found). The workflow now installs apps/docs dependencies before npm run check, matching CI.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "5ef847d47118b35c7c8e8128f7551237581ae9b38c8033e2572e8a0440697a05"
     },
     {
       "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
@@ -2933,8 +2945,8 @@
     }
   },
   "inputs": {
-    "hash": "e3c8f295358194471aa993067f3fa713a840e95bf16b2b08b18ef9dd2bc591d4",
-    "fileCount": 180,
+    "hash": "348129e56d1de7cf6cde044e1a219e51684435b1f9ddf0c8012576e59b7f01e3",
+    "fileCount": 181,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -2956,9 +2968,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "afddaebfe9d6eca9e64bb6d82a4ba64e91194fd731300d6245ad3edea775785b",
+    "contentHash": "647cb189a804adb054eda394f23355159782a6730efb3d8bc675572b43457f40",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "76903b127fa621b309e1964e7c53fcfac433f52140dfe690f98b20ce1de30d66",
+    "snapshotHash": "622ad3b149fa4b43362fc0d65c162df8f4d2f628082f511884f1f0dc78b29326",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
@@ -2978,7 +2990,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 179,
+      "documentCount": 180,
       "fieldNames": [
         "aliases",
         "body",
@@ -2989,13 +3001,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.916201117318436,
-        "body": 50.374301675977655,
-        "headings": 3.910614525139665,
-        "path": 5.597765363128492,
-        "summary": 3.022346368715084,
-        "symbols": 14.296089385474861,
-        "title": 4.262569832402234
+        "aliases": 2.911111111111111,
+        "body": 50.3,
+        "headings": 3.888888888888889,
+        "path": 5.6,
+        "summary": 3.2111111111111112,
+        "symbols": 14.216666666666667,
+        "title": 4.266666666666667
       }
     },
     "entries": [
@@ -3050,13 +3062,19 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 1,
+          "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
+            "document:.changeset/publish-docs-dependencies.md",
             "document:apps/docs/README.md"
           ],
           "packageId": "package:@agentskit/code-review",
           "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:.changeset/publish-docs-dependencies.md",
+              "confidence": "observed"
+            },
             {
               "kind": "mentions",
               "id": "document:apps/docs/README.md",
@@ -3216,6 +3234,44 @@
         "contentHash": "715edae67cdb05fb982dca41177f0c420f83422cf5af868a51e74d9e4fb42b41",
         "provenance": "declared",
         "confidence": "declared"
+      },
+      {
+        "id": "document:.changeset/publish-docs-dependencies.md",
+        "kind": "document",
+        "path": ".changeset/publish-docs-dependencies.md",
+        "title": "publish-docs-dependencies.md",
+        "summary": "Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies (fumadocs-mdx: not found). The workflow now installs apps/docs dependencies before npm run check, matching CI.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "publish-docs-dependencies.md",
+          "headings": "",
+          "path": ".changeset/publish-docs-dependencies.md",
+          "symbols": "",
+          "summary": "Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies (fumadocs-mdx: not found). The workflow now installs apps/docs dependencies before npm run check, matching CI.",
+          "body": "Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies ( fumadocs-mdx: not found ). The workflow now installs apps/docs dependencies before npm run check , matching CI.",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "mentions",
+              "id": "area:apps/docs",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "5ef847d47118b35c7c8e8128f7551237581ae9b38c8033e2572e8a0440697a05",
+        "provenance": "observed",
+        "confidence": "observed"
       },
       {
         "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
