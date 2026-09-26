@@ -28,7 +28,7 @@ function EcosystemTour() {
 
 export default function HomePage() {
   return <HomeLayout {...layoutOptions}>
-    <main id="main-content" className="code-review-home">
+    <main id="main-content" className="code-review-home" data-ak-surface="dark">
       <agentskit-aurora aria-hidden="true" />
       <div className="home-content">
         <section className="hero" aria-labelledby="home-title">
