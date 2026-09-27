@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "9795afbd22a9ed71e71af55ff53e78b3d2aaea7371e17ae155caa41afeae6153",
+  "contentHash": "441e9f01864efc3bc77c11df1051e2bd53a07ee761bd0e78e07eaafbb92b5162",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-09-27T01:50:48.407Z",
+  "generatedAt": "2026-09-27T15:23:35.918Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -21,6 +21,18 @@
       "title": "Code Review agent docs",
       "path": "docs/for-agents/index.md",
       "description": "- Code Review CLI handoff — ownership, change routes, security boundaries, and verification: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review.md - Concise machine map — discovery, raw sources, and all six ecosystem products: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms.txt - Full machine corpus — public, operational, governance,"
+    },
+    {
+      "id": "document:.changeset/codex-prompt-over-stdin.md",
+      "type": "document",
+      "title": "codex-prompt-over-stdin.md",
+      "path": ".changeset/codex-prompt-over-stdin.md",
+      "description": "Codex lenses send the review prompt over stdin instead of as a command-line argument, so reviewing a large file no longer fails on Windows with spawn ENAMETOOLONG.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "8230474465e2b75dad3cad03feaf31001bef3cea377ae6f881c7f4d1eadf226d"
     },
     {
       "id": "document:.changeset/presentation-ui-fixes.md",
@@ -1287,7 +1299,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "afcaf8ad2206f776dd1541685ca1cae5150bf677db0a820a7f8b9f5b0147c3d9"
+      "contentHash": "6877639305594e1d67eba52c9a87cd7c961c0aaca5b5ad4b170af812b4c10a11"
     },
     {
       "id": "module:src/domain-contracts.ts",
@@ -2341,7 +2353,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "dc3be502b15fff2513627bb6419cdd35fbb52746356e0942f0545101bd84a861"
+      "contentHash": "a55f8fe919c5c69a6cd110174ba18f97412c717da557b7736abb428ca3f141d0"
     },
     {
       "id": "module:test/context-packs.test.mjs",
@@ -2976,8 +2988,8 @@
     }
   },
   "inputs": {
-    "hash": "49d83b1a3c3d179e0bdefc76af98d5bb52355a911eb3f280125ec9b53909a957",
-    "fileCount": 183,
+    "hash": "13d16649d364469098879e13013e8005f45f92c22f25939dc0bc5860f37ee8f6",
+    "fileCount": 184,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -2999,9 +3011,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "a1f0de1ef144b623ccf552da64714cf4d8e0844967c078f26ee3592f859262b6",
+    "contentHash": "4551469f2efac6f4a2b9fcdb850228c8144becf910dfbaa4c1555b10ddfd933e",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "039995056f6b5ba84c8bffe9d3f125bba2559385cd62e13945c3614efa93169c",
+    "snapshotHash": "e21aba2ac7fdced14f58d30a70f767deff6cfbd5b7914ffbcf4a2a5e2ce13079",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
@@ -3021,7 +3033,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 182,
+      "documentCount": 183,
       "fieldNames": [
         "aliases",
         "body",
@@ -3032,13 +3044,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.912087912087912,
-        "body": 49.8021978021978,
-        "headings": 3.8461538461538463,
-        "path": 5.615384615384615,
-        "summary": 2.9945054945054945,
-        "symbols": 14.159340659340659,
-        "title": 4.274725274725275
+        "aliases": 2.907103825136612,
+        "body": 49.63387978142077,
+        "headings": 3.8251366120218577,
+        "path": 5.617486338797814,
+        "summary": 3.081967213114754,
+        "symbols": 14.081967213114755,
+        "title": 4.278688524590164
       }
     },
     "entries": [
@@ -3265,6 +3277,38 @@
         "contentHash": "715edae67cdb05fb982dca41177f0c420f83422cf5af868a51e74d9e4fb42b41",
         "provenance": "declared",
         "confidence": "declared"
+      },
+      {
+        "id": "document:.changeset/codex-prompt-over-stdin.md",
+        "kind": "document",
+        "path": ".changeset/codex-prompt-over-stdin.md",
+        "title": "codex-prompt-over-stdin.md",
+        "summary": "Codex lenses send the review prompt over stdin instead of as a command-line argument, so reviewing a large file no longer fails on Windows with spawn ENAMETOOLONG.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "codex-prompt-over-stdin.md",
+          "headings": "",
+          "path": ".changeset/codex-prompt-over-stdin.md",
+          "symbols": "",
+          "summary": "Codex lenses send the review prompt over stdin instead of as a command-line argument, so reviewing a large file no longer fails on Windows with spawn ENAMETOOLONG.",
+          "body": "Codex lenses send the review prompt over stdin instead of as a command-line argument, so reviewing a large file no longer fails on Windows with spawn ENAMETOOLONG .",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "8230474465e2b75dad3cad03feaf31001bef3cea377ae6f881c7f4d1eadf226d",
+        "provenance": "observed",
+        "confidence": "observed"
       },
       {
         "id": "document:.changeset/presentation-ui-fixes.md",
@@ -8669,7 +8713,7 @@
             }
           ]
         },
-        "contentHash": "afcaf8ad2206f776dd1541685ca1cae5150bf677db0a820a7f8b9f5b0147c3d9",
+        "contentHash": "6877639305594e1d67eba52c9a87cd7c961c0aaca5b5ad4b170af812b4c10a11",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -11657,7 +11701,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "dc3be502b15fff2513627bb6419cdd35fbb52746356e0942f0545101bd84a861",
+        "contentHash": "a55f8fe919c5c69a6cd110174ba18f97412c717da557b7736abb428ca3f141d0",
         "provenance": "observed",
         "confidence": "observed"
       },
