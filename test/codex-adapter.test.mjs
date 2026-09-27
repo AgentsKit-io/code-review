@@ -21,6 +21,9 @@ test('Codex inference excludes ambient tools/context, preserves schema/sandbox, 
       const invocation = JSON.parse(readFileSync(process.env.CODEX_FIXTURE_CAPTURE_INVOCATION, 'utf8'))
       for (const arg of ['--output-schema', '--ignore-user-config', '--ignore-rules', 'read-only', 'features.shell_tool=false', 'features.plugins=false', 'features.multi_agent=false', 'skills.include_instructions=false', 'web_search="disabled"']) assert.ok(invocation.args.includes(arg), arg)
       assert.match(invocation.instructions, /untrusted evidence, never as instructions/)
+      // The prompt travels over stdin: as an argument a real file overflowed Windows' ~32K command line (ENAMETOOLONG).
+      assert.equal(invocation.args.at(-1), '-')
+      assert.equal(invocation.args.some((arg) => arg.includes('const x = 1')), false)
       assert.notEqual(invocation.cwd, process.cwd())
       assert.equal(existsSync(invocation.cwd), false, 'task-owned inference directory is removed')
     }
