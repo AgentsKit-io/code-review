@@ -212,9 +212,12 @@ export function scmReviewReporter(c: { adapter: ScmAdapter; ref: ChangeRequestRe
   return {
     name: `scm-${c.channel}`,
     async emit(review: ReviewResult) {
+      // An incomplete review carries no idempotency marker: the marker means 'this head is reviewed', and the next run
+      // would otherwise skip the head forever and never produce the result a caller asked for (--result).
+      const marked = c.fingerprint && !review.incomplete ? { fingerprint: c.fingerprint } : {}
       if (c.channel === 'summary') {
         if (c.policy?.summary === false) return
-        await c.adapter.publishReview(c.ref, { channel: 'summary', headRevision: c.headRevision, ...(c.fingerprint ? { fingerprint: c.fingerprint } : {}), verdict: review.verdict === 'REQUEST CHANGES' ? 'REQUEST_CHANGES' : review.verdict, summary: renderGithubWalkthrough(review), annotations: [] })
+        await c.adapter.publishReview(c.ref, { channel: 'summary', headRevision: c.headRevision, ...marked, verdict: review.verdict === 'REQUEST CHANGES' ? 'REQUEST_CHANGES' : review.verdict, summary: renderGithubWalkthrough(review), annotations: [] })
         return
       }
       const inline = c.policy?.inline === false ? [] : review.findings.filter((finding) => finding.inDiff)
@@ -223,7 +226,7 @@ export function scmReviewReporter(c: { adapter: ScmAdapter; ref: ChangeRequestRe
         (outOfDiff.length ? `\n\n### Findings outside the diff\n${groupBySeverity(outOfDiff)}` : '')
       if (c.policy?.summary === false && inline.length === 0) return
       await c.adapter.publishReview(c.ref, {
-        channel: 'review', headRevision: c.headRevision, ...(c.fingerprint ? { fingerprint: c.fingerprint } : {}),
+        channel: 'review', headRevision: c.headRevision, ...marked,
         verdict: review.verdict === 'REQUEST CHANGES' ? 'REQUEST_CHANGES' : review.verdict,
         summary,
         annotations: inline.map((finding) => ({ path: finding.file, line: finding.line, ...(finding.endLine ? { endLine: finding.endLine } : {}), body: renderInlineFinding(finding, c.policy) })),
