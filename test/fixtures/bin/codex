@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 import { closeSync, openSync, readFileSync, writeFileSync } from 'node:fs'
 
-const prompt = process.argv.at(-1) ?? ''
+// `-`: the real CLI reads the prompt from stdin (codex exec --help).
+const prompt = process.argv.at(-1) === '-' ? readFileSync(0, 'utf8') : (process.argv.at(-1) ?? '')
 if (process.env.CODEX_FIXTURE_CAPTURE_INVOCATION) {
   const args = process.argv.slice(2)
   const instructions = args.find((arg) => arg.startsWith('model_instructions_file='))

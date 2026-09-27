@@ -111,8 +111,11 @@ async function runCodex(prompt: string, schema: unknown, model?: string, signal?
         args.push("--output-schema", schemaFile);
       }
       if (model) args.push("-m", model);
-      args.push(prompt);
+      // `-`: read the prompt from stdin. As an argument, a real file plus the review instructions exceeds
+      // Windows' ~32K command line and every such lens failed with `spawn ENAMETOOLONG` (same fix as claude-code).
+      args.push("-");
       return runLocalCli("codex", args, {
+        stdin: prompt,
         cwd: dir,
         signal,
         mode,
