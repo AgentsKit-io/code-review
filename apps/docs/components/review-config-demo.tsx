@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 const examples = [
   {
     label: 'Security',
+    header: 'export async function readSession(cookie, store, verifySessionCookie) {',
     file: 'src/auth/session.ts',
     line: '41',
     before: 'const session = await store.get(cookie.id)',
@@ -17,18 +18,20 @@ const examples = [
   },
   {
     label: 'Code quality',
+    header: 'export async function enrichUsers(users, loadProfile, mergePreferences) {',
     file: 'src/users/enrich.ts',
     line: '18',
-    before: 'for (const user of users) {',
+    before: 'const profiles = []; for (const user of users) profiles.push(await loadProfile(user))',
     after: 'const profiles = await Promise.all(users.map(loadProfile))',
     continuation: 'return profiles.map(mergePreferences)',
     severity: 'Medium',
     title: 'Load independent profiles concurrently.',
-    detail: 'Each profile lookup is independent, but the loop waits for one request before starting the next. A single bounded batch keeps this path easier to follow and faster.',
+    detail: 'Each profile lookup is independent, but the loop waits for one request before starting the next. A concurrent batch keeps this path easier to follow and faster.',
     evidence: 'Sequential I/O · changed lines 18–20',
   },
   {
     label: 'Performance',
+    header: 'export function matchHits(hits, all) {',
     file: 'src/search/results.ts',
     line: '88',
     before: 'return hits.map(hit => all.find(item => item.id === hit.id))',
@@ -41,11 +44,12 @@ const examples = [
   },
   {
     label: 'Correctness',
+    header: 'export function parseBillingDate(value) {',
     file: 'src/billing/period.ts',
     line: '27',
     before: 'return new Date(`${value}T00:00:00`)',
     after: 'return new Date(`${value}T00:00:00.000Z`)',
-    continuation: '}',
+    continuation: '',
     severity: 'High',
     title: 'Parse the billing date in UTC.',
     detail: 'This date is persisted as a calendar day, but local-time parsing can shift it across regions. Make the timezone explicit before calculating the billing window.',
@@ -138,13 +142,13 @@ export function ReviewConfigDemo() {
     </div>
     <div className="review-window" id="review-panel" role="tabpanel" aria-labelledby={`review-tab-${activeIndex}`} tabIndex={0} key={activeIndex}>
       <div className="review-file">
-        <div className="review-file-head"><span>DIFF</span><code>{item.file}</code><span className="review-diff-count">+2 −1</span></div>
+        <div className="review-file-head"><span>DIFF</span><code>{item.file}</code><span className="review-diff-count">+{item.continuation ? 2 : 1} −1</span></div>
         <div className="review-code" aria-label={`Illustrative change in ${item.file}`}>
-          <div className="review-code-line review-code-muted"><span>40</span><code>export async function reviewChange(input) {'{'}</code></div>
-          <div className="review-code-line review-code-removed"><span>−</span><code>{item.before}</code></div>
-          <div className="review-code-line review-code-added"><span>{item.line}</span><code>{item.after}</code></div>
-          <div className="review-code-line review-code-added"><span>+</span><code>{item.continuation}</code></div>
-          <div className="review-code-line review-code-muted"><span>43</span><code>{'}'}</code></div>
+          <div className="review-code-line review-code-muted"><span>{Number(item.line) - 1}</span><code>{item.header}</code></div>
+          <div className="review-code-line review-code-removed"><span>− {item.line}</span><code>{item.before}</code></div>
+          <div className="review-code-line review-code-added"><span>+ {item.line}</span><code>{item.after}</code></div>
+          {item.continuation && <div className="review-code-line review-code-added"><span>+ {Number(item.line) + 1}</span><code>{item.continuation}</code></div>}
+          <div className="review-code-line review-code-muted"><span>{Number(item.line) + (item.continuation ? 2 : 1)}</span><code>{'}'}</code></div>
         </div>
         <div className="review-comment" aria-label={`${item.label} review comment`}>
           <div className="comment-avatar" aria-hidden="true">AK</div>
@@ -154,7 +158,7 @@ export function ReviewConfigDemo() {
             <h3>{item.title}</h3>
             <p>{item.detail}</p>
             <div className="comment-evidence">{item.evidence}</div>
-            <details className="comment-suggestion"><summary>View suggested change</summary><code>{item.after}</code></details>
+            <details className="comment-suggestion"><summary>View suggested change</summary><code>{[item.after, item.continuation].filter(Boolean).join('\n')}</code></details>
           </div>
         </div>
       </div>
