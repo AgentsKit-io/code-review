@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "441e9f01864efc3bc77c11df1051e2bd53a07ee761bd0e78e07eaafbb92b5162",
+  "contentHash": "d85fca49b9df5d29061205891c1b61bd8c134c9cb4a3b877a540a527c2113b96",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-09-27T15:23:35.918Z",
+  "generatedAt": "2026-09-27T19:25:50.291Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -33,6 +33,18 @@
         "unclassified"
       ],
       "contentHash": "8230474465e2b75dad3cad03feaf31001bef3cea377ae6f881c7f4d1eadf226d"
+    },
+    {
+      "id": "document:.changeset/incomplete-review-no-marker.md",
+      "type": "document",
+      "title": "incomplete-review-no-marker.md",
+      "path": ".changeset/incomplete-review-no-marker.md",
+      "description": "An incomplete review is published without the idempotency marker, so a later run at the same head reviews it again instead of printing SKIPPED: already reviewed without the requested --result.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "058d1685d3d66b90e77c8eebe8045dd25f0d98425e70e2702e8e62edf52b411a"
     },
     {
       "id": "document:.changeset/presentation-ui-fixes.md",
@@ -525,7 +537,7 @@
         "ts",
         "code-review"
       ],
-      "contentHash": "d259f548e165c8be9e2c8ac4f2bb2253f65b70cd69fb0534b92740f79fd145c0"
+      "contentHash": "8c677c3d3f27bd7e647a24de88ca0ee28ac40d6705f25112d526724c6f5ea9dd"
     },
     {
       "id": "module:agents/code-review/risk.ts",
@@ -2857,6 +2869,18 @@
       "contentHash": "f43c9b07bf5b101692cb49032d172fc648f110391858675b8544f25b1f869c7a"
     },
     {
+      "id": "module:test/scm-review-reporter.test.mjs",
+      "type": "module",
+      "title": "scm-review-reporter.test.mjs",
+      "path": "test/scm-review-reporter.test.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "test"
+      ],
+      "contentHash": "0e8399f518a40b263d4799d116729e04088570ec4a28f3eca6ab4bbfcf702bf6"
+    },
+    {
       "id": "module:test/semantic-grouping.test.mjs",
       "type": "module",
       "title": "semantic-grouping.test.mjs",
@@ -2988,8 +3012,8 @@
     }
   },
   "inputs": {
-    "hash": "13d16649d364469098879e13013e8005f45f92c22f25939dc0bc5860f37ee8f6",
-    "fileCount": 184,
+    "hash": "c27b40cae9fe2ace9aad6fc97d402fd7ad6f27352c27bf8b8549302eb2d2704e",
+    "fileCount": 186,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3011,9 +3035,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "4551469f2efac6f4a2b9fcdb850228c8144becf910dfbaa4c1555b10ddfd933e",
+    "contentHash": "2a0e98e777350ac20ebe6966951df0a626be6262c354b35e6e9c6238127878f6",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "ea404094b2958d227258a8dd3d3174454a454585bd9a7d4fbd15230d4e9b57f8",
+    "snapshotHash": "45d9ff280231b534c95f4e0d82bc31c0f84455eef79b6cdb3ccc32911b807f1e",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
@@ -3033,7 +3057,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 183,
+      "documentCount": 185,
       "fieldNames": [
         "aliases",
         "body",
@@ -3044,13 +3068,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.907103825136612,
-        "body": 49.63387978142077,
-        "headings": 3.8251366120218577,
-        "path": 5.617486338797814,
-        "summary": 3.081967213114754,
-        "symbols": 14.081967213114755,
-        "title": 4.278688524590164
+        "aliases": 2.902702702702703,
+        "body": 49.2,
+        "headings": 3.7837837837837838,
+        "path": 5.627027027027027,
+        "summary": 3.151351351351351,
+        "symbols": 13.92972972972973,
+        "title": 4.291891891891892
       }
     },
     "entries": [
@@ -3241,7 +3265,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "0ca2033ff19520a123452dcc873a4c6b344955ee0a875d8c8c697f71bfe1cdee",
+        "contentHash": "14dd5d1e11f26f4aa3c598542f4eee0ba3ee7762ef10d546d4bc9bfa23848e84",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3307,6 +3331,38 @@
           "outbound": []
         },
         "contentHash": "8230474465e2b75dad3cad03feaf31001bef3cea377ae6f881c7f4d1eadf226d",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:.changeset/incomplete-review-no-marker.md",
+        "kind": "document",
+        "path": ".changeset/incomplete-review-no-marker.md",
+        "title": "incomplete-review-no-marker.md",
+        "summary": "An incomplete review is published without the idempotency marker, so a later run at the same head reviews it again instead of printing SKIPPED: already reviewed without the requested --result.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "incomplete-review-no-marker.md",
+          "headings": "",
+          "path": ".changeset/incomplete-review-no-marker.md",
+          "symbols": "",
+          "summary": "An incomplete review is published without the idempotency marker, so a later run at the same head reviews it again instead of printing SKIPPED: already reviewed without the requested --result.",
+          "body": "An incomplete review is published without the idempotency marker, so a later run at the same head reviews it again instead of printing SKIPPED: already reviewed without the requested --result .",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "058d1685d3d66b90e77c8eebe8045dd25f0d98425e70e2702e8e62edf52b411a",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6243,7 +6299,7 @@
             }
           ]
         },
-        "contentHash": "d259f548e165c8be9e2c8ac4f2bb2253f65b70cd69fb0534b92740f79fd145c0",
+        "contentHash": "8c677c3d3f27bd7e647a24de88ca0ee28ac40d6705f25112d526724c6f5ea9dd",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13141,6 +13197,40 @@
           "outbound": []
         },
         "contentHash": "f43c9b07bf5b101692cb49032d172fc648f110391858675b8544f25b1f869c7a",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:test/scm-review-reporter.test.mjs",
+        "kind": "module",
+        "path": "test/scm-review-reporter.test.mjs",
+        "title": "scm-review-reporter.test.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "test"
+        ],
+        "fields": {
+          "title": "scm-review-reporter.test.mjs",
+          "headings": "",
+          "path": "test/scm-review-reporter.test.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs test"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:test",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "0e8399f518a40b263d4799d116729e04088570ec4a28f3eca6ab4bbfcf702bf6",
         "provenance": "observed",
         "confidence": "observed"
       },
