@@ -86,6 +86,7 @@ const API_METADATA: Record<string, Omit<ProviderEntry, 'id' | 'aliases' | 'facto
   groq: api('Groq', ['GROQ_API_KEY']),
   openrouter: api('OpenRouter', ['OPENROUTER_API_KEY']),
   together: api('Together AI', ['TOGETHER_API_KEY']),
+  minimax: api('MiniMax', ['MINIMAX_API_KEY']),
 }
 
 const LOCAL_PROVIDERS: readonly ProviderEntry[] = [
