@@ -62,3 +62,12 @@ test('review execution defaults do not branch on provider names', () => {
   assert.doesNotMatch(source, /provider\s*===|provider\?\.endsWith/)
   assert.match(source, /providerExecutionPolicy/)
 })
+
+test('minimax resolves once @agentskit/adapters exports the factory, keyed by MINIMAX_API_KEY', () => {
+  // Listed only when the adapter exists: code-review stays on its current adapters range until the bump.
+  assert.equal(providerRegistry({}).some((entry) => entry.id === 'minimax'), false)
+  const entries = providerRegistry({ minimax: () => ({ createSource() {} }) })
+  assert.equal(resolveProviderId('minimax', entries), 'minimax')
+  assert.deepEqual(entries.find((entry) => entry.id === 'minimax')?.credentialEnv, ['MINIMAX_API_KEY'])
+  assert.equal(entries.find((entry) => entry.id === 'minimax')?.support, 'stable')
+})

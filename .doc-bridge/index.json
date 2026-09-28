@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "f435a428abbfca67401e2aad6d552d1d9b0757ad239a54f372242d690601596f",
+  "contentHash": "a15caa963d4454fed3ffda7929499bf582e4edcd6a5a51f86b27321137667cf4",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-09-28T00:20:23.638Z",
+  "generatedAt": "2026-09-28T01:57:08.603Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -57,6 +57,18 @@
         "unclassified"
       ],
       "contentHash": "058d1685d3d66b90e77c8eebe8045dd25f0d98425e70e2702e8e62edf52b411a"
+    },
+    {
+      "id": "document:.changeset/minimax-provider.md",
+      "type": "document",
+      "title": "minimax-provider.md",
+      "path": ".changeset/minimax-provider.md",
+      "description": "Recognise --provider minimax (MiniMax, MINIMAX_API_KEY) as a stable API provider once @agentskit/adapters exports the minimax adapter.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "7e39624b94ae9465780a975f1452b2a99c6a5f88eb027b0fe1d0f314e194bcc8"
     },
     {
       "id": "document:.changeset/presentation-ui-fixes.md",
@@ -1918,7 +1930,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "9731af8c48242f75a64b2df4643fb2af7d45c88a84162ebbd52bbaf110b1ab7d"
+      "contentHash": "c311ad52e2019bced688df3d6db47757032fb8167233210c5844c7c1afe86122"
     },
     {
       "id": "module:src/public-config.ts",
@@ -2686,7 +2698,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "192ecef61a3ef6684da8fc8354027cd528ba06c0f7bd18f54a2013f9f6fa57dd"
+      "contentHash": "fe07eed2de95a81a5656b31e3f6f97336bc2f4b4bee10a264f479862200a3adc"
     },
     {
       "id": "module:test/public-api-surface.test.mjs",
@@ -3024,8 +3036,8 @@
     }
   },
   "inputs": {
-    "hash": "0f3e223d74d32f72b48208093ba158404e2a660190f1deedae9b702c70197c9f",
-    "fileCount": 187,
+    "hash": "877673bfb5329e9ce3ee346e57e2554ebfcdfd1190fb40dd211361f6f1ae09ed",
+    "fileCount": 188,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3047,9 +3059,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "250fbaa7fe5ed045cfda2ef56e3352ccc64355ad3fca0ad2e1df9719ddb24315",
+    "contentHash": "d1ac325289e4e01674ce5078949985d27ebb2994ad85f4bfa505f0c848055fe1",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "ea97e7d6be7ca474156b9b1a63fb919a8a907f58e8e4d4c0991ab2d5458bdfb1",
+    "snapshotHash": "3409d7a44dc9a0ab65b9aa94b8ce15984b907babd6b4c77b34ada9777a6438c4",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
@@ -3069,7 +3081,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 186,
+      "documentCount": 187,
       "fieldNames": [
         "aliases",
         "body",
@@ -3080,13 +3092,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8978494623655915,
-        "body": 49.24193548387097,
-        "headings": 3.763440860215054,
-        "path": 5.634408602150538,
-        "summary": 3.4408602150537635,
-        "symbols": 13.85483870967742,
-        "title": 4.301075268817204
+        "aliases": 2.893048128342246,
+        "body": 49.080213903743314,
+        "headings": 3.7433155080213902,
+        "path": 5.6310160427807485,
+        "summary": 3.5294117647058822,
+        "symbols": 13.780748663101605,
+        "title": 4.2994652406417115
       }
     },
     "entries": [
@@ -3407,6 +3419,38 @@
           "outbound": []
         },
         "contentHash": "058d1685d3d66b90e77c8eebe8045dd25f0d98425e70e2702e8e62edf52b411a",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:.changeset/minimax-provider.md",
+        "kind": "document",
+        "path": ".changeset/minimax-provider.md",
+        "title": "minimax-provider.md",
+        "summary": "Recognise --provider minimax (MiniMax, MINIMAX_API_KEY) as a stable API provider once @agentskit/adapters exports the minimax adapter.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "minimax-provider.md",
+          "headings": "",
+          "path": ".changeset/minimax-provider.md",
+          "symbols": "",
+          "summary": "Recognise --provider minimax (MiniMax, MINIMAX_API_KEY) as a stable API provider once @agentskit/adapters exports the minimax adapter.",
+          "body": "Recognise --provider minimax (MiniMax, MINIMAX API KEY ) as a stable API provider once @agentskit/adapters exports the minimax adapter.",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "7e39624b94ae9465780a975f1452b2a99c6a5f88eb027b0fe1d0f314e194bcc8",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -10335,7 +10379,7 @@
             }
           ]
         },
-        "contentHash": "9731af8c48242f75a64b2df4643fb2af7d45c88a84162ebbd52bbaf110b1ab7d",
+        "contentHash": "c311ad52e2019bced688df3d6db47757032fb8167233210c5844c7c1afe86122",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -12674,7 +12718,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "192ecef61a3ef6684da8fc8354027cd528ba06c0f7bd18f54a2013f9f6fa57dd",
+        "contentHash": "fe07eed2de95a81a5656b31e3f6f97336bc2f4b4bee10a264f479862200a3adc",
         "provenance": "observed",
         "confidence": "observed"
       },
