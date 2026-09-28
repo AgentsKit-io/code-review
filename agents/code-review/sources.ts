@@ -2,6 +2,7 @@ import { execFile } from 'node:child_process'
 import { closeSync, fstatSync, lstatSync, openSync, readdirSync, readFileSync, realpathSync } from 'node:fs'
 import { extname, isAbsolute, join, relative, posix } from 'node:path'
 import { promisify } from 'node:util'
+import { toPosix } from '@agentskit/cross-platform'
 import type { ReviewTarget } from './agent.js'
 import { redactSecrets } from '../../src/local-cli-process.js'
 import { createGithubScmAdapter } from '../../src/github-scm-adapter.js'
@@ -48,7 +49,7 @@ const langOf = (file: string): string => {
   return extname(file).replace('.', '') || 'text'
 }
 
-function normalize(file: string): string { return file.replaceAll('\\', '/') }
+function normalize(file: string): string { return toPosix(file) }
 
 function promptText(content: string): string | undefined {
   let nul = 0; let controls = 0

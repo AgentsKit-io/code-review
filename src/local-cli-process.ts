@@ -1,6 +1,6 @@
 import { mkdirSync, mkdtempSync, rmSync } from 'node:fs'
-import { type ChildProcess } from 'node:child_process'
-import crossSpawn from 'cross-spawn'
+import type { ChildProcess } from 'node:child_process'
+import { killProcessTree, spawnNodeChild } from '@agentskit/cross-platform'
 import { createInterface } from 'node:readline'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -12,12 +12,11 @@ import { DEFAULT_LOCAL_CLI_TIMEOUT_MS, localCliTimeoutMs } from './local-cli-tim
 // spawn(command, args, { ... }) (no shell option -> shell: false) fails with ENOENT/EINVAL for
 // every one of them regardless of the path given -- reproduced live via `doctor --provider
 // claude-cli`, which reported `{"name":"executable","status":"fail","detail":"not found"}` even
-// though `claude --version` succeeds in the same shell. `cross-spawn` detects this case and
-// re-execs through `cmd.exe /d /s /c` with the same argument escaping node's own shell: true uses,
-// so callers keep effectively-shell-free argv semantics (this module still never accepts a shell
-// string) on every platform. `terminateProcessTree`'s own `spawn('taskkill', ...)` below is
-// unaffected -- taskkill.exe ships as a real Windows executable, not an npm .cmd shim.
-const spawn = crossSpawn
+// though `claude --version` succeeds in the same shell. `spawnNodeChild` from
+// @agentskit/cross-platform resolves the shim against the child's PATH and runs it through
+// `cmd.exe` with cmd.exe-safe argument escaping, so callers keep effectively-shell-free argv
+// semantics (this module still never accepts a shell string) on every platform.
+const spawn = spawnNodeChild
 
 export { DEFAULT_LOCAL_CLI_TIMEOUT_MS }
 
@@ -74,12 +73,8 @@ export function redactDiagnostic(value: string, secrets: readonly string[] = [])
 
 function terminateProcessTree(child: ChildProcess): void {
   if (!child.pid) return
-  if (process.platform === 'win32') {
-    spawn('taskkill', ['/pid', String(child.pid), '/t', '/f'], { stdio: 'ignore' })
-    return
-  }
-  try { process.kill(-child.pid, 'SIGKILL') } catch { /* The direct kill below handles non-grouped children. */ }
-  try { child.kill('SIGKILL') } catch { /* The child may already have exited. */ }
+  // Windows: `taskkill /T /F`; POSIX: SIGKILL every descendant, falling back to the child itself.
+  void killProcessTree(child.pid, 'SIGKILL', (signal) => { child.kill(signal) })
 }
 
 function createEnvironment(mode: LocalCliMode, credential?: LocalCliOptions['providerCredential']): { env: NodeJS.ProcessEnv; tempRoot?: string } {
@@ -98,13 +93,6 @@ function createEnvironment(mode: LocalCliMode, credential?: LocalCliOptions['pro
   for (const [name, value] of Object.entries(process.env)) if (name.startsWith('CODEX_FIXTURE_')) env[name] = value
   if (credential) env[credential.name] = credential.value
   return { env, tempRoot }
-}
-
-// stdio: ['pipe', 'pipe', 'pipe'] guarantees real streams; @types/cross-spawn's ChildProcess type
-// is not narrowed the way node:child_process's own spawn overloads are for a literal stdio tuple.
-function requireStream<T>(stream: T | null, name: string): T {
-  if (stream === null) throw new Error(`spawned child is missing ${name} (stdio must include 'pipe')`)
-  return stream
 }
 
 function boundedAppend(current: string, chunk: string, limit: number): { value: string; overflow: boolean } {
@@ -127,9 +115,9 @@ export function runLocalCli(command: string, args: string[], options: LocalCliOp
       cwd: options.cwd ?? (mode === 'trusted-local' ? process.cwd() : join(tempRoot!, 'home')), env,
       detached: process.platform !== 'win32', stdio: ['pipe', 'pipe', 'pipe'],
     })
-    const childStdin = requireStream(child.stdin, 'stdin')
-    const childStdout = requireStream(child.stdout, 'stdout')
-    const childStderr = requireStream(child.stderr, 'stderr')
+    const childStdin = child.stdin
+    const childStdout = child.stdout
+    const childStderr = child.stderr
     let stdout = ''
     let stderr = ''
     let timedOut = false
@@ -158,12 +146,9 @@ export function runLocalCli(command: string, args: string[], options: LocalCliOp
       if (timedOut) { failure.code = 'ETIMEDOUT'; failure.message = `${command} timed out after ${timeoutMs}ms` }
       else if (aborted) { failure.code = 'ABORT_ERR'; failure.message = `${command} aborted` }
       else if (parentShutdown) { failure.code = 'PARENT_SHUTDOWN'; failure.message = `${command} stopped because the parent process is shutting down` }
-      // On Windows, cross-spawn resolves a bare/extension-less command by probing it through
-      // cmd.exe before it can confirm the command doesn't exist at all; that probe's own
-      // "not recognized" message can land in our stderr buffer before the synthesized ENOENT
-      // fires. The real target program never ran in that case, so that text is spawn-resolution
-      // noise, not program output -- keep this failure's diagnostics empty like a non-Windows
-      // ENOENT (which never spawns anything) already reports.
+      // An unresolved command never ran the real target program, so any buffered text is
+      // spawn-resolution noise, not program output -- keep this failure's diagnostics empty on
+      // every platform, matching a POSIX ENOENT (which never spawns anything).
       const isUnresolvedSpawn = failure.code === 'ENOENT' && !timedOut && !aborted && !parentShutdown
       failure.stdout = isUnresolvedSpawn ? '' : redactDiagnostic(stdout, secrets)
       failure.stderr = isUnresolvedSpawn ? '' : redactDiagnostic(stderr, secrets)
@@ -223,9 +208,9 @@ export function runLocalCliProtocol<T>(
     const { env, tempRoot } = createEnvironment(mode, options.providerCredential)
     const cwd = options.cwd ?? (mode === 'trusted-local' ? process.cwd() : join(tempRoot!, 'home'))
     const child = spawn(command, args, { cwd, env, detached: process.platform !== 'win32', stdio: ['pipe', 'pipe', 'pipe'] })
-    const childStdin = requireStream(child.stdin, 'stdin')
-    const childStdout = requireStream(child.stdout, 'stdout')
-    const childStderr = requireStream(child.stderr, 'stderr')
+    const childStdin = child.stdin
+    const childStdout = child.stdout
+    const childStderr = child.stderr
     const rl = createInterface({ input: childStdout })
     let stdout = ''
     let stderr = ''
@@ -261,9 +246,7 @@ export function runLocalCliProtocol<T>(
       if (timedOut) { failure.code = 'ETIMEDOUT'; failure.message = `${command} timed out after ${timeoutMs}ms` }
       else if (aborted) { failure.code = 'ABORT_ERR'; failure.message = `${command} aborted` }
       else if (parentShutdown) { failure.code = 'PARENT_SHUTDOWN'; failure.message = `${command} stopped because the parent process is shutting down` }
-      // See the matching comment in runLocalCli: on Windows, cross-spawn's cmd.exe probe for an
-      // unresolved bare command can leak its own "not recognized" text into our stderr buffer
-      // before the synthesized ENOENT fires, even though the real target program never ran.
+      // See the matching comment in runLocalCli: an unresolved command never ran the target.
       const isUnresolvedSpawn = failure.code === 'ENOENT' && !timedOut && !aborted && !parentShutdown
       failure.stdout = isUnresolvedSpawn ? '' : redactDiagnostic(stdout, secrets)
       failure.stderr = isUnresolvedSpawn ? '' : redactDiagnostic(stderr, secrets)

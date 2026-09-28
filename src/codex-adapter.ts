@@ -8,6 +8,7 @@
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { splitLines } from "@agentskit/cross-platform";
 import type { AdapterFactory, AdapterRequest, StreamChunk, StreamSource } from "@agentskit/core";
 import { runLocalCli, type LocalCliMode } from "./local-cli-process.js";
 import { DEFAULT_CODEX_CLI_TIMEOUT_MS, localCliTimeoutMs } from "./local-cli-timeout.js";
@@ -63,7 +64,7 @@ export function hardenOutputSchema(value: unknown): unknown {
 type CodexUsage = { inputTokens: number; cachedInputTokens: number; outputTokens: number; reasoningOutputTokens: number }
 
 function parseUsage(output: string): CodexUsage | undefined {
-  for (const line of output.trim().split('\n').reverse()) {
+  for (const line of splitLines(output.trim()).reverse()) {
     try {
       const event = JSON.parse(line) as { type?: string; usage?: { input_tokens?: number; cached_input_tokens?: number; output_tokens?: number; reasoning_output_tokens?: number } }
       if (event.type !== 'turn.completed' || !event.usage) continue
@@ -187,7 +188,7 @@ export function codexCli(opts: { model?: string; mode?: LocalCliMode; worker?: {
         } catch (err) {
           const e = err as { code?: string; message?: string; stderr?: string; stdout?: string };
           const detail = e.code === "ETIMEDOUT" ? e.message : [e.stderr, e.stdout].filter(Boolean).join(" ").trim();
-          yield { type: "error", content: `codex exec failed${detail ? `: ${detail.slice(0, 400)}` : ` (no output): ${(e.message ?? "").split("\n")[0]}`}` };
+          yield { type: "error", content: `codex exec failed${detail ? `: ${detail.slice(0, 400)}` : ` (no output): ${splitLines(e.message ?? "")[0] ?? ""}`}` };
         }
       },
       abort: () => controller.abort(),

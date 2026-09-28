@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "d85fca49b9df5d29061205891c1b61bd8c134c9cb4a3b877a540a527c2113b96",
+  "contentHash": "f435a428abbfca67401e2aad6d552d1d9b0757ad239a54f372242d690601596f",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-09-27T19:25:50.291Z",
+  "generatedAt": "2026-09-28T00:20:23.638Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -33,6 +33,18 @@
         "unclassified"
       ],
       "contentHash": "8230474465e2b75dad3cad03feaf31001bef3cea377ae6f881c7f4d1eadf226d"
+    },
+    {
+      "id": "document:.changeset/cross-platform-process-helpers.md",
+      "type": "document",
+      "title": "cross-platform-process-helpers.md",
+      "path": ".changeset/cross-platform-process-helpers.md",
+      "description": "Route local CLI spawning, process-tree termination, and Windows-sensitive path/line handling through @agentskit/cross-platform instead of hand-rolled cross-spawn, negative-pid group kills, and shell: true probes. cross-spawn is no longer a direct dependency. npm run check now runs agentskit-cross-platform check against a committed baseline so new portability hazards fail.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "5cdf7f01fbc07d9aad477c4822c60ddafa33cffb8e09cf43ea2e98f1403855c4"
     },
     {
       "id": "document:.changeset/incomplete-review-no-marker.md",
@@ -591,7 +603,7 @@
         "ts",
         "code-review"
       ],
-      "contentHash": "70f343cc6b2a924d3ff0168357ba9693cc12fa8f93563f33b2a586868b9d5b19"
+      "contentHash": "0d58f7a69cd1d184c535723dca7d090c56dda50757bff8bb983e03a39c997779"
     },
     {
       "id": "module:apps/docs/app/api/search/route.ts",
@@ -1023,7 +1035,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "8f563338f90e86219d74d4d20aa28246dbfb349c53499a97608310760840cbec"
+      "contentHash": "0d8e943601a8e59332600d511a8ffca8f255d093d91c1745e368f9044f65caf3"
     },
     {
       "id": "module:scripts/review-cycle.mjs",
@@ -1042,7 +1054,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "613d44a376c0cc5384d014fa94d88b711ec75ca36c52bf2a1b9f2dd92ed8eae6"
+      "contentHash": "ee24f3753b69b0aac5ac4f314257a10e03a8b21cbcef346eae20e059386fd66e"
     },
     {
       "id": "module:scripts/review-harness.mjs",
@@ -1054,7 +1066,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "dbc1c63ed97617e49704c84ca3435560b0af1ef18eab05487b33eceba29f4438"
+      "contentHash": "3ba50e607f8ab877d19ee86e3e33d5fae3f3988fc177142bc5f1c1b76e0409d9"
     },
     {
       "id": "module:scripts/run-cycle-benchmark.mjs",
@@ -1283,7 +1295,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "5a66dc7538af32ae5ebaf488e17af177db30ecb1d9b4d87ac08af33605ab7197"
+      "contentHash": "d338cbf3439d9c3dae16dea5d590f524e6c12f880760900ecc3869a0a3f691b1"
     },
     {
       "id": "module:src/cli.ts",
@@ -1311,7 +1323,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "6877639305594e1d67eba52c9a87cd7c961c0aaca5b5ad4b170af812b4c10a11"
+      "contentHash": "5bb701b10ff9cb26ff534226b8a97723e906f148e85d78b3331dbe20d74ffbef"
     },
     {
       "id": "module:src/domain-contracts.ts",
@@ -1786,7 +1798,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "f12ee0dc2ff50357c63a8cdf96d105af224da9779a7aad11e8800cebc254ae81"
+      "contentHash": "45f175f278604c4085b045f5d8dde8b0ba9dd701f33eb797199ecc59a2db8e2f"
     },
     {
       "id": "module:src/local-cli-timeout.ts",
@@ -2578,7 +2590,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "e2b610f47a3188c4d4a53aca0bace5e12cf9863f10c4f7847fe4b65ba7942d2a"
+      "contentHash": "23e19e16185e09ca224d857702cbff6b6f3cf92060e4bcb71d7d7e287b81e1b4"
     },
     {
       "id": "module:test/multidimensional-analysis.test.mjs",
@@ -3012,8 +3024,8 @@
     }
   },
   "inputs": {
-    "hash": "c27b40cae9fe2ace9aad6fc97d402fd7ad6f27352c27bf8b8549302eb2d2704e",
-    "fileCount": 186,
+    "hash": "0f3e223d74d32f72b48208093ba158404e2a660190f1deedae9b702c70197c9f",
+    "fileCount": 187,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3035,9 +3047,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "2a0e98e777350ac20ebe6966951df0a626be6262c354b35e6e9c6238127878f6",
+    "contentHash": "250fbaa7fe5ed045cfda2ef56e3352ccc64355ad3fca0ad2e1df9719ddb24315",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "45d9ff280231b534c95f4e0d82bc31c0f84455eef79b6cdb3ccc32911b807f1e",
+    "snapshotHash": "ea97e7d6be7ca474156b9b1a63fb919a8a907f58e8e4d4c0991ab2d5458bdfb1",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
@@ -3057,7 +3069,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 185,
+      "documentCount": 186,
       "fieldNames": [
         "aliases",
         "body",
@@ -3068,13 +3080,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.902702702702703,
-        "body": 49.2,
-        "headings": 3.7837837837837838,
-        "path": 5.627027027027027,
-        "summary": 3.151351351351351,
-        "symbols": 13.92972972972973,
-        "title": 4.291891891891892
+        "aliases": 2.8978494623655915,
+        "body": 49.24193548387097,
+        "headings": 3.763440860215054,
+        "path": 5.634408602150538,
+        "summary": 3.4408602150537635,
+        "symbols": 13.85483870967742,
+        "title": 4.301075268817204
       }
     },
     "entries": [
@@ -3331,6 +3343,38 @@
           "outbound": []
         },
         "contentHash": "8230474465e2b75dad3cad03feaf31001bef3cea377ae6f881c7f4d1eadf226d",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:.changeset/cross-platform-process-helpers.md",
+        "kind": "document",
+        "path": ".changeset/cross-platform-process-helpers.md",
+        "title": "cross-platform-process-helpers.md",
+        "summary": "Route local CLI spawning, process-tree termination, and Windows-sensitive path/line handling through @agentskit/cross-platform instead of hand-rolled cross-spawn, negative-pid group kills, and shell: true probes. cross-spawn is no longer a direct dependency. npm run check now runs agentskit-cross-platform check against a committed baseline so new portability hazards fail.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "cross-platform-process-helpers.md",
+          "headings": "",
+          "path": ".changeset/cross-platform-process-helpers.md",
+          "symbols": "",
+          "summary": "Route local CLI spawning, process-tree termination, and Windows-sensitive path/line handling through @agentskit/cross-platform instead of hand-rolled cross-spawn, negative-pid group kills, and shell: true probes. cross-spawn is no longer a direct dependency. npm run check now runs agentskit-cross-platform check against a committed baseline so new portability hazards fail.",
+          "body": "Route local CLI spawning, process-tree termination, and Windows-sensitive path/line handling through @agentskit/cross-platform instead of hand-rolled cross-spawn , negative-pid group kills, and shell: true probes. cross-spawn is no longer a direct dependency. npm run check now runs agentskit-cross-platform check against a committed baseline so new portability hazards fail.",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "5cdf7f01fbc07d9aad477c4822c60ddafa33cffb8e09cf43ea2e98f1403855c4",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6508,7 +6552,7 @@
             }
           ]
         },
-        "contentHash": "70f343cc6b2a924d3ff0168357ba9693cc12fa8f93563f33b2a586868b9d5b19",
+        "contentHash": "0d58f7a69cd1d184c535723dca7d090c56dda50757bff8bb983e03a39c997779",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -7651,7 +7695,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "8f563338f90e86219d74d4d20aa28246dbfb349c53499a97608310760840cbec",
+        "contentHash": "0d8e943601a8e59332600d511a8ffca8f255d093d91c1745e368f9044f65caf3",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -7698,7 +7742,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "613d44a376c0cc5384d014fa94d88b711ec75ca36c52bf2a1b9f2dd92ed8eae6",
+        "contentHash": "ee24f3753b69b0aac5ac4f314257a10e03a8b21cbcef346eae20e059386fd66e",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -7732,7 +7776,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "dbc1c63ed97617e49704c84ca3435560b0af1ef18eab05487b33eceba29f4438",
+        "contentHash": "3ba50e607f8ab877d19ee86e3e33d5fae3f3988fc177142bc5f1c1b76e0409d9",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -8559,7 +8603,7 @@
             }
           ]
         },
-        "contentHash": "5a66dc7538af32ae5ebaf488e17af177db30ecb1d9b4d87ac08af33605ab7197",
+        "contentHash": "d338cbf3439d9c3dae16dea5d590f524e6c12f880760900ecc3869a0a3f691b1",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -8769,7 +8813,7 @@
             }
           ]
         },
-        "contentHash": "6877639305594e1d67eba52c9a87cd7c961c0aaca5b5ad4b170af812b4c10a11",
+        "contentHash": "5bb701b10ff9cb26ff534226b8a97723e906f148e85d78b3331dbe20d74ffbef",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -9903,7 +9947,7 @@
             }
           ]
         },
-        "contentHash": "f12ee0dc2ff50357c63a8cdf96d105af224da9779a7aad11e8800cebc254ae81",
+        "contentHash": "45f175f278604c4085b045f5d8dde8b0ba9dd701f33eb797199ecc59a2db8e2f",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -12358,7 +12402,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "e2b610f47a3188c4d4a53aca0bace5e12cf9863f10c4f7847fe4b65ba7942d2a",
+        "contentHash": "23e19e16185e09ca224d857702cbff6b6f3cf92060e4bcb71d7d7e287b81e1b4",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13484,7 +13528,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "49b85aec0750f3e1d59407ca73b05a8187bdae45c84de5084de1bd5c5833e62f",
+        "contentHash": "66e5bdd8091aabce3573bce22f0764fdaad35bb4397d65376486a53e22255d92",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
