@@ -90,7 +90,7 @@ if (process.platform === 'win32') {
   test('runs a Windows .cmd file directly, with shell-free argv semantics preserved', async () => {
     const dir = mkdtempSync(join(tmpdir(), 'agentskit-review-cmd-test-'))
     const cmdPath = join(dir, 'greet.cmd')
-    // A shell-metacharacter (&) argument proves cross-spawn's cmd.exe re-quoting keeps this argv
+    // A shell-metacharacter (&) argument proves spawnNodeChild's cmd.exe re-quoting keeps this argv
     // element intact end to end, the same way shell: false would for a real executable.
     writeFileSync(cmdPath, '@echo off\r\necho hello %1\r\nexit /b 0\r\n')
     const result = await runLocalCli(cmdPath, ['a & b'])

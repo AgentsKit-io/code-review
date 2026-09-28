@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync, renameSync, unlinkSync, writeFileSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
+import { commandExists, runCommand } from '@agentskit/cross-platform'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { createHarnessRun, recordBatchCompletion, recordCanaryAttempt, validateCanary, runBlockerSweep } from '../dist/src/harness.js'
@@ -41,15 +42,15 @@ if (preflight) {
   add('config.exists', Boolean(configFile && existsSync(configFile)), configFile ? `configuration path: ${configFile}` : 'configuration path was not provided', 'provide the validated project configuration path')
   add('github.token', Boolean(process.env.GITHUB_TOKEN), 'GITHUB_TOKEN is available to the child process', 'authenticate GitHub before live review')
   add('pr.identity', Boolean(pr && /^[^/]+\/[^#]+#\d+$/.test(pr)), pr ?? 'PR identity was not provided', 'use --pr owner/repository#number')
-  add('provider.binary', provider !== 'codex-cli' || spawnSync('command', ['-v', 'codex'], { shell: true, encoding: 'utf8' }).status === 0, provider === 'codex-cli' ? 'codex executable is available' : `provider ${provider} is validated by the configured adapter`, 'install or authenticate the selected provider')
+  add('provider.binary', provider !== 'codex-cli' || await commandExists('codex'), provider === 'codex-cli' ? 'codex executable is available' : `provider ${provider} is validated by the configured adapter`, 'install or authenticate the selected provider')
   if (stateDir) {
     const probe = `${stateDir}/.harness-write-probe-${process.pid}`
     try { writeFileSync(probe, 'ok', { flag: 'wx', mode: 0o600 }); unlinkSync(probe); add('state.writable', true, `state directory is writable: ${stateDir}`) }
     catch { add('state.writable', false, `state directory is not writable: ${stateDir}`, 'use a writable run-local state directory') }
   } else add('state.writable', false, 'state directory was not provided', 'provide --state-dir inside the run directory')
   if (expectedVersion) {
-    const npm = spawnSync('npm', ['view', '@agentskit/code-review', 'version'], { encoding: 'utf8', timeout: 30_000 })
-    const actual = npm.status === 0 ? npm.stdout.trim() : ''
+    const npm = await runCommand('npm', ['view', '@agentskit/code-review', 'version'], { timeoutMs: 30_000 }).catch(() => undefined)
+    const actual = npm?.code === 0 && !npm.timedOut ? npm.stdout.trim() : ''
     add('package.version', actual === expectedVersion, `published=${actual || 'unavailable'}, expected=${expectedVersion}`, 'publish the expected package version before starting')
   } else add('package.version', false, 'expected package version was not provided', 'pin --expected-version to an immutable published version')
   const report = runBlockerSweep(checks)

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-import { spawn, spawnSync } from 'node:child_process'
+import { spawnSync } from 'node:child_process'
+import { killProcessTree, spawnNodeChild } from '@agentskit/cross-platform'
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import { dirname, join, resolve } from 'node:path'
@@ -28,16 +29,17 @@ const write = (file, report) => {
   writeFileSync(temporary, `${JSON.stringify(report, null, 2)}\n`, { mode: 0o600 }); renameSync(temporary, target)
 }
 const run = (command, args, options) => new Promise((done) => {
-  const child = spawn(command, args, { cwd: options.cwd, env: options.env, stdio: ['ignore', 'pipe', 'pipe'], detached: process.platform !== 'win32' })
+  const child = spawnNodeChild(command, args, { cwd: options.cwd, env: options.env, stdio: ['ignore', 'pipe', 'pipe'], detached: process.platform !== 'win32' })
   let stdout = ''; let stderr = ''; let timedOut = false
   let settled = false
   let killTimer
+  const killTree = (signal) => { if (child.pid) void killProcessTree(child.pid, signal, (sig) => { child.kill(sig) }); else child.kill(signal) }
   const kill = () => {
-    try { process.kill(-child.pid, 'SIGTERM') } catch { child.kill('SIGTERM') }
-    killTimer = setTimeout(() => { try { process.kill(-child.pid, 'SIGKILL') } catch { child.kill('SIGKILL') } }, 5_000)
+    killTree('SIGTERM')
+    killTimer = setTimeout(() => killTree('SIGKILL'), 5_000)
   }
   const finish = (result) => { if (settled) return; settled = true; clearTimeout(timer); clearTimeout(killTimer); options.signal?.removeEventListener('abort', kill); done(result) }
-  const timer = setTimeout(() => { timedOut = true; try { process.kill(-child.pid, 'SIGKILL') } catch { child.kill('SIGKILL') } }, options.timeout)
+  const timer = setTimeout(() => { timedOut = true; killTree('SIGKILL') }, options.timeout)
   options.signal?.addEventListener('abort', kill, { once: true })
   if (options.signal?.aborted) kill()
   child.stdout.on('data', (chunk) => { stdout = (stdout + chunk).slice(-200_000) })

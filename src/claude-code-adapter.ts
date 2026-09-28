@@ -5,6 +5,7 @@
  * stage offers exactly ONE tool, so we tell Claude to emit only that tool's JSON
  * args and synthesize the `tool_call` stream chunk the runtime expects.
  */
+import { splitLines } from "@agentskit/cross-platform";
 import type { AdapterFactory, AdapterRequest, StreamChunk, StreamSource } from "@agentskit/core";
 import { runLocalCli, type LocalCliMode } from "./local-cli-process.js";
 
@@ -77,7 +78,7 @@ export function claudeCode(opts: { model?: string; mode?: LocalCliMode; oauthTok
           // /login"). The default execFile message embeds the whole prompt — drop it.
           const e = err as { code?: string; message?: string; stderr?: string; stdout?: string };
           const detail = e.code === "ETIMEDOUT" ? e.message : [e.stderr, e.stdout].filter(Boolean).join(" ").trim();
-          yield { type: "error", content: `claude -p failed${detail ? `: ${detail.slice(0, 400)}` : ` (no output): ${(e.message ?? "").split("\n")[0]}`}` };
+          yield { type: "error", content: `claude -p failed${detail ? `: ${detail.slice(0, 400)}` : ` (no output): ${splitLines(e.message ?? "")[0] ?? ""}`}` };
         }
       },
       abort: () => controller.abort(),

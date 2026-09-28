@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-import { spawn, spawnSync } from 'node:child_process'
+import { spawnSync } from 'node:child_process'
+import { killProcessTree, spawnNodeChild } from '@agentskit/cross-platform'
 import { createHash, randomUUID } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, realpathSync, renameSync, statfsSync, unlinkSync, writeFileSync } from 'node:fs'
 import { dirname, extname, isAbsolute, join, resolve } from 'node:path'
@@ -35,17 +36,18 @@ const safeExec = (command, args, options = {}) => {
 }
 const check = (id, ok, message, remediation, evidence) => ({ id, severity: ok ? 'low' : 'blocker', ok, message, remediation, evidence })
 const processResult = (command, args, options = {}) => new Promise((resolveRun) => {
-  const child = spawn(command, args, { cwd: options.cwd ?? root, env: options.env ?? process.env, stdio: [options.input === undefined ? 'ignore' : 'pipe', 'pipe', 'pipe'], detached: process.platform !== 'win32' })
+  const child = spawnNodeChild(command, args, { cwd: options.cwd ?? root, env: options.env ?? process.env, stdio: [options.input === undefined ? 'ignore' : 'pipe', 'pipe', 'pipe'], detached: process.platform !== 'win32' })
   let stdout = ''; let stderr = ''; let timedOut = false
   let settled = false; let killTimer
+  const killTree = (signal) => { if (child.pid) void killProcessTree(child.pid, signal, (sig) => { child.kill(sig) }); else child.kill(signal) }
   const kill = () => {
-    try { process.kill(-child.pid, 'SIGTERM') } catch { child.kill('SIGTERM') }
-    killTimer = setTimeout(() => { try { process.kill(-child.pid, 'SIGKILL') } catch { child.kill('SIGKILL') } }, 5_000)
+    killTree('SIGTERM')
+    killTimer = setTimeout(() => killTree('SIGKILL'), 5_000)
   }
   const finish = (result) => { if (settled) return; settled = true; clearTimeout(timer); clearTimeout(killTimer); shutdown.signal.removeEventListener('abort', kill); resolveRun(result) }
   const timer = setTimeout(() => {
     timedOut = true
-    try { process.kill(-child.pid, 'SIGKILL') } catch { child.kill('SIGKILL') }
+    killTree('SIGKILL')
   }, options.timeout ?? 660_000)
   shutdown.signal.addEventListener('abort', kill, { once: true })
   if (shutdown.signal.aborted) kill()

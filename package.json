@@ -110,9 +110,10 @@
     "docs:doctor": "ak-docs doctor --text",
     "changeset": "changeset",
     "version-packages": "changeset version && npm version --no-git-tag-version --ignore-scripts --allow-same-version $(node -p \"require('./package.json').version\") && npm run docs:index && npm run readme:standard:refresh",
-    "check": "npm run typecheck && npm run test && npm run docs:gate && npm run docs:web:typecheck && node dist/src/cli.js --help && npm run check:readme-standard",
+    "check": "npm run check:cross-platform && npm run typecheck && npm run test && npm run docs:gate && npm run docs:web:typecheck && node dist/src/cli.js --help && npm run check:readme-standard",
     "prepare": "npm run build",
     "prepack": "npm run build && npm run docs:gate",
+    "check:cross-platform": "agentskit-cross-platform check",
     "check:readme-standard": "node scripts/check-readme-standard.mjs",
     "test:readme-standard": "node --test scripts/readme-standard.test.mjs",
     "readme:standard:refresh": "node scripts/refresh-readme-standard.mjs",
@@ -123,10 +124,10 @@
   "dependencies": {
     "@agentskit/adapters": "^0.17.0",
     "@agentskit/core": "^1.12.9",
+    "@agentskit/cross-platform": "^0.1.0",
     "@agentskit/ink": "0.10.11",
     "@agentskit/runtime": "^0.10.17",
     "@agentskit/tools": "^0.13.8",
-    "cross-spawn": "^7.0.6",
     "esbuild": "^0.28.2",
     "tsx": "^4.23.13",
     "zod": "^4.6.5"
@@ -137,7 +138,6 @@
   "devDependencies": {
     "@changesets/changelog-github": "^1.0.1",
     "@changesets/cli": "^3.0.2",
-    "@types/cross-spawn": "^6.0.6",
     "@types/json-schema": "^7.0.15",
     "@types/node": "^22.20.3",
     "typescript": "^7.0.2"

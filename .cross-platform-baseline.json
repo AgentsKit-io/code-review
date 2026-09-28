@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "include": [
+    "src",
+    "agents",
+    "scripts",
+    "apps"
+  ],
+  "exclude": [],
+  "entries": {
+    "agents/code-review/agent.ts": {
+      "child-process-import": 1,
+      "split-newline": 12
+    },
+    "agents/code-review/sources.ts": {
+      "child-process-import": 1,
+      "split-newline": 4
+    },
+    "apps/docs/lib/repo-links.mjs": {
+      "manual-slash-normalize": 2
+    },
+    "scripts/capture-quality-baseline.mjs": {
+      "child-process-import": 1
+    },
+    "scripts/readme-standard.test.mjs": {
+      "child-process-import": 1
+    },
+    "scripts/review-campaign.mjs": {
+      "child-process-import": 1
+    },
+    "scripts/review-cycle.mjs": {
+      "child-process-import": 1
+    },
+    "scripts/review-harness.mjs": {
+      "child-process-import": 1
+    },
+    "scripts/run-cycle-benchmark.mjs": {
+      "child-process-import": 1
+    },
+    "src/github-scm-adapter.ts": {
+      "child-process-import": 1
+    },
+    "src/ollama-adapter.ts": {
+      "split-newline": 1
+    }
+  }
+}
