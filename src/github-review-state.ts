@@ -1,17 +1,26 @@
 import { createHash } from 'node:crypto'
+import { fetchWithRetry, NetError, NetErrorCodes, readText } from '@agentskit/net'
 
 const API = 'https://api.github.com'
+/** Per-attempt GitHub request timeout in milliseconds. */
 export const GITHUB_REQUEST_TIMEOUT_MS = 30_000
+/** Default maximum buffered GitHub response body (25 MiB). */
 export const MAX_GITHUB_RESPONSE_BYTES = 25 * 1024 * 1024
 const MARKER_PREFIX = '<!-- agentskit-code-review:v1'
 const COMMENT_PAGE_SIZE = 100
 const MAX_COMMENT_PAGES = 10
 const REVIEW_PAGE_SIZE = 100
 const MAX_REVIEW_PAGES = 10
+const GITHUB_RETRY_STATUSES = [429, ...Array.from({ length: 100 }, (_, index) => 500 + index)]
 
+/**
+ * GitHub response bodies larger than the requested byte limit.
+ * @param maxBytes Limit that was exceeded.
+ * @param cause NET `AK_NET_BODY_TOO_LARGE` error from the underlying body reader.
+ */
 export class GithubResponseLimitError extends Error {
-  constructor(readonly maxBytes: number) {
-    super(`GitHub response exceeded ${maxBytes} byte limit`)
+  constructor(readonly maxBytes: number, cause?: unknown) {
+    super(`GitHub response exceeded ${maxBytes} byte limit`, cause === undefined ? undefined : { cause })
     this.name = 'GithubResponseLimitError'
   }
 }
@@ -41,38 +50,22 @@ export function reviewMarker(sha: string, fingerprint: string): string {
   return `${MARKER_PREFIX} sha=${sha} fingerprint=${fingerprint} -->`
 }
 
-function retryableGithubGet(error: unknown): boolean {
-  const message = error instanceof Error ? error.message : String(error)
-  const marker = message.indexOf(' → ')
-  const status = marker < 0 ? Number.NaN : Number(message.slice(marker + 3, marker + 6))
-  return status === 429 || (status >= 500 && status < 600)
-    || ['aborted', 'timed out', 'fetch failed', 'network'].some((term) => message.toLowerCase().includes(term))
-}
-
+/**
+ * Read a bounded UTF-8 GitHub body; the default limit is 25 MiB.
+ * `maxBytes` must be a non-negative integer. Overflow throws
+ * `GithubResponseLimitError` with the NET `AK_NET_BODY_TOO_LARGE` error as its cause.
+ * @param response Response whose body should be read.
+ * @param maxBytes Maximum bytes to read; defaults to 25 MiB.
+ */
 export async function readGithubResponseText(response: Response, maxBytes = MAX_GITHUB_RESPONSE_BYTES): Promise<string> {
-  const reader = response.body?.getReader()
-  if (!reader) {
-    const text = await response.text()
-    if (Buffer.byteLength(text, 'utf8') > maxBytes) throw new GithubResponseLimitError(maxBytes)
-    return text
-  }
-  const chunks: Uint8Array[] = []
-  let bytes = 0
   try {
-    for (;;) {
-      const { done, value } = await reader.read()
-      if (done) break
-      bytes += value.byteLength
-      if (bytes > maxBytes) {
-        await reader.cancel()
-        throw new GithubResponseLimitError(maxBytes)
-      }
-      chunks.push(value)
+    return await readText(response, { maxBytes })
+  } catch (error) {
+    if (error instanceof NetError && error.code === NetErrorCodes.AK_NET_BODY_TOO_LARGE) {
+      throw new GithubResponseLimitError(maxBytes, error)
     }
-  } finally {
-    reader.releaseLock()
+    throw error
   }
-  return Buffer.concat(chunks.map((chunk) => Buffer.from(chunk))).toString('utf8')
 }
 
 async function responseDetail(response: Response): Promise<string> {
@@ -80,25 +73,36 @@ async function responseDetail(response: Response): Promise<string> {
   catch (error) { return error instanceof GithubResponseLimitError ? error.message : '' }
 }
 
+/**
+ * Fetch a GitHub GET with two total attempts and a 30-second per-attempt timeout.
+ * Network failures, 429 and 5xx responses retry once using 250 ms-base full jitter;
+ * `Retry-After` is honored up to 60 seconds. 408, 425 and other HTTP statuses are not retried.
+ * Non-2xx responses retain the `GitHub GET <url> → <status>: <detail>` error format.
+ *
+ * @param token Bearer token used for GitHub API authentication.
+ * @param url Request URL.
+ * @param accept GitHub media type; defaults to `application/vnd.github+json`.
+ * @param fetcher Injectable fetch implementation; defaults to `globalThis.fetch`.
+ */
 export async function githubFetch(token: string, url: string, accept = 'application/vnd.github+json', fetcher: typeof fetch = fetch): Promise<Response> {
-  let lastError: unknown
-  for (let attempt = 0; attempt < 2; attempt++) {
-    try {
-      const response = await fetcher(url, {
-        headers: { authorization: `Bearer ${token}`, accept, 'user-agent': 'agentskit-code-review' },
-        signal: AbortSignal.timeout(GITHUB_REQUEST_TIMEOUT_MS),
-      })
-      if (!response.ok) {
-        const detail = await responseDetail(response)
-        throw new Error(`GitHub GET ${url} → ${response.status}${detail ? `: ${detail}` : ''}`)
-      }
-      return response
-    } catch (error) {
-      lastError = error
-      if (attempt === 1 || !retryableGithubGet(error)) throw error
-    }
+  const response = await fetchWithRetry(url, {
+    headers: { authorization: `Bearer ${token}`, accept, 'user-agent': 'agentskit-code-review' },
+  }, {
+    timeoutMs: GITHUB_REQUEST_TIMEOUT_MS,
+    retries: 1,
+    retryMethods: ['GET'],
+    retryStatuses: GITHUB_RETRY_STATUSES,
+    minDelayMs: 250,
+    maxDelayMs: 10_000,
+    jitter: 'full',
+    maxRetryAfterMs: 60_000,
+    fetch: fetcher,
+  })
+  if (!response.ok) {
+    const detail = await responseDetail(response)
+    throw new Error(`GitHub GET ${url} → ${response.status}${detail ? `: ${detail}` : ''}`)
   }
-  throw lastError instanceof Error ? lastError : new Error('GitHub GET failed')
+  return response
 }
 
 export async function githubGet<T>(token: string, path: string, fetcher: typeof fetch = fetch): Promise<T> {

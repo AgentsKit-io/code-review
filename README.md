@@ -282,6 +282,8 @@ reviewdog -f=sarif -name=agentskit-review \
   < "${REPORT_FILE}"
 ```
 
+GitHub GETs use a 30-second per-attempt timeout and at most two attempts. Network failures, `429`, and `5xx` responses retry with full jitter over a 250 ms base delay capped at 10 seconds; `Retry-After` is honored up to 60 seconds. Other statuses, including `408` and `425`, are returned without retry. GitHub response bodies default to a 25 MiB cap. Review and merge writes time out after 30 seconds and are not retried after transport or server failures; the existing review `422` fallback remains. If a review acknowledgement is lost, Code Review checks for the exact posted body before reporting failure.
+
 The reviewdog recipe needs no custom converter: Code Review emits SARIF 2.1.0 and reviewdog consumes SARIF natively. See the [complete GitHub Actions job](docs/OPERATIONS.md#route-findings-through-reviewdog) for pinned installation, base-branch checkout, permissions, severity mapping, and CI ownership of the failure threshold.
 
 ## CLI reference

@@ -126,6 +126,7 @@
     "@agentskit/core": "^1.12.9",
     "@agentskit/cross-platform": "^0.1.0",
     "@agentskit/ink": "0.10.11",
+    "@agentskit/net": "^0.1.0",
     "@agentskit/runtime": "^0.10.17",
     "@agentskit/tools": "^0.13.8",
     "esbuild": "^0.28.2",
