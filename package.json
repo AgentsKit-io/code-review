@@ -124,7 +124,7 @@
   },
   "dependencies": {
     "@agentskit/adapters": "^0.17.0",
-    "@agentskit/core": "^1.12.9",
+    "@agentskit/core": "^1.14.1",
     "@agentskit/cross-platform": "^0.1.0",
     "@agentskit/ink": "0.10.11",
     "@agentskit/net": "^0.1.0",
