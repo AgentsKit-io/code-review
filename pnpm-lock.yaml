@@ -10,25 +10,25 @@ importers:
     dependencies:
       '@agentskit/adapters':
         specifier: ^0.17.0
-        version: 0.17.0
+        version: 0.17.4
       '@agentskit/core':
         specifier: ^1.12.9
-        version: 1.12.9
+        version: 1.13.0
       '@agentskit/cross-platform':
         specifier: ^0.1.0
         version: 0.1.0
       '@agentskit/ink':
-        specifier: 0.10.11
-        version: 0.10.11(react@19.3.0)
+        specifier: 0.10.13
+        version: 0.10.13(react@19.3.0)
       '@agentskit/net':
         specifier: ^0.1.0
         version: 0.1.0
       '@agentskit/runtime':
         specifier: ^0.10.17
-        version: 0.10.17
+        version: 0.10.19
       '@agentskit/tools':
         specifier: ^0.13.8
-        version: 0.13.8
+        version: 0.13.12
       esbuild:
         specifier: ^0.28.2
         version: 0.28.2
@@ -57,12 +57,12 @@ importers:
     optionalDependencies:
       '@agentskit/doc-bridge':
         specifier: ^1.12.0
-        version: 1.12.0(@agentskit/adapters@0.17.0)(@agentskit/core@1.12.9)(@agentskit/ink@0.10.11(react@19.3.0))(graphology-types@0.24.8)(react@19.3.0)
+        version: 1.12.0(@agentskit/adapters@0.17.4)(@agentskit/core@1.13.0)(@agentskit/ink@0.10.13(react@19.3.0))(graphology-types@0.24.8)(react@19.3.0)(supports-color@7.2.0)
 
 packages:
 
-  '@agentskit/adapters@0.17.0':
-    resolution: {integrity: sha512-AibyobwrwHor8yrIwqfh2N1VxNPcSDD1yE9HzgUn6V7E7t3/T13oVeT9pPB36iPvKv+6Pp2v+FKL7QADMMPekw==}
+  '@agentskit/adapters@0.17.4':
+    resolution: {integrity: sha512-0BBlIAWgV0EHouTMxXs7GLVXaaMLagUANbAPmSIdXT7Sik3T6lkqGevL6qlid57V0sV5DaNsMu5ZNNmju06yzQ==}
     peerDependencies:
       '@aws-sdk/client-bedrock-runtime': ^3.0.0
       '@langchain/core': ^1.0.0
@@ -78,14 +78,16 @@ packages:
   '@agentskit/core@1.12.10':
     resolution: {integrity: sha512-dKffCjASPBPvV2xq810dS7X1+/bNfxAJYdI3mPaK1Sj/Scbh8xR37lxo2AWBK+JNL40ffDe/pIJf72S+MUA+bw==}
 
-  '@agentskit/core@1.12.9':
-    resolution: {integrity: sha512-Ou6WB9cDB9o85XpUZKWGfC699OuPzgnP8oXekVRktYBHj+Ww7FX5o10nHVPiG/2a7mJ9paQdyvUbNe5n+RZSlg==}
-
   '@agentskit/core@1.13.0':
     resolution: {integrity: sha512-KgBCpF8232hfGm5ZIzAIEVtjQdLAroGNS2Sd091S0oDr5ouDXvqwk66tVHyVOqezFTulcAyiMKvDVw4Vg89yBA==}
 
   '@agentskit/cross-platform@0.1.0':
     resolution: {integrity: sha512-yl0VHjvs6pjtTYSYOxm3ADTnjC1m3ZAuHh11oDKwmSxEE9u09NLhsGcRFA3tJkWwNHH62a+pV3T0NwLvr0NtPw==}
+    engines: {node: '>=20.19'}
+    hasBin: true
+
+  '@agentskit/cross-platform@0.1.2':
+    resolution: {integrity: sha512-WDj6b8kmJdDPdSSkhQvyfmiYE72ioP4OyaD/L19muK1RH01YkK/woiPggXZmCmqSVQFoSBdHR7awYnQno/YOnw==}
     engines: {node: '>=20.19'}
     hasBin: true
 
@@ -119,23 +121,23 @@ packages:
     engines: {node: '>=22'}
     hasBin: true
 
-  '@agentskit/ink@0.10.11':
-    resolution: {integrity: sha512-bHA305qqWfkmBU/D7Eqc3djUvcFpLl8wxS3AOQwbu7JZsQn0NcbwVHJiJpfoCQ3Hl6omocYoaGVLJSirPHIKiA==}
+  '@agentskit/ink@0.10.13':
+    resolution: {integrity: sha512-FmJJkx6NKdBlHw8cmoWsgmHVFZSlkbvNtmz1J5xFMWu4aENoO8ndr++nNmd92DHwhq24ixT/kTgPpY44D2jY6g==}
     peerDependencies:
       react: '>=18.0.0'
 
-  '@agentskit/integrations@0.7.3':
-    resolution: {integrity: sha512-MWqi0zcxUxC9EScglR13R6kYQxMr4EbzouUsmPA7I5K4ekDABKiyg7fq7c24G1vwrOgzgqv++VPl9UfH/PZtqg==}
+  '@agentskit/integrations@0.7.5':
+    resolution: {integrity: sha512-iJFXKuHh9vby2v5X/kmXtYQJwVz825Ox8ZoUD/J1u3wysf19thWupygZMl2g0HEMB5YjI5NkxVT/4SU6LaK/0Q==}
 
   '@agentskit/net@0.1.0':
     resolution: {integrity: sha512-BGJe9JuoeDzlYslSzhWgb1weyCQqWzfMbWLUl10iQWm3Py0bqzgxjGOEmmiVAo3QhTU+Unvxt9NQcewg8koKwQ==}
     engines: {node: '>=20.19'}
 
-  '@agentskit/runtime@0.10.17':
-    resolution: {integrity: sha512-uz2PFRzuq+uMPdE+Ze+LxB/wD5ca0OJZnSy/vL+gi0Eg7nxkiBACkOj3Ud/E92yp+Th1+PoQUWliQRHkP84HrA==}
+  '@agentskit/runtime@0.10.19':
+    resolution: {integrity: sha512-k9RQ8niqVOx6WSTV1JFxKpiH8kKhvwxjLjx2MJ1XgrdRDmm6K22A0GljKKZnKu4ShpHfWCqKkhMjjLjjLr0kvg==}
 
-  '@agentskit/tools@0.13.8':
-    resolution: {integrity: sha512-1TpDTDPSJNCDCw4SAPxPaWkMQnCZtmGNarKvD9FAuiBzBq+ji4fJEJaMOEkcGRAMY9Sia4+RgJWWJI1/LC3q5g==}
+  '@agentskit/tools@0.13.12':
+    resolution: {integrity: sha512-xeFDDHaP8bifpTNgHjnbHgZgvOZLaUslhQGwW/S8qI5lC5ZXRbebAA5UwvA5EAtzofRgihnn3p64RbU/0MA2vg==}
     peerDependencies:
       better-sqlite3: ^11.0.0 || ^12.0.0 || ^13.0.0
     peerDependenciesMeta:
@@ -1691,13 +1693,12 @@ packages:
 
 snapshots:
 
-  '@agentskit/adapters@0.17.0':
+  '@agentskit/adapters@0.17.4':
     dependencies:
-      '@agentskit/core': 1.12.9
+      '@agentskit/core': 1.13.0
+      '@agentskit/cross-platform': 0.1.2
 
   '@agentskit/core@1.12.10': {}
-
-  '@agentskit/core@1.12.9': {}
 
   '@agentskit/core@1.13.0': {}
 
@@ -1710,7 +1711,16 @@ snapshots:
       tree-kill: 1.2.2
       which: 2.0.2
 
-  '@agentskit/doc-bridge@1.12.0(@agentskit/adapters@0.17.0)(@agentskit/core@1.12.9)(@agentskit/ink@0.10.11(react@19.3.0))(graphology-types@0.24.8)(react@19.3.0)':
+  '@agentskit/cross-platform@0.1.2':
+    dependencies:
+      '@agentskit/core': 1.13.0
+      cross-spawn: 7.0.6
+      graceful-fs: 4.2.11
+      pathe: 2.0.3
+      tree-kill: 1.2.2
+      which: 2.0.2
+
+  '@agentskit/doc-bridge@1.12.0(@agentskit/adapters@0.17.4)(@agentskit/core@1.13.0)(@agentskit/ink@0.10.13(react@19.3.0))(graphology-types@0.24.8)(react@19.3.0)(supports-color@7.2.0)':
     dependencies:
       '@agentskit/harness': 0.11.0
       github-slugger: 2.0.0
@@ -1724,18 +1734,18 @@ snapshots:
       mdast-util-to-string: 4.0.0
       mermaid: 11.17.2
       minimatch: 10.2.6
-      remark-frontmatter: 5.0.0
-      remark-gfm: 4.0.1
-      remark-parse: 11.0.0
+      remark-frontmatter: 5.0.0(supports-color@7.2.0)
+      remark-gfm: 4.0.1(supports-color@7.2.0)
+      remark-parse: 11.0.0(supports-color@7.2.0)
       typescript: 6.0.3
       unified: 11.0.5
       unist-util-visit: 5.1.0
       yaml: 2.9.1
       zod: 4.6.5
     optionalDependencies:
-      '@agentskit/adapters': 0.17.0
-      '@agentskit/core': 1.12.9
-      '@agentskit/ink': 0.10.11(react@19.3.0)
+      '@agentskit/adapters': 0.17.4
+      '@agentskit/core': 1.13.0
+      '@agentskit/ink': 0.10.13(react@19.3.0)
       react: 19.3.0
     transitivePeerDependencies:
       - '@types/react'
@@ -1760,9 +1770,9 @@ snapshots:
       - utf-8-validate
     optional: true
 
-  '@agentskit/ink@0.10.11(react@19.3.0)':
+  '@agentskit/ink@0.10.13(react@19.3.0)':
     dependencies:
-      '@agentskit/core': 1.12.9
+      '@agentskit/core': 1.13.0
       ink: 7.1.1(react@19.3.0)
       marked: 15.0.12
       marked-terminal: 7.3.0(marked@15.0.12)
@@ -1773,9 +1783,9 @@ snapshots:
       - react-devtools-core
       - utf-8-validate
 
-  '@agentskit/integrations@0.7.3':
+  '@agentskit/integrations@0.7.5':
     dependencies:
-      '@agentskit/core': 1.12.9
+      '@agentskit/core': 1.13.0
 
   '@agentskit/net@0.1.0':
     dependencies:
@@ -1783,14 +1793,15 @@ snapshots:
       eventsource-parser: 4.1.1
       ipaddr.js: 2.5.0
 
-  '@agentskit/runtime@0.10.17':
+  '@agentskit/runtime@0.10.19':
     dependencies:
-      '@agentskit/core': 1.12.9
+      '@agentskit/core': 1.13.0
 
-  '@agentskit/tools@0.13.8':
+  '@agentskit/tools@0.13.12':
     dependencies:
-      '@agentskit/core': 1.12.9
-      '@agentskit/integrations': 0.7.3
+      '@agentskit/core': 1.13.0
+      '@agentskit/cross-platform': 0.1.2
+      '@agentskit/integrations': 0.7.5
       ajv: 8.20.0
 
   '@alcalzone/ansi-tokenize@0.3.1':
@@ -2645,9 +2656,11 @@ snapshots:
   dayjs@1.11.23:
     optional: true
 
-  debug@4.4.3:
+  debug@4.4.3(supports-color@7.2.0):
     dependencies:
       ms: 2.1.3
+    optionalDependencies:
+      supports-color: 7.2.0
     optional: true
 
   decode-named-character-reference@1.3.0:
@@ -2961,14 +2974,14 @@ snapshots:
       unist-util-visit-parents: 6.0.2
     optional: true
 
-  mdast-util-from-markdown@2.0.3:
+  mdast-util-from-markdown@2.0.3(supports-color@7.2.0):
     dependencies:
       '@types/mdast': 4.0.4
       '@types/unist': 3.0.3
       decode-named-character-reference: 1.3.0
       devlop: 1.1.0
       mdast-util-to-string: 4.0.0
-      micromark: 4.0.2
+      micromark: 4.0.2(supports-color@7.2.0)
       micromark-util-decode-numeric-character-reference: 2.0.2
       micromark-util-decode-string: 2.0.1
       micromark-util-normalize-identifier: 2.0.1
@@ -2979,12 +2992,12 @@ snapshots:
       - supports-color
     optional: true
 
-  mdast-util-frontmatter@2.0.1:
+  mdast-util-frontmatter@2.0.1(supports-color@7.2.0):
     dependencies:
       '@types/mdast': 4.0.4
       devlop: 1.1.0
       escape-string-regexp: 5.0.0
-      mdast-util-from-markdown: 2.0.3
+      mdast-util-from-markdown: 2.0.3(supports-color@7.2.0)
       mdast-util-to-markdown: 2.1.2
       micromark-extension-frontmatter: 2.0.0
     transitivePeerDependencies:
@@ -3000,55 +3013,55 @@ snapshots:
       micromark-util-character: 2.1.1
     optional: true
 
-  mdast-util-gfm-footnote@2.1.0:
+  mdast-util-gfm-footnote@2.1.0(supports-color@7.2.0):
     dependencies:
       '@types/mdast': 4.0.4
       devlop: 1.1.0
-      mdast-util-from-markdown: 2.0.3
+      mdast-util-from-markdown: 2.0.3(supports-color@7.2.0)
       mdast-util-to-markdown: 2.1.2
       micromark-util-normalize-identifier: 2.0.1
     transitivePeerDependencies:
       - supports-color
     optional: true
 
-  mdast-util-gfm-strikethrough@2.0.0:
+  mdast-util-gfm-strikethrough@2.0.0(supports-color@7.2.0):
     dependencies:
       '@types/mdast': 4.0.4
-      mdast-util-from-markdown: 2.0.3
+      mdast-util-from-markdown: 2.0.3(supports-color@7.2.0)
       mdast-util-to-markdown: 2.1.2
     transitivePeerDependencies:
       - supports-color
     optional: true
 
-  mdast-util-gfm-table@2.0.0:
+  mdast-util-gfm-table@2.0.0(supports-color@7.2.0):
     dependencies:
       '@types/mdast': 4.0.4
       devlop: 1.1.0
       markdown-table: 3.0.4
-      mdast-util-from-markdown: 2.0.3
+      mdast-util-from-markdown: 2.0.3(supports-color@7.2.0)
       mdast-util-to-markdown: 2.1.2
     transitivePeerDependencies:
       - supports-color
     optional: true
 
-  mdast-util-gfm-task-list-item@2.0.0:
+  mdast-util-gfm-task-list-item@2.0.0(supports-color@7.2.0):
     dependencies:
       '@types/mdast': 4.0.4
       devlop: 1.1.0
-      mdast-util-from-markdown: 2.0.3
+      mdast-util-from-markdown: 2.0.3(supports-color@7.2.0)
       mdast-util-to-markdown: 2.1.2
     transitivePeerDependencies:
       - supports-color
     optional: true
 
-  mdast-util-gfm@3.1.0:
+  mdast-util-gfm@3.1.0(supports-color@7.2.0):
     dependencies:
-      mdast-util-from-markdown: 2.0.3
+      mdast-util-from-markdown: 2.0.3(supports-color@7.2.0)
       mdast-util-gfm-autolink-literal: 2.0.1
-      mdast-util-gfm-footnote: 2.1.0
-      mdast-util-gfm-strikethrough: 2.0.0
-      mdast-util-gfm-table: 2.0.0
-      mdast-util-gfm-task-list-item: 2.0.0
+      mdast-util-gfm-footnote: 2.1.0(supports-color@7.2.0)
+      mdast-util-gfm-strikethrough: 2.0.0(supports-color@7.2.0)
+      mdast-util-gfm-table: 2.0.0(supports-color@7.2.0)
+      mdast-util-gfm-task-list-item: 2.0.0(supports-color@7.2.0)
       mdast-util-to-markdown: 2.1.2
     transitivePeerDependencies:
       - supports-color
@@ -3308,10 +3321,10 @@ snapshots:
   micromark-util-types@2.0.2:
     optional: true
 
-  micromark@4.0.2:
+  micromark@4.0.2(supports-color@7.2.0):
     dependencies:
       '@types/debug': 4.1.13
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@7.2.0)
       decode-named-character-reference: 1.3.0
       devlop: 1.1.0
       micromark-core-commonmark: 2.0.3
@@ -3412,32 +3425,32 @@ snapshots:
 
   react@19.3.0: {}
 
-  remark-frontmatter@5.0.0:
+  remark-frontmatter@5.0.0(supports-color@7.2.0):
     dependencies:
       '@types/mdast': 4.0.4
-      mdast-util-frontmatter: 2.0.1
+      mdast-util-frontmatter: 2.0.1(supports-color@7.2.0)
       micromark-extension-frontmatter: 2.0.0
       unified: 11.0.5
     transitivePeerDependencies:
       - supports-color
     optional: true
 
-  remark-gfm@4.0.1:
+  remark-gfm@4.0.1(supports-color@7.2.0):
     dependencies:
       '@types/mdast': 4.0.4
-      mdast-util-gfm: 3.1.0
+      mdast-util-gfm: 3.1.0(supports-color@7.2.0)
       micromark-extension-gfm: 3.0.0
-      remark-parse: 11.0.0
+      remark-parse: 11.0.0(supports-color@7.2.0)
       remark-stringify: 11.0.0
       unified: 11.0.5
     transitivePeerDependencies:
       - supports-color
     optional: true
 
-  remark-parse@11.0.0:
+  remark-parse@11.0.0(supports-color@7.2.0):
     dependencies:
       '@types/mdast': 4.0.4
-      mdast-util-from-markdown: 2.0.3
+      mdast-util-from-markdown: 2.0.3(supports-color@7.2.0)
       micromark-util-types: 2.0.2
       unified: 11.0.5
     transitivePeerDependencies:
