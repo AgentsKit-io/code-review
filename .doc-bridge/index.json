@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "77b15704a8beab5b931159e7cbec5d57553bc27f75d36c06f14be0eb64d87789",
+  "contentHash": "1e84ac4344a36a5f74bcd737573e324ce1a05b9887b19329c569f415ccc1dc75",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-02T22:45:53.000Z",
+  "generatedAt": "2026-10-02T22:54:26.138Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -2640,7 +2640,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "bd0f79c4ae5a44e79e753196f440c46cebcf9ae47f6593cd7e563a25ce26c75a"
+      "contentHash": "d2718d82eb0ed97d0eea150f0e8e2b88bd9f444f6674c916413b508d9766c70a"
     },
     {
       "id": "module:test/multidimensional-analysis.test.mjs",
@@ -3074,7 +3074,7 @@
     }
   },
   "inputs": {
-    "hash": "bc080c46daff28cb046d1bf4654361185b97799c3c3c20ad5e0c3f3d53d92d03",
+    "hash": "f48dcf82766af1eecc7977e5f3ef1ac9762ea0e5eaa12d0e5971c9faba4f2902",
     "fileCount": 191,
     "projectionVersion": 2
   },
@@ -3097,9 +3097,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "4789499b39f1499bc486949f284c3111f055677da1f586023a2bb111cf4a8bf6",
+    "contentHash": "9c6c2966de2a143580f46cabfdac7b89d66fd929bf51b81b1c104c405c491d51",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "b4d221a4442fa8ac289875c2c47d6e21c251ae41b9c5aa0a9511bdb0875089ed",
+    "snapshotHash": "ea1c6f00880e29e075edae789fa3d3988f68622093aeb30b67320a8aab4e33a9",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
@@ -12574,7 +12574,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "bd0f79c4ae5a44e79e753196f440c46cebcf9ae47f6593cd7e563a25ce26c75a",
+        "contentHash": "d2718d82eb0ed97d0eea150f0e8e2b88bd9f444f6674c916413b508d9766c70a",
         "provenance": "observed",
         "confidence": "observed"
       },

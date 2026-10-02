@@ -99,6 +99,7 @@ test('local CLI diagnostics use shared core secret redaction', () => {
     ['short Bearer', 'value=Bearer short', 'value=Bearer [REDACTED]'],
     ['bot path', 'path=/botfakeBotTokenValue12345/method', 'path=/bot[REDACTED]/method'],
     ['PEM block', '-----BEGIN RSA PRIVATE KEY-----\nfake-private-key-material\n-----END RSA PRIVATE KEY-----', '[REDACTED]'],
+    ['PEM EC block', '-----BEGIN EC PRIVATE KEY-----\nfake-private-key-material\n-----END EC PRIVATE KEY-----', '[REDACTED]'],
     ['api_key unquoted', 'api_key=fakeApiKeyValue12345', 'api_key=[REDACTED]'],
     ['api_key quoted', 'api_key="fakeApiKeyValue12345"', 'api_key="[REDACTED]"'],
     ['api-key quoted', "api-key='fakeApiKeyValue12345'", "api-key='[REDACTED]'"],
