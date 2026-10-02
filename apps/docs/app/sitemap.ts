@@ -1,6 +1,8 @@
 import type { MetadataRoute } from 'next'
 import { source } from '@/lib/source'
 import { SITE_URL } from '@/lib/shell'
+// Prerendered: no request-time data (also required by the Cloudflare static export).
+export const dynamic = 'force-static'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = SITE_URL

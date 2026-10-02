@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "0cf8352636aaa74610e01ec88dfb261f6005c348be4c3bec48b03d1ee6905681",
+  "contentHash": "4cb6805f1798ced0c85f9379ab6282ee1f3518e37ddd3869cc2af7feea6a8aeb",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-02T10:04:32.577Z",
+  "generatedAt": "2026-10-02T12:17:07.868Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -702,6 +702,7 @@
       "symbols": [
         "Image",
         "contentType",
+        "dynamic",
         "size"
       ],
       "tags": [
@@ -709,7 +710,7 @@
         "tsx",
         "app"
       ],
-      "contentHash": "264b6c8d8deb50b8220a7ce1977066b04ad918daf501d8a79c48bd430651ca99"
+      "contentHash": "2b8af38f8cdf47375d55d836f62ad136c216980c987a6feccd990318bbaeb78e"
     },
     {
       "id": "module:apps/docs/app/page.tsx",
@@ -732,6 +733,7 @@
       "title": "robots.ts",
       "path": "apps/docs/app/robots.ts",
       "symbols": [
+        "dynamic",
         "robots"
       ],
       "tags": [
@@ -739,7 +741,7 @@
         "ts",
         "app"
       ],
-      "contentHash": "0ba39c3abb8caaf82b9f29028d003d8ddc2b3e8ff2b9f4464d0ad3d87bd2ca4b"
+      "contentHash": "19ec96269b58f887048eab329914a044fa528e88711be52c0aa021218902db85"
     },
     {
       "id": "module:apps/docs/app/sitemap.ts",
@@ -747,6 +749,7 @@
       "title": "sitemap.ts",
       "path": "apps/docs/app/sitemap.ts",
       "symbols": [
+        "dynamic",
         "sitemap"
       ],
       "tags": [
@@ -754,7 +757,7 @@
         "ts",
         "app"
       ],
-      "contentHash": "f500b56b7d8f0a20b207a1e58246d25e0a2e33a0d4464950a6d59a4cd65e45b8"
+      "contentHash": "f09ec2d1b637868a464a874217f6b1db65319861152c5bbd71cff64ce4c58125"
     },
     {
       "id": "module:apps/docs/components/home-sections.tsx",
@@ -903,7 +906,7 @@
         "mjs",
         "docs"
       ],
-      "contentHash": "8b501f704249a635ebf01c98965b47cdde3f39d49e69bf42a1585198e5fcbf6f"
+      "contentHash": "5b549cc1b2a345a4913b3026667ab7af8ad08ade2947905534d73b2ed494ae2c"
     },
     {
       "id": "module:apps/docs/postcss.config.mjs",
@@ -919,6 +922,18 @@
         "docs"
       ],
       "contentHash": "86e5307895a6424e166106895f17f5f33451ebfee23fee0be313dca0993ee034"
+    },
+    {
+      "id": "module:apps/docs/scripts/cloudflare-headers.mjs",
+      "type": "module",
+      "title": "cloudflare-headers.mjs",
+      "path": "apps/docs/scripts/cloudflare-headers.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "1ac216f700a27902b5db6865daac8db0a24c6eb5611c2957c7f699ca1c85d612"
     },
     {
       "id": "module:apps/docs/source.config.ts",
@@ -3048,8 +3063,8 @@
     }
   },
   "inputs": {
-    "hash": "f99fc2c9d4624dd83fe412d8f3948a608447fbd4ad85564cebbb15b1465d186f",
-    "fileCount": 189,
+    "hash": "07c252798053062060bc35b498dc6c85d79b59fa25d8ed4ab1ede20ef52091cb",
+    "fileCount": 190,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3071,9 +3086,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "09bbc44c0862e6da08051ffb8a5aafaac1daeeb1e1153269b0cf38b1aaeedc8f",
+    "contentHash": "5943d5e641d68723bed8236c9bd0409e466d0039212c0f1fb67cf1ba6b7e56d6",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "71bd7aaffa421cc9b23c9a390b3610392f8fb0721512a05e535b621fb4933132",
+    "snapshotHash": "f2389654d9b7e90e1a5ce9637a06d0d1b5a19b712726aa2dec3e6fbe48719021",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
@@ -3093,7 +3108,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 188,
+      "documentCount": 189,
       "fieldNames": [
         "aliases",
         "body",
@@ -3104,13 +3119,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8882978723404253,
-        "body": 49.005319148936174,
-        "headings": 3.723404255319149,
-        "path": 5.632978723404255,
-        "summary": 3.6968085106382977,
-        "symbols": 13.707446808510639,
-        "title": 4.303191489361702
+        "aliases": 2.888888888888889,
+        "body": 48.74603174603175,
+        "headings": 3.7037037037037037,
+        "path": 5.64021164021164,
+        "summary": 3.677248677248677,
+        "symbols": 13.65079365079365,
+        "title": 4.301587301587301
       }
     },
     "entries": [
@@ -3186,7 +3201,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "7be079ac284ef5e393127aa3b5bc428521b9293e26f931dca51849f549af49fa",
+        "contentHash": "753432dc6f4a3a1dcfbae07761b77f25fa56931e02cce58bbef0022689e9a759",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6806,6 +6821,7 @@
         "symbols": [
           "Image",
           "contentType",
+          "dynamic",
           "size"
         ],
         "tags": [
@@ -6817,7 +6833,7 @@
           "title": "opengraph-image.tsx",
           "headings": "",
           "path": "apps/docs/app/opengraph-image.tsx",
-          "symbols": "Image contentType size",
+          "symbols": "Image contentType dynamic size",
           "summary": "",
           "body": "",
           "aliases": "module tsx app"
@@ -6832,7 +6848,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "264b6c8d8deb50b8220a7ce1977066b04ad918daf501d8a79c48bd430651ca99",
+        "contentHash": "2b8af38f8cdf47375d55d836f62ad136c216980c987a6feccd990318bbaeb78e",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6880,6 +6896,7 @@
         "title": "robots.ts",
         "aliases": [],
         "symbols": [
+          "dynamic",
           "robots"
         ],
         "tags": [
@@ -6891,7 +6908,7 @@
           "title": "robots.ts",
           "headings": "",
           "path": "apps/docs/app/robots.ts",
-          "symbols": "robots",
+          "symbols": "dynamic robots",
           "summary": "",
           "body": "",
           "aliases": "module ts app"
@@ -6906,7 +6923,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "0ba39c3abb8caaf82b9f29028d003d8ddc2b3e8ff2b9f4464d0ad3d87bd2ca4b",
+        "contentHash": "19ec96269b58f887048eab329914a044fa528e88711be52c0aa021218902db85",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6917,6 +6934,7 @@
         "title": "sitemap.ts",
         "aliases": [],
         "symbols": [
+          "dynamic",
           "sitemap"
         ],
         "tags": [
@@ -6928,7 +6946,7 @@
           "title": "sitemap.ts",
           "headings": "",
           "path": "apps/docs/app/sitemap.ts",
-          "symbols": "sitemap",
+          "symbols": "dynamic sitemap",
           "summary": "",
           "body": "",
           "aliases": "module ts app"
@@ -6943,7 +6961,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "f500b56b7d8f0a20b207a1e58246d25e0a2e33a0d4464950a6d59a4cd65e45b8",
+        "contentHash": "f09ec2d1b637868a464a874217f6b1db65319861152c5bbd71cff64ce4c58125",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -7315,7 +7333,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "8b501f704249a635ebf01c98965b47cdde3f39d49e69bf42a1585198e5fcbf6f",
+        "contentHash": "5b549cc1b2a345a4913b3026667ab7af8ad08ade2947905534d73b2ed494ae2c",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -7353,6 +7371,40 @@
           "outbound": []
         },
         "contentHash": "86e5307895a6424e166106895f17f5f33451ebfee23fee0be313dca0993ee034",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:apps/docs/scripts/cloudflare-headers.mjs",
+        "kind": "module",
+        "path": "apps/docs/scripts/cloudflare-headers.mjs",
+        "title": "cloudflare-headers.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "cloudflare-headers.mjs",
+          "headings": "",
+          "path": "apps/docs/scripts/cloudflare-headers.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:apps/docs",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "1ac216f700a27902b5db6865daac8db0a24c6eb5611c2957c7f699ca1c85d612",
         "provenance": "observed",
         "confidence": "observed"
       },
