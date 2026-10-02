@@ -38,3 +38,5 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npm audit --omit=dev --audit-level=high
+      - run: npm ci --prefix apps/docs --ignore-scripts
+      - run: npm audit --prefix apps/docs --audit-level=high

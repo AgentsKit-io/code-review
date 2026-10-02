@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "1e84ac4344a36a5f74bcd737573e324ce1a05b9887b19329c569f415ccc1dc75",
+  "contentHash": "c0bb1e823ebe740200d9f235d5ee7ce9818f5969abcc3e1fedf5eb423470219f",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-02T22:54:26.138Z",
+  "generatedAt": "2026-10-02T23:18:43.101Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -3074,7 +3074,7 @@
     }
   },
   "inputs": {
-    "hash": "f48dcf82766af1eecc7977e5f3ef1ac9762ea0e5eaa12d0e5971c9faba4f2902",
+    "hash": "2a600e207c27cd95c77f44a88f277ac22516de2de8cc88606af60549a55702fb",
     "fileCount": 191,
     "projectionVersion": 2
   },
