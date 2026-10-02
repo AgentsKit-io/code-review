@@ -1,0 +1,11 @@
+# Cloudflare Workers static assets (migration off Vercel). Serves the static export built with
+# CF_STATIC_EXPORT=1 (see next.config.mjs); _headers is written by scripts/cloudflare-headers.mjs.
+# Deploy: npm run cf:deploy   (needs CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID)
+name = "ak-code-review"
+compatibility_date = "2026-10-01"
+workers_dev = true
+
+[assets]
+directory = "out"
+html_handling = "auto-trailing-slash"
+not_found_handling = "404-page"

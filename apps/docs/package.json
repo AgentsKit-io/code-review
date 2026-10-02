@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "fumadocs-mdx && next build",
-    "typecheck": "fumadocs-mdx && tsc --noEmit"
+    "typecheck": "fumadocs-mdx && tsc --noEmit",
+    "cf:build": "CF_STATIC_EXPORT=1 npm run build && node scripts/cloudflare-headers.mjs",
+    "cf:deploy": "npm run cf:build && npx -y wrangler@4 deploy"
   },
   "dependencies": {
     "fumadocs-core": "16.15.4",
