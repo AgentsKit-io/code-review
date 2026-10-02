@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict'
+import { createServer } from 'node:http'
 import test from 'node:test'
 import { createGithubScmAdapter } from '../dist/src/github-scm-adapter.js'
+import { GithubResponseLimitError, githubFetch, githubGet, readGithubResponseText } from '../dist/src/github-review-state.js'
 
 const pull = {
   title: 'Adapter migration', state: 'open', draft: false, updated_at: '2026-09-09T00:00:00.000Z', user: { login: 'teammate' }, labels: [{ name: 'team' }],
@@ -8,6 +10,319 @@ const pull = {
   base: { sha: '1234567abcdef', ref: 'main', repo: { full_name: 'org/repo' } },
   mergeable: true, mergeable_state: 'clean',
 }
+
+function listen(server) {
+  return new Promise((resolve, reject) => {
+    server.once('error', reject)
+    server.listen(0, '127.0.0.1', () => resolve(server.address()))
+  })
+}
+
+function close(server) {
+  return new Promise(resolve => {
+    server.close(resolve)
+    server.closeAllConnections()
+  })
+}
+
+function localGithubFetch(baseUrl) {
+  const nativeFetch = globalThis.fetch
+  return (input, init) => {
+    const source = input instanceof Request ? input.url : String(input)
+    const target = new URL(source)
+    return nativeFetch(new URL(`${target.pathname}${target.search}`, baseUrl), init)
+  }
+}
+
+async function waitFor(predicate) {
+  const deadline = Date.now() + 1_500
+  while (!predicate() && Date.now() < deadline) await new Promise(resolve => setTimeout(resolve, 5))
+  return predicate()
+}
+
+async function withShortNativeTimeouts(run) {
+  const nativeTimeout = AbortSignal.timeout
+  const random = Math.random
+  const configuredTimeouts = []
+  AbortSignal.timeout = ms => {
+    configuredTimeouts.push(ms)
+    return nativeTimeout.call(AbortSignal, Math.min(ms, 60))
+  }
+  Math.random = () => 0
+  try { return await run(configuredTimeouts) }
+  finally {
+    AbortSignal.timeout = nativeTimeout
+    Math.random = random
+  }
+}
+
+test('GitHub GET retries native 429 and network failures, but preserves terminal status details', async () => {
+  let rateLimitCalls = 0
+  let dateRetryCalls = 0
+  let cappedRetryCalls = 0
+  let networkCalls = 0
+  let serverErrorCalls = 0
+  let requestTimeoutCalls = 0
+  let earlyStatusCalls = 0
+  const observed = []
+  const server = createServer((request, response) => {
+    const path = new URL(request.url, 'http://127.0.0.1').pathname
+    observed.push({ path, method: request.method, auth: /^Bearer \S+$/.test(request.headers.authorization ?? ''), accept: request.headers.accept, agent: request.headers['user-agent'] })
+    if (path === '/rate-limit') {
+      rateLimitCalls++
+      if (rateLimitCalls === 1) {
+        response.writeHead(429, { 'retry-after': '0.04' })
+        response.end('rate limited')
+      } else response.end('{"ok":true}')
+      return
+    }
+    if (path === '/retry-date') {
+      dateRetryCalls++
+      if (dateRetryCalls === 1) {
+        response.writeHead(429, { 'retry-after': new Date(Date.now() + 2_000).toUTCString() })
+        response.end('rate limited')
+      } else response.end('{"dateRetry":true}')
+      return
+    }
+    if (path === '/retry-after-cap') {
+      cappedRetryCalls++
+      response.writeHead(429, { 'retry-after': '61' })
+      response.end('retry-after exceeds cap')
+      return
+    }
+    if (path === '/server-error') {
+      serverErrorCalls++
+      if (serverErrorCalls === 1) {
+        response.writeHead(503)
+        response.end('transient server error')
+      } else response.end('{"serverRetry":true}')
+      return
+    }
+    if (path === '/too-early') {
+      earlyStatusCalls++
+      response.writeHead(425)
+      response.end('too early')
+      return
+    }
+    if (path === '/request-timeout') {
+      requestTimeoutCalls++
+      response.writeHead(408)
+      response.end('request timeout')
+      return
+    }
+    if (path === '/invalid-json') {
+      response.end('{broken')
+      return
+    }
+    if (path === '/network') {
+      networkCalls++
+      if (networkCalls === 1) { request.socket.destroy(); return }
+      response.end('{"recovered":true}')
+      return
+    }
+    response.writeHead(404, { 'content-type': 'application/json' })
+    response.end('{"message":"Not Found"}')
+  })
+  const address = await listen(server)
+  const random = Math.random
+  Math.random = () => 0
+  try {
+    const fetcher = localGithubFetch(`http://127.0.0.1:${address.port}`)
+    const secondsStart = Date.now()
+    const rateLimit = await githubFetch('fixture-token', 'https://api.github.com/rate-limit', undefined, fetcher)
+    assert.equal(await rateLimit.text(), '{"ok":true}')
+    assert.ok(Date.now() - secondsStart >= 20, 'delta-seconds Retry-After should delay the retry')
+    const dateStart = Date.now()
+    const dateRetry = await githubFetch('fixture-token', 'https://api.github.com/retry-date', undefined, fetcher)
+    assert.equal(await dateRetry.text(), '{"dateRetry":true}')
+    assert.ok(Date.now() - dateStart >= 800, 'HTTP-date Retry-After should delay the retry')
+    await assert.rejects(
+      githubFetch('fixture-token', 'https://api.github.com/retry-after-cap', undefined, fetcher),
+      /GitHub GET https:\/\/api\.github\.com\/retry-after-cap → 429: retry-after exceeds cap/,
+    )
+    const network = await githubFetch('fixture-token', 'https://api.github.com/network', undefined, fetcher)
+    assert.equal(await network.text(), '{"recovered":true}')
+    const serverError = await githubFetch('fixture-token', 'https://api.github.com/server-error', undefined, fetcher)
+    assert.equal(await serverError.text(), '{"serverRetry":true}')
+    await assert.rejects(
+      githubFetch('fixture-token', 'https://api.github.com/not-found', undefined, fetcher),
+      /GitHub GET https:\/\/api\.github\.com\/not-found → 404: \{"message":"Not Found"\}/,
+    )
+    await assert.rejects(
+      githubFetch('fixture-token', 'https://api.github.com/too-early', undefined, fetcher),
+      /GitHub GET https:\/\/api\.github\.com\/too-early → 425: too early/,
+    )
+    await assert.rejects(
+      githubFetch('fixture-token', 'https://api.github.com/request-timeout', undefined, fetcher),
+      /GitHub GET https:\/\/api\.github\.com\/request-timeout → 408: request timeout/,
+    )
+    await assert.rejects(githubGet('fixture-token', '/invalid-json', fetcher), SyntaxError)
+    assert.equal(rateLimitCalls, 2)
+    assert.equal(dateRetryCalls, 2)
+    assert.equal(cappedRetryCalls, 1, 'Retry-After above the NET cap should be returned without another request')
+    assert.equal(networkCalls, 2)
+    assert.equal(serverErrorCalls, 2)
+    assert.equal(requestTimeoutCalls, 1, '408 must not be added to the GitHub retry status set')
+    assert.equal(earlyStatusCalls, 1, '425 must not be added to the GitHub retry status set')
+    assert.ok(observed.every(({ method, auth, accept, agent }) => method === 'GET' && auth && accept === 'application/vnd.github+json' && agent === 'agentskit-code-review'))
+  } finally {
+    Math.random = random
+    await close(server)
+  }
+})
+
+test('GitHub writes use one native POST and reconcile a committed but lost acknowledgement', async () => {
+  const reviews = []
+  const writes = []
+  const observed = []
+  const server = createServer((request, response) => {
+    const path = new URL(request.url, 'http://127.0.0.1').pathname
+    observed.push({ method: request.method, auth: /^Bearer \S+$/.test(request.headers.authorization ?? ''), contentType: request.headers['content-type'] })
+    if (request.method === 'GET' && path.endsWith('/pulls/7/reviews')) {
+      response.setHeader('content-type', 'application/json')
+      response.end(JSON.stringify(reviews))
+      return
+    }
+    if (request.method === 'POST' && path.endsWith('/pulls/7/reviews')) {
+      let raw = ''
+      request.setEncoding('utf8')
+      request.on('data', chunk => { raw += chunk })
+      request.on('end', () => {
+        const body = JSON.parse(raw)
+        writes.push(body)
+        reviews.push({ id: 71, body: body.body })
+        response.writeHead(502, { 'content-type': 'application/json' })
+        response.end('{"message":"server failed after commit"}')
+      })
+      return
+    }
+    response.writeHead(404)
+    response.end()
+  })
+  const address = await listen(server)
+  try {
+    const scm = createGithubScmAdapter({ token: 'fixture-token', fetch: localGithubFetch(`http://127.0.0.1:${address.port}`) })
+    const receipt = await scm.publishReview(
+      { repository: 'org/repo', id: '7' },
+      { channel: 'review', headRevision: pull.head.sha, fingerprint: 'native-lost-ack', verdict: 'APPROVE', summary: 'Native transport acceptance.', annotations: [] },
+    )
+    assert.equal(receipt.id, '71')
+    assert.equal(writes.length, 1)
+    assert.equal(writes[0].event, 'COMMENT')
+    assert.match(writes[0].body, /Native transport acceptance\./)
+    assert.ok(observed.every(({ auth }) => auth))
+    assert.equal(observed.filter(({ method }) => method === 'POST').length, 1)
+    assert.ok(observed.filter(({ method }) => method === 'POST').every(({ contentType }) => contentType === 'application/json'))
+  } finally { await close(server) }
+})
+
+test('NET bounded reads cancel declared and chunked oversized native HTTP bodies', async () => {
+  const canceled = []
+  const server = createServer((request, response) => {
+    const path = new URL(request.url, 'http://127.0.0.1').pathname
+    response.once('close', () => {
+      if (!response.writableFinished) canceled.push(path)
+      clearTimeout(timer)
+    })
+    const timer = setTimeout(() => response.end('67890'), 500)
+    if (path === '/declared') response.writeHead(200, { 'content-length': '10' })
+    else response.writeHead(200)
+    response.write('12345')
+  })
+  const address = await listen(server)
+  try {
+    const fetcher = localGithubFetch(`http://127.0.0.1:${address.port}`)
+    for (const path of ['/declared', '/chunked']) {
+      const response = await githubFetch('fixture-token', `https://api.github.com${path}`, undefined, fetcher)
+      await assert.rejects(readGithubResponseText(response, 4), error => {
+        assert.ok(error instanceof GithubResponseLimitError)
+        assert.equal(error.maxBytes, 4)
+        assert.equal(error.cause?.code, 'AK_NET_BODY_TOO_LARGE')
+        return true
+      })
+      assert.equal(await waitFor(() => canceled.includes(path)), true, `${path} transport should close after overflow`)
+    }
+    assert.deepEqual(canceled.sort(), ['/chunked', '/declared'])
+  } finally { await close(server) }
+})
+
+test('NET per-attempt timeout cancels native GETs before headers and while reading a body, then recovers', async () => {
+  await withShortNativeTimeouts(async configuredTimeouts => {
+    let waitingHeaders = 0
+    let bodyRequests = 0
+    const canceled = []
+    const server = createServer((request, response) => {
+      const path = new URL(request.url, 'http://127.0.0.1').pathname
+      if (path === '/headers') waitingHeaders++
+      if (path === '/body') bodyRequests++
+      const timer = setTimeout(() => response.end('late response'), 500)
+      response.once('close', () => {
+        if (!response.writableFinished) canceled.push(path)
+        clearTimeout(timer)
+      })
+      if (path === '/headers') return
+      response.writeHead(200, { 'content-type': 'application/json' })
+      if (path === '/body' && bodyRequests === 1) response.write('{"ok":')
+      else response.end(path === '/body' ? '{"recovered":true}' : '{"ok":true}')
+    })
+    const address = await listen(server)
+    try {
+      const fetcher = localGithubFetch(`http://127.0.0.1:${address.port}`)
+      await assert.rejects(
+        githubFetch('fixture-token', 'https://api.github.com/headers', undefined, fetcher),
+        error => error?.code === 'AK_NET_TIMEOUT',
+      )
+      assert.equal(waitingHeaders, 2, 'the idempotent GET should retry once after a timed out attempt')
+      assert.equal(await waitFor(() => canceled.filter(path => path === '/headers').length === 2), true)
+
+      const firstBody = await githubFetch('fixture-token', 'https://api.github.com/body', undefined, fetcher)
+      await assert.rejects(readGithubResponseText(firstBody), error => error instanceof Error && /abort|timeout|terminated/i.test(`${error.name} ${error.message}`))
+      assert.equal(await waitFor(() => canceled.includes('/body')), true, 'the streaming transport should close on its request deadline')
+
+      const recovered = await githubFetch('fixture-token', 'https://api.github.com/body', undefined, fetcher)
+      assert.equal(await readGithubResponseText(recovered), '{"recovered":true}')
+      assert.equal(bodyRequests, 2)
+      assert.ok(configuredTimeouts.length >= 4 && configuredTimeouts.every(ms => ms === 30_000))
+    } finally { await close(server) }
+  })
+})
+
+test('NET timeout cancels a native mutation response body without retry, then a later merge succeeds', async () => {
+  await withShortNativeTimeouts(async configuredTimeouts => {
+    const writes = []
+    let canceled = false
+    const server = createServer((request, response) => {
+      let raw = ''
+      request.setEncoding('utf8')
+      request.on('data', chunk => { raw += chunk })
+      request.on('end', () => {
+        writes.push({ method: request.method, auth: /^Bearer \S+$/.test(request.headers.authorization ?? ''), contentType: request.headers['content-type'], body: JSON.parse(raw) })
+        response.writeHead(200, { 'content-type': 'application/json' })
+        if (writes.length === 1) {
+          const timer = setTimeout(() => response.end('{"merged":true,"sha":"late"}'), 500)
+          response.once('close', () => {
+            if (!response.writableFinished) canceled = true
+            clearTimeout(timer)
+          })
+          response.write('{"merged":')
+        } else response.end('{"merged":true,"sha":"fedcba7654321"}')
+      })
+    })
+    const address = await listen(server)
+    try {
+      const scm = createGithubScmAdapter({ token: 'fixture-token', fetch: localGithubFetch(`http://127.0.0.1:${address.port}`) })
+      const request = { expectedHeadRevision: pull.head.sha, method: 'squash', admin: false }
+      await assert.rejects(scm.merge({ repository: 'org/repo', id: '7' }, request), error => error instanceof Error && /abort|timeout|terminated/i.test(`${error.name} ${error.message}`))
+      assert.equal(await waitFor(() => canceled), true, 'the mutation response transport should close after its deadline')
+      assert.equal(writes.length, 1, 'a failed PUT response body must not cause an automatic mutation retry')
+      const merged = await scm.merge({ repository: 'org/repo', id: '7' }, request)
+      assert.equal(merged.revision, 'fedcba7654321')
+      assert.equal(writes.length, 2)
+      assert.ok(writes.every(({ method, auth, contentType, body }) => method === 'PUT' && auth && contentType === 'application/json' && body.sha === pull.head.sha))
+      assert.ok(configuredTimeouts.length >= 2 && configuredTimeouts.every(ms => ms === 30_000))
+    } finally { await close(server) }
+  })
+})
 
 test('transient file 404 retries once at the identical revision and persistent 404 fails', async () => {
   const urls = []

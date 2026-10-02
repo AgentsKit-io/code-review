@@ -20,6 +20,9 @@ importers:
       '@agentskit/ink':
         specifier: 0.10.11
         version: 0.10.11(react@19.3.0)
+      '@agentskit/net':
+        specifier: ^0.1.0
+        version: 0.1.0
       '@agentskit/runtime':
         specifier: ^0.10.17
         version: 0.10.17
@@ -78,6 +81,9 @@ packages:
   '@agentskit/core@1.12.9':
     resolution: {integrity: sha512-Ou6WB9cDB9o85XpUZKWGfC699OuPzgnP8oXekVRktYBHj+Ww7FX5o10nHVPiG/2a7mJ9paQdyvUbNe5n+RZSlg==}
 
+  '@agentskit/core@1.13.0':
+    resolution: {integrity: sha512-KgBCpF8232hfGm5ZIzAIEVtjQdLAroGNS2Sd091S0oDr5ouDXvqwk66tVHyVOqezFTulcAyiMKvDVw4Vg89yBA==}
+
   '@agentskit/cross-platform@0.1.0':
     resolution: {integrity: sha512-yl0VHjvs6pjtTYSYOxm3ADTnjC1m3ZAuHh11oDKwmSxEE9u09NLhsGcRFA3tJkWwNHH62a+pV3T0NwLvr0NtPw==}
     engines: {node: '>=20.19'}
@@ -120,6 +126,10 @@ packages:
 
   '@agentskit/integrations@0.7.3':
     resolution: {integrity: sha512-MWqi0zcxUxC9EScglR13R6kYQxMr4EbzouUsmPA7I5K4ekDABKiyg7fq7c24G1vwrOgzgqv++VPl9UfH/PZtqg==}
+
+  '@agentskit/net@0.1.0':
+    resolution: {integrity: sha512-BGJe9JuoeDzlYslSzhWgb1weyCQqWzfMbWLUl10iQWm3Py0bqzgxjGOEmmiVAo3QhTU+Unvxt9NQcewg8koKwQ==}
+    engines: {node: '>=20.19'}
 
   '@agentskit/runtime@0.10.17':
     resolution: {integrity: sha512-uz2PFRzuq+uMPdE+Ze+LxB/wD5ca0OJZnSy/vL+gi0Eg7nxkiBACkOj3Ud/E92yp+Th1+PoQUWliQRHkP84HrA==}
@@ -999,6 +1009,10 @@ packages:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
     engines: {node: '>=0.8.x'}
 
+  eventsource-parser@4.1.1:
+    resolution: {integrity: sha512-zaWNqeSLeyzEAAt2Q6aDBRDRk/VnPmsKqvToyGvv6aahvLv71A4Jw7jG93Hckf11zXurbqgsffvpSgKPoeU1Qw==}
+    engines: {node: '>=22.12'}
+
   extend@3.0.2:
     resolution: {integrity: sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==}
 
@@ -1141,6 +1155,10 @@ packages:
   internmap@2.0.3:
     resolution: {integrity: sha512-5Hh7Y1wQbvY5ooGgPbDaL5iYLAPzMTUrjMulskHLH6wnv/A+1q5rgEaiuqEjB+oxGXIVZs1FF+R/KPN3ZSQYYg==}
     engines: {node: '>=12'}
+
+  ipaddr.js@2.5.0:
+    resolution: {integrity: sha512-aq+t5NAc+cS6rZQQVWC2x98CPqGtKKTMDd4Gaodv0wShnItdKg/51djkGJ1hqH+Oy0ivDftCbSLCQob8zso01w==}
+    engines: {node: '>= 10'}
 
   is-fullwidth-code-point@3.0.0:
     resolution: {integrity: sha512-zymm5+u+sCsSWyD9qNaejV3DFvhCKclKdizYaJUuHA83RLjb7nSuGnddCHGv0hk+KY7BMAlsWeK4Ueg6EV6XQg==}
@@ -1681,6 +1699,8 @@ snapshots:
 
   '@agentskit/core@1.12.9': {}
 
+  '@agentskit/core@1.13.0': {}
+
   '@agentskit/cross-platform@0.1.0':
     dependencies:
       '@agentskit/core': 1.12.10
@@ -1756,6 +1776,12 @@ snapshots:
   '@agentskit/integrations@0.7.3':
     dependencies:
       '@agentskit/core': 1.12.9
+
+  '@agentskit/net@0.1.0':
+    dependencies:
+      '@agentskit/core': 1.13.0
+      eventsource-parser: 4.1.1
+      ipaddr.js: 2.5.0
 
   '@agentskit/runtime@0.10.17':
     dependencies:
@@ -2694,6 +2720,8 @@ snapshots:
   events@3.3.0:
     optional: true
 
+  eventsource-parser@4.1.1: {}
+
   extend@3.0.2:
     optional: true
 
@@ -2854,6 +2882,8 @@ snapshots:
 
   internmap@2.0.3:
     optional: true
+
+  ipaddr.js@2.5.0: {}
 
   is-fullwidth-code-point@3.0.0: {}
 
