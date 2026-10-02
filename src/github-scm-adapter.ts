@@ -1,5 +1,6 @@
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
+import { fetchWithRetry } from '@agentskit/net'
 import {
   ChangeRequestDiffSchema, ChangeRequestMetadataSchema, ChangeRequestQuerySchema, ChangeRequestRefSchema,
   ScmCapabilitiesSchema, ScmFileContentSchema, ScmMergeReadinessSchema, ScmMergeReceiptSchema,
@@ -52,11 +53,15 @@ export function createGithubScmAdapter(options: GithubScmAdapterOptions): ScmAda
   const api = <T>(token: string, path: string) => githubGet<T>(token, path, fetcher)
 
   const mutate = async <T>(method: 'POST' | 'PATCH' | 'PUT', path: string, body: unknown): Promise<T> => {
-    const response = await fetcher(`https://api.github.com${path}`, {
+    const response = await fetchWithRetry(`https://api.github.com${path}`, {
       method,
       headers: { authorization: `Bearer ${options.token}`, accept: 'application/vnd.github+json', 'user-agent': 'agentskit-code-review', 'content-type': 'application/json' },
       body: JSON.stringify(body),
-      signal: AbortSignal.timeout(GITHUB_REQUEST_TIMEOUT_MS),
+    }, {
+      timeoutMs: GITHUB_REQUEST_TIMEOUT_MS,
+      retries: 0,
+      retryMethods: ['GET'],
+      fetch: fetcher,
     })
     if (!response.ok) {
       const detail = (await readGithubResponseText(response, 4_096)).trim().slice(0, 300)

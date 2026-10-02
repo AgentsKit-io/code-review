@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "a15caa963d4454fed3ffda7929499bf582e4edcd6a5a51f86b27321137667cf4",
+  "contentHash": "0cf8352636aaa74610e01ec88dfb261f6005c348be4c3bec48b03d1ee6905681",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-09-28T01:57:08.603Z",
+  "generatedAt": "2026-10-02T10:04:32.577Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -69,6 +69,18 @@
         "unclassified"
       ],
       "contentHash": "7e39624b94ae9465780a975f1452b2a99c6a5f88eb027b0fe1d0f314e194bcc8"
+    },
+    {
+      "id": "document:.changeset/net14-github-network.md",
+      "type": "document",
+      "title": "net14-github-network.md",
+      "path": ".changeset/net14-github-network.md",
+      "description": "Use @agentskit/net for GitHub retry, per-attempt timeout, and bounded response-body handling. GETs now honor bounded Retry-After and jittered backoff; write reconciliation and the single-attempt mutation policy remain intact.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "afa431a8b50e2d201ee899b93e75dafa160b9e8a63b02cdd50d037efefc0cd93"
     },
     {
       "id": "document:.changeset/presentation-ui-fixes.md",
@@ -440,7 +452,7 @@
         "document",
         "project"
       ],
-      "contentHash": "c0abc05a0c9f3bec4bf5e32ded3c35197e6d09fa192235a28fb1aec9b4e0adfe"
+      "contentHash": "ad54555d773a6ac456975bd899befd048c46b50b7dd3ef0dcec808f5dd2bcf1b"
     },
     {
       "id": "document:ROADMAP.md",
@@ -1438,7 +1450,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "14762dcc01d7331c338c4aff7d8f97f214808dbaac06f91caf552931f771df49"
+      "contentHash": "a062ff0e72cf44ff0e0f7881a4b937f144240179555af245866b19fd8d4cfa2d"
     },
     {
       "id": "module:src/github-scm-adapter.ts",
@@ -1454,7 +1466,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "beb6a03f1c2d5720f6156806590bf0ffe36aa8bc72b4ab4cb2891760da05b7a5"
+      "contentHash": "12172896656312674619d565abc99a587b7af6a58f2aa57483da6cfee31baad7"
     },
     {
       "id": "module:src/grok-cli-adapter.ts",
@@ -2542,7 +2554,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "01401eeaf843637e0ee3b35aac4248d5c36896c0921b035db41c92842f04d949"
+      "contentHash": "042c68eb090d680c6d8af2e3b63b8a38b7f095d0a1ac25b25ba3885c1da52a86"
     },
     {
       "id": "module:test/grok-cli-adapter.test.mjs",
@@ -3036,8 +3048,8 @@
     }
   },
   "inputs": {
-    "hash": "877673bfb5329e9ce3ee346e57e2554ebfcdfd1190fb40dd211361f6f1ae09ed",
-    "fileCount": 188,
+    "hash": "f99fc2c9d4624dd83fe412d8f3948a608447fbd4ad85564cebbb15b1465d186f",
+    "fileCount": 189,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3059,9 +3071,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "d1ac325289e4e01674ce5078949985d27ebb2994ad85f4bfa505f0c848055fe1",
+    "contentHash": "09bbc44c0862e6da08051ffb8a5aafaac1daeeb1e1153269b0cf38b1aaeedc8f",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "3409d7a44dc9a0ab65b9aa94b8ce15984b907babd6b4c77b34ada9777a6438c4",
+    "snapshotHash": "71bd7aaffa421cc9b23c9a390b3610392f8fb0721512a05e535b621fb4933132",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
@@ -3081,7 +3093,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 187,
+      "documentCount": 188,
       "fieldNames": [
         "aliases",
         "body",
@@ -3092,13 +3104,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.893048128342246,
-        "body": 49.080213903743314,
-        "headings": 3.7433155080213902,
-        "path": 5.6310160427807485,
-        "summary": 3.5294117647058822,
-        "symbols": 13.780748663101605,
-        "title": 4.2994652406417115
+        "aliases": 2.8882978723404253,
+        "body": 49.005319148936174,
+        "headings": 3.723404255319149,
+        "path": 5.632978723404255,
+        "summary": 3.6968085106382977,
+        "symbols": 13.707446808510639,
+        "title": 4.303191489361702
       }
     },
     "entries": [
@@ -3451,6 +3463,38 @@
           "outbound": []
         },
         "contentHash": "7e39624b94ae9465780a975f1452b2a99c6a5f88eb027b0fe1d0f314e194bcc8",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:.changeset/net14-github-network.md",
+        "kind": "document",
+        "path": ".changeset/net14-github-network.md",
+        "title": "net14-github-network.md",
+        "summary": "Use @agentskit/net for GitHub retry, per-attempt timeout, and bounded response-body handling. GETs now honor bounded Retry-After and jittered backoff; write reconciliation and the single-attempt mutation policy remain intact.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "net14-github-network.md",
+          "headings": "",
+          "path": ".changeset/net14-github-network.md",
+          "symbols": "",
+          "summary": "Use @agentskit/net for GitHub retry, per-attempt timeout, and bounded response-body handling. GETs now honor bounded Retry-After and jittered backoff; write reconciliation and the single-attempt mutation policy remain intact.",
+          "body": "Use @agentskit/net for GitHub retry, per-attempt timeout, and bounded response-body handling. GETs now honor bounded Retry-After and jittered backoff; write reconciliation and the single-attempt mutation policy remain intact.",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "afa431a8b50e2d201ee899b93e75dafa160b9e8a63b02cdd50d037efefc0cd93",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -5773,7 +5817,7 @@
             }
           ]
         },
-        "contentHash": "c0abc05a0c9f3bec4bf5e32ded3c35197e6d09fa192235a28fb1aec9b4e0adfe",
+        "contentHash": "ad54555d773a6ac456975bd899befd048c46b50b7dd3ef0dcec808f5dd2bcf1b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -9145,7 +9189,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "14762dcc01d7331c338c4aff7d8f97f214808dbaac06f91caf552931f771df49",
+        "contentHash": "a062ff0e72cf44ff0e0f7881a4b937f144240179555af245866b19fd8d4cfa2d",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -9221,7 +9265,7 @@
             }
           ]
         },
-        "contentHash": "beb6a03f1c2d5720f6156806590bf0ffe36aa8bc72b4ab4cb2891760da05b7a5",
+        "contentHash": "12172896656312674619d565abc99a587b7af6a58f2aa57483da6cfee31baad7",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -12276,7 +12320,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "01401eeaf843637e0ee3b35aac4248d5c36896c0921b035db41c92842f04d949",
+        "contentHash": "042c68eb090d680c6d8af2e3b63b8a38b7f095d0a1ac25b25ba3885c1da52a86",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13572,7 +13616,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "66e5bdd8091aabce3573bce22f0764fdaad35bb4397d65376486a53e22255d92",
+        "contentHash": "1c28a9c43593bbb6241ee8c88323adf7b1ac19b485d6694856359bffe98e5af2",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
