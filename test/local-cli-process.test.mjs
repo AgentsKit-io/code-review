@@ -3,7 +3,7 @@ import { mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
-import { runLocalCli } from '../dist/src/local-cli-process.js'
+import { redactDiagnostic, runLocalCli } from '../dist/src/local-cli-process.js'
 
 const node = process.execPath
 
@@ -78,6 +78,56 @@ test('the stdin option writes content to the child before stdin closes', async (
 test('omitting stdin still closes it empty, unchanged from before', async () => {
   const result = await runLocalCli(node, ['-e', 'let data = ""; process.stdin.on("data", (c) => { data += c }); process.stdin.on("end", () => process.stdout.write(JSON.stringify({ length: data.length })))'])
   assert.equal(result.stdout, '{"length":0}')
+})
+
+test('local CLI diagnostics use shared core secret redaction', () => {
+  const fixtures = [
+    ['sk-proj', 'value=sk-proj-abcdefghijklmnop', 'value=[REDACTED]'],
+    ['sk-ant', 'value=sk-ant-abcdefghijklmnop', 'value=[REDACTED]'],
+    ['pk', 'value=pk-abcdefghijklmnop', 'value=[REDACTED]'],
+    ['xai', 'value=xai-abcdefghijklmnop', 'value=[REDACTED]'],
+    ['AIza', 'value=AIza-abcdefghijklmnop', 'value=[REDACTED]'],
+    ['ghp', 'value=ghp_abcdefghijklmnop', 'value=[REDACTED]'],
+    ['gho', 'value=gho_abcdefghijklmnop', 'value=[REDACTED]'],
+    ['ghs', 'value=ghs_abcdefghijklmnop', 'value=[REDACTED]'],
+    ['ghr', 'value=ghr_abcdefghijklmnop', 'value=[REDACTED]'],
+    ['github_pat', 'value=github_pat_abcdefghijklmnop', 'value=[REDACTED]'],
+    ['xoxb', 'value=xoxb-abcdefghijkl', 'value=[REDACTED]'],
+    ['xoxp', 'value=xoxp-abcdefghijkl', 'value=[REDACTED]'],
+    ['AKIA', 'value=AKIA1234567890ABCDEF', 'value=[REDACTED]'],
+    ['Bearer', 'value=Bearer abcdefghijkl', 'value=Bearer [REDACTED]'],
+    ['short Bearer', 'value=Bearer short', 'value=Bearer [REDACTED]'],
+    ['bot path', 'path=/botfakeBotTokenValue12345/method', 'path=/bot[REDACTED]/method'],
+    ['PEM block', '-----BEGIN RSA PRIVATE KEY-----\nfake-private-key-material\n-----END RSA PRIVATE KEY-----', '[REDACTED]'],
+    ['api_key unquoted', 'api_key=fakeApiKeyValue12345', 'api_key=[REDACTED]'],
+    ['api_key quoted', 'api_key="fakeApiKeyValue12345"', 'api_key="[REDACTED]"'],
+    ['api-key quoted', "api-key='fakeApiKeyValue12345'", "api-key='[REDACTED]'"],
+    ['secret unquoted', 'secret:fakeSecretValue12345', 'secret:[REDACTED]'],
+    ['secret quoted', "secret:'fakeSecretValue12345'", "secret:'[REDACTED]'"],
+    ['token unquoted', 'token=fakeTokenValue123456', 'token=[REDACTED]'],
+    ['token quoted', 'token="fakeTokenValue123456"', 'token="[REDACTED]"'],
+    ['password unquoted', 'password=fakePasswordValue12345', 'password=[REDACTED]'],
+    ['password quoted', "password:'fakePasswordValue12345'", "password:'[REDACTED]'"],
+    ['access_token', 'access_token=fakeAccessTokenValue12345', 'access_token=[REDACTED]'],
+    ['refresh_token', 'refresh_token=fakeRefreshTokenValue12345', 'refresh_token=[REDACTED]'],
+    ['client_secret', 'client_secret=fakeClientSecretValue12345', 'client_secret=[REDACTED]'],
+    ['bot_token', 'bot_token=fakeBotTokenValue12345', 'bot_token=[REDACTED]'],
+    ['oauth_token', 'oauth_token=fakeOauthTokenValue12345', 'oauth_token=[REDACTED]'],
+    ['camel token', 'refreshToken=fakeRefreshTokenValue12345', 'refreshToken=[REDACTED]'],
+    ['passwd', 'passwd=fakePasswordValue12345', 'passwd=[REDACTED]'],
+    ['authorization', 'authorization=fakeAuthorizationValue12345', 'authorization=[REDACTED]'],
+    ['credential', 'credential=fakeCredentialValue12345', 'credential=[REDACTED]'],
+    ['private_key', 'private_key=fakePrivateKeyValue12345', 'private_key=[REDACTED]'],
+    ['signature', 'signature=fakeSignatureValue12345', 'signature=[REDACTED]'],
+    ['normal words', 'normal words and credentials are discussed here', 'normal words and credentials are discussed here'],
+    ['short ids', 'id=abc123; id=deadbeef', 'id=abc123; id=deadbeef'],
+    ['file path', 'path=/Users/example/repo/src/file.ts', 'path=/Users/example/repo/src/file.ts'],
+    ['commit SHA', 'commit=0123456789abcdef0123456789abcdef01234567', 'commit=0123456789abcdef0123456789abcdef01234567'],
+    ['URL without credentials', 'https://example.test/path?q=hello', 'https://example.test/path?q=hello'],
+  ]
+  for (const [name, input, expected] of fixtures) assert.equal(redactDiagnostic(input), expected, name)
+  assert.equal(redactDiagnostic('failure customCredentialValue12345', ['customCredentialValue12345']), 'failure [REDACTED]')
+  assert.equal(redactDiagnostic('x'.repeat(4001)).length, 4000)
 })
 // Every local CLI provider this module spawns by bare name (claude, codex, ...) is a globally
 // npm-installed Node CLI. On Windows, npm's only artifact for such a CLI is a `.cmd` shim;

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "482cca04053c381866cc6b4b85cc2a2b3693a68b46de8184f4f15ce5baa21b52",
+  "contentHash": "77b15704a8beab5b931159e7cbec5d57553bc27f75d36c06f14be0eb64d87789",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-02T21:01:08.099Z",
+  "generatedAt": "2026-10-02T22:45:53.000Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -33,6 +33,18 @@
         "unclassified"
       ],
       "contentHash": "8230474465e2b75dad3cad03feaf31001bef3cea377ae6f881c7f4d1eadf226d"
+    },
+    {
+      "id": "document:.changeset/core-redaction.md",
+      "type": "document",
+      "title": "core-redaction.md",
+      "path": ".changeset/core-redaction.md",
+      "description": "Reuse AgentsKit Core's shared secret redactor for review source content and local CLI diagnostics.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "cb763ba6329dd10cc76a6383825693202d6354b65c795f9f000cfe7e34a3b1d6"
     },
     {
       "id": "document:.changeset/cross-platform-process-helpers.md",
@@ -627,7 +639,7 @@
         "ts",
         "code-review"
       ],
-      "contentHash": "0d58f7a69cd1d184c535723dca7d090c56dda50757bff8bb983e03a39c997779"
+      "contentHash": "93cbdd130903d3812540f0b1fa7b783b9454816e4c1c055561a0b2b3113c5b39"
     },
     {
       "id": "module:apps/docs/app/api/search/route.ts",
@@ -1828,7 +1840,6 @@
         "LocalCliOptions",
         "LocalCliProtocolChannel",
         "redactDiagnostic",
-        "redactSecrets",
         "runLocalCli",
         "runLocalCliProtocol"
       ],
@@ -1837,7 +1848,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "45f175f278604c4085b045f5d8dde8b0ba9dd701f33eb797199ecc59a2db8e2f"
+      "contentHash": "27e42cc7020e0eba3eb225b3ac14a4c8672dd324f4811cb8b65cad8cbbddf1c0"
     },
     {
       "id": "module:src/local-cli-timeout.ts",
@@ -2629,7 +2640,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "23e19e16185e09ca224d857702cbff6b6f3cf92060e4bcb71d7d7e287b81e1b4"
+      "contentHash": "bd0f79c4ae5a44e79e753196f440c46cebcf9ae47f6593cd7e563a25ce26c75a"
     },
     {
       "id": "module:test/multidimensional-analysis.test.mjs",
@@ -3063,8 +3074,8 @@
     }
   },
   "inputs": {
-    "hash": "f0c25c945e61604be8fdbd3bc4041258c94dcc75efd399b718239b9fcbe95fcf",
-    "fileCount": 190,
+    "hash": "bc080c46daff28cb046d1bf4654361185b97799c3c3c20ad5e0c3f3d53d92d03",
+    "fileCount": 191,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3086,9 +3097,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "22ec8b91eb1212271005e06d7df9d3545b801d78dab8dc06fe1abef25ba1f344",
+    "contentHash": "4789499b39f1499bc486949f284c3111f055677da1f586023a2bb111cf4a8bf6",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "fff92e85d3e8865d5830bc8f3461ef7a36c4f38d27bb60ce2e35af0384652cb0",
+    "snapshotHash": "b4d221a4442fa8ac289875c2c47d6e21c251ae41b9c5aa0a9511bdb0875089ed",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
@@ -3108,7 +3119,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 189,
+      "documentCount": 190,
       "fieldNames": [
         "aliases",
         "body",
@@ -3119,13 +3130,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.888888888888889,
-        "body": 48.957671957671955,
-        "headings": 3.7037037037037037,
-        "path": 5.64021164021164,
-        "summary": 3.677248677248677,
-        "symbols": 13.65079365079365,
-        "title": 4.301587301587301
+        "aliases": 2.8842105263157896,
+        "body": 48.77368421052632,
+        "headings": 3.6842105263157894,
+        "path": 5.636842105263158,
+        "summary": 3.731578947368421,
+        "symbols": 13.563157894736841,
+        "title": 4.3
       }
     },
     "entries": [
@@ -3382,6 +3393,38 @@
           "outbound": []
         },
         "contentHash": "8230474465e2b75dad3cad03feaf31001bef3cea377ae6f881c7f4d1eadf226d",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:.changeset/core-redaction.md",
+        "kind": "document",
+        "path": ".changeset/core-redaction.md",
+        "title": "core-redaction.md",
+        "summary": "Reuse AgentsKit Core's shared secret redactor for review source content and local CLI diagnostics.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "core-redaction.md",
+          "headings": "",
+          "path": ".changeset/core-redaction.md",
+          "symbols": "",
+          "summary": "Reuse AgentsKit Core's shared secret redactor for review source content and local CLI diagnostics.",
+          "body": "Reuse AgentsKit Core's shared secret redactor for review source content and local CLI diagnostics.",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "cb763ba6329dd10cc76a6383825693202d6354b65c795f9f000cfe7e34a3b1d6",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6645,17 +6688,12 @@
             },
             {
               "kind": "imports",
-              "id": "module:src/local-cli-process.ts",
-              "confidence": "observed"
-            },
-            {
-              "kind": "imports",
               "id": "module:src/scm-contract.ts",
               "confidence": "observed"
             }
           ]
         },
-        "contentHash": "0d58f7a69cd1d184c535723dca7d090c56dda50757bff8bb983e03a39c997779",
+        "contentHash": "93cbdd130903d3812540f0b1fa7b783b9454816e4c1c055561a0b2b3113c5b39",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -10006,7 +10044,6 @@
           "LocalCliOptions",
           "LocalCliProtocolChannel",
           "redactDiagnostic",
-          "redactSecrets",
           "runLocalCli",
           "runLocalCliProtocol"
         ],
@@ -10019,7 +10056,7 @@
           "title": "local-cli-process.ts",
           "headings": "",
           "path": "src/local-cli-process.ts",
-          "symbols": "ABSOLUTE_LOCAL_CLI_OUTPUT_BYTES ABSOLUTE_LOCAL_CLI_TIMEOUT_MS DEFAULT_LOCAL_CLI_OUTPUT_BYTES DEFAULT_LOCAL_CLI_TIMEOUT_MS LocalCliMode LocalCliOptions LocalCliProtocolChannel redactDiagnostic redactSecrets runLocalCli runLocalCliProtocol",
+          "symbols": "ABSOLUTE_LOCAL_CLI_OUTPUT_BYTES ABSOLUTE_LOCAL_CLI_TIMEOUT_MS DEFAULT_LOCAL_CLI_OUTPUT_BYTES DEFAULT_LOCAL_CLI_TIMEOUT_MS LocalCliMode LocalCliOptions LocalCliProtocolChannel redactDiagnostic runLocalCli runLocalCliProtocol",
           "summary": "",
           "body": "",
           "aliases": "module ts src"
@@ -10033,11 +10070,6 @@
           ],
           "packageId": "package:@agentskit/code-review",
           "inbound": [
-            {
-              "kind": "imports",
-              "id": "module:agents/code-review/sources.ts",
-              "confidence": "observed"
-            },
             {
               "kind": "imports",
               "id": "module:src/acp-cli-adapter.ts",
@@ -10087,7 +10119,7 @@
             }
           ]
         },
-        "contentHash": "45f175f278604c4085b045f5d8dde8b0ba9dd701f33eb797199ecc59a2db8e2f",
+        "contentHash": "27e42cc7020e0eba3eb225b3ac14a4c8672dd324f4811cb8b65cad8cbbddf1c0",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -12542,7 +12574,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "23e19e16185e09ca224d857702cbff6b6f3cf92060e4bcb71d7d7e287b81e1b4",
+        "contentHash": "bd0f79c4ae5a44e79e753196f440c46cebcf9ae47f6593cd7e563a25ce26c75a",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13668,7 +13700,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "702368fe2733358caebf24e65a49f34be75c758dcdafe21978efa4aae6b720c6",
+        "contentHash": "edbfc00908ee7f9c078193e0adfde9b7efaf41784b5fc7f7e65211b958f5b0c9",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"

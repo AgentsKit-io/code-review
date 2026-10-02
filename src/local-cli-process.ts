@@ -1,5 +1,6 @@
 import { mkdirSync, mkdtempSync, rmSync } from 'node:fs'
 import type { ChildProcess } from 'node:child_process'
+import { redactSecrets } from '@agentskit/core/security'
 import { killProcessTree, spawnNodeChild } from '@agentskit/cross-platform'
 import { createInterface } from 'node:readline'
 import { tmpdir } from 'node:os'
@@ -47,24 +48,6 @@ export interface LocalCliProtocolChannel {
   readonly cwd: string
   readonly readLine: () => Promise<string>
   readonly send: (message: unknown) => void
-}
-
-const SECRET_PATTERNS = [
-  /(?:sk|pk)-[A-Za-z0-9_-]{16,}/g,
-  /(?:ghp|gho|ghs|ghr|github_pat)_[A-Za-z0-9_]{16,}/g,
-  /xox[baprs]-[A-Za-z0-9-]{12,}/g,
-  /\bAKIA[0-9A-Z]{16}\b/g,
-  /\bBearer\s+[A-Za-z0-9._~+/=-]{12,}/gi,
-  /-----BEGIN [^-]*PRIVATE KEY-----[\s\S]*?-----END [^-]*PRIVATE KEY-----/g,
-]
-
-
-export function redactSecrets(value: string, secrets: readonly string[] = []): string {
-  let redacted = value
-  for (const secret of secrets.filter(Boolean)) redacted = redacted.split(secret).join('[REDACTED]')
-  for (const pattern of SECRET_PATTERNS) redacted = redacted.replace(pattern, '[REDACTED]')
-  redacted = redacted.replace(/((?:api[_-]?key|secret|token|password)\s*[:=]\s*["']?)[A-Za-z0-9._~+/=-]{12,}/gi, '$1[REDACTED]')
-  return redacted
 }
 
 export function redactDiagnostic(value: string, secrets: readonly string[] = []): string {

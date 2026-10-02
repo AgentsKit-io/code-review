@@ -3,8 +3,8 @@ import { closeSync, fstatSync, lstatSync, openSync, readdirSync, readFileSync, r
 import { extname, isAbsolute, join, relative, posix } from 'node:path'
 import { promisify } from 'node:util'
 import { toPosix } from '@agentskit/cross-platform'
+import { redactSecrets } from '@agentskit/core/security'
 import type { ReviewTarget } from './agent.js'
-import { redactSecrets } from '../../src/local-cli-process.js'
 import { createGithubScmAdapter } from '../../src/github-scm-adapter.js'
 import type { ChangeRequestDiff, ChangeRequestRef, ScmAdapter } from '../../src/scm-contract.js'
 
