@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "4cb6805f1798ced0c85f9379ab6282ee1f3518e37ddd3869cc2af7feea6a8aeb",
+  "contentHash": "482cca04053c381866cc6b4b85cc2a2b3693a68b46de8184f4f15ce5baa21b52",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-02T12:17:07.868Z",
+  "generatedAt": "2026-10-02T21:01:08.099Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -188,7 +188,7 @@
         "document",
         "project"
       ],
-      "contentHash": "1f2da9a94944467ba3d67f7903017e4f33b466d914f48b58dc003995b8e28e15"
+      "contentHash": "c5b194ccf68c460a084c475ff5023d93884954a2b9a336b7a39d01edafaad8e8"
     },
     {
       "id": "document:design.md",
@@ -3063,7 +3063,7 @@
     }
   },
   "inputs": {
-    "hash": "07c252798053062060bc35b498dc6c85d79b59fa25d8ed4ab1ede20ef52091cb",
+    "hash": "f0c25c945e61604be8fdbd3bc4041258c94dcc75efd399b718239b9fcbe95fcf",
     "fileCount": 190,
     "projectionVersion": 2
   },
@@ -3086,9 +3086,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "5943d5e641d68723bed8236c9bd0409e466d0039212c0f1fb67cf1ba6b7e56d6",
+    "contentHash": "22ec8b91eb1212271005e06d7df9d3545b801d78dab8dc06fe1abef25ba1f344",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "f2389654d9b7e90e1a5ce9637a06d0d1b5a19b712726aa2dec3e6fbe48719021",
+    "snapshotHash": "fff92e85d3e8865d5830bc8f3461ef7a36c4f38d27bb60ce2e35af0384652cb0",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
@@ -3120,7 +3120,7 @@
       ],
       "averageFieldLength": {
         "aliases": 2.888888888888889,
-        "body": 48.74603174603175,
+        "body": 48.957671957671955,
         "headings": 3.7037037037037037,
         "path": 5.64021164021164,
         "summary": 3.677248677248677,
@@ -3975,7 +3975,7 @@
           "path": "CONTRIBUTING.md",
           "symbols": "",
           "summary": "Thanks for helping make AI code review more useful and less noisy.",
-          "body": "Contributing Thanks for helping make AI code review more useful and less noisy. Start here 1. Fork and clone the repository. 2. Create a focused branch from main . 3. Run npm install . 4. Make the smallest change that solves the issue. 5. Run npm run check before opening a pull request. Node.js 20 or newer is required. Project map - src/cli.ts — arguments, providers, review policy, and reporters. - src/ -adapter.ts — adapters for logged-in local CLIs. - agents/code-review/ — vendored review agent, lenses, sources, and reporters. - action.yml — GitHub Action interface. - examples/ — copy-ready workflows. Good contributions - Reduce a reproducible false positive. - Add a provider through the existing adapter contract. - Add a focused review lens with clear evidence requirements. - Improve a reporter or source without tying it to one model. - Add provider-neutral examples and documentation. Please open an issue before a large architectural change. Small fixes and documentation improvements can go straight to a pull request. Pull requests - Keep one concern per PR. - Explain the user-visible behavior and how you tested it. - Add or update tests for behavior changes. - Preserve provider neutrality: provider-specific behavior belongs in its adapter. - Never commit API keys, model output containing private code, or review tokens. - Update README or examples when changing the public CLI or Action interface. Project decisions, maintainer responsibilities, and the release process are documented in . By participating, you agree to follow the .",
+          "body": "Contributing Thanks for helping make AI code review more useful and less noisy. Start here 1. Fork and clone the repository. 2. Create a focused branch from main . 3. Run npm install . 4. Make the smallest change that solves the issue. 5. Run npm run check before opening a pull request. Node.js 20 or newer is required; npm run test:coverage requires Node.js 22.8 or newer. npm run test:coverage runs the offline test suite with Node's built-in coverage reporter, covering dist/src only. The baseline floors are 93% lines, 79% branches, and 92% functions; raise a floor after tests improve its corresponding metric. Project map - src/cli.ts — arguments, providers, review policy, and reporters. - src/ -adapter.ts — adapters for logged-in local CLIs. - agents/code-review/ — vendored review agent, lenses, sources, and reporters. - action.yml — GitHub Action interface. - examples/ — copy-ready workflows. Good contributions - Reduce a reproducible false positive. - Add a provider through the existing adapter contract. - Add a focused review lens with clear evidence requirements. - Improve a reporter or source without tying it to one model. - Add provider-neutral examples and documentation. Please open an issue before a large architectural change. Small fixes and documentation improvements can go straight to a pull request. Pull requests - Keep one concern per PR. - Explain the user-visible behavior and how you tested it. - Add or update tests for behavior changes. - Preserve provider neutrality: provider-specific behavior belongs in its adapter. - Never commit API keys, model output containing private code, or review tokens. - Update README or examples when changing the public CLI or Action interface. Project decisions, maintainer responsibilities, and the release process are documented in . By participating, you agree to follow the .",
           "aliases": "document project"
         },
         "graph": {
@@ -4047,7 +4047,7 @@
             }
           ]
         },
-        "contentHash": "1f2da9a94944467ba3d67f7903017e4f33b466d914f48b58dc003995b8e28e15",
+        "contentHash": "c5b194ccf68c460a084c475ff5023d93884954a2b9a336b7a39d01edafaad8e8",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13668,7 +13668,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "1c28a9c43593bbb6241ee8c88323adf7b1ac19b485d6694856359bffe98e5af2",
+        "contentHash": "702368fe2733358caebf24e65a49f34be75c758dcdafe21978efa4aae6b720c6",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"

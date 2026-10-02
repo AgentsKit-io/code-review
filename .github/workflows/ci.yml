@@ -35,6 +35,7 @@ jobs:
       - run: npm run docs:index
       - run: git diff --exit-code -- doc-bridge.config.json .doc-bridge llms-full.txt
       - run: npm run check
+      - run: npm run test:coverage
       - run: npm pack --dry-run
       - if: always()
         run: rm -f .doc-bridge/.ci-content-revision
