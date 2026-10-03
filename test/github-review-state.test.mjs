@@ -64,7 +64,10 @@ test('fails closed when comment history exceeds the safe pagination cap', async 
     if (parsed.pathname.endsWith('/pulls/14')) return Response.json({ head: { sha: 'head-14', repo: { full_name: 'org/repo' } }, base: { sha: 'base-14', repo: { full_name: 'org/repo' } } })
     if (parsed.pathname.endsWith('/comments')) {
       commentPages++
-      return Response.json(Array.from({ length: 100 }, (_, index) => ({ id: commentPages * 100 + index, body: 'unrelated' })))
+      const page = Number(parsed.searchParams.get('page') ?? '1')
+      return Response.json(Array.from({ length: 100 }, (_, index) => ({ id: page * 100 + index, body: 'unrelated' })), {
+        headers: page < 11 ? { link: `<https://api.github.com${parsed.pathname}?per_page=100&page=${page + 1}>; rel="next"` } : {},
+      })
     }
     return new Response('not found', { status: 404 })
   }
@@ -138,10 +141,17 @@ test('overlapsExistingComment applies the configured threshold', () => {
   assert.equal(overlapsExistingComment({ path: 'a.ts', line: 8, endLine: 12 }, existing), true, 'an identical range always matches')
 })
 
-test('githubReviewComments paginates and reports truncation past the page cap', async () => {
+test('githubReviewComments follows Link pagination and reports truncation past the page cap', async () => {
   const originalFetch = globalThis.fetch
   let pages = 0
-  globalThis.fetch = async () => { pages++; return Response.json(Array.from({ length: 100 }, (_, i) => ({ id: i, path: 'a.ts', line: 1 }))) }
+  globalThis.fetch = async (url) => {
+    pages++
+    const parsed = new URL(url)
+    const page = Number(parsed.searchParams.get('page') ?? '1')
+    return Response.json(Array.from({ length: 100 }, (_, i) => ({ id: i, path: 'a.ts', line: 1 })), {
+      headers: page < 11 ? { link: `<https://api.github.com${parsed.pathname}?per_page=100&page=${page + 1}>; rel="next"` } : {},
+    })
+  }
   try {
     const result = await githubReviewComments('token', 'org', 'repo', 5)
     assert.equal(result.truncated, true)

@@ -270,7 +270,10 @@ test('GitHub PR ingestion caps paginated file metadata and reports truncation', 
     if (parsed.pathname.endsWith('/pulls/12')) return Response.json({ head: { sha: 'abc123' } })
     if (parsed.pathname.endsWith('/pulls/12/files')) {
       filePages++
-      return Response.json(Array.from({ length: 100 }, (_, index) => ({ filename: `src/file-${filePages}-${index}.ts`, patch: '@@ -0,0 +1 @@', status: 'added' })))
+      const page = Number(parsed.searchParams.get('page') ?? '1')
+      return Response.json(Array.from({ length: 100 }, (_, index) => ({ filename: `src/file-${page}-${index}.ts`, patch: '@@ -0,0 +1 @@', status: 'added' })), {
+        headers: page < 6 ? { link: `<https://api.github.com${parsed.pathname}?per_page=100&page=${page + 1}>; rel="next"` } : {},
+      })
     }
     if (parsed.pathname.includes('/contents/')) return Response.json({ content: 'export const answer = 42\n', encoding: 'utf8' })
     return new Response('not found', { status: 404 })

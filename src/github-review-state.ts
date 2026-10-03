@@ -1,17 +1,14 @@
 import { createHash } from 'node:crypto'
-import { fetchWithRetry, NetError, NetErrorCodes, readText } from '@agentskit/net'
+import { NetError, NetErrorCodes, readText } from '@agentskit/net'
+import { createGithubApiClient, GITHUB_REQUEST_TIMEOUT_MS, MAX_GITHUB_RESPONSE_BYTES } from './github-api-client.js'
 
-const API = 'https://api.github.com'
-/** Per-attempt GitHub request timeout in milliseconds. */
-export const GITHUB_REQUEST_TIMEOUT_MS = 30_000
-/** Default maximum buffered GitHub response body (25 MiB). */
-export const MAX_GITHUB_RESPONSE_BYTES = 25 * 1024 * 1024
+export { GITHUB_REQUEST_TIMEOUT_MS, MAX_GITHUB_RESPONSE_BYTES }
+
 const MARKER_PREFIX = '<!-- agentskit-code-review:v1'
 const COMMENT_PAGE_SIZE = 100
 const MAX_COMMENT_PAGES = 10
 const REVIEW_PAGE_SIZE = 100
 const MAX_REVIEW_PAGES = 10
-const GITHUB_RETRY_STATUSES = [429, ...Array.from({ length: 100 }, (_, index) => 500 + index)]
 
 /**
  * GitHub response bodies larger than the requested byte limit.
@@ -68,9 +65,8 @@ export async function readGithubResponseText(response: Response, maxBytes = MAX_
   }
 }
 
-async function responseDetail(response: Response): Promise<string> {
-  try { return (await readGithubResponseText(response, 4096)).trim().slice(0, 300) }
-  catch (error) { return error instanceof GithubResponseLimitError ? error.message : '' }
+function githubClient(token: string, fetcher: typeof fetch) {
+  return createGithubApiClient({ token, fetch: fetcher })
 }
 
 /**
@@ -85,29 +81,11 @@ async function responseDetail(response: Response): Promise<string> {
  * @param fetcher Injectable fetch implementation; defaults to `globalThis.fetch`.
  */
 export async function githubFetch(token: string, url: string, accept = 'application/vnd.github+json', fetcher: typeof fetch = fetch): Promise<Response> {
-  const response = await fetchWithRetry(url, {
-    headers: { authorization: `Bearer ${token}`, accept, 'user-agent': 'agentskit-code-review' },
-  }, {
-    timeoutMs: GITHUB_REQUEST_TIMEOUT_MS,
-    retries: 1,
-    retryMethods: ['GET'],
-    retryStatuses: GITHUB_RETRY_STATUSES,
-    minDelayMs: 250,
-    maxDelayMs: 10_000,
-    jitter: 'full',
-    maxRetryAfterMs: 60_000,
-    fetch: fetcher,
-  })
-  if (!response.ok) {
-    const detail = await responseDetail(response)
-    throw new Error(`GitHub GET ${url} → ${response.status}${detail ? `: ${detail}` : ''}`)
-  }
-  return response
+  return githubClient(token, fetcher).request(url, { accept })
 }
 
 export async function githubGet<T>(token: string, path: string, fetcher: typeof fetch = fetch): Promise<T> {
-  const response = await githubFetch(token, `${API}${path}`, 'application/vnd.github+json', fetcher)
-  return JSON.parse(await readGithubResponseText(response)) as T
+  return githubClient(token, fetcher).get<T>(path)
 }
 
 export interface GithubIssueComment {
@@ -124,23 +102,13 @@ export interface GithubPullReview {
 }
 
 export async function githubIssueComments(token: string, owner: string, repo: string, number: number, fetcher: typeof fetch = fetch): Promise<{ comments: GithubIssueComment[]; truncated: boolean }> {
-  const comments: GithubIssueComment[] = []
-  for (let page = 1; page <= MAX_COMMENT_PAGES; page++) {
-    const batch = await githubGet<GithubIssueComment[]>(token, `/repos/${owner}/${repo}/issues/${number}/comments?per_page=${COMMENT_PAGE_SIZE}&page=${page}&sort=created&direction=desc`, fetcher)
-    comments.push(...batch)
-    if (batch.length < COMMENT_PAGE_SIZE) return { comments, truncated: false }
-  }
-  return { comments, truncated: true }
+  const { items: comments, truncated } = await githubClient(token, fetcher).list<GithubIssueComment>(`/repos/${owner}/${repo}/issues/${number}/comments?per_page=${COMMENT_PAGE_SIZE}&sort=created&direction=desc`, MAX_COMMENT_PAGES)
+  return { comments, truncated }
 }
 
 export async function githubPullReviews(token: string, owner: string, repo: string, number: number, fetcher: typeof fetch = fetch): Promise<{ reviews: GithubPullReview[]; truncated: boolean }> {
-  const reviews: GithubPullReview[] = []
-  for (let page = 1; page <= MAX_REVIEW_PAGES; page++) {
-    const batch = await githubGet<GithubPullReview[]>(token, `/repos/${owner}/${repo}/pulls/${number}/reviews?per_page=${REVIEW_PAGE_SIZE}&page=${page}`, fetcher)
-    reviews.push(...batch)
-    if (batch.length < REVIEW_PAGE_SIZE) return { reviews, truncated: false }
-  }
-  return { reviews, truncated: true }
+  const { items: reviews, truncated } = await githubClient(token, fetcher).list<GithubPullReview>(`/repos/${owner}/${repo}/pulls/${number}/reviews?per_page=${REVIEW_PAGE_SIZE}`, MAX_REVIEW_PAGES)
+  return { reviews, truncated }
 }
 
 export interface GithubReviewComment {
@@ -157,13 +125,8 @@ const MAX_REVIEW_COMMENT_PAGES = 10
 /** Existing inline review comments (not the review summary bodies) — used to detect a
  * line-range overlap with a previous run's comments before re-posting the same finding. */
 export async function githubReviewComments(token: string, owner: string, repo: string, number: number, fetcher: typeof fetch = fetch): Promise<{ comments: GithubReviewComment[]; truncated: boolean }> {
-  const comments: GithubReviewComment[] = []
-  for (let page = 1; page <= MAX_REVIEW_COMMENT_PAGES; page++) {
-    const batch = await githubGet<GithubReviewComment[]>(token, `/repos/${owner}/${repo}/pulls/${number}/comments?per_page=${REVIEW_COMMENT_PAGE_SIZE}&page=${page}`, fetcher)
-    comments.push(...batch)
-    if (batch.length < REVIEW_COMMENT_PAGE_SIZE) return { comments, truncated: false }
-  }
-  return { comments, truncated: true }
+  const { items: comments, truncated } = await githubClient(token, fetcher).list<GithubReviewComment>(`/repos/${owner}/${repo}/pulls/${number}/comments?per_page=${REVIEW_COMMENT_PAGE_SIZE}`, MAX_REVIEW_COMMENT_PAGES)
+  return { comments, truncated }
 }
 
 /** Line-range Intersection-over-Union between a candidate annotation and an existing

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "f474b0aef326aaa3e8e78c64ddc686b6a3917854b5dd96bfebfa683aae8d138b",
+  "contentHash": "5a461d529c8404e960659405e2682ca0906b91dc5f5cab2a5d41c7cb79477f01",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-03T01:38:03.468Z",
+  "generatedAt": "2026-10-03T12:42:03.789Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -105,6 +105,18 @@
         "unclassified"
       ],
       "contentHash": "fb5a1367dec8beb0b95d995967969f0c4b87e16c21761a6a57581026c528c56c"
+    },
+    {
+      "id": "document:.changeset/robust-github-rest.md",
+      "type": "document",
+      "title": "robust-github-rest.md",
+      "path": ".changeset/robust-github-rest.md",
+      "description": "Route GitHub REST traffic through one internal client with bounded JSON reads, API version and auth headers, same-origin redirect and pagination handling, and rate-limit-aware retries for GET requests. Keep all review and merge writes single-attempt.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "55af8ad84bddbcdcaf39b536c364d251ef4cac836315d0ce1a06477dc7b925c1"
     },
     {
       "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
@@ -1458,6 +1470,25 @@
       "contentHash": "36fc90dc4b0cf1baff309170ecfc61e7030e381d1581230685fadb431c73c7b8"
     },
     {
+      "id": "module:src/github-api-client.ts",
+      "type": "module",
+      "title": "github-api-client.ts",
+      "path": "src/github-api-client.ts",
+      "symbols": [
+        "GITHUB_API_BASE_URL",
+        "GITHUB_API_VERSION",
+        "GITHUB_REQUEST_TIMEOUT_MS",
+        "MAX_GITHUB_RESPONSE_BYTES",
+        "createGithubApiClient"
+      ],
+      "tags": [
+        "module",
+        "ts",
+        "src"
+      ],
+      "contentHash": "96c35e745b8d6497e676516390ec62be3e2a8965e317bb7cc7a2e00c753f9ae2"
+    },
+    {
       "id": "module:src/github-review-state.ts",
       "type": "module",
       "title": "github-review-state.ts",
@@ -1489,7 +1520,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "a062ff0e72cf44ff0e0f7881a4b937f144240179555af245866b19fd8d4cfa2d"
+      "contentHash": "0006bd6eef0307eb25c2e0a925f630a598a750f0adaa560448e0c52b85e6dc97"
     },
     {
       "id": "module:src/github-scm-adapter.ts",
@@ -1505,7 +1536,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "12172896656312674619d565abc99a587b7af6a58f2aa57483da6cfee31baad7"
+      "contentHash": "aafa98bfa0241a9125986657f9a1fab2ccfe7e92444e0f1bde976b2f78cada89"
     },
     {
       "id": "module:src/grok-cli-adapter.ts",
@@ -2580,7 +2611,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "ce67040d74e22313da72ca56b1b1fcf8410cd3211adddef68c1187509a3a9aec"
+      "contentHash": "885d5f8d96b2499b74e79e370f6f16a08e1d37867877bbe186b3853447b00e71"
     },
     {
       "id": "module:test/github-scm-adapter.test.mjs",
@@ -2592,7 +2623,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "042c68eb090d680c6d8af2e3b63b8a38b7f095d0a1ac25b25ba3885c1da52a86"
+      "contentHash": "46c0c279af85471896c236f477c73de99879f93a9404d30b60465968df593eb7"
     },
     {
       "id": "module:test/grok-cli-adapter.test.mjs",
@@ -2988,7 +3019,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "63d4444ab2eb9d0505d5a24b000e1b21c640f2970acecf318c5d5bddbc02e9a8"
+      "contentHash": "a732a2362eb26a89bb78f1c6107893b0e7369707014d0e4e2f61b4960f91aff6"
     },
     {
       "id": "module:test/telemetry.test.mjs",
@@ -3086,8 +3117,8 @@
     }
   },
   "inputs": {
-    "hash": "a610b9557b557af52ad2f8cdb393284bfb802595e8bccbee4cb476b729cd7482",
-    "fileCount": 192,
+    "hash": "8139d803f28e3ad3b630a0a6a639d52bde11289889d341d405cd1b34d7f7bd5d",
+    "fileCount": 194,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3109,9 +3140,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "033331b284505f580ec5942053c6aca8814dbf45cce54cd83235e4f739f08198",
+    "contentHash": "ede277774ac9d2e40d2c841f1ad8cc05bb3111e0c51bc875e0333d23720f766e",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "737d40210fef3c60f01f7190f71c2fdde66d1b9c2127c2a2ec75f805795ab89c",
+    "snapshotHash": "1e5ccdbc8a23e735cf32bd92f01fe3708480a22c585380f3145093fae2962d10",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
@@ -3131,7 +3162,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 191,
+      "documentCount": 193,
       "fieldNames": [
         "aliases",
         "body",
@@ -3142,13 +3173,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.884816753926702,
-        "body": 48.80628272251309,
-        "headings": 3.680628272251309,
-        "path": 5.638743455497382,
-        "summary": 3.712041884816754,
-        "symbols": 13.492146596858639,
-        "title": 4.303664921465969
+        "aliases": 2.8808290155440415,
+        "body": 48.48186528497409,
+        "headings": 3.6424870466321244,
+        "path": 5.642487046632124,
+        "summary": 3.854922279792746,
+        "symbols": 13.476683937823834,
+        "title": 4.310880829015544
       }
     },
     "entries": [
@@ -3597,6 +3628,38 @@
           "outbound": []
         },
         "contentHash": "fb5a1367dec8beb0b95d995967969f0c4b87e16c21761a6a57581026c528c56c",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:.changeset/robust-github-rest.md",
+        "kind": "document",
+        "path": ".changeset/robust-github-rest.md",
+        "title": "robust-github-rest.md",
+        "summary": "Route GitHub REST traffic through one internal client with bounded JSON reads, API version and auth headers, same-origin redirect and pagination handling, and rate-limit-aware retries for GET requests. Keep all review and merge writes single-attempt.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "robust-github-rest.md",
+          "headings": "",
+          "path": ".changeset/robust-github-rest.md",
+          "symbols": "",
+          "summary": "Route GitHub REST traffic through one internal client with bounded JSON reads, API version and auth headers, same-origin redirect and pagination handling, and rate-limit-aware retries for GET requests. Keep all review and merge writes single-attempt.",
+          "body": "Route GitHub REST traffic through one internal client with bounded JSON reads, API version and auth headers, same-origin redirect and pagination handling, and rate-limit-aware retries for GET requests. Keep all review and merge writes single-attempt.",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "55af8ad84bddbcdcaf39b536c364d251ef4cac836315d0ce1a06477dc7b925c1",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -9259,6 +9322,57 @@
         "confidence": "observed"
       },
       {
+        "id": "module:src/github-api-client.ts",
+        "kind": "module",
+        "path": "src/github-api-client.ts",
+        "title": "github-api-client.ts",
+        "aliases": [],
+        "symbols": [
+          "GITHUB_API_BASE_URL",
+          "GITHUB_API_VERSION",
+          "GITHUB_REQUEST_TIMEOUT_MS",
+          "MAX_GITHUB_RESPONSE_BYTES",
+          "createGithubApiClient"
+        ],
+        "tags": [
+          "module",
+          "ts",
+          "src"
+        ],
+        "fields": {
+          "title": "github-api-client.ts",
+          "headings": "",
+          "path": "src/github-api-client.ts",
+          "symbols": "GITHUB_API_BASE_URL GITHUB_API_VERSION GITHUB_REQUEST_TIMEOUT_MS MAX_GITHUB_RESPONSE_BYTES createGithubApiClient",
+          "summary": "",
+          "body": "",
+          "aliases": "module ts src"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "imports",
+              "id": "module:src/github-review-state.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
+              "id": "module:src/github-scm-adapter.ts",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "96c35e745b8d6497e676516390ec62be3e2a8965e317bb7cc7a2e00c753f9ae2",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:src/github-review-state.ts",
         "kind": "module",
         "path": "src/github-review-state.ts",
@@ -9323,9 +9437,15 @@
               "confidence": "observed"
             }
           ],
-          "outbound": []
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:src/github-api-client.ts",
+              "confidence": "observed"
+            }
+          ]
         },
-        "contentHash": "a062ff0e72cf44ff0e0f7881a4b937f144240179555af245866b19fd8d4cfa2d",
+        "contentHash": "0006bd6eef0307eb25c2e0a925f630a598a750f0adaa560448e0c52b85e6dc97",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -9391,6 +9511,11 @@
           "outbound": [
             {
               "kind": "imports",
+              "id": "module:src/github-api-client.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
               "id": "module:src/github-review-state.ts",
               "confidence": "observed"
             },
@@ -9401,7 +9526,7 @@
             }
           ]
         },
-        "contentHash": "12172896656312674619d565abc99a587b7af6a58f2aa57483da6cfee31baad7",
+        "contentHash": "aafa98bfa0241a9125986657f9a1fab2ccfe7e92444e0f1bde976b2f78cada89",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -12416,7 +12541,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "ce67040d74e22313da72ca56b1b1fcf8410cd3211adddef68c1187509a3a9aec",
+        "contentHash": "885d5f8d96b2499b74e79e370f6f16a08e1d37867877bbe186b3853447b00e71",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -12450,7 +12575,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "042c68eb090d680c6d8af2e3b63b8a38b7f095d0a1ac25b25ba3885c1da52a86",
+        "contentHash": "46c0c279af85471896c236f477c73de99879f93a9404d30b60465968df593eb7",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13594,7 +13719,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "63d4444ab2eb9d0505d5a24b000e1b21c640f2970acecf318c5d5bddbc02e9a8",
+        "contentHash": "a732a2362eb26a89bb78f1c6107893b0e7369707014d0e4e2f61b4960f91aff6",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13746,7 +13871,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "a5f54f05d636a075e352ae84aac453e7a1c3ce4bc985b763e6f9190556972689",
+        "contentHash": "3cec18a9527595958567d19db74e8f8d3319ab7f618095b7eff15c5375bfea17",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"

@@ -1,6 +1,6 @@
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
-import { fetchWithRetry } from '@agentskit/net'
+import { createGithubApiClient } from './github-api-client.js'
 import {
   ChangeRequestDiffSchema, ChangeRequestMetadataSchema, ChangeRequestQuerySchema, ChangeRequestRefSchema,
   ScmCapabilitiesSchema, ScmFileContentSchema, ScmMergeReadinessSchema, ScmMergeReceiptSchema,
@@ -11,7 +11,7 @@ import {
   type ScmPublicationReceipt, type ScmReviewPublication, type ScmReviewState,
 } from './scm-contract.js'
 import {
-  GITHUB_REQUEST_TIMEOUT_MS, GithubResponseLimitError, githubFetch, githubGet, githubIssueComments,
+  GithubResponseLimitError, githubIssueComments,
   githubPullReviews, getGithubReviewState, readGithubResponseText, reviewMarker,
 } from './github-review-state.js'
 
@@ -46,29 +46,15 @@ function status(value: string): 'added' | 'modified' | 'removed' | 'renamed' | '
 export function createGithubScmAdapter(options: GithubScmAdapterOptions): ScmAdapter {
   if (!options.token) throw new Error('GitHub SCM adapter needs a token')
   const fetcher = options.fetch ?? fetch
+  const github = createGithubApiClient({ token: options.token, fetch: fetcher })
   const command = options.command ?? (async (executable, args) => run(executable, [...args], { timeout: 180_000, maxBuffer: 1024 * 1024 }))
   const capabilities = ScmCapabilitiesSchema.parse(Object.fromEntries([
     'discovery', 'metadata', 'diff', 'file-content', 'review-state', 'publish-review', 'merge-readiness', 'merge',
   ].map((capability) => [capability, true])))
-  const api = <T>(token: string, path: string) => githubGet<T>(token, path, fetcher)
+  const api = <T>(path: string) => github.get<T>(path)
 
   const mutate = async <T>(method: 'POST' | 'PATCH' | 'PUT', path: string, body: unknown): Promise<T> => {
-    const response = await fetchWithRetry(`https://api.github.com${path}`, {
-      method,
-      headers: { authorization: `Bearer ${options.token}`, accept: 'application/vnd.github+json', 'user-agent': 'agentskit-code-review', 'content-type': 'application/json' },
-      body: JSON.stringify(body),
-    }, {
-      timeoutMs: GITHUB_REQUEST_TIMEOUT_MS,
-      retries: 0,
-      retryMethods: ['GET'],
-      fetch: fetcher,
-    })
-    if (!response.ok) {
-      const detail = (await readGithubResponseText(response, 4_096)).trim().slice(0, 300)
-      throw new Error(`GitHub ${method} ${path} → ${response.status}${detail ? `: ${detail}` : ''}`)
-    }
-    const text = await readGithubResponseText(response)
-    return (text ? JSON.parse(text) : {}) as T
+    return github.json<T>(path, { method, body })
   }
 
   const adapter: ScmAdapter = {
@@ -80,19 +66,16 @@ export function createGithubScmAdapter(options: GithubScmAdapterOptions): ScmAda
       const query = ChangeRequestQuerySchema.parse(input)
       const [owner, repo] = query.repository.split('/') as [string, string]
       const found: ChangeRequestRef[] = []
-      for (let page = 1; page <= MAX_DISCOVERY_PAGES; page++) {
-        const pulls = await api<Array<{ number: number; user?: { login?: string }; labels?: Array<{ name?: string }> }>>(options.token, `/repos/${owner}/${repo}/pulls?state=${query.state}&per_page=${PAGE_SIZE}&page=${page}`)
-        for (const pull of pulls) {
-          const author = pull.user?.login ?? ''
-          const labels = new Set((pull.labels ?? []).map((label) => label.name).filter((label): label is string => Boolean(label)))
-          if (query.authors.length && !query.authors.includes(author)) continue
-          if (query.excludeAuthors.includes(author)) continue
-          if (query.labels.some((label) => !labels.has(label))) continue
-          found.push(ChangeRequestRefSchema.parse({ repository: query.repository, id: String(pull.number) }))
-        }
-        if (pulls.length < PAGE_SIZE) break
-        if (page === MAX_DISCOVERY_PAGES) throw new Error(`GitHub change-request discovery exceeded ${MAX_DISCOVERY_PAGES * PAGE_SIZE} pull requests`)
+      const { items: pulls, truncated } = await github.list<{ number: number; user?: { login?: string }; labels?: Array<{ name?: string }> }>(`/repos/${owner}/${repo}/pulls?state=${query.state}&per_page=${PAGE_SIZE}`, MAX_DISCOVERY_PAGES)
+      for (const pull of pulls) {
+        const author = pull.user?.login ?? ''
+        const labels = new Set((pull.labels ?? []).map((label) => label.name).filter((label): label is string => Boolean(label)))
+        if (query.authors.length && !query.authors.includes(author)) continue
+        if (query.excludeAuthors.includes(author)) continue
+        if (query.labels.some((label) => !labels.has(label))) continue
+        found.push(ChangeRequestRefSchema.parse({ repository: query.repository, id: String(pull.number) }))
       }
+      if (truncated) throw new Error(`GitHub change-request discovery exceeded ${MAX_DISCOVERY_PAGES * PAGE_SIZE} pull requests`)
       return found
     },
 
@@ -102,7 +85,7 @@ export function createGithubScmAdapter(options: GithubScmAdapterOptions): ScmAda
       const pull = await api<{
         title: string; state: 'open' | 'closed'; draft?: boolean; updated_at: string; additions?: number; deletions?: number; user?: { login?: string }; labels?: Array<{ name?: string }>
         head: { sha: string; ref: string; repo?: { full_name?: string } }; base: { sha: string; ref: string; repo?: { full_name?: string } }
-      }>(options.token, `/repos/${owner}/${repo}/pulls/${number}`)
+      }>(`/repos/${owner}/${repo}/pulls/${number}`)
       return ChangeRequestMetadataSchema.parse({
         ref, title: pull.title, state: pull.state, author: pull.user?.login ?? 'unknown', sourceRevision: pull.head.sha,
         targetRevision: pull.base.sha, sourceBranch: pull.head.ref, targetBranch: pull.base.ref,
@@ -115,22 +98,18 @@ export function createGithubScmAdapter(options: GithubScmAdapterOptions): ScmAda
     async diff(ref: ChangeRequestRef, baselineRevision?: string): Promise<ChangeRequestDiff> {
       requireScmCapability(adapter, 'diff')
       const { owner, repo, number } = coordinates(ref)
-      const pull = await api<{ head: { sha: string }; base?: { sha?: string } }>(options.token, `/repos/${owner}/${repo}/pulls/${number}`)
+      const pull = await api<{ head: { sha: string }; base?: { sha?: string } }>(`/repos/${owner}/${repo}/pulls/${number}`)
       const files: Array<{ filename: string; previous_filename?: string; patch?: string; status: string }> = []
       let complete = true
       if (baselineRevision) {
-        const comparison = await api<{ files?: typeof files }>(options.token, `/repos/${owner}/${repo}/compare/${baselineRevision}...${pull.head.sha}`)
+        const comparison = await api<{ files?: typeof files }>(`/repos/${owner}/${repo}/compare/${baselineRevision}...${pull.head.sha}`)
         const batch = comparison.files ?? []
         complete = batch.length <= MAX_FILES
         files.push(...batch.slice(0, MAX_FILES))
       } else {
-        for (let page = 1; ; page++) {
-          const batch = await api<typeof files>(options.token, `/repos/${owner}/${repo}/pulls/${number}/files?per_page=${PAGE_SIZE}&page=${page}`)
-          const remaining = MAX_FILES - files.length
-          files.push(...batch.slice(0, remaining))
-          if (batch.length < PAGE_SIZE) break
-          if (remaining <= batch.length) { complete = false; break }
-        }
+        const { items: batch, truncated } = await github.list<typeof files[number]>(`/repos/${owner}/${repo}/pulls/${number}/files?per_page=${PAGE_SIZE}`, Math.ceil(MAX_FILES / PAGE_SIZE))
+        files.push(...batch.slice(0, MAX_FILES))
+        if (truncated || batch.length >= MAX_FILES) complete = false
       }
       return ChangeRequestDiffSchema.parse({
         baseRevision: baselineRevision ?? pull.base?.sha ?? pull.head.sha,
@@ -144,7 +123,7 @@ export function createGithubScmAdapter(options: GithubScmAdapterOptions): ScmAda
       requireScmCapability(adapter, 'file-content')
       const { owner, repo } = coordinates(ref)
       const endpoint = `/repos/${owner}/${repo}/contents/${encodeURIComponent(path)}?ref=${revision}`
-      const read = () => api<{ content: string; encoding: string; download_url?: string }>(options.token, endpoint)
+      const read = () => api<{ content: string; encoding: string; download_url?: string }>(endpoint)
       // GitHub can briefly return 404 for a file present at an immutable revision.
       // Retry exactly once at the same SHA; never substitute another revision.
       const content = await read().catch((error: unknown) => {
@@ -157,8 +136,9 @@ export function createGithubScmAdapter(options: GithubScmAdapterOptions): ScmAda
       }
       if (!content.download_url) throw new Error(`GitHub contents response has no download URL for ${path}`)
       const url = new URL(content.download_url)
-      if (url.hostname !== 'raw.githubusercontent.com') throw new Error(`GitHub contents response has an unsafe download URL for ${path}`)
-      const response = await githubFetch(options.token, url.toString(), 'application/vnd.github.raw', fetcher)
+      if (url.protocol !== 'https:' || url.hostname !== 'raw.githubusercontent.com') throw new Error(`GitHub contents response has an unsafe download URL for ${path}`)
+      const rawClient = createGithubApiClient({ token: options.token, fetch: fetcher, baseUrl: url.origin })
+      const response = await rawClient.request(url.toString(), { accept: 'application/vnd.github.raw', authenticated: false })
       try { return ScmFileContentSchema.parse({ content: await readGithubResponseText(response, maxBytes), truncated: false }) }
       catch (error) {
         if (!(error instanceof GithubResponseLimitError)) throw error
@@ -235,9 +215,9 @@ export function createGithubScmAdapter(options: GithubScmAdapterOptions): ScmAda
       requireScmCapability(adapter, 'merge-readiness')
       const policy = ScmCheckPolicySchema.parse(inputPolicy ?? {})
       const { owner, repo, number } = coordinates(ref)
-      const pull = await api<{ draft?: boolean; mergeable?: boolean | null; mergeable_state?: string; head: { sha: string } }>(options.token, `/repos/${owner}/${repo}/pulls/${number}`)
-      const checks = await api<{ total_count?: number; check_runs?: Array<{ name?: string; status?: string; conclusion?: string | null }> }>(options.token, `/repos/${owner}/${repo}/commits/${pull.head.sha}/check-runs?per_page=100`)
-      const statuses = await api<{ state?: string; total_count?: number; statuses?: unknown[] }>(options.token, `/repos/${owner}/${repo}/commits/${pull.head.sha}/status`)
+      const pull = await api<{ draft?: boolean; mergeable?: boolean | null; mergeable_state?: string; head: { sha: string } }>(`/repos/${owner}/${repo}/pulls/${number}`)
+      const checks = await github.listObject<{ total_count?: number; check_runs?: Array<{ name?: string; status?: string; conclusion?: string | null }>; [key: string]: unknown }>(`/repos/${owner}/${repo}/commits/${pull.head.sha}/check-runs?per_page=100`, 'check_runs')
+      const statuses = await github.listObject<{ state?: string; total_count?: number; statuses?: unknown[]; [key: string]: unknown }>(`/repos/${owner}/${repo}/commits/${pull.head.sha}/status?per_page=100`, 'statuses')
       const blockers: string[] = []
       const reviewHistory = await githubPullReviews(options.token, owner, repo, number, fetcher)
       if (reviewHistory.truncated) blockers.push('review history exceeds bounded readiness response')

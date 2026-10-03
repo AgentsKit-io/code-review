@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { createServer } from 'node:http'
 import test from 'node:test'
+import { createGithubApiClient } from '../dist/src/github-api-client.js'
 import { createGithubScmAdapter } from '../dist/src/github-scm-adapter.js'
 import { GithubResponseLimitError, githubFetch, githubGet, readGithubResponseText } from '../dist/src/github-review-state.js'
 
@@ -67,7 +68,7 @@ test('GitHub GET retries native 429 and network failures, but preserves terminal
   const observed = []
   const server = createServer((request, response) => {
     const path = new URL(request.url, 'http://127.0.0.1').pathname
-    observed.push({ path, method: request.method, auth: /^Bearer \S+$/.test(request.headers.authorization ?? ''), accept: request.headers.accept, agent: request.headers['user-agent'] })
+    observed.push({ path, method: request.method, auth: /^Bearer \S+$/.test(request.headers.authorization ?? ''), accept: request.headers.accept, agent: request.headers['user-agent'], version: request.headers['x-github-api-version'] })
     if (path === '/rate-limit') {
       rateLimitCalls++
       if (rateLimitCalls === 1) {
@@ -164,11 +165,79 @@ test('GitHub GET retries native 429 and network failures, but preserves terminal
     assert.equal(serverErrorCalls, 2)
     assert.equal(requestTimeoutCalls, 1, '408 must not be added to the GitHub retry status set')
     assert.equal(earlyStatusCalls, 1, '425 must not be added to the GitHub retry status set')
-    assert.ok(observed.every(({ method, auth, accept, agent }) => method === 'GET' && auth && accept === 'application/vnd.github+json' && agent === 'agentskit-code-review'))
+    assert.ok(observed.every(({ method, auth, accept, agent, version }) => method === 'GET' && auth && accept === 'application/vnd.github+json' && agent === 'agentskit-code-review' && version === '2022-11-28'))
   } finally {
     Math.random = random
     await close(server)
   }
+})
+
+test('shared GitHub client follows three Link pages and retries secondary rate limits only on GET', async () => {
+  let listCalls = 0
+  let secondaryCalls = 0
+  let primaryResetCalls = 0
+  let postCalls = 0
+  const server = createServer((request, response) => {
+    const url = new URL(request.url, 'http://127.0.0.1')
+    if (url.pathname === '/pages') {
+      listCalls++
+      const page = Number(url.searchParams.get('page') ?? '1')
+      if (page < 3) response.setHeader('link', `<https://api.github.com/pages?page=${page + 1}>; rel="next"`)
+      response.end(JSON.stringify([{ page }]))
+      return
+    }
+    if (url.pathname === '/secondary') {
+      secondaryCalls++
+      if (secondaryCalls === 1) {
+        response.writeHead(403, { 'retry-after': '0.02' })
+        response.end('{"message":"You have exceeded a secondary rate limit."}')
+      } else response.end('{"ok":true}')
+      return
+    }
+    if (url.pathname === '/primary-reset') {
+      primaryResetCalls++
+      if (primaryResetCalls === 1) {
+        response.writeHead(403, { 'x-ratelimit-remaining': '0', 'x-ratelimit-reset': String(Math.floor(Date.now() / 1000)) })
+        response.end('{"message":"API rate limit exceeded"}')
+      } else response.end('{"ok":true}')
+      return
+    }
+    if (url.pathname === '/post') {
+      postCalls++
+      response.writeHead(429, { 'retry-after': '0' })
+      response.end('{"message":"rate limited"}')
+      return
+    }
+    if (url.pathname === '/large') {
+      response.writeHead(200, { 'content-length': String(26 * 1024 * 1024) })
+      response.end('{}')
+      return
+    }
+    if (url.pathname === '/redirect') {
+      response.writeHead(302, { location: '/redirect-target' }).end()
+      return
+    }
+    if (url.pathname === '/redirect-target') {
+      response.end('{"followed":true}')
+      return
+    }
+    response.writeHead(404).end()
+  })
+  const address = await listen(server)
+  const client = createGithubApiClient({ token: 'fixture-token', fetch: localGithubFetch(`http://127.0.0.1:${address.port}`) })
+  try {
+    const pages = await client.list(`/pages?page=1`)
+    assert.deepEqual(pages.items, [{ page: 1 }, { page: 2 }, { page: 3 }])
+    assert.equal(listCalls, 3)
+    assert.deepEqual(await client.get('/secondary'), { ok: true })
+    assert.equal(secondaryCalls, 2)
+    assert.deepEqual(await client.get('/primary-reset'), { ok: true })
+    assert.equal(primaryResetCalls, 2)
+    await assert.rejects(client.json('/post', { method: 'POST', body: { change: true } }), /GitHub POST .* → 429/)
+    assert.equal(postCalls, 1, 'a rate-limited POST must not be retried')
+    await assert.rejects(client.get('/large'), error => error?.code === 'AK_NET_BODY_TOO_LARGE')
+    await assert.rejects(client.get('/redirect'), /GitHub GET .* → 302/)
+  } finally { await close(server) }
 })
 
 test('GitHub writes use one native POST and reconcile a committed but lost acknowledgement', async () => {
