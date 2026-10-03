@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "6b9948644e1789a1b182827c615ebb1c2ae373b9f21e7260af19351279afbe05",
+  "contentHash": "832d21f81c321e156571d2a1dff72c77d69009fc400da57bb5736800a8faa16a",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-03T12:54:49.400Z",
+  "generatedAt": "2026-10-03T13:17:44.816Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -128,7 +128,7 @@
         "document",
         "unclassified"
       ],
-      "contentHash": "1e145a83ca6b2a3e7fbd79dc96552235f7f28d21eb8f076123ff01d34dd5df2c"
+      "contentHash": "28edc0d585b4dcff1a8b66e6cd0582e6ecc348af0e69944f8c30a3fb54334f65"
     },
     {
       "id": "document:AGENTS.md",
@@ -3117,7 +3117,7 @@
     }
   },
   "inputs": {
-    "hash": "9584d525f2267ab57f3b9a2544f1a7582f9c6993cda9ec06a2ca2e429c443481",
+    "hash": "9a42f6420890cca3770be79106c03cbf27fed2d26ae333666344a5f2481927c2",
     "fileCount": 194,
     "projectionVersion": 2
   },
@@ -3140,9 +3140,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "18482af1ba2e0ffeb8a10da6d66394e934b89d8c16f033780b893a4e87a6383f",
+    "contentHash": "1e1ba11b0ed4b0b5d698b9d2e925dbf0dd638f7d2be5a39b95d37639b0c1147b",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "1c0a9281f1465e48f59f3847e089254514fdc38a3cb65c4eb7659971586736e8",
+    "snapshotHash": "1cc6c37ac73061b7ea6e1b7ac92c6e7eaa891d82dc47b3eec48bd1e282fafb4d",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
@@ -3174,8 +3174,8 @@
       ],
       "averageFieldLength": {
         "aliases": 2.8808290155440415,
-        "body": 48.48186528497409,
-        "headings": 3.6424870466321244,
+        "body": 48.96373056994819,
+        "headings": 3.6528497409326426,
         "path": 5.642487046632124,
         "summary": 3.854922279792746,
         "symbols": 13.476683937823834,
@@ -3676,11 +3676,11 @@
         ],
         "fields": {
           "title": "PULL_REQUEST_TEMPLATE.md",
-          "headings": "What changed Why Verification",
+          "headings": "What changed Why How Reuse Validation Definition of Done",
           "path": ".github/PULL_REQUEST_TEMPLATE.md",
           "symbols": "",
           "summary": "npm run check",
-          "body": "What changed <!-- Describe the user-visible behavior. -- Why <!-- Link the issue or explain the problem. -- Verification - [ ] npm run check - [ ] Public CLI or Action changes are documented - [ ] No secrets or private model output are included",
+          "body": "What changed <!-- Describe the user-visible behavior. -- Why <!-- Link the issue or explain the problem. -- How <!-- Summarize the implementation and relevant design choices. -- Reuse <!-- What existing package, module, library, or service did you consider or reuse? If none fit, why? -- Validation - [ ] npm run check - Acceptance criteria and their contract or edge-case tests: - The repository's documented lint, test, build, typecheck, and other required gates pass on this commit: - [ ] Public CLI or Action changes are documented - [ ] No secrets or private model output are included - [ ] Generated artifacts were regenerated with the official tools, when applicable Definition of Done - [ ] One package, or one isolated cross-cutting gate change, per PR. - [ ] Each acceptance criterion has a contract or edge-case test. - [ ] The repository's documented gates pass on this commit. - [ ] Measure size when a bundle or export changes; add or update JSDoc when a public API changes. - [ ] Required changeset and documentation updates are included. - [ ] No tests were disabled to pass checks. - [ ] Generated artifacts were regenerated with the official tools, when applicable.",
           "aliases": "document unclassified"
         },
         "graph": {
@@ -3691,7 +3691,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "1e145a83ca6b2a3e7fbd79dc96552235f7f28d21eb8f076123ff01d34dd5df2c",
+        "contentHash": "28edc0d585b4dcff1a8b66e6cd0582e6ecc348af0e69944f8c30a3fb54334f65",
         "provenance": "observed",
         "confidence": "observed"
       },
