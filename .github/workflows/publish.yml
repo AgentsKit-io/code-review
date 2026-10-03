@@ -34,6 +34,25 @@ jobs:
           registry-url: https://registry.npmjs.org
           package-manager-cache: false
 
+      - name: Ensure npm supports Trusted Publishing
+        run: |
+          set -eu
+          npm install --global npm@11.5.1
+          npm_version="$(npm --version)"
+          if [ "$npm_version" != '11.5.1' ]; then
+            echo "Trusted Publishing requires npm 11.5.1 or newer; expected pinned npm 11.5.1, found $npm_version." >&2
+            exit 1
+          fi
+
+      - name: Reject npm auth tokens in the publish workflow
+        run: |
+          set -eu
+          token_pattern='NODE_AUTH''_TOKEN|NPM''_TOKEN'
+          if grep -nE "$token_pattern" .github/workflows/publish.yml; then
+            echo 'Publish workflow contains a legacy npm auth token reference; use Trusted Publishing.' >&2
+            exit 1
+          fi
+
       - name: Verify the approved publishing trigger and package version
         run: |
           set -eu
@@ -73,7 +92,7 @@ jobs:
 
       - name: Publish to npm with OIDC
         if: steps.npm-version.outputs.already_published != 'true'
-        run: npm publish --access public
+        run: npm publish --access public --provenance
 
       - name: Create the immutable GitHub release
         env:
