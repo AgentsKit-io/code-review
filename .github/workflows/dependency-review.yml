@@ -15,28 +15,31 @@ concurrency:
 jobs:
   review:
     name: Dependency Review
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Review new dependencies
-        uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
-        with:
-          fail-on-severity: high
+    uses: AgentsKit-io/.github/.github/workflows/dependency-review.yml@5a584290feaaa0a800a28d24583d16f15102bea1 # main
+    with:
+      fail-on-severity: high
+    permissions:
+      contents: read
+      pull-requests: read
 
   audit:
     name: npm audit
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: 22
-          cache: npm
-      - run: npm ci --ignore-scripts
-      - run: npm audit --omit=dev --audit-level=high
-      - run: npm ci --prefix apps/docs --ignore-scripts
-      - run: npm audit --prefix apps/docs --audit-level=high
+    uses: AgentsKit-io/.github/.github/workflows/audit.yml@5a584290feaaa0a800a28d24583d16f15102bea1 # main
+    with:
+      package-manager: npm
+      working-directories: '["."]'
+      audit-level: high
+      production-only: true
+    permissions:
+      contents: read
+
+  docs-audit:
+    name: npm audit (apps/docs)
+    uses: AgentsKit-io/.github/.github/workflows/audit.yml@5a584290feaaa0a800a28d24583d16f15102bea1 # main
+    with:
+      package-manager: npm
+      working-directories: '["apps/docs"]'
+      audit-level: high
+      production-only: false
+    permissions:
+      contents: read
