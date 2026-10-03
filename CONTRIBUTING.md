@@ -12,6 +12,15 @@ Thanks for helping make AI code review more useful and less noisy.
 
 Node.js 20 or newer is required; `npm run test:coverage` requires Node.js 22.8 or newer.
 
+## Public API snapshot
+
+The package's exported names and symbol kinds are recorded per export subpath in
+`docs/stability/public-api-v1.json`. `npm run check:public-api` compares the
+current TypeScript API with that snapshot and reports additions, removals, and
+kind changes. When an API change is intentional, run
+`npm run check:public-api:update`, review the snapshot diff, and commit the
+updated snapshot with the API change.
+
 `npm run test:coverage` runs the offline test suite with Node's built-in coverage
 reporter, covering `dist/src` only. The baseline floors are 93% lines, 79% branches,
 and 92% functions; raise a floor after tests improve its corresponding metric.
