@@ -69,6 +69,14 @@ inline and summary publication, conservative merge readiness, and
 revision-locked normal/admin merge. GitLab is future work and is not supported
 until an adapter passes the same contract suite.
 
+GitHub REST GET and HEAD requests follow up to three redirects when each
+`Location` stays on the configured origin, within the original request timeout
+and retry attempt. Cross-origin redirects are rejected before forwarding
+credentials. POST, PATCH, PUT, and DELETE requests fail on redirects rather than
+replaying a write. Raw-content downloads use the same redirect policy with API
+authentication disabled, so a same-origin redirect is followed without sending
+the GitHub API token to the raw-content host.
+
 Merge readiness also reads bounded review history. An outstanding request for changes blocks merging even when checks pass or its reviewed SHA predates the current commit. Comments do not clear a request; a later approval by that reviewer or dismissal of that request does. Missing decision identity or truncated history fails closed.
 
 ## First local setup

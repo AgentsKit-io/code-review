@@ -214,7 +214,7 @@ test('shared GitHub client follows three Link pages and retries secondary rate l
       return
     }
     if (url.pathname === '/redirect') {
-      response.writeHead(302, { location: '/redirect-target' }).end()
+      response.writeHead(301, { location: '/redirect-target' }).end()
       return
     }
     if (url.pathname === '/redirect-target') {
@@ -236,8 +236,55 @@ test('shared GitHub client follows three Link pages and retries secondary rate l
     await assert.rejects(client.json('/post', { method: 'POST', body: { change: true } }), /GitHub POST .* → 429/)
     assert.equal(postCalls, 1, 'a rate-limited POST must not be retried')
     await assert.rejects(client.get('/large'), error => error?.code === 'AK_NET_BODY_TOO_LARGE')
-    await assert.rejects(client.get('/redirect'), /GitHub GET .* → 302/)
+    assert.deepEqual(await client.get('/redirect'), { followed: true })
   } finally { await close(server) }
+})
+
+test('GitHub client follows bounded same-origin GET redirects and blocks unsafe redirects', async () => {
+  let loopCalls = 0
+  let writeCalls = 0
+  let crossOriginAuthorization
+  const destination = createServer((request, response) => {
+    crossOriginAuthorization = request.headers.authorization
+    response.end('{"unexpected":true}')
+  })
+  const destinationAddress = await listen(destination)
+  const server = createServer((request, response) => {
+    const url = new URL(request.url, 'http://127.0.0.1')
+    if (url.pathname === '/loop') {
+      loopCalls++
+      response.writeHead(302, { location: '/loop' }).end()
+      return
+    }
+    if (url.pathname === '/cross-origin') {
+      response.writeHead(302, { location: `http://127.0.0.1:${destinationAddress.port}/capture` }).end()
+      return
+    }
+    if (url.pathname === '/write-redirect') {
+      writeCalls++
+      response.writeHead(307, { location: '/write-target' }).end()
+      return
+    }
+    if (url.pathname === '/write-target') {
+      writeCalls++
+      response.end('{"unexpected":true}')
+      return
+    }
+    response.writeHead(404).end()
+  })
+  const address = await listen(server)
+  const client = createGithubApiClient({ token: 'fixture-token', baseUrl: `http://127.0.0.1:${address.port}` })
+  try {
+    await assert.rejects(client.get('/loop'), /redirect limit exceeded \(3\)/)
+    assert.equal(loopCalls, 4, 'the initial request plus three redirects are allowed')
+    await assert.rejects(client.get('/cross-origin'), /redirect to a different origin is blocked/)
+    assert.equal(crossOriginAuthorization, undefined, 'the cross-origin host must never receive Authorization')
+    await assert.rejects(client.json('/write-redirect', { method: 'POST', body: { change: true } }), /refusing to follow a write request/)
+    assert.equal(writeCalls, 1, 'a redirected POST must not be replayed')
+  } finally {
+    await close(server)
+    await close(destination)
+  }
 })
 
 test('GitHub writes use one native POST and reconcile a committed but lost acknowledgement', async () => {

@@ -5,6 +5,7 @@ export const GITHUB_API_VERSION = '2022-11-28'
 const MAX_ERROR_BYTES = 4 * 1024
 const MAX_RETRY_AFTER_MS = 60_000
 const MAX_PAGES = 100
+const MAX_REDIRECTS = 3
 export const GITHUB_REQUEST_TIMEOUT_MS = 30_000
 export const MAX_GITHUB_RESPONSE_BYTES = 25 * 1024 * 1024
 
@@ -91,9 +92,38 @@ export function createGithubApiClient({ token, fetch: fetcher = fetch, baseUrl =
       maxDelayMs: 10_000,
       jitter: 'full' as const,
       maxRetryAfterMs: MAX_RETRY_AFTER_MS,
-      fetch: fetcher,
+      // Keep manual redirects so credentials never leave the configured origin.
+      // Re-requests use fetchWithRetry's signal, so the entire redirect chain
+      // shares one timeout budget and remains part of the same retry attempt.
+      fetch: async (input: RequestInfo | URL, requestInit?: RequestInit): Promise<Response> => {
+        let target = new URL(input instanceof Request ? input.url : input.toString())
+        for (let redirects = 0; ; redirects++) {
+          const result = await fetcher(target, { ...requestInit, redirect: 'manual' })
+          if (![301, 302, 303, 307, 308].includes(result.status)) return result
+          const location = result.headers.get('location')
+          if (!location) return result
+          const redirected = new URL(location, target)
+          if (redirected.origin !== base.origin) {
+            void result.body?.cancel().catch(() => {})
+            resultRedirectError = `GitHub ${method} redirect to a different origin is blocked: ${redirected.origin}`
+            return result
+          }
+          if (method !== 'GET' && method !== 'HEAD') {
+            void result.body?.cancel().catch(() => {})
+            resultRedirectError = `GitHub ${method} request was redirected (${result.status}); refusing to follow a write request`
+            return result
+          }
+          if (redirects >= MAX_REDIRECTS) {
+            void result.body?.cancel().catch(() => {})
+            resultRedirectError = `GitHub ${method} redirect limit exceeded (${MAX_REDIRECTS})`
+            return result
+          }
+          target = redirected
+        }
+      },
     }
     let response: Response
+    let resultRedirectError: string | undefined
     try {
       response = await retry(async () => {
         const result = await fetchWithRetry(url, init, fetchOptions)
@@ -116,6 +146,7 @@ export function createGithubApiClient({ token, fetch: fetcher = fetch, baseUrl =
       if (!isRetryableRateLimit(error)) throw error
       response = error.response
     }
+    if (resultRedirectError) throw new Error(resultRedirectError)
     if (!response.ok) {
       let detail = ''
       try { detail = (await readText(response, { maxBytes: MAX_ERROR_BYTES })).trim().slice(0, 300) }

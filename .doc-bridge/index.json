@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "5a461d529c8404e960659405e2682ca0906b91dc5f5cab2a5d41c7cb79477f01",
+  "contentHash": "6b9948644e1789a1b182827c615ebb1c2ae373b9f21e7260af19351279afbe05",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-03T12:42:03.789Z",
+  "generatedAt": "2026-10-03T12:54:49.400Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -416,7 +416,7 @@
         "document",
         "human"
       ],
-      "contentHash": "da720320098ab91a41dc11d235f8f15524e21f3f0e2d3a0876d99210faa0251a"
+      "contentHash": "d4034a9be5153573cbf77accda2fa34377787079e13348add34cd3f5420fb5fa"
     },
     {
       "id": "document:docs/plans/ecosystem-doc-quality-code-review.md",
@@ -476,7 +476,7 @@
         "document",
         "project"
       ],
-      "contentHash": "ad54555d773a6ac456975bd899befd048c46b50b7dd3ef0dcec808f5dd2bcf1b"
+      "contentHash": "09d3367b44aa6e3163767d61bf9d771a5f5d6fe186067331f6717b4c9a75e878"
     },
     {
       "id": "document:ROADMAP.md",
@@ -1486,7 +1486,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "96c35e745b8d6497e676516390ec62be3e2a8965e317bb7cc7a2e00c753f9ae2"
+      "contentHash": "334e57a47338564782b3ed2819081092b6aee181cfe5785fa05f7267819c8009"
     },
     {
       "id": "module:src/github-review-state.ts",
@@ -2623,7 +2623,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "46c0c279af85471896c236f477c73de99879f93a9404d30b60465968df593eb7"
+      "contentHash": "d69366c503ed73e9feb37e8361333704966166af1d94d2ae70230c17aa79650e"
     },
     {
       "id": "module:test/grok-cli-adapter.test.mjs",
@@ -3117,7 +3117,7 @@
     }
   },
   "inputs": {
-    "hash": "8139d803f28e3ad3b630a0a6a639d52bde11289889d341d405cd1b34d7f7bd5d",
+    "hash": "9584d525f2267ab57f3b9a2544f1a7582f9c6993cda9ec06a2ca2e429c443481",
     "fileCount": 194,
     "projectionVersion": 2
   },
@@ -3140,9 +3140,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "ede277774ac9d2e40d2c841f1ad8cc05bb3111e0c51bc875e0333d23720f766e",
+    "contentHash": "18482af1ba2e0ffeb8a10da6d66394e934b89d8c16f033780b893a4e87a6383f",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "1e5ccdbc8a23e735cf32bd92f01fe3708480a22c585380f3145093fae2962d10",
+    "snapshotHash": "1c0a9281f1465e48f59f3847e089254514fdc38a3cb65c4eb7659971586736e8",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
@@ -5553,7 +5553,7 @@
             }
           ]
         },
-        "contentHash": "da720320098ab91a41dc11d235f8f15524e21f3f0e2d3a0876d99210faa0251a",
+        "contentHash": "d4034a9be5153573cbf77accda2fa34377787079e13348add34cd3f5420fb5fa",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -5950,7 +5950,7 @@
             }
           ]
         },
-        "contentHash": "ad54555d773a6ac456975bd899befd048c46b50b7dd3ef0dcec808f5dd2bcf1b",
+        "contentHash": "09d3367b44aa6e3163767d61bf9d771a5f5d6fe186067331f6717b4c9a75e878",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -9368,7 +9368,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "96c35e745b8d6497e676516390ec62be3e2a8965e317bb7cc7a2e00c753f9ae2",
+        "contentHash": "334e57a47338564782b3ed2819081092b6aee181cfe5785fa05f7267819c8009",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -12575,7 +12575,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "46c0c279af85471896c236f477c73de99879f93a9404d30b60465968df593eb7",
+        "contentHash": "d69366c503ed73e9feb37e8361333704966166af1d94d2ae70230c17aa79650e",
         "provenance": "observed",
         "confidence": "observed"
       },
