@@ -34,6 +34,7 @@ jobs:
       - run: touch .doc-bridge/.ci-content-revision
       - run: npm run docs:index
       - run: git diff --exit-code -- doc-bridge.config.json .doc-bridge llms-full.txt
+      - run: npm run check:public-api
       - run: npm run check
       - run: npm run test:coverage
       - run: npm pack --dry-run
