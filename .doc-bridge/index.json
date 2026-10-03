@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "832d21f81c321e156571d2a1dff72c77d69009fc400da57bb5736800a8faa16a",
+  "contentHash": "193c130570d67d1db07b867b29a8b8a2ac2c8581efb7a9e3b1d9e9f528a04459",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-03T13:17:44.816Z",
+  "generatedAt": "2026-10-03T23:53:59.922Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -69,6 +69,18 @@
         "unclassified"
       ],
       "contentHash": "058d1685d3d66b90e77c8eebe8045dd25f0d98425e70e2702e8e62edf52b411a"
+    },
+    {
+      "id": "document:.changeset/migrate-to-renovate.md",
+      "type": "document",
+      "title": "migrate-to-renovate.md",
+      "path": ".changeset/migrate-to-renovate.md",
+      "description": "Migrate dependency updates from Dependabot to the organization Renovate preset.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "26d1afa4491e4151150b7d28049fc629882046c171774d1057b75ad779497fe0"
     },
     {
       "id": "document:.changeset/minimax-provider.md",
@@ -3117,8 +3129,8 @@
     }
   },
   "inputs": {
-    "hash": "9a42f6420890cca3770be79106c03cbf27fed2d26ae333666344a5f2481927c2",
-    "fileCount": 194,
+    "hash": "c8fb2c8561f69209218e2a4caba958049ddccf3440240e313c36c3c72129eebe",
+    "fileCount": 195,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3140,9 +3152,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "1e1ba11b0ed4b0b5d698b9d2e925dbf0dd638f7d2be5a39b95d37639b0c1147b",
+    "contentHash": "80d37f3ec38a99cdad3ce58cdab9b1e86b8b437125c260f083e944017e4575af",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "1cc6c37ac73061b7ea6e1b7ac92c6e7eaa891d82dc47b3eec48bd1e282fafb4d",
+    "snapshotHash": "1658c82ee8445c9e66f18acd31f63484d625beb6084c8727569b6edeb372d6e4",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
@@ -3162,7 +3174,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 193,
+      "documentCount": 194,
       "fieldNames": [
         "aliases",
         "body",
@@ -3173,13 +3185,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8808290155440415,
-        "body": 48.96373056994819,
-        "headings": 3.6528497409326426,
-        "path": 5.642487046632124,
-        "summary": 3.854922279792746,
-        "symbols": 13.476683937823834,
-        "title": 4.310880829015544
+        "aliases": 2.8762886597938144,
+        "body": 48.74742268041237,
+        "headings": 3.634020618556701,
+        "path": 5.639175257731959,
+        "summary": 3.8711340206185567,
+        "symbols": 13.407216494845361,
+        "title": 4.309278350515464
       }
     },
     "entries": [
@@ -3532,6 +3544,38 @@
           "outbound": []
         },
         "contentHash": "058d1685d3d66b90e77c8eebe8045dd25f0d98425e70e2702e8e62edf52b411a",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:.changeset/migrate-to-renovate.md",
+        "kind": "document",
+        "path": ".changeset/migrate-to-renovate.md",
+        "title": "migrate-to-renovate.md",
+        "summary": "Migrate dependency updates from Dependabot to the organization Renovate preset.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "migrate-to-renovate.md",
+          "headings": "",
+          "path": ".changeset/migrate-to-renovate.md",
+          "symbols": "",
+          "summary": "Migrate dependency updates from Dependabot to the organization Renovate preset.",
+          "body": "Migrate dependency updates from Dependabot to the organization Renovate preset.",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "26d1afa4491e4151150b7d28049fc629882046c171774d1057b75ad779497fe0",
         "provenance": "observed",
         "confidence": "observed"
       },
