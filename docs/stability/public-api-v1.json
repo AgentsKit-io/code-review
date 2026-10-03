@@ -1,0 +1,1618 @@
+{
+  "schemaVersion": 1,
+  "package": "@agentskit/code-review",
+  "subpaths": {
+    ".": {
+      "symbols": [
+        {
+          "name": "AdaptiveConcurrencyGate",
+          "kinds": [
+            "type",
+            "value"
+          ]
+        },
+        {
+          "name": "BudgetEnvelope",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "BudgetEnvelopeSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "CampaignCheckpoint",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "CampaignCheckpointSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "CampaignContract",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "CampaignContractSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "CampaignEngineState",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "CampaignEngineStateSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "CampaignEvent",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "CampaignEventSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "CampaignExecutionEntry",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "CampaignExecutionReport",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "CampaignExecutionReportSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "CampaignLease",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "CampaignPreflightEntry",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "CampaignPreflightEntrySchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "CampaignPreflightReport",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "CampaignPreflightReportSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "CampaignPullRequestResult",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "CampaignTerminalOutcome",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "CampaignTerminalOutcomeSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "CanaryResult",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "Category",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ChangeRequestDiff",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ChangeRequestDiffSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ChangeRequestMetadata",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ChangeRequestMetadataSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ChangeRequestQuery",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ChangeRequestQuerySchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ChangeRequestRef",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ChangeRequestRefSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "CodeReviewConfig",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ConfigInput",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ContextPackEvidence",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "DomainFailure",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "DomainFailureSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ExecutionBudget",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ExecutionBudgetSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "FailureDisposition",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "FailureDispositionSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "FaultInjectionReport",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "FaultInjectionReportSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "Finding",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "GithubCommentPolicy",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "GithubScmAdapterOptions",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "GrokCliOptions",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "HarnessBlocker",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "HarnessCheck",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "HarnessContract",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "HarnessReport",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "HarnessRunState",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "HarnessStage",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "HeadlessCliOptions",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "HierarchicalReviewBudget",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "HierarchicalReviewBudgetSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "Lens",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "LensExecutionStats",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "LocalCliMode",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "OllamaReviewOptions",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "OpenCodeCliOptions",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "PROVIDER_REGISTRY_VERSION",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ProviderCapabilities",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ProviderCapabilitiesSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ProviderEntry",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ProviderExecutionPolicy",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "PublicConfigError",
+          "kinds": [
+            "type",
+            "value"
+          ]
+        },
+        {
+          "name": "PullRequestRunContract",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "PullRequestRunContractSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "PullRequestTerminalOutcome",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "PullRequestTerminalOutcomeSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "QUALITY_AREAS",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "QualityArea",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "QualityAreaResult",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "QualityBaseline",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "QualityBaselineIdentity",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "QualityBaselineIdentitySchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "QualityBaselineSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "QualityCampaignInput",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "QualityCampaignSummary",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "QualityDurationBreakdown",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "QualityDurationBreakdownSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "QualityEvidence",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "QualityInput",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "QualityRegressionPolicy",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "QualityReport",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "QualityStatus",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "QualityTokenBreakdown",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "QualityTokenBreakdownSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "RealCampaignBaselineSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "RealRunBaselineSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "Reporter",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewBudgetExceededError",
+          "kinds": [
+            "type",
+            "value"
+          ]
+        },
+        {
+          "name": "ReviewBudgetHierarchyInput",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewBudgetScope",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewBudgetScopeSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ReviewCache",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewCacheIdentity",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewCacheIdentitySchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ReviewCacheLookup",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewCacheMissReason",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewCacheRecord",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewCacheRecordSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ReviewCacheWrite",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewCandidateRule",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewCandidateRuleSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ReviewConfigSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ReviewDeadlineError",
+          "kinds": [
+            "type",
+            "value"
+          ]
+        },
+        {
+          "name": "ReviewEvidence",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewExecutionError",
+          "kinds": [
+            "type",
+            "value"
+          ]
+        },
+        {
+          "name": "ReviewFeedback",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewFeedbackFileSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ReviewFeedbackSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ReviewFeedbackStore",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewIdentity",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewIdentitySchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ReviewKnowledge",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewKnowledgeFileSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ReviewKnowledgeSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ReviewKnowledgeScope",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewKnowledgeScopeInput",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewKnowledgeScopeSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ReviewKnowledgeStore",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewPlan",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewPreflightError",
+          "kinds": [
+            "type",
+            "value"
+          ]
+        },
+        {
+          "name": "ReviewProjectConfig",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewReconciliationMetrics",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewReconciliationMetricsSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ReviewReconciliationReport",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewReconciliationReportSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ReviewReconciliationStore",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewResult",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewSafeTextSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ReviewStoreLayout",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewStoreLayoutSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ReviewTarget",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewUnitContract",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ReviewUnitContractSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ReviewUsage",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ScmAdapter",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ScmCapabilities",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ScmCapabilitiesSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ScmCapability",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ScmCapabilitySchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ScmCheckPolicy",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ScmCheckPolicySchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ScmFileContent",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ScmFileContentSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ScmMergeReadiness",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ScmMergeReadinessSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ScmMergeReceipt",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ScmMergeReceiptSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ScmMergeRequest",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ScmMergeRequestSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ScmPublicationReceipt",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ScmPublicationReceiptSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ScmReviewPublication",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ScmReviewPublicationSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ScmReviewState",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "ScmReviewStateSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "Severity",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "SyntheticRunBaselineSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "TelemetryOptions",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "UnsupportedScmCapabilityError",
+          "kinds": [
+            "type",
+            "value"
+          ]
+        },
+        {
+          "name": "Verdict",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "acquireCampaignLease",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "addReviewUsage",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "appendCampaignEvent",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "assertCanaryReady",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "blockedCampaignPreflightReport",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "blockedQualityReport",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "builtInLenses",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "campaignReportDeliveryFailed",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "claudeCode",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "codexCli",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "compareQuality",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "compileReviewBudget",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "configFingerprint",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "createApprovedReviewRetriever",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "createApprovedReviewRule",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "createAutoCliAdapter",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "createCampaignCheckpoint",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "createCampaignEngineState",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "createCodeReviewAgent",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "createFileMemory",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "createGithubScmAdapter",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "createHarnessContract",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "createHarnessRun",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "createHeadlessCliAdapter",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "createReviewBudgetLedger",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "createReviewCache",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "createReviewFeedbackStore",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "createReviewKnowledgeStore",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "createReviewReconciliationStore",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "createReviewStoreLayout",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "createReviewStores",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "createTelemetryObserver",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "defaultReviewBudget",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "defineConfig",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "emptyReviewUsage",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "evaluateCampaignQuality",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "evaluateQuality",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "evaluateQualityAgainstBaseline",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "executeCampaign",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "fingerprint",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "generateConfigSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "githubInlineReporter",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "githubSummaryReporter",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "grokCli",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "loadApprovedReviewRules",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "loadCampaignCheckpoint",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "loadProjectConfig",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "markdownReporter",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "normalizeProviderFailure",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ollamaReview",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "opencodeCli",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "parseQualityBaseline",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "parseQualityInput",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "pendingReviewUnitIds",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "preflightCampaign",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "presets",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "providerEntry",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "providerExecutionPolicy",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "providerRegistry",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "providerRetryDelay",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "qualityBaselineIdentity",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "reconcileReviewFeedback",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "recordBatchCompletion",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "recordCanaryAttempt",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "recordExternalEffect",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "releaseCampaignLease",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "renderGithubWalkthrough",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "renderMarkdown",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "renewCampaignLease",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "replayCampaign",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "requireScmCapability",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "resolveProviderId",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "reviewCacheKey",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "reviewIdentityFingerprint",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "runBlockerSweep",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "runFaultInjectionHarness",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "sarifReporter",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "saveCampaignCheckpoint",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "scmReviewReporter",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "shouldApplyExternalEffect",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "toReviewConfig",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "transitionCampaign",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "validateCanary",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "validateConfig",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "validateStudyOutputPath",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "waitForProviderRetry",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "writeAtomicJson",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "writeLeasedJson",
+          "kinds": [
+            "value"
+          ]
+        }
+      ]
+    },
+    "./config": {
+      "symbols": [
+        {
+          "name": "ConfigInput",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "PublicConfigError",
+          "kinds": [
+            "type",
+            "value"
+          ]
+        },
+        {
+          "name": "ReviewConfigSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "ReviewProjectConfig",
+          "kinds": [
+            "type"
+          ]
+        },
+        {
+          "name": "configFingerprint",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "configSchemaFilePath",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "defineConfig",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "generateConfigSchema",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "loadProjectConfig",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "presets",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "toReviewConfig",
+          "kinds": [
+            "value"
+          ]
+        },
+        {
+          "name": "validateConfig",
+          "kinds": [
+            "value"
+          ]
+        }
+      ]
+    },
+    "./package.json": {
+      "assets": [
+        "package.json"
+      ],
+      "symbols": []
+    }
+  }
+}

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "c0bb1e823ebe740200d9f235d5ee7ce9818f5969abcc3e1fedf5eb423470219f",
+  "contentHash": "f474b0aef326aaa3e8e78c64ddc686b6a3917854b5dd96bfebfa683aae8d138b",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-02T23:18:43.101Z",
+  "generatedAt": "2026-10-03T01:38:03.468Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -200,7 +200,7 @@
         "document",
         "project"
       ],
-      "contentHash": "c5b194ccf68c460a084c475ff5023d93884954a2b9a336b7a39d01edafaad8e8"
+      "contentHash": "f9c2398ec6ef5dd7c9bf3596aed3d9ec9ac172fd3fd9204d0601ae945e13535d"
     },
     {
       "id": "document:design.md",
@@ -998,6 +998,18 @@
         "scripts"
       ],
       "contentHash": "49505a1acd2f43868246b73fcdbcb5c8385966a19f78b2040b4a85885e855a72"
+    },
+    {
+      "id": "module:scripts/check-public-api.mjs",
+      "type": "module",
+      "title": "check-public-api.mjs",
+      "path": "scripts/check-public-api.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "939975ed25cc691e6b217967411b057480194d5ec30c5245a35831e86bbf5cf5"
     },
     {
       "id": "module:scripts/check-readme-standard.mjs",
@@ -3074,8 +3086,8 @@
     }
   },
   "inputs": {
-    "hash": "2a600e207c27cd95c77f44a88f277ac22516de2de8cc88606af60549a55702fb",
-    "fileCount": 191,
+    "hash": "a610b9557b557af52ad2f8cdb393284bfb802595e8bccbee4cb476b729cd7482",
+    "fileCount": 192,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3097,9 +3109,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "9c6c2966de2a143580f46cabfdac7b89d66fd929bf51b81b1c104c405c491d51",
+    "contentHash": "033331b284505f580ec5942053c6aca8814dbf45cce54cd83235e4f739f08198",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "ea1c6f00880e29e075edae789fa3d3988f68622093aeb30b67320a8aab4e33a9",
+    "snapshotHash": "737d40210fef3c60f01f7190f71c2fdde66d1b9c2127c2a2ec75f805795ab89c",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
@@ -3119,7 +3131,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 190,
+      "documentCount": 191,
       "fieldNames": [
         "aliases",
         "body",
@@ -3130,13 +3142,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8842105263157896,
-        "body": 48.77368421052632,
-        "headings": 3.6842105263157894,
-        "path": 5.636842105263158,
-        "summary": 3.731578947368421,
-        "symbols": 13.563157894736841,
-        "title": 4.3
+        "aliases": 2.884816753926702,
+        "body": 48.80628272251309,
+        "headings": 3.680628272251309,
+        "path": 5.638743455497382,
+        "summary": 3.712041884816754,
+        "symbols": 13.492146596858639,
+        "title": 4.303664921465969
       }
     },
     "entries": [
@@ -3288,7 +3300,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "92ead4e18fd3061f503a92fde76c791fcca303162ee674a8b0c37273b827cc72",
+        "contentHash": "701c56fced664ee983fbd041296379dcbe7c61548135e0bc5030a616595cc94b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -4014,11 +4026,11 @@
         ],
         "fields": {
           "title": "Contributing",
-          "headings": "Contributing Start here Project map Good contributions Pull requests",
+          "headings": "Contributing Start here Public API snapshot Project map Good contributions Pull requests",
           "path": "CONTRIBUTING.md",
           "symbols": "",
           "summary": "Thanks for helping make AI code review more useful and less noisy.",
-          "body": "Contributing Thanks for helping make AI code review more useful and less noisy. Start here 1. Fork and clone the repository. 2. Create a focused branch from main . 3. Run npm install . 4. Make the smallest change that solves the issue. 5. Run npm run check before opening a pull request. Node.js 20 or newer is required; npm run test:coverage requires Node.js 22.8 or newer. npm run test:coverage runs the offline test suite with Node's built-in coverage reporter, covering dist/src only. The baseline floors are 93% lines, 79% branches, and 92% functions; raise a floor after tests improve its corresponding metric. Project map - src/cli.ts — arguments, providers, review policy, and reporters. - src/ -adapter.ts — adapters for logged-in local CLIs. - agents/code-review/ — vendored review agent, lenses, sources, and reporters. - action.yml — GitHub Action interface. - examples/ — copy-ready workflows. Good contributions - Reduce a reproducible false positive. - Add a provider through the existing adapter contract. - Add a focused review lens with clear evidence requirements. - Improve a reporter or source without tying it to one model. - Add provider-neutral examples and documentation. Please open an issue before a large architectural change. Small fixes and documentation improvements can go straight to a pull request. Pull requests - Keep one concern per PR. - Explain the user-visible behavior and how you tested it. - Add or update tests for behavior changes. - Preserve provider neutrality: provider-specific behavior belongs in its adapter. - Never commit API keys, model output containing private code, or review tokens. - Update README or examples when changing the public CLI or Action interface. Project decisions, maintainer responsibilities, and the release process are documented in . By participating, you agree to follow the .",
+          "body": "Contributing Thanks for helping make AI code review more useful and less noisy. Start here 1. Fork and clone the repository. 2. Create a focused branch from main . 3. Run npm install . 4. Make the smallest change that solves the issue. 5. Run npm run check before opening a pull request. Node.js 20 or newer is required; npm run test:coverage requires Node.js 22.8 or newer. Public API snapshot The package's exported names and symbol kinds are recorded per export subpath in docs/stability/public-api-v1.json . npm run check:public-api compares the current TypeScript API with that snapshot and reports additions, removals, and kind changes. When an API change is intentional, run npm run check:public-api:update , review the snapshot diff, and commit the updated snapshot with the API change. npm run test:coverage runs the offline test suite with Node's built-in coverage reporter, covering dist/src only. The baseline floors are 93% lines, 79% branches, and 92% functions; raise a floor after tests improve its corresponding metric. Project map - src/cli.ts — arguments, providers, review policy, and reporters. - src/ -adapter.ts — adapters for logged-in local CLIs. - agents/code-review/ — vendored review agent, lenses, sources, and reporters. - action.yml — GitHub Action interface. - examples/ — copy-ready workflows. Good contributions - Reduce a reproducible false positive. - Add a provider through the existing adapter contract. - Add a focused review lens with clear evidence requirements. - Improve a reporter or source without tying it to one model. - Add provider-neutral examples and documentation. Please open an issue before a large architectural change. Small fixes and documentation improvements can go straight to a pull request. Pull requests - Keep one concern per PR. - Explain the user-visible behavior and how you tested it. - Add or update tests for behavior changes. - Preserve provider neutrality: provider-specific behavior belongs in its adapter. - Never commit API keys, model output containing private code, or review tokens. - Update README or examples when changing the public CLI or Action interface. Project decisions, maintainer responsibilities, and the release process are documented in . By participating, you agree to follow the .",
           "aliases": "document project"
         },
         "graph": {
@@ -4090,7 +4102,7 @@
             }
           ]
         },
-        "contentHash": "c5b194ccf68c460a084c475ff5023d93884954a2b9a336b7a39d01edafaad8e8",
+        "contentHash": "f9c2398ec6ef5dd7c9bf3596aed3d9ec9ac172fd3fd9204d0601ae945e13535d",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -7589,6 +7601,40 @@
           "outbound": []
         },
         "contentHash": "49505a1acd2f43868246b73fcdbcb5c8385966a19f78b2040b4a85885e855a72",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:scripts/check-public-api.mjs",
+        "kind": "module",
+        "path": "scripts/check-public-api.mjs",
+        "title": "check-public-api.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "check-public-api.mjs",
+          "headings": "",
+          "path": "scripts/check-public-api.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:scripts",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "939975ed25cc691e6b217967411b057480194d5ec30c5245a35831e86bbf5cf5",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13700,7 +13746,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "edbfc00908ee7f9c078193e0adfde9b7efaf41784b5fc7f7e65211b958f5b0c9",
+        "contentHash": "a5f54f05d636a075e352ae84aac453e7a1c3ce4bc985b763e6f9190556972689",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
