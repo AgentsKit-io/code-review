@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "193c130570d67d1db07b867b29a8b8a2ac2c8581efb7a9e3b1d9e9f528a04459",
+  "contentHash": "327798594e3ce205713e7c6c48970dd6171c4a43950dbd32e8df8a337098df9a",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-03T23:53:59.922Z",
+  "generatedAt": "2026-10-04T00:04:29.971Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -21,114 +21,6 @@
       "title": "Code Review agent docs",
       "path": "docs/for-agents/index.md",
       "description": "- Code Review CLI handoff — ownership, change routes, security boundaries, and verification: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review.md - Concise machine map — discovery, raw sources, and all six ecosystem products: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms.txt - Full machine corpus — public, operational, governance,"
-    },
-    {
-      "id": "document:.changeset/codex-prompt-over-stdin.md",
-      "type": "document",
-      "title": "codex-prompt-over-stdin.md",
-      "path": ".changeset/codex-prompt-over-stdin.md",
-      "description": "Codex lenses send the review prompt over stdin instead of as a command-line argument, so reviewing a large file no longer fails on Windows with spawn ENAMETOOLONG.",
-      "tags": [
-        "document",
-        "unclassified"
-      ],
-      "contentHash": "8230474465e2b75dad3cad03feaf31001bef3cea377ae6f881c7f4d1eadf226d"
-    },
-    {
-      "id": "document:.changeset/core-redaction.md",
-      "type": "document",
-      "title": "core-redaction.md",
-      "path": ".changeset/core-redaction.md",
-      "description": "Reuse AgentsKit Core's shared secret redactor for review source content and local CLI diagnostics.",
-      "tags": [
-        "document",
-        "unclassified"
-      ],
-      "contentHash": "cb763ba6329dd10cc76a6383825693202d6354b65c795f9f000cfe7e34a3b1d6"
-    },
-    {
-      "id": "document:.changeset/cross-platform-process-helpers.md",
-      "type": "document",
-      "title": "cross-platform-process-helpers.md",
-      "path": ".changeset/cross-platform-process-helpers.md",
-      "description": "Route local CLI spawning, process-tree termination, and Windows-sensitive path/line handling through @agentskit/cross-platform instead of hand-rolled cross-spawn, negative-pid group kills, and shell: true probes. cross-spawn is no longer a direct dependency. npm run check now runs agentskit-cross-platform check against a committed baseline so new portability hazards fail.",
-      "tags": [
-        "document",
-        "unclassified"
-      ],
-      "contentHash": "5cdf7f01fbc07d9aad477c4822c60ddafa33cffb8e09cf43ea2e98f1403855c4"
-    },
-    {
-      "id": "document:.changeset/incomplete-review-no-marker.md",
-      "type": "document",
-      "title": "incomplete-review-no-marker.md",
-      "path": ".changeset/incomplete-review-no-marker.md",
-      "description": "An incomplete review is published without the idempotency marker, so a later run at the same head reviews it again instead of printing SKIPPED: already reviewed without the requested --result.",
-      "tags": [
-        "document",
-        "unclassified"
-      ],
-      "contentHash": "058d1685d3d66b90e77c8eebe8045dd25f0d98425e70e2702e8e62edf52b411a"
-    },
-    {
-      "id": "document:.changeset/migrate-to-renovate.md",
-      "type": "document",
-      "title": "migrate-to-renovate.md",
-      "path": ".changeset/migrate-to-renovate.md",
-      "description": "Migrate dependency updates from Dependabot to the organization Renovate preset.",
-      "tags": [
-        "document",
-        "unclassified"
-      ],
-      "contentHash": "26d1afa4491e4151150b7d28049fc629882046c171774d1057b75ad779497fe0"
-    },
-    {
-      "id": "document:.changeset/minimax-provider.md",
-      "type": "document",
-      "title": "minimax-provider.md",
-      "path": ".changeset/minimax-provider.md",
-      "description": "Recognise --provider minimax (MiniMax, MINIMAX_API_KEY) as a stable API provider once @agentskit/adapters exports the minimax adapter.",
-      "tags": [
-        "document",
-        "unclassified"
-      ],
-      "contentHash": "7e39624b94ae9465780a975f1452b2a99c6a5f88eb027b0fe1d0f314e194bcc8"
-    },
-    {
-      "id": "document:.changeset/net14-github-network.md",
-      "type": "document",
-      "title": "net14-github-network.md",
-      "path": ".changeset/net14-github-network.md",
-      "description": "Use @agentskit/net for GitHub retry, per-attempt timeout, and bounded response-body handling. GETs now honor bounded Retry-After and jittered backoff; write reconciliation and the single-attempt mutation policy remain intact.",
-      "tags": [
-        "document",
-        "unclassified"
-      ],
-      "contentHash": "afa431a8b50e2d201ee899b93e75dafa160b9e8a63b02cdd50d037efefc0cd93"
-    },
-    {
-      "id": "document:.changeset/presentation-ui-fixes.md",
-      "type": "document",
-      "title": "presentation-ui-fixes.md",
-      "path": ".changeset/presentation-ui-fixes.md",
-      "description": "Correct illustrative review diff line ranges, function headers and suggestions in the private documentation app. No CLI or Action changes.",
-      "tags": [
-        "document",
-        "unclassified"
-      ],
-      "contentHash": "fb5a1367dec8beb0b95d995967969f0c4b87e16c21761a6a57581026c528c56c"
-    },
-    {
-      "id": "document:.changeset/robust-github-rest.md",
-      "type": "document",
-      "title": "robust-github-rest.md",
-      "path": ".changeset/robust-github-rest.md",
-      "description": "Route GitHub REST traffic through one internal client with bounded JSON reads, API version and auth headers, same-origin redirect and pagination handling, and rate-limit-aware retries for GET requests. Keep all review and merge writes single-attempt.",
-      "tags": [
-        "document",
-        "unclassified"
-      ],
-      "contentHash": "55af8ad84bddbcdcaf39b536c364d251ef4cac836315d0ce1a06477dc7b925c1"
     },
     {
       "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
@@ -195,12 +87,12 @@
       "type": "document",
       "title": "Changelog",
       "path": "CHANGELOG.md",
-      "description": "#308 c660bcf Thanks @EmersonBraun! - Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies (fumadocs-mdx: not found). The workflow now installs apps/docs dependencies before npm run check, matching CI.",
+      "description": "#315 d132f51 Thanks @Dev4LifeV! - Codex lenses send the review prompt over stdin instead of as a command-line argument, so reviewing a large file no longer fails on Windows with spawn ENAMETOOLONG.",
       "tags": [
         "document",
         "project"
       ],
-      "contentHash": "d1fe04494854dc775b4e5391ae818ea26a2b3b5e3219b69be4221bbdf99549ee"
+      "contentHash": "4e335b01cf6739634282865c872d76103374e47cf50bb9e3196f68e1fb3f9795"
     },
     {
       "id": "document:CODE_OF_CONDUCT.md",
@@ -3129,8 +3021,8 @@
     }
   },
   "inputs": {
-    "hash": "c8fb2c8561f69209218e2a4caba958049ddccf3440240e313c36c3c72129eebe",
-    "fileCount": 195,
+    "hash": "c5e5d8dfe8bac2f5beabe6c7d81931b2d64d830bb7ed2b1b6f339c4b24f77597",
+    "fileCount": 186,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3152,9 +3044,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "80d37f3ec38a99cdad3ce58cdab9b1e86b8b437125c260f083e944017e4575af",
+    "contentHash": "761eba730cd7ca5b297098afce88a875cd928663dd576d687dad22e4a16484b5",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "1658c82ee8445c9e66f18acd31f63484d625beb6084c8727569b6edeb372d6e4",
+    "snapshotHash": "0ca20684f72657c4c72c74f97f25de2a3b8247565bd8dcf05afe829e5be6fe52",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
@@ -3174,7 +3066,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 194,
+      "documentCount": 185,
       "fieldNames": [
         "aliases",
         "body",
@@ -3185,13 +3077,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8762886597938144,
-        "body": 48.74742268041237,
-        "headings": 3.634020618556701,
-        "path": 5.639175257731959,
-        "summary": 3.8711340206185567,
-        "symbols": 13.407216494845361,
-        "title": 4.309278350515464
+        "aliases": 2.918918918918919,
+        "body": 49.92972972972973,
+        "headings": 3.810810810810811,
+        "path": 5.632432432432433,
+        "summary": 2.7675675675675677,
+        "symbols": 14.05945945945946,
+        "title": 4.286486486486487
       }
     },
     "entries": [
@@ -3420,294 +3312,6 @@
         "confidence": "declared"
       },
       {
-        "id": "document:.changeset/codex-prompt-over-stdin.md",
-        "kind": "document",
-        "path": ".changeset/codex-prompt-over-stdin.md",
-        "title": "codex-prompt-over-stdin.md",
-        "summary": "Codex lenses send the review prompt over stdin instead of as a command-line argument, so reviewing a large file no longer fails on Windows with spawn ENAMETOOLONG.",
-        "aliases": [],
-        "tags": [
-          "document",
-          "unclassified"
-        ],
-        "fields": {
-          "title": "codex-prompt-over-stdin.md",
-          "headings": "",
-          "path": ".changeset/codex-prompt-over-stdin.md",
-          "symbols": "",
-          "summary": "Codex lenses send the review prompt over stdin instead of as a command-line argument, so reviewing a large file no longer fails on Windows with spawn ENAMETOOLONG.",
-          "body": "Codex lenses send the review prompt over stdin instead of as a command-line argument, so reviewing a large file no longer fails on Windows with spawn ENAMETOOLONG .",
-          "aliases": "document unclassified"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "8230474465e2b75dad3cad03feaf31001bef3cea377ae6f881c7f4d1eadf226d",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
-        "id": "document:.changeset/core-redaction.md",
-        "kind": "document",
-        "path": ".changeset/core-redaction.md",
-        "title": "core-redaction.md",
-        "summary": "Reuse AgentsKit Core's shared secret redactor for review source content and local CLI diagnostics.",
-        "aliases": [],
-        "tags": [
-          "document",
-          "unclassified"
-        ],
-        "fields": {
-          "title": "core-redaction.md",
-          "headings": "",
-          "path": ".changeset/core-redaction.md",
-          "symbols": "",
-          "summary": "Reuse AgentsKit Core's shared secret redactor for review source content and local CLI diagnostics.",
-          "body": "Reuse AgentsKit Core's shared secret redactor for review source content and local CLI diagnostics.",
-          "aliases": "document unclassified"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "cb763ba6329dd10cc76a6383825693202d6354b65c795f9f000cfe7e34a3b1d6",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
-        "id": "document:.changeset/cross-platform-process-helpers.md",
-        "kind": "document",
-        "path": ".changeset/cross-platform-process-helpers.md",
-        "title": "cross-platform-process-helpers.md",
-        "summary": "Route local CLI spawning, process-tree termination, and Windows-sensitive path/line handling through @agentskit/cross-platform instead of hand-rolled cross-spawn, negative-pid group kills, and shell: true probes. cross-spawn is no longer a direct dependency. npm run check now runs agentskit-cross-platform check against a committed baseline so new portability hazards fail.",
-        "aliases": [],
-        "tags": [
-          "document",
-          "unclassified"
-        ],
-        "fields": {
-          "title": "cross-platform-process-helpers.md",
-          "headings": "",
-          "path": ".changeset/cross-platform-process-helpers.md",
-          "symbols": "",
-          "summary": "Route local CLI spawning, process-tree termination, and Windows-sensitive path/line handling through @agentskit/cross-platform instead of hand-rolled cross-spawn, negative-pid group kills, and shell: true probes. cross-spawn is no longer a direct dependency. npm run check now runs agentskit-cross-platform check against a committed baseline so new portability hazards fail.",
-          "body": "Route local CLI spawning, process-tree termination, and Windows-sensitive path/line handling through @agentskit/cross-platform instead of hand-rolled cross-spawn , negative-pid group kills, and shell: true probes. cross-spawn is no longer a direct dependency. npm run check now runs agentskit-cross-platform check against a committed baseline so new portability hazards fail.",
-          "aliases": "document unclassified"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "5cdf7f01fbc07d9aad477c4822c60ddafa33cffb8e09cf43ea2e98f1403855c4",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
-        "id": "document:.changeset/incomplete-review-no-marker.md",
-        "kind": "document",
-        "path": ".changeset/incomplete-review-no-marker.md",
-        "title": "incomplete-review-no-marker.md",
-        "summary": "An incomplete review is published without the idempotency marker, so a later run at the same head reviews it again instead of printing SKIPPED: already reviewed without the requested --result.",
-        "aliases": [],
-        "tags": [
-          "document",
-          "unclassified"
-        ],
-        "fields": {
-          "title": "incomplete-review-no-marker.md",
-          "headings": "",
-          "path": ".changeset/incomplete-review-no-marker.md",
-          "symbols": "",
-          "summary": "An incomplete review is published without the idempotency marker, so a later run at the same head reviews it again instead of printing SKIPPED: already reviewed without the requested --result.",
-          "body": "An incomplete review is published without the idempotency marker, so a later run at the same head reviews it again instead of printing SKIPPED: already reviewed without the requested --result .",
-          "aliases": "document unclassified"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "058d1685d3d66b90e77c8eebe8045dd25f0d98425e70e2702e8e62edf52b411a",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
-        "id": "document:.changeset/migrate-to-renovate.md",
-        "kind": "document",
-        "path": ".changeset/migrate-to-renovate.md",
-        "title": "migrate-to-renovate.md",
-        "summary": "Migrate dependency updates from Dependabot to the organization Renovate preset.",
-        "aliases": [],
-        "tags": [
-          "document",
-          "unclassified"
-        ],
-        "fields": {
-          "title": "migrate-to-renovate.md",
-          "headings": "",
-          "path": ".changeset/migrate-to-renovate.md",
-          "symbols": "",
-          "summary": "Migrate dependency updates from Dependabot to the organization Renovate preset.",
-          "body": "Migrate dependency updates from Dependabot to the organization Renovate preset.",
-          "aliases": "document unclassified"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "26d1afa4491e4151150b7d28049fc629882046c171774d1057b75ad779497fe0",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
-        "id": "document:.changeset/minimax-provider.md",
-        "kind": "document",
-        "path": ".changeset/minimax-provider.md",
-        "title": "minimax-provider.md",
-        "summary": "Recognise --provider minimax (MiniMax, MINIMAX_API_KEY) as a stable API provider once @agentskit/adapters exports the minimax adapter.",
-        "aliases": [],
-        "tags": [
-          "document",
-          "unclassified"
-        ],
-        "fields": {
-          "title": "minimax-provider.md",
-          "headings": "",
-          "path": ".changeset/minimax-provider.md",
-          "symbols": "",
-          "summary": "Recognise --provider minimax (MiniMax, MINIMAX_API_KEY) as a stable API provider once @agentskit/adapters exports the minimax adapter.",
-          "body": "Recognise --provider minimax (MiniMax, MINIMAX API KEY ) as a stable API provider once @agentskit/adapters exports the minimax adapter.",
-          "aliases": "document unclassified"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "7e39624b94ae9465780a975f1452b2a99c6a5f88eb027b0fe1d0f314e194bcc8",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
-        "id": "document:.changeset/net14-github-network.md",
-        "kind": "document",
-        "path": ".changeset/net14-github-network.md",
-        "title": "net14-github-network.md",
-        "summary": "Use @agentskit/net for GitHub retry, per-attempt timeout, and bounded response-body handling. GETs now honor bounded Retry-After and jittered backoff; write reconciliation and the single-attempt mutation policy remain intact.",
-        "aliases": [],
-        "tags": [
-          "document",
-          "unclassified"
-        ],
-        "fields": {
-          "title": "net14-github-network.md",
-          "headings": "",
-          "path": ".changeset/net14-github-network.md",
-          "symbols": "",
-          "summary": "Use @agentskit/net for GitHub retry, per-attempt timeout, and bounded response-body handling. GETs now honor bounded Retry-After and jittered backoff; write reconciliation and the single-attempt mutation policy remain intact.",
-          "body": "Use @agentskit/net for GitHub retry, per-attempt timeout, and bounded response-body handling. GETs now honor bounded Retry-After and jittered backoff; write reconciliation and the single-attempt mutation policy remain intact.",
-          "aliases": "document unclassified"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "afa431a8b50e2d201ee899b93e75dafa160b9e8a63b02cdd50d037efefc0cd93",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
-        "id": "document:.changeset/presentation-ui-fixes.md",
-        "kind": "document",
-        "path": ".changeset/presentation-ui-fixes.md",
-        "title": "presentation-ui-fixes.md",
-        "summary": "Correct illustrative review diff line ranges, function headers and suggestions in the private documentation app. No CLI or Action changes.",
-        "aliases": [],
-        "tags": [
-          "document",
-          "unclassified"
-        ],
-        "fields": {
-          "title": "presentation-ui-fixes.md",
-          "headings": "",
-          "path": ".changeset/presentation-ui-fixes.md",
-          "symbols": "",
-          "summary": "Correct illustrative review diff line ranges, function headers and suggestions in the private documentation app. No CLI or Action changes.",
-          "body": "Correct illustrative review diff line ranges, function headers and suggestions in the private documentation app. No CLI or Action changes.",
-          "aliases": "document unclassified"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "fb5a1367dec8beb0b95d995967969f0c4b87e16c21761a6a57581026c528c56c",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
-        "id": "document:.changeset/robust-github-rest.md",
-        "kind": "document",
-        "path": ".changeset/robust-github-rest.md",
-        "title": "robust-github-rest.md",
-        "summary": "Route GitHub REST traffic through one internal client with bounded JSON reads, API version and auth headers, same-origin redirect and pagination handling, and rate-limit-aware retries for GET requests. Keep all review and merge writes single-attempt.",
-        "aliases": [],
-        "tags": [
-          "document",
-          "unclassified"
-        ],
-        "fields": {
-          "title": "robust-github-rest.md",
-          "headings": "",
-          "path": ".changeset/robust-github-rest.md",
-          "symbols": "",
-          "summary": "Route GitHub REST traffic through one internal client with bounded JSON reads, API version and auth headers, same-origin redirect and pagination handling, and rate-limit-aware retries for GET requests. Keep all review and merge writes single-attempt.",
-          "body": "Route GitHub REST traffic through one internal client with bounded JSON reads, API version and auth headers, same-origin redirect and pagination handling, and rate-limit-aware retries for GET requests. Keep all review and merge writes single-attempt.",
-          "aliases": "document unclassified"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "55af8ad84bddbcdcaf39b536c364d251ef4cac836315d0ce1a06477dc7b925c1",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
         "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
         "kind": "document",
         "path": ".github/PULL_REQUEST_TEMPLATE.md",
@@ -3912,7 +3516,7 @@
         "kind": "document",
         "path": "CHANGELOG.md",
         "title": "Changelog",
-        "summary": "#308 c660bcf Thanks @EmersonBraun! - Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies (fumadocs-mdx: not found). The workflow now installs apps/docs dependencies before npm run check, matching CI.",
+        "summary": "#315 d132f51 Thanks @Dev4LifeV! - Codex lenses send the review prompt over stdin instead of as a command-line argument, so reviewing a large file no longer fails on Windows with spawn ENAMETOOLONG.",
         "audience": "human",
         "aliases": [],
         "tags": [
@@ -3921,11 +3525,11 @@
         ],
         "fields": {
           "title": "Changelog",
-          "headings": "Changelog 0.32.2 Patch Changes 0.32.1 Patch Changes 0.32.0 Minor Changes 0.31.0 Minor Changes Patch Changes 0.30.19 Patch Changes 0.30.18 Patch Changes 0.30.17 Patch Changes 0.30.16 Patch Changes 0.30.15 Patch Changes 0.30.14 Patch Changes 0.30.13 Patch Changes 0.30.12 Patch Changes 0.30.11 Patch Changes 0.30.10 Patch Changes 0.30.9 Patch Changes 0.30.8 Patch Changes 0.30.7 Patch Changes 0.30.6 Patch Changes 0.30.5 Patch Changes 0.30.4 Patch Changes 0.30.3 Patch Changes 0.30.2 Patch Changes 0.30.1 Patch Changes 0.30.0 Minor Changes 0.29.0 Minor Changes 0.28.0 Minor Changes 0.27.0 Minor Changes 0.26.0 Minor Changes 0.25.0 Minor Changes 0.24.0 Minor Changes 0.23.0 Minor Changes",
+          "headings": "Changelog 0.32.3 Patch Changes 0.32.2 Patch Changes 0.32.1 Patch Changes 0.32.0 Minor Changes 0.31.0 Minor Changes Patch Changes 0.30.19 Patch Changes 0.30.18 Patch Changes 0.30.17 Patch Changes 0.30.16 Patch Changes 0.30.15 Patch Changes 0.30.14 Patch Changes 0.30.13 Patch Changes 0.30.12 Patch Changes 0.30.11 Patch Changes 0.30.10 Patch Changes 0.30.9 Patch Changes 0.30.8 Patch Changes 0.30.7 Patch Changes 0.30.6 Patch Changes 0.30.5 Patch Changes 0.30.4 Patch Changes 0.30.3 Patch Changes 0.30.2 Patch Changes 0.30.1 Patch Changes 0.30.0 Minor Changes 0.29.0 Minor Changes 0.28.0 Minor Changes 0.27.0 Minor Changes 0.26.0 Minor Changes 0.25.0 Minor Changes 0.24.0 Minor Changes",
           "path": "CHANGELOG.md",
           "symbols": "",
-          "summary": "#308 c660bcf Thanks @EmersonBraun! - Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies (fumadocs-mdx: not found). The workflow now installs apps/docs dependencies before npm run check, matching CI.",
-          "body": "Changelog 0.32.2 Patch Changes - Thanks ! - Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies ( fumadocs-mdx: not found ). The workflow now installs apps/docs dependencies before npm run check , matching CI. 0.32.1 Patch Changes - Thanks ! - Fix local CLI providers ( claude-cli , codex-cli , ...) failing to spawn on Windows. npm's global install of any Node CLI produces a .cmd shim there, and Windows' CreateProcess cannot execute one without a shell, so the previous plain child process.spawn failed with ENOENT / EINVAL for every local provider regardless of the configured path — reproduced live via doctor --provider claude-cli , which reported executable: not found even though the CLI ran fine directly in the same shell. Switched to cross-spawn , which detects this case and re-execs through cmd.exe with the same argument escaping Node's own shell: true uses. 0.32.0 Minor Changes - Thanks ! - Migrate from zod v3 to zod v4, and drop zod-to-json-schema in favor of zod v4's native z.toJSONSchema() . zod-to-json-schema@3.25.2 declares zod v4 support in its peer dependencies, but its published types still import zod/v3 internally — passing it a native v4 schema fails to typecheck, so bumping the library alone doesn't work; the dependency has to go. This surfaced a real, pre-existing fragility during the migration: every structured tool-call schema in agents/code-review/agent.ts ( submit batched findings , submit verdicts , etc.) relied on zod-to-json-schema 's implicit default of additionalProperties: false for every z.object() , strict or not. z.toJSONSchema() only sets that when a schema is explicitly .strict() . Every one of those schemas is now .strict() by name, and a new test ( test/tool-schema-order.test.mjs ) locks additionalProperties: false in at every nesting level of the real tool-call schemas sent to providers, so this can't silently regress again. Other consequences of the migration: - generateConfigSchema() (the CLI's --config-schema output) keeps its $schema: \"http://json-schema.org/draft-07/schema \" value via z.toJSONSchema 's target: 'draft-7' option, and keeps the AgentsKitCodeReviewConfig name via .meta({ title }) instead of the old library's name option — the output is now a flat schema instead of a $ref -wrapped definitions entry, which is a JSON Schema shape change for anything that inspected that wrapper specifically (nothing in this repo did). - z.record(valueSchema) calls became z.record(z.string(), valueSchema) (zod v4 requires an explicit key schema) across campaign-store.ts , campaign-reducer.ts , and review-config.ts . - .strict().default({}) on optional config sections in public-config.ts became .strict().prefault({}) — zod v4's .default() now requires the already-resolved output shape as its argument, while .prefault() keeps the old \"apply {} then let nested field defaults fill in\" behavior. - A custom z.ZodError issue was being re-added via context.addIssue(issue) in campaign-runner.ts with the full upstream issue object; zod v4's addIssue expects its own narrower shape, so this now rebuilds { code: 'custom', message, path } explicitly. - A CLI error-message check in review-config.ts matched zod v3's exact default message text for a too small violation; zod v4 reworded that message, so the check now matches on the structured issue.code / issue.minimum instead of English text. Full test suite (311 tests, one new) and the full local check gate pass. 0.31.0 Minor Changes - Thanks ! - Promote conservative to the default verification.posture on createCodeReviewAgent , replacing strict . This closes out ADR-0008's pending live A/B: run against all 20 cases in quality/evals/default.json (including the corpus recalibration from the previous release) through a real codex-cli provider, conservative detected 10/12 positive cases versus strict 's 9/12 (+8.3 points), at a precision cost ",
+          "summary": "#315 d132f51 Thanks @Dev4LifeV! - Codex lenses send the review prompt over stdin instead of as a command-line argument, so reviewing a large file no longer fails on Windows with spawn ENAMETOOLONG.",
+          "body": "Changelog 0.32.3 Patch Changes - Thanks ! - Codex lenses send the review prompt over stdin instead of as a command-line argument, so reviewing a large file no longer fails on Windows with spawn ENAMETOOLONG . - Thanks ! - Reuse AgentsKit Core's shared secret redactor for review source content and local CLI diagnostics. - Thanks ! - Route local CLI spawning, process-tree termination, and Windows-sensitive path/line handling through @agentskit/cross-platform instead of hand-rolled cross-spawn , negative-pid group kills, and shell: true probes. cross-spawn is no longer a direct dependency. npm run check now runs agentskit-cross-platform check against a committed baseline so new portability hazards fail. - Thanks ! - An incomplete review is published without the idempotency marker, so a later run at the same head reviews it again instead of printing SKIPPED: already reviewed without the requested --result . - Thanks ! - Recognise --provider minimax (MiniMax, MINIMAX API KEY ) as a stable API provider once @agentskit/adapters exports the minimax adapter. - Thanks ! - Use @agentskit/net for GitHub retry, per-attempt timeout, and bounded response-body handling. GETs now honor bounded Retry-After and jittered backoff; write reconciliation and the single-attempt mutation policy remain intact. - Thanks ! - Route GitHub REST traffic through one internal client with bounded JSON reads, API version and auth headers, same-origin redirect and pagination handling, and rate-limit-aware retries for GET requests. Keep all review and merge writes single-attempt. 0.32.2 Patch Changes - Thanks ! - Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies ( fumadocs-mdx: not found ). The workflow now installs apps/docs dependencies before npm run check , matching CI. 0.32.1 Patch Changes - Thanks ! - Fix local CLI providers ( claude-cli , codex-cli , ...) failing to spawn on Windows. npm's global install of any Node CLI produces a .cmd shim there, and Windows' CreateProcess cannot execute one without a shell, so the previous plain child process.spawn failed with ENOENT / EINVAL for every local provider regardless of the configured path — reproduced live via doctor --provider claude-cli , which reported executable: not found even though the CLI ran fine directly in the same shell. Switched to cross-spawn , which detects this case and re-execs through cmd.exe with the same argument escaping Node's own shell: true uses. 0.32.0 Minor Changes - Thanks ! - Migrate from zod v3 to zod v4, and drop zod-to-json-schema in favor of zod v4's native z.toJSONSchema() . zod-to-json-schema@3.25.2 declares zod v4 support in its peer dependencies, but its published types still import zod/v3 internally — passing it a native v4 schema fails to typecheck, so bumping the library alone doesn't work; the dependency has to go. This surfaced a real, pre-existing fragility during the migration: every structured tool-call schema in agents/code-review/agent.ts ( submit batched findings , submit verdicts , etc.) relied on zod-to-json-schema 's implicit default of additionalProperties: false for every z.object() , strict or not. z.toJSONSchema() only sets that when a schema is explicitly .strict() . Every one of those schemas is now .strict() by name, and a new test ( test/tool-schema-order.test.mjs ) locks additionalProperties: false in at every nesting level of the real tool-call schemas sent to providers, so this can't silently regress again. Other consequences of the migration: - generateConfigSchema() (the CLI's --config-schema output) keeps its $schema: \"http://json-schema.org/draft-07/schema \" value via z.toJSONSchema 's target: 'draft-7' option, and keeps the AgentsKitCodeReviewConfig name via .meta({ title }) instead of the old library's name option — the output is now a flat schema instead of a $ref -wrapped definitions entry, which is a JSON Schema sha",
           "aliases": "document project"
         },
         "graph": {
@@ -4065,7 +3669,7 @@
             }
           ]
         },
-        "contentHash": "d1fe04494854dc775b4e5391ae818ea26a2b3b5e3219b69be4221bbdf99549ee",
+        "contentHash": "4e335b01cf6739634282865c872d76103374e47cf50bb9e3196f68e1fb3f9795",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13915,7 +13519,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "3cec18a9527595958567d19db74e8f8d3319ab7f618095b7eff15c5375bfea17",
+        "contentHash": "628eb0b21d51e9b641e2da74ee73f260a4da8fe3dd876f418ffd4cfb0527df06",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
