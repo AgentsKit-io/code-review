@@ -2221,6 +2221,24 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.32.3
+
+### Patch Changes
+
+- [#315](https://github.com/AgentsKit-io/code-review/pull/315) [`d132f51`](https://github.com/AgentsKit-io/code-review/commit/d132f51507361a7786951b1416f555b9cd4f1ee6) Thanks [@Dev4LifeV](https://github.com/Dev4LifeV)! - Codex lenses send the review prompt over stdin instead of as a command-line argument, so reviewing a large file no longer fails on Windows with `spawn ENAMETOOLONG`.
+
+- [#327](https://github.com/AgentsKit-io/code-review/pull/327) [`5db8225`](https://github.com/AgentsKit-io/code-review/commit/5db822541c118c467093f774090ab396e7a11318) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Reuse AgentsKit Core's shared secret redactor for review source content and local CLI diagnostics.
+
+- [#318](https://github.com/AgentsKit-io/code-review/pull/318) [`1946c9e`](https://github.com/AgentsKit-io/code-review/commit/1946c9ece69e088c460e6a17e3f6470a2fb6d982) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Route local CLI spawning, process-tree termination, and Windows-sensitive path/line handling through `@agentskit/cross-platform` instead of hand-rolled `cross-spawn`, negative-pid group kills, and `shell: true` probes. `cross-spawn` is no longer a direct dependency. `npm run check` now runs `agentskit-cross-platform check` against a committed baseline so new portability hazards fail.
+
+- [#317](https://github.com/AgentsKit-io/code-review/pull/317) [`f7db2fb`](https://github.com/AgentsKit-io/code-review/commit/f7db2fb576df2b5b9a484932cf372da0cfda25bc) Thanks [@Dev4LifeV](https://github.com/Dev4LifeV)! - An incomplete review is published without the idempotency marker, so a later run at the same head reviews it again instead of printing `SKIPPED: already reviewed` without the requested `--result`.
+
+- [#319](https://github.com/AgentsKit-io/code-review/pull/319) [`7b8032d`](https://github.com/AgentsKit-io/code-review/commit/7b8032dc007bd7f3a900e4c245a26cb5fbd76f74) Thanks [@Dev4LifeV](https://github.com/Dev4LifeV)! - Recognise `--provider minimax` (MiniMax, `MINIMAX_API_KEY`) as a stable API provider once `@agentskit/adapters` exports the `minimax` adapter.
+
+- [#323](https://github.com/AgentsKit-io/code-review/pull/323) [`4d56dca`](https://github.com/AgentsKit-io/code-review/commit/4d56dcad4c91cd6371ab29d11ed961df49de18fe) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Use `@agentskit/net` for GitHub retry, per-attempt timeout, and bounded response-body handling. GETs now honor bounded `Retry-After` and jittered backoff; write reconciliation and the single-attempt mutation policy remain intact.
+
+- [#334](https://github.com/AgentsKit-io/code-review/pull/334) [`aa8d0fb`](https://github.com/AgentsKit-io/code-review/commit/aa8d0fbf61390718b2ade504f83e6c736fbaf0f7) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Route GitHub REST traffic through one internal client with bounded JSON reads, API version and auth headers, same-origin redirect and pagination handling, and rate-limit-aware retries for GET requests. Keep all review and merge writes single-attempt.
+
 ## 0.32.2
 
 ### Patch Changes
