@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "193c130570d67d1db07b867b29a8b8a2ac2c8581efb7a9e3b1d9e9f528a04459",
+  "contentHash": "33a1f559dccc55a54dddbbd5b865f0177828af56ac3f7b174322e75c29155de2",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-03T23:53:59.922Z",
+  "generatedAt": "2026-10-09T18:08:39.304Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -117,6 +117,18 @@
         "unclassified"
       ],
       "contentHash": "fb5a1367dec8beb0b95d995967969f0c4b87e16c21761a6a57581026c528c56c"
+    },
+    {
+      "id": "document:.changeset/review-deleted-files.md",
+      "type": "document",
+      "title": "review-deleted-files.md",
+      "path": ".changeset/review-deleted-files.md",
+      "description": "A pull request that deletes a file is no longer left INCOMPLETE. Since #180 every removed file was marked UNREVIEWED (\"deleted file requires diff-first review\"), so any PR with a deletion exited 2 and could never complete. A deleted file is now reviewed diff-first from its patch: the removed lines, numbered by their base-file line.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "1452ed19beb758ac3506a0704427e70ca24ce63162fe403cff9a324fb4ee1259"
     },
     {
       "id": "document:.changeset/robust-github-rest.md",
@@ -663,7 +675,7 @@
         "ts",
         "code-review"
       ],
-      "contentHash": "93cbdd130903d3812540f0b1fa7b783b9454816e4c1c055561a0b2b3113c5b39"
+      "contentHash": "d0db5a367db1f2beef091a250f37f6f5eb0c57c10a4aabb3de355ac5df11377b"
     },
     {
       "id": "module:apps/docs/app/api/search/route.ts",
@@ -2422,7 +2434,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "280004d4dfaab60aec428ba33dc271a0922df984c3b7e0d589f29280b687c9da"
+      "contentHash": "6786cc3d66aca06062f317a194f4f38339ad6f39fb53a885807cc040f423387c"
     },
     {
       "id": "module:test/campaign-reducer.test.mjs",
@@ -3022,6 +3034,18 @@
       "contentHash": "52bb8776fb129f44f8df736a5af22131772084eac07a293bfe20fac1d16fb956"
     },
     {
+      "id": "module:test/sources-deleted-files.test.mjs",
+      "type": "module",
+      "title": "sources-deleted-files.test.mjs",
+      "path": "test/sources-deleted-files.test.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "test"
+      ],
+      "contentHash": "2a5cad378760f0c65fb8159732b10c18d010019e3b95b8868d8c15ae80e9aa54"
+    },
+    {
       "id": "module:test/sources.test.mjs",
       "type": "module",
       "title": "sources.test.mjs",
@@ -3129,8 +3153,8 @@
     }
   },
   "inputs": {
-    "hash": "c8fb2c8561f69209218e2a4caba958049ddccf3440240e313c36c3c72129eebe",
-    "fileCount": 195,
+    "hash": "246b6bd130ee3c14573c16b05b27f04b29085500cfde20795c20fe55691a4d45",
+    "fileCount": 197,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3152,9 +3176,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "80d37f3ec38a99cdad3ce58cdab9b1e86b8b437125c260f083e944017e4575af",
+    "contentHash": "8e22d0ad1972dbb9c72fce30d1269610917e1633527a4447c16ddd0869a69d79",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "1658c82ee8445c9e66f18acd31f63484d625beb6084c8727569b6edeb372d6e4",
+    "snapshotHash": "f8a2edce203bf77b974eed110b95f41764e602ccc0366394b8c5986839dbebec",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
     "lexiconVersion": 1,
@@ -3174,7 +3198,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 194,
+      "documentCount": 196,
       "fieldNames": [
         "aliases",
         "body",
@@ -3185,13 +3209,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8762886597938144,
-        "body": 48.74742268041237,
-        "headings": 3.634020618556701,
-        "path": 5.639175257731959,
-        "summary": 3.8711340206185567,
-        "symbols": 13.407216494845361,
-        "title": 4.309278350515464
+        "aliases": 2.872448979591837,
+        "body": 48.62244897959184,
+        "headings": 3.5969387755102042,
+        "path": 5.6479591836734695,
+        "summary": 4.040816326530612,
+        "symbols": 13.270408163265307,
+        "title": 4.321428571428571
       }
     },
     "entries": [
@@ -3382,7 +3406,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "14dd5d1e11f26f4aa3c598542f4eee0ba3ee7762ef10d546d4bc9bfa23848e84",
+        "contentHash": "c22e4a2075b87b29bebab5b13ac1e1d008a6bba7f099e543a67196f3ea596e4a",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3672,6 +3696,38 @@
           "outbound": []
         },
         "contentHash": "fb5a1367dec8beb0b95d995967969f0c4b87e16c21761a6a57581026c528c56c",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:.changeset/review-deleted-files.md",
+        "kind": "document",
+        "path": ".changeset/review-deleted-files.md",
+        "title": "review-deleted-files.md",
+        "summary": "A pull request that deletes a file is no longer left INCOMPLETE. Since #180 every removed file was marked UNREVIEWED (\"deleted file requires diff-first review\"), so any PR with a deletion exited 2 and could never complete. A deleted file is now reviewed diff-first from its patch: the removed lines, numbered by their base-file line.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "review-deleted-files.md",
+          "headings": "",
+          "path": ".changeset/review-deleted-files.md",
+          "symbols": "",
+          "summary": "A pull request that deletes a file is no longer left INCOMPLETE. Since #180 every removed file was marked UNREVIEWED (\"deleted file requires diff-first review\"), so any PR with a deletion exited 2 and could never complete. A deleted file is now reviewed diff-first from its patch: the removed lines, numbered by their base-file line.",
+          "body": "A pull request that deletes a file is no longer left INCOMPLETE . Since 180 every removed file was marked UNREVIEWED (\"deleted file requires diff-first review\"), so any PR with a deletion exited 2 and could never complete. A deleted file is now reviewed diff-first from its patch: the removed lines, numbered by their base-file line. Its findings surface in the review summary rather than inline, because GitHub anchors inline comments on the head side, where a deleted file has no lines. A deleted file stays UNREVIEWED when GitHub sent no patch for it, when its path is denied, or when it exceeds the byte budget.",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "1452ed19beb758ac3506a0704427e70ca24ce63162fe403cff9a324fb4ee1259",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6812,7 +6868,7 @@
             }
           ]
         },
-        "contentHash": "93cbdd130903d3812540f0b1fa7b783b9454816e4c1c055561a0b2b3113c5b39",
+        "contentHash": "d0db5a367db1f2beef091a250f37f6f5eb0c57c10a4aabb3de355ac5df11377b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -12004,7 +12060,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "280004d4dfaab60aec428ba33dc271a0922df984c3b7e0d589f29280b687c9da",
+        "contentHash": "6786cc3d66aca06062f317a194f4f38339ad6f39fb53a885807cc040f423387c",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13730,6 +13786,40 @@
           "outbound": []
         },
         "contentHash": "52bb8776fb129f44f8df736a5af22131772084eac07a293bfe20fac1d16fb956",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:test/sources-deleted-files.test.mjs",
+        "kind": "module",
+        "path": "test/sources-deleted-files.test.mjs",
+        "title": "sources-deleted-files.test.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "test"
+        ],
+        "fields": {
+          "title": "sources-deleted-files.test.mjs",
+          "headings": "",
+          "path": "test/sources-deleted-files.test.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs test"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:test",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "2a5cad378760f0c65fb8159732b10c18d010019e3b95b8868d8c15ae80e9aa54",
         "provenance": "observed",
         "confidence": "observed"
       },

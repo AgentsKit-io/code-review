@@ -23,7 +23,8 @@ function fakeScm(observedFingerprints = []) {
       return { ref: change, title: `PR ${change.id}`, state: 'open', author: authors[change.id], sourceRevision: sha(change.id), targetRevision: sha('a'), sourceBranch: `branch-${change.id}`, targetBranch: 'main', isDraft: change.id === '5', isFork: false, labels: [], updatedAt: '2026-09-09T00:00:00.000Z' }
     },
     async reviewState(change, fingerprint) { observedFingerprints.push(fingerprint); return { headRevision: sha(change.id), fingerprint, alreadyPublished: change.id === '4', scope: 'full', baselineRevision: null } },
-    async diff(change) { return { baseRevision: sha('a'), headRevision: sha(change.id), complete: true, files: [{ path: change.id === '6' ? 'removed.ts' : `src/${change.id}.ts`, status: change.id === '6' ? 'removed' : 'modified', patch: '@@ -1 +1 @@\n-old\n+new', truncated: false }] } },
+    // PR 6 deletes a file GitHub sent no patch for (too large or binary): nothing to review it from, so it stays unreviewed.
+    async diff(change) { return { baseRevision: sha('a'), headRevision: sha(change.id), complete: true, files: [change.id === '6' ? { path: 'removed.ts', status: 'removed', truncated: false } : { path: `src/${change.id}.ts`, status: 'modified', patch: '@@ -1 +1 @@\n-old\n+new', truncated: false }] } },
     async fileContent(change, path) { return { content: change.id === '1' ? 'export const key = `tenant\0workspace`\n' : `export const file = '${path}'\n`, truncated: false } },
     async publishReview() { throw new Error('preflight must not publish') },
     async mergeReadiness() { throw new Error('preflight must not inspect merge readiness') },
