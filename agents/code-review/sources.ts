@@ -2,7 +2,7 @@ import { execFile } from 'node:child_process'
 import { closeSync, fstatSync, lstatSync, openSync, readdirSync, readFileSync, realpathSync } from 'node:fs'
 import { extname, isAbsolute, join, relative, posix } from 'node:path'
 import { promisify } from 'node:util'
-import { toPosix } from '@agentskit/cross-platform'
+import { splitLines, toPosix } from '@agentskit/cross-platform'
 import { redactSecrets } from '@agentskit/core/security'
 import type { ReviewTarget } from './agent.js'
 import { createGithubScmAdapter } from '../../src/github-scm-adapter.js'
@@ -195,7 +195,7 @@ function projectDeletion(patch: string): ProjectedSource | undefined {
   const sourceLineNumbers: number[] = []
   let line = 0
   let inHunk = false
-  for (const value of patch.split('\n')) {
+  for (const value of splitLines(patch)) {
     const header = value.match(/^@@ -(\d+)(?:,\d+)? \+\d+(?:,\d+)? @@/)
     if (header) { line = Number(header[1]); inHunk = true; continue }
     if (!inHunk || !value.startsWith('-')) continue
