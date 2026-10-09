@@ -185,6 +185,35 @@ function projectPatch(patch: string, adjacentLines: number): ProjectedSource | u
   }
 }
 
+/**
+ * A deleted file has no head content, so its patch is the whole review source: every removed line, numbered by
+ * its line in the base file. `changedRanges` stays empty on purpose — GitHub anchors inline comments on the head
+ * side, where a deleted file has no lines, so its findings must surface in the review summary, not inline.
+ */
+function projectDeletion(patch: string): ProjectedSource | undefined {
+  const selected: string[] = []
+  const sourceLineNumbers: number[] = []
+  let line = 0
+  let inHunk = false
+  for (const value of patch.split('\n')) {
+    const header = value.match(/^@@ -(\d+)(?:,\d+)? \+\d+(?:,\d+)? @@/)
+    if (header) { line = Number(header[1]); inHunk = true; continue }
+    if (!inHunk || !value.startsWith('-')) continue
+    sourceLineNumbers.push(line++)
+    selected.push(`[deleted] ${value.slice(1)}`)
+  }
+  if (!selected.length) return undefined
+  const fullContent = selected.join('\n')
+  return {
+    fullContent,
+    sourceLineNumbers,
+    contextProjection: {
+      mode: 'patch-fallback', originalBytes: Buffer.byteLength(patch, 'utf8'), includedBytes: Buffer.byteLength(fullContent, 'utf8'),
+      includedRanges: rangesFromLines(sourceLineNumbers), adjacentLines: 0, requestedAdjacentLines: 0,
+    },
+  }
+}
+
 function unreviewed(file: string, reason: string): ReviewTarget {
   return { file: normalize(file), language: langOf(file), fullContent: '', isChanged: true, reviewStatus: 'UNREVIEWED', unreviewedReason: reason }
 }
@@ -327,9 +356,20 @@ export async function loadScmTargets(c: { adapter: ScmAdapter; ref: ChangeReques
   let downloadedBytes = 0
   let byteBudgetHit = false
   for (const f of files) {
-    if (f.status === 'removed') { targets.push(unreviewed(f.path, 'deleted file requires diff-first review')); continue }
     const denied = deniedPath(f.path)
     if (denied || !isReviewableName(f.path)) { targets.push(unreviewed(f.path, denied ?? 'unsupported text format')); continue }
+    // Deletions are reviewed from the patch alone (diff-first): what a PR removes can matter as much as what it
+    // adds, so a deleted file is neither skipped nor left UNREVIEWED when GitHub sent its patch.
+    if (f.status === 'removed') {
+      const deletion = f.patch ? projectDeletion(f.patch) : undefined
+      if (!deletion) { targets.push(unreviewed(f.path, 'deleted file has no patch to review')); continue }
+      const safe = c.redact ? redactSecrets(deletion.fullContent) : deletion.fullContent
+      const includedBytes = Buffer.byteLength(safe, 'utf8')
+      if (byteBudgetHit || downloadedBytes + includedBytes > (c.limits?.maxBytes ?? Number.POSITIVE_INFINITY)) { targets.push(unreviewed(f.path, `PR exceeds ${c.limits?.maxBytes} byte limit`)); byteBudgetHit = true; continue }
+      downloadedBytes += includedBytes
+      targets.push({ file: f.path, language: langOf(f.path), ...deletion, fullContent: safe, contextProjection: { ...deletion.contextProjection, includedBytes }, changedRanges: [], patch: f.patch, isChanged: true, commitId: sha })
+      continue
+    }
     if (!selectedFiles.has(f.path)) { targets.push(unreviewed(f.path, `PR exceeds ${maxFiles} file limit`)); continue }
     if (byteBudgetHit || downloadedBytes >= (c.limits?.maxBytes ?? Number.POSITIVE_INFINITY)) {
       targets.push(unreviewed(f.path, `PR exceeds ${c.limits?.maxBytes} byte limit`))
