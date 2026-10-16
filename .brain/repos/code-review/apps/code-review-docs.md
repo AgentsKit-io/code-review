@@ -6,8 +6,8 @@ npm: "@agentskit/code-review-docs"
 visibilidade: publico
 verificado-em: 2026-10-16
 commits:
-  code-review: 5580f8b
-metodo: "análise estática de apps/docs em 5580f8b; doc-bridge 1.12.0 (`ak-docs list knowledge`) listou os módulos do app e o corpus humano Fumadocs; o site não foi construído nem implantado nesta análise."
+  code-review: 4c442c0
+metodo: "análise estática de apps/docs em 5580f8b; doc-bridge 1.12.0 (`ak-docs list knowledge`) listou os módulos do app e o corpus humano Fumadocs; o site não foi construído nem implantado nesta análise. Auditado em 2026-10-16 (v2): todas as referências arquivo:linha e símbolos conferidos mecanicamente e amostra semântica verificada contra o código em 4c442c0 (seção Auditoria v2 em Auditoria - code-review)."
 fontes:
   - apps/docs/package.json
   - apps/docs/README.md

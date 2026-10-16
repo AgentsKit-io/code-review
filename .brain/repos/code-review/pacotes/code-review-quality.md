@@ -6,8 +6,8 @@ npm: "@agentskit/code-review"
 visibilidade: publico
 verificado-em: 2026-10-16
 commits:
-  code-review: 5580f8b
-metodo: "análise estática do código em 5580f8b; doc-bridge 1.12.0 (`ak-docs list knowledge`) listou scripts e módulos; nenhum ciclo, benchmark ou harness foi executado."
+  code-review: 4c442c0
+metodo: "análise estática do código em 5580f8b; doc-bridge 1.12.0 (`ak-docs list knowledge`) listou scripts e módulos; nenhum ciclo, benchmark ou harness foi executado. Auditado em 2026-10-16 (v2): todas as referências arquivo:linha e símbolos conferidos mecanicamente e amostra semântica verificada contra o código em 4c442c0 (seção Auditoria v2 em Auditoria - code-review)."
 fontes:
   - scripts/review-cycle.mjs
   - scripts/review-harness.mjs
@@ -90,7 +90,7 @@ if (quality.decision !== 'PASS') throw new Error('posting forbidden because the 
 - **State dir** (`--state-dir`): cache de revisão e stores de memória ([[code-review-memory]]).
 - **Variáveis:** `GITHUB_TOKEN` (ou `gh auth token`), repassada aos filhos (`scripts/review-cycle.mjs:101`); o ambiente inteiro é herdado pelos filhos (`scripts/review-cycle.mjs:102`), mas a CLI filha apaga os tokens SCM antes de chamar o provedor ([[code-review-engine]]).
 - **Efeitos externos:** publicação no PR com `--post` e merge com `--merge` — só depois de quality `PASS` (`scripts/review-cycle.mjs:409`, `scripts/review-cycle.mjs:415`).
-- **Telemetria:** `fetch` POST para `<otlpEndpoint>/v1/traces` quando habilitada com exporter `otlp` (`src/telemetry.ts:89`); nunca leva prompts, diffs ou credenciais.
+- **Telemetria:** `fetch` POST para `<otlpEndpoint>/v1/traces` quando habilitada com exporter `otlp` (`src/telemetry.ts:89`); só recebe eventos de progresso do observer, nunca prompts, diffs ou credenciais; `contentLogging` apenas inclui a nota curta de fase (`src/telemetry.ts:63`–`src/telemetry.ts:66`). Falha de entrega é ignorada (`src/telemetry.ts:99`).
 - **Corpus empacotado:** `quality/evals/default.json` e `quality/learning/default.json` vão no tarball (`package.json:60`).
 
 ## Como mexer (para agentes)

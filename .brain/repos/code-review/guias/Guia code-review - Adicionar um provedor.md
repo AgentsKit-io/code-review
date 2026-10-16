@@ -5,8 +5,8 @@ camada: ferramenta
 visibilidade: publico
 verificado-em: 2026-10-16
 commits:
-  code-review: 5580f8b
-metodo: "passos derivados de CONTRIBUTING.md, docs/for-agents/code-review.md, ADR-0001 e do código de registro/adaptadores em 5580f8b; não executado."
+  code-review: 4c442c0
+metodo: "passos derivados de CONTRIBUTING.md, docs/for-agents/code-review.md, ADR-0001 e do código de registro/adaptadores em 5580f8b; não executado. Auditado em 2026-10-16 (v2): todas as referências arquivo:linha e símbolos conferidos mecanicamente e amostra semântica verificada contra o código em 4c442c0 (seção Auditoria v2 em Auditoria - code-review)."
 fontes:
   - CONTRIBUTING.md
   - docs/for-agents/code-review.md

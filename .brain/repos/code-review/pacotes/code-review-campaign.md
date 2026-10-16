@@ -6,8 +6,8 @@ npm: "@agentskit/code-review"
 visibilidade: publico
 verificado-em: 2026-10-16
 commits:
-  code-review: 5580f8b
-metodo: "análise estática do código em 5580f8b; doc-bridge 1.12.0 (`ak-docs list knowledge`) listou os módulos de campanha; chamadores conferidos com `git grep`; nenhuma campanha foi executada."
+  code-review: 4c442c0
+metodo: "análise estática do código em 5580f8b; doc-bridge 1.12.0 (`ak-docs list knowledge`) listou os módulos de campanha; chamadores conferidos com `git grep`; nenhuma campanha foi executada. Auditado em 2026-10-16 (v2): todas as referências arquivo:linha e símbolos conferidos mecanicamente e amostra semântica verificada contra o código em 4c442c0 (seção Auditoria v2 em Auditoria - code-review)."
 fontes:
   - src/campaign-runner.ts
   - src/campaign-store.ts

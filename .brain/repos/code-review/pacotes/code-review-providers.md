@@ -6,8 +6,8 @@ npm: "@agentskit/code-review"
 visibilidade: publico
 verificado-em: 2026-10-16
 commits:
-  code-review: 5580f8b
-metodo: "análise estática do código em 5580f8b; doc-bridge 1.12.0 (`ak-docs list knowledge`) confirmou os módulos `src/*-adapter.ts` e `src/provider-*.ts`; nenhum provedor ou CLI foi executado."
+  code-review: 4c442c0
+metodo: "análise estática do código em 5580f8b; doc-bridge 1.12.0 (`ak-docs list knowledge`) confirmou os módulos `src/*-adapter.ts` e `src/provider-*.ts`; nenhum provedor ou CLI foi executado. Auditado em 2026-10-16 (v2): todas as referências arquivo:linha e símbolos conferidos mecanicamente e amostra semântica verificada contra o código em 4c442c0 (seção Auditoria v2 em Auditoria - code-review)."
 fontes:
   - src/provider-registry.ts
   - src/provider-execution.ts
@@ -66,7 +66,7 @@ Mantém o contrato `AdapterFactory` de [[agentskit-core]] como única fronteira 
 | `normalizeProviderFailure`, `providerRetryDelay`, `waitForProviderRetry`, `AdaptiveConcurrencyGate` | funções/classe | Falha tipada (`RETRYABLE`/`TERMINAL`/`CANCELLED`), espera com jitter, gate que reduz paralelismo em instabilidade | `src/provider-execution.ts:6`, `src/provider-execution.ts:31`, `src/provider-execution.ts:37`, `src/provider-execution.ts:46` |
 | `LocalCliMode` | tipo | `isolated` \| `trusted-local` | `src/local-cli-process.ts:28` |
 
-Todos exportados na raiz em `src/index.ts:82`, `src/index.ts:84` e `src/index.ts:126`.
+Exportados na raiz (exceto `diagnoseProvider`) em `src/index.ts:82`, `src/index.ts:84` e `src/index.ts:126`–`src/index.ts:136` (inclui `createAutoCliAdapter`/`createHeadlessCliAdapter` em `src/index.ts:134`).
 
 Provedores registrados: APIs `anthropic`, `openai`, `gemini`, `grok`, `deepseek`, `mistral`, `groq`, `openrouter`, `together`, `minimax` (`src/provider-registry.ts:79`); locais `codex-cli`, `claude-cli`, `grok-cli`, `opencode-cli`, `ollama` (`src/provider-registry.ts:92`). Fábricas de `@agentskit/adapters` fora dessa lista entram como `experimental` (`src/provider-registry.ts:153`).
 
@@ -89,7 +89,7 @@ if (provider === 'codex-cli') return codexCli({ model, mode, worker: reviewConfi
 
 ## Dados e efeitos
 
-- **Processos:** cada chamada a CLI local abre um processo filho com argv sem shell; o prompt vai por stdin (Windows limita a linha de comando, `src/local-cli-process.ts:39`, `src/codex-adapter.ts:117`).
+- **Processos:** cada chamada a CLI local abre um processo filho com argv sem shell. O prompt vai por stdin no Codex e no Claude Code (Windows limita a linha de comando, `src/local-cli-process.ts:39`, `src/codex-adapter.ts:117`, `src/claude-code-adapter.ts:68`) e por mensagens JSON-RPC no stdin no transporte ACP (`src/acp-cli-adapter.ts:105`); já o transporte *headless* de Grok e OpenCode passa o prompt **como argumento** (`-p <prompt>` em `src/grok-cli-adapter.ts:35`; último argumento de `run` em `src/opencode-cli-adapter.ts:56`).
 - **Modo `isolated` (padrão):** `HOME`/`TMPDIR` temporários e ambiente reduzido a `PATH`, `LANG`, `LC_ALL`, `CI`, `SystemRoot`, variáveis `CODEX_FIXTURE_*` de teste e a credencial explicitamente passada (`src/local-cli-process.ts:63`, `src/local-cli-process.ts:70`, `src/local-cli-process.ts:76`). Diretório temporário apagado no fim (`src/local-cli-process.ts:122`).
 - **Modo `trusted-local`:** herda todo `process.env` e o cwd (`src/local-cli-process.ts:64`) — necessário para reaproveitar login interativo (por isso a Action recusa `codex-cli` fora de `trusted-local`, `action.yml:99`). Proibido em CI e em config de projeto ([[code-review-engine]]).
 - **Limites:** saída 20 MiB padrão / 25 MiB absoluto; timeout absoluto 10 min (`src/local-cli-process.ts:24`); padrão 120 s, Codex 300 s, ajustável por `AGENTSKIT_REVIEW_SUBPROCESS_TIMEOUT_MS` (`src/local-cli-timeout.ts:1`, `src/local-cli-timeout.ts:4`). Ollama usa timeout próprio (`src/ollama-adapter.ts:139`; 30 s segundo `docs/OPERATIONS.md:615`).
@@ -126,7 +126,7 @@ if (provider === 'codex-cli') return codexCli({ model, mode, worker: reviewConfi
 | 2026-09-08 | 6155fec, d857a58, f142fab | Execução adaptativa, política de capacidades, falha rápida em trabalhador travado |
 
 > [!info]- Detalhe técnico
-> - Envelope aceito das CLIs ACP/headless: `.strict()` com `findings` obrigatório e `completedCategories`/`analysis` opcionais (`src/acp-cli-adapter.ts:11`, `src/acp-cli-adapter.ts:18`); o prompt pede sempre `{"schemaVersion":1,...,"findings":[]}` (`src/acp-cli-adapter.ts:40`).
+> - Envelope aceito das CLIs ACP/headless: `.strict()` com `findings` obrigatório e `completedCategories`/`analysis` opcionais (`src/acp-cli-adapter.ts:11`, `src/acp-cli-adapter.ts:18`); o prompt pede `{"schemaVersion":1,"findings":[]}` ou, se o schema da ferramenta tiver `completedCategories`, `{"schemaVersion":1,"completedCategories":[],"analysis":[...],"findings":[]}` (`src/acp-cli-adapter.ts:40`–`src/acp-cli-adapter.ts:42`).
 > - Retentativa interna de 1 vez para saída inválida em ACP/headless (`src/acp-cli-adapter.ts:122`, `src/headless-cli-adapter.ts:32`); o agente ainda aplica até 1 retry por falha `RETRYABLE` (`agents/code-review/agent.ts:696`).
 > - Circuit breaker: abre após 2 falhas, meio-aberto após 30 s (`src/provider-circuit-breaker.ts:19`).
 > - Codex: repete sem `--output-schema` só quando a versão rejeita o schema (`src/codex-adapter.ts:136`).

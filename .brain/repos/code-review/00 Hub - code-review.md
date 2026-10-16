@@ -6,8 +6,8 @@ npm: "@agentskit/code-review"
 visibilidade: publico
 verificado-em: 2026-10-16
 commits:
-  code-review: 5580f8b
-metodo: "análise estática do código em 5580f8b; doc-bridge 1.12.0 executado localmente (`pnpm exec ak-docs index` e `ak-docs query package code-review --agent`) como fonte objetiva de pacote, editRoot e checks, com os arquivos gerados descartados; `pnpm install` rodou o `prepare` (build tsc). Nenhum teste, revisão real, deploy ou chamada a provedor foi executado."
+  code-review: 4c442c0
+metodo: "análise estática do código em 5580f8b; doc-bridge 1.12.0 executado localmente (`pnpm exec ak-docs index` e `ak-docs query package code-review --agent`) como fonte objetiva de pacote, editRoot e checks, com os arquivos gerados descartados; `pnpm install` rodou o `prepare` (build tsc). Nenhum teste, revisão real, deploy ou chamada a provedor foi executado. Auditado em 2026-10-16 (v2): todas as referências arquivo:linha e símbolos conferidos mecanicamente e amostra semântica verificada contra o código em 4c442c0 (seção Auditoria v2 em Auditoria - code-review)."
 fontes:
   - README.md
   - AGENTS.md
@@ -49,7 +49,7 @@ O pacote npm `@agentskit/code-review` (`package.json:2`) entrega uma CLI (`agent
 | Pessoa desenvolvedora | `agentskit-review --provider <p>` no próprio diff (`src/cli.ts:174`) |
 | Repositório no GitHub | Action consultiva em PR (`action.yml:120`) |
 | Operação agendada (Orca/runner local) | `agentskit-review-campaign` → `agentskit-review-cycle` por PR, com publicação e merge opcionais (`scripts/review-campaign.mjs:103`) |
-| [[00 Hub - harness]] | Declara usar o code-review como etapa de revisão (ver o hub do harness) |
+| [[00 Hub - harness]] | Produto irmão citado no README (`README.md:216`); que ele use o code-review como etapa de revisão não é verificável neste repo (ver o hub do harness) |
 | Integradores da biblioteca | `createCodeReviewAgent`, reporters, contratos de campanha (`src/index.ts:113`) |
 
 **Stack:** TypeScript ESM, Node ≥ 20 (`package.json:149`), Zod 4, [[agentskit-core]], [[agentskit-runtime]], [[agentskit-tools]], [[agentskit-net]], [[agentskit-cross-platform]], [[agentskit-ink]] (`package.json:127`); site Next.js 16 + Fumadocs em `apps/docs` (`apps/docs/package.json:13`).

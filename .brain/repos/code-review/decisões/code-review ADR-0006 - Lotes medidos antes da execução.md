@@ -6,8 +6,8 @@ visibilidade: publico
 status: aceito
 verificado-em: 2026-10-16
 commits:
-  code-review: 5580f8b
-metodo: "leitura do ADR e conferência estática no código em 5580f8b."
+  code-review: 4c442c0
+metodo: "leitura do ADR e conferência estática no código em 5580f8b. Auditado em 2026-10-16 (v2): todas as referências arquivo:linha e símbolos conferidos mecanicamente e amostra semântica verificada contra o código em 4c442c0 (seção Auditoria v2 em Auditoria - code-review)."
 fontes:
   - docs/adr/0006-measured-batch-completion.md
   - src/batch-mode.ts

@@ -6,8 +6,8 @@ npm: "@agentskit/code-review"
 visibilidade: publico
 verificado-em: 2026-10-16
 commits:
-  code-review: 5580f8b
-metodo: "análise estática do código em 5580f8b; doc-bridge 1.12.0 (`ak-docs list knowledge`) listou os módulos; nenhuma chamada ao GitHub foi feita."
+  code-review: 4c442c0
+metodo: "análise estática do código em 5580f8b; doc-bridge 1.12.0 (`ak-docs list knowledge`) listou os módulos; nenhuma chamada ao GitHub foi feita. Auditado em 2026-10-16 (v2): todas as referências arquivo:linha e símbolos conferidos mecanicamente e amostra semântica verificada contra o código em 4c442c0 (seção Auditoria v2 em Auditoria - code-review)."
 fontes:
   - src/scm-contract.ts
   - src/github-scm-adapter.ts
@@ -67,7 +67,7 @@ const githubAdapter = source.kind === 'github-pr' ? createGithubScmAdapter({ tok
 | Consumidor | [[code-review-campaign]] — `discover`, `metadata`, `reviewState`, `diff` no preflight (`src/campaign-preflight.ts:56`, `src/campaign-preflight.ts:93`) |
 | Consumidor | [[code-review-quality]] — `metadata`, `reviewState`, `mergeReadiness`, `merge` no ciclo (`scripts/review-cycle.mjs:177`, `scripts/review-cycle.mjs:419`, `scripts/review-cycle.mjs:421`) |
 | Depende | [[agentskit-net]] — `fetchWithRetry`, `readJson`, `readText`, `retry` (`src/github-api-client.ts:1`) |
-| Externo | API REST do GitHub `https://api.github.com`, versão `2022-11-28` (`src/github-api-client.ts:3`); CLI `gh` para merge com `--admin` (`src/github-scm-adapter.ts:259`) |
+| Externo | API REST do GitHub `https://api.github.com`, versão `2022-11-28` (`src/github-api-client.ts:3`, `src/github-api-client.ts:4`); CLI `gh` para merge com `--admin` (`src/github-scm-adapter.ts:259`) |
 
 ## Dados e efeitos
 

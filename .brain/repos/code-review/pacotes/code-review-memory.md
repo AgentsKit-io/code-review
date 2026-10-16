@@ -6,8 +6,8 @@ npm: "@agentskit/code-review"
 visibilidade: publico
 verificado-em: 2026-10-16
 commits:
-  code-review: 5580f8b
-metodo: "análise estática do código em 5580f8b; doc-bridge 1.12.0 (`ak-docs list knowledge`) listou os módulos; chamadores conferidos com `git grep`; nenhum store foi gravado."
+  code-review: 4c442c0
+metodo: "análise estática do código em 5580f8b; doc-bridge 1.12.0 (`ak-docs list knowledge`) listou os módulos; chamadores conferidos com `git grep`; nenhum store foi gravado. Auditado em 2026-10-16 (v2): todas as referências arquivo:linha e símbolos conferidos mecanicamente e amostra semântica verificada contra o código em 4c442c0 (seção Auditoria v2 em Auditoria - code-review)."
 fontes:
   - src/review-stores.ts
   - src/review-feedback.ts
@@ -105,7 +105,7 @@ const configuredKnowledge = projectConfig?.config.memory.enabled && projectConfi
   - Regras por linguagem desligadas por padrão (`agents/code-review/agent.ts:476`).
 - **Testes:** `test/review-stores.test.mjs`, `test/review-feedback.test.mjs`, `test/review-learning.test.mjs`, `test/file-memory.test.mjs`, `test/review-cache.test.mjs`, `test/review-rules.test.mjs`, `test/continuous-improvement.test.mjs`.
 - **Validação:** `npm run check`.
-- **Armadilhas:** a trava `withPathLock` só serializa dentro de um processo; dois processos no mesmo arquivo dependem apenas da escrita atômica. O comentário em `agents/code-review/lenses.ts:202` manda manter `DEFAULT_PROTECTED_SUBJECTS` em sincronia com `src/review-config.ts`, mas esse arquivo não define a constante.
+- **Armadilhas:** a trava `withPathLock` só serializa dentro de um processo; dois processos no mesmo arquivo dependem apenas da escrita atômica. O comentário em `agents/code-review/lenses.ts:202` manda manter `DEFAULT_PROTECTED_SUBJECTS` em sincronia com `src/review-config.ts`, mas esse arquivo não define a constante: ela é definida no próprio `agents/code-review/lenses.ts:204` (comentário desatualizado).
 
 ## Decisões e história
 

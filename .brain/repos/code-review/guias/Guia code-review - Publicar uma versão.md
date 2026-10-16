@@ -5,8 +5,8 @@ camada: ferramenta
 visibilidade: publico
 verificado-em: 2026-10-16
 commits:
-  code-review: 5580f8b
-metodo: "passos tirados de docs/OPERATIONS.md, .changeset/config.json, package.json e dos workflows release/publish em 5580f8b; nada foi executado."
+  code-review: 4c442c0
+metodo: "passos tirados de docs/OPERATIONS.md, .changeset/config.json, package.json e dos workflows release/publish em 5580f8b; nada foi executado. Auditado em 2026-10-16 (v2): todas as referências arquivo:linha e símbolos conferidos mecanicamente e amostra semântica verificada contra o código em 4c442c0 (seção Auditoria v2 em Auditoria - code-review)."
 fontes:
   - docs/OPERATIONS.md
   - .changeset/config.json

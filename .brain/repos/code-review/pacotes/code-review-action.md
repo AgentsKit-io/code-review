@@ -6,8 +6,8 @@ npm: "@agentskit/code-review"
 visibilidade: publico
 verificado-em: 2026-10-16
 commits:
-  code-review: 5580f8b
-metodo: "análise estática de action.yml e dos exemplos em 5580f8b; doc-bridge 1.12.0 (`ak-docs query package code-review --agent`) confirmou os checks; a Action não foi executada."
+  code-review: 4c442c0
+metodo: "análise estática de action.yml e dos exemplos em 5580f8b; doc-bridge 1.12.0 (`ak-docs query package code-review --agent`) confirmou os checks; a Action não foi executada. Auditado em 2026-10-16 (v2): todas as referências arquivo:linha e símbolos conferidos mecanicamente e amostra semântica verificada contra o código em 4c442c0 (seção Auditoria v2 em Auditoria - code-review)."
 fontes:
   - action.yml
   - examples/pull-request.yml

@@ -5,8 +5,8 @@ camada: ferramenta
 visibilidade: publico
 verificado-em: 2026-10-16
 commits:
-  code-review: 5580f8b
-metodo: "sequência reconstruída por análise estática de src/cli.ts e agents/code-review/agent.ts em 5580f8b; nenhuma revisão foi executada."
+  code-review: 4c442c0
+metodo: "sequência reconstruída por análise estática de src/cli.ts e agents/code-review/agent.ts em 5580f8b; nenhuma revisão foi executada. Auditado em 2026-10-16 (v2): todas as referências arquivo:linha e símbolos conferidos mecanicamente e amostra semântica verificada contra o código em 4c442c0 (seção Auditoria v2 em Auditoria - code-review)."
 fontes:
   - src/cli.ts
   - src/review-config.ts
@@ -50,11 +50,11 @@ flowchart LR
 | 3. Estado no GitHub | Com `--post`: fork → `SKIPPED` e exit 2; mesma SHA+política já publicada → `SKIPPED`; marcador anterior "atrás" → revisão incremental | `src/cli.ts:270`, `src/cli.ts:275`, `src/cli.ts:279` |
 | 4. Tokens de SCM saem do ambiente | `GITHUB_TOKEN`, `GH_TOKEN`, `GITLAB_TOKEN` apagados antes do provedor | `src/cli.ts:257` |
 | 5. Plano | Carrega alvos, agrupa (teste↔implementação, imports locais), mede cada pacote com `compileBudget`, divide arquivo grande; recusa se exceder arquivos, bytes, tokens ou chamadas | `agents/code-review/agent.ts:1372`, `agents/code-review/agent.ts:844`, `agents/code-review/agent.ts:1302` |
-| 6. Preflight do provedor | Para CLIs locais: `doctor` com smoke test se `health-check=auto` | `src/cli.ts:453` |
+| 6. Preflight do provedor | Para CLIs locais (não para APIs): `doctor`; com `health-check=auto` pede também o teste ao vivo, que só existe para `codex-cli` | `src/cli.ts:453`, `src/cli.ts:465`, `src/provider-registry.ts:284` |
 | 7. Análise | Uma chamada `submit_batched_findings` por pacote; risco `high`/`critical` acrescenta uma especializada; achados fora de linha alterada são rejeitados pelo schema | `agents/code-review/agent.ts:950`, `agents/code-review/risk.ts:48`, `agents/code-review/agent.ts:964` |
 | 8. Verificação | Lotes de até 8 achados; rodada 2 para `high`+ e `med` pouco confiantes; rodada 3 se as duas primeiras divergirem; sem veredito ⇒ `unverified` (aparece no relatório e torna a revisão incompleta) | `agents/code-review/agent.ts:1103`, `agents/code-review/agent.ts:1181` |
 | 9. Limiar e consolidação | Severidade/confiança mínimas, máximo por arquivo; uma chamada junta duplicados entre lentes (falha = segue sem consolidar) | `agents/code-review/agent.ts:1228`, `agents/code-review/agent.ts:1073` |
-| 10. Síntese | `incomplete` ⇒ `COMMENT`; sem achados ⇒ `APPROVE`; `high`+ ⇒ `REQUEST CHANGES`; prazo estourado liga `blocking` | `agents/code-review/agent.ts:1262`, `agents/code-review/agent.ts:1265` |
+| 10. Síntese | `incomplete` ⇒ `COMMENT`; sem achados ⇒ `APPROVE`; `high`+ ⇒ `REQUEST CHANGES`; só `med`/`nit` ⇒ `COMMENT`; prazo estourado liga `blocking` | `agents/code-review/agent.ts:1262`, `agents/code-review/agent.ts:1265` |
 | 11. Reporters | Markdown sempre; SARIF com `--sarif`; com `--post`, review (inline só em linhas do diff) e resumo; revisão incompleta vai sem marcador | `src/cli.ts:296`, `agents/code-review/reporters.ts:215` |
 | 12. Saída | `incomplete` ⇒ 2; `blocking` sem `--no-fail` ⇒ 1; senão 0; exceção ⇒ 2 | `src/cli.ts:401`, `src/cli.ts:542` |
 

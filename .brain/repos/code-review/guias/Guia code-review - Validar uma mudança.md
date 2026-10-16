@@ -5,8 +5,8 @@ camada: ferramenta
 visibilidade: publico
 verificado-em: 2026-10-16
 commits:
-  code-review: 5580f8b
-metodo: "comandos tirados de AGENTS.md, CONTRIBUTING.md, package.json, ci.yml e do índice doc-bridge (checks de ownership) em 5580f8b; os comandos não foram executados nesta análise."
+  code-review: 4c442c0
+metodo: "comandos tirados de AGENTS.md, CONTRIBUTING.md, package.json, ci.yml e do índice doc-bridge (checks de ownership) em 5580f8b; os comandos não foram executados nesta análise. Auditado em 2026-10-16 (v2): todas as referências arquivo:linha e símbolos conferidos mecanicamente e amostra semântica verificada contra o código em 4c442c0 (seção Auditoria v2 em Auditoria - code-review)."
 fontes:
   - AGENTS.md
   - CONTRIBUTING.md

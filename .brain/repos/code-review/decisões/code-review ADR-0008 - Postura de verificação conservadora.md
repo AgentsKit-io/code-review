@@ -6,8 +6,8 @@ visibilidade: publico
 status: aceito
 verificado-em: 2026-10-16
 commits:
-  code-review: 5580f8b
-metodo: "leitura do ADR e conferência estática no código em 5580f8b; os números do A/B vêm do próprio ADR e não foram reproduzidos."
+  code-review: 4c442c0
+metodo: "leitura do ADR e conferência estática no código em 5580f8b; os números do A/B vêm do próprio ADR e não foram reproduzidos. Auditado em 2026-10-16 (v2): todas as referências arquivo:linha e símbolos conferidos mecanicamente e amostra semântica verificada contra o código em 4c442c0 (seção Auditoria v2 em Auditoria - code-review)."
 fontes:
   - docs/adr/0008-verification-posture.md
   - docs/adr/README.md

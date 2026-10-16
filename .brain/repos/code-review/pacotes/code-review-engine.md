@@ -6,8 +6,8 @@ npm: "@agentskit/code-review"
 visibilidade: publico
 verificado-em: 2026-10-16
 commits:
-  code-review: 5580f8b
-metodo: "análise estática do código em 5580f8b; doc-bridge 1.12.0 (`ak-docs index` + `ak-docs query package code-review --agent`) usado para editRoot `.`, startHere e checks; nada de revisão real, teste ou provedor foi executado."
+  code-review: 4c442c0
+metodo: "análise estática do código em 5580f8b; doc-bridge 1.12.0 (`ak-docs index` + `ak-docs query package code-review --agent`) usado para editRoot `.`, startHere e checks; nada de revisão real, teste ou provedor foi executado. Auditado em 2026-10-16 (v2): todas as referências arquivo:linha e símbolos conferidos mecanicamente e amostra semântica verificada contra o código em 4c442c0 (seção Auditoria v2 em Auditoria - code-review)."
 fontes:
   - src/cli.ts
   - src/index.ts
@@ -51,6 +51,7 @@ tags: [pacote, repo/code-review, camada/ferramenta]
 - **Risco determinístico** (`agents/code-review/risk.ts:21`): classifica cada pacote como `low|normal|high|critical` e acrescenta uma análise especializada para `high`/`critical`.
 - **Orçamentos hierárquicos e lotes** (`src/budget.ts:150`, `src/batch-mode.ts:9`, `src/batch-coverage.ts:95`).
 - **Reporters** Markdown, SARIF e publicação via SCM (`agents/code-review/reporters.ts:84`, `agents/code-review/reporters.ts:147`, `agents/code-review/reporters.ts:211`).
+- **Hook pre-commit** opcional: `.pre-commit-hooks.yaml:1` registra `agentskit-review` (estágio `manual`, `always_run`, sem `pass_filenames`) para rodar a CLI sobre o diff do repositório.
 
 Limites: não escolhe nem implementa modelos (isso é [[code-review-providers]] sobre [[agentskit-adapters]]); não fala HTTP com o GitHub diretamente (isso é [[code-review-scm]]); não orquestra vários PRs ([[code-review-campaign]]).
 
@@ -69,7 +70,7 @@ O problema que resolve: revisão por IA barulhenta e não confiável. A resposta
 | `ReviewPreflightError`, `ReviewDeadlineError`, `ReviewExecutionError` | classes | Recusa de plano, prazo e "nenhuma lente funcionou" | `agents/code-review/agent.ts:163`, `agents/code-review/agent.ts:189`, `agents/code-review/agent.ts:197` |
 | `markdownReporter`, `renderMarkdown`, `sarifReporter`, `scmReviewReporter`, `renderGithubWalkthrough` | funções | Saídas | `agents/code-review/reporters.ts:84`, `agents/code-review/reporters.ts:96`, `agents/code-review/reporters.ts:147`, `agents/code-review/reporters.ts:211`, `agents/code-review/reporters.ts:112` |
 | `githubSummaryReporter`, `githubInlineReporter` | funções | Reporters de compatibilidade GitHub (o inline deduplica por IoU de linhas) | `agents/code-review/reporters.ts:239`, `agents/code-review/reporters.ts:257` |
-| `defineConfig`, `validateConfig`, `loadProjectConfig`, `generateConfigSchema`, `presets`, `toReviewConfig`, `configFingerprint`, `ReviewConfigSchema` | config pública | `code-review.config.{ts,mjs,js}` versão 1; subpath `./config` | `src/public-config.ts:142`, `src/public-config.ts:246`, `src/public-config.ts:154`, `src/public-config.ts:193`, `src/index.ts:1`, `package.json:16` |
+| `defineConfig`, `validateConfig`, `loadProjectConfig`, `generateConfigSchema`, `presets`, `toReviewConfig`, `configFingerprint`, `ReviewConfigSchema` | config pública | `code-review.config.{ts,mjs,js}` versão 1; subpath `./config` | `src/public-config.ts:142` (`defineConfig`), `src/public-config.ts:146` (`validateConfig`), `src/public-config.ts:150` (`configFingerprint`), `src/public-config.ts:154` (`generateConfigSchema`), `src/public-config.ts:163` (`toReviewConfig`), `src/public-config.ts:193` (`presets`), `src/public-config.ts:246` (`loadProjectConfig`), `src/public-config.ts:22` (`ReviewConfigSchema`), `src/index.ts:1`, `package.json:16` |
 | `compileReviewBudget`, `defaultReviewBudget`, `createReviewBudgetLedger`, `ReviewBudgetExceededError` | orçamento | Hierarquia campanha › PR › pacote/análise/verificação | `src/budget.ts:52`, `src/budget.ts:58`, `src/budget.ts:150`, `src/budget.ts:136` |
 | CLI `agentskit-review` | binário | Flags em `HELP` | `src/cli.ts:43` |
 
@@ -94,9 +95,9 @@ const planned = await review.plan()
 | Usa SCM | [[code-review-scm]] — `createGithubScmAdapter` (`src/cli.ts:252`), `loadScmTargets` (`agents/code-review/sources.ts:314`) |
 | Usa memória | [[code-review-memory]] — `loadApprovedReviewRules` e regras por linguagem (`agents/code-review/agent.ts:718`, `agents/code-review/agent.ts:723`) |
 | Consumido por | [[code-review-action]] (`action.yml:120`), [[code-review-quality]] (o `review-cycle` invoca a CLI, `scripts/review-cycle.mjs:269`), [[code-review-campaign]] (preflight, `src/campaign-preflight.ts:108`) |
-| Consumido fora do repo | [[00 Hub - harness]] declara usar a revisão; o pacote é a API pública (`src/index.ts:113`) |
+| Consumido fora do repo | O pacote é a API pública (`src/index.ts:113`). Que [[00 Hub - harness]] use a revisão não é verificável neste repo (o README só cita o Harness como produto separado, `README.md:216`) |
 | Dependência AgentsKit | [[agentskit-core]] (`compileBudget`, `buildMessage`, `agents/code-review/agent.ts:1`; `redactSecrets`, `agents/code-review/sources.ts:6`), [[agentskit-runtime]] (`createRuntime`, `agents/code-review/agent.ts:663`), [[agentskit-tools]] (`defineZodTool`, `agents/code-review/agent.ts:3`), [[agentskit-ink]] (`createProgressObserver`, `src/cli.ts:17`), [[agentskit-cross-platform]] (`toPosix`, `agents/code-review/sources.ts:5`) |
-| Externas relevantes | `zod` 4, `esbuild` (carregar `code-review.config.ts`, `src/public-config.ts:221`), `tsx` (Action) (`package.json:127`) |
+| Externas relevantes | `zod` 4, `esbuild` (carregar `code-review.config.ts`, `src/public-config.ts:221`), `tsx` (Action) (`package.json:135`, `package.json:136`) |
 
 ## Dados e efeitos
 
