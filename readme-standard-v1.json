@@ -142,7 +142,7 @@
         ],
         "maturity": [
           "## Maturity",
-          "pre-v1 (`0.31.x`)"
+          "pre-v1 (`0.32.x`)"
         ],
         "compatibility": [
           "## Compatibility",
@@ -202,8 +202,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-07-14",
-        "reviewDueOn": "2026-10-12",
+        "reviewedOn": "2026-10-23",
+        "reviewDueOn": "2027-01-21",
         "sources": [
           "README.md",
           "package.json",
@@ -220,7 +220,7 @@
           "docs/OPERATIONS.md",
           "test/cli-smoke.test.mjs"
         ],
-        "sourceHash": "sha256:be344a067a7bb1035560224b5979f83e3e48865c4e048c711e21db947cf780e7"
+        "sourceHash": "sha256:fdb5c076464c81dff84df3bb24f53d59d78c4b6da49670749bc9de506dcc931e"
       },
       "exceptions": []
     }

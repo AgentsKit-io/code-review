@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "badc3090ef614c14e42faa83890595780a45e62604f3a3d6044ca0a92bf27697",
+  "contentHash": "4c1acfaa7145552787d2421f50aa72971bdadfd1263b3f829d48c024975871ea",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-10-23T03:51:25.692Z",
+  "generatedAt": "2026-10-23T11:34:56.483Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -428,7 +428,7 @@
         "document",
         "human"
       ],
-      "contentHash": "d4034a9be5153573cbf77accda2fa34377787079e13348add34cd3f5420fb5fa"
+      "contentHash": "b972204c1667cb7ebc82587a6c76ff2b7579a144f9092086e937c87a5adf579b"
     },
     {
       "id": "document:docs/plans/ecosystem-doc-quality-code-review.md",
@@ -488,7 +488,7 @@
         "document",
         "project"
       ],
-      "contentHash": "09d3367b44aa6e3163767d61bf9d771a5f5d6fe186067331f6717b4c9a75e878"
+      "contentHash": "39bcc1ae9b03a422993f5a9610559fd11813f9f6473b76ad40c2058bcd6961d9"
     },
     {
       "id": "document:ROADMAP.md",
@@ -3129,7 +3129,7 @@
     }
   },
   "inputs": {
-    "hash": "2bae32769c88247b062d8fd6f7c5dbf642e0a2875d7db3fd5b23e4300955570d",
+    "hash": "3709b1754da7747bddd9e8352162fc7cd829207fcddc93ffebf6c22d19005b83",
     "fileCount": 209,
     "projectionVersion": 2
   },
@@ -3152,9 +3152,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "b77aef97dcdfe03f434717c8ca724b5eee1c6097b1f89c664955b334cd37941e",
+    "contentHash": "db49b4ba72c37d40efde0ee068aae1b965098cdbbd2ffc88bb47c65a19d63a0e",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "c5b11e33ed8bacb11d1199e7dadbac94ed1700929e67702e1606f54878043016",
+    "snapshotHash": "5b7dab62d7ec1a4e5d1e83f2d0978d9e518441e75049db82b632839024de3032",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "af8d8640b75a389e76f3cc41c135a12439a743104a8127b6e6c5f512facd4a1f",
     "lexiconVersion": 1,
@@ -5597,7 +5597,7 @@
             }
           ]
         },
-        "contentHash": "d4034a9be5153573cbf77accda2fa34377787079e13348add34cd3f5420fb5fa",
+        "contentHash": "b972204c1667cb7ebc82587a6c76ff2b7579a144f9092086e937c87a5adf579b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -5994,7 +5994,7 @@
             }
           ]
         },
-        "contentHash": "09d3367b44aa6e3163767d61bf9d771a5f5d6fe186067331f6717b4c9a75e878",
+        "contentHash": "39bcc1ae9b03a422993f5a9610559fd11813f9f6473b76ad40c2058bcd6961d9",
         "provenance": "observed",
         "confidence": "observed"
       },
