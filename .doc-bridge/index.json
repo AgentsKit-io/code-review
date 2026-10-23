@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "0dfa99a4291fc61d9591e3961fcbfc3f804b1c1ccdce62969f9720bdf925f178",
+  "contentHash": "8383a2461a124bc8e9faef34e56a09381b5e6b6a45af93dc948c3b800851f887",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-10-23T12:31:42.845Z",
+  "generatedAt": "2026-10-23T16:15:46.033Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -21,6 +21,18 @@
       "title": "Code Review agent docs",
       "path": "docs/for-agents/index.md",
       "description": "- Code Review CLI handoff — ownership, change routes, security boundaries, and verification: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review.md - Concise machine map — discovery, raw sources, and all six ecosystem products: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms.txt - Full machine corpus — public, operational, governance,"
+    },
+    {
+      "id": "document:.changeset/align-agentskit-deps.md",
+      "type": "document",
+      "title": "align-agentskit-deps.md",
+      "path": ".changeset/align-agentskit-deps.md",
+      "description": "Align @agentskit/* dependencies with the latest releases: adapters ^0.19.0, core ^1.15.0, cross-platform ^0.3.0, ink 0.10.16, net ^0.2.3, runtime ^0.11.2, tools ^0.13.15.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "7c8cf03738bb721867da11fd2ba8b40de2ba9354f7874b75f7e07ea702bf4b53"
     },
     {
       "id": "document:.changeset/codex-prompt-over-stdin.md",
@@ -3129,8 +3141,8 @@
     }
   },
   "inputs": {
-    "hash": "2bdc33bf5665141e5863bb93de55c8df8e6f5497de32794e57de890779a91f25",
-    "fileCount": 209,
+    "hash": "fbd8cefc7557e9af2d0ef585f5685056501e7875d30b906201bc41052066d3f0",
+    "fileCount": 210,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3152,9 +3164,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "b84eeaf11e7b8de32ccbd35fc072dd5c3bce3b9945bc5eab86eb94a17525b41a",
+    "contentHash": "1dad1393902a8c549b42c25249ffa2c92c7acad15628e5ef746defc5a6704b19",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "d7c86594ed0bfc3b691f0f17bffd74e50522cc59d58a3f2c367e362562656c5d",
+    "snapshotHash": "fc8b5aa263ab6cd6e78cd9ba11af3cc11bc49e925db0e6477b643b206785904a",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "af8d8640b75a389e76f3cc41c135a12439a743104a8127b6e6c5f512facd4a1f",
     "lexiconVersion": 1,
@@ -3174,7 +3186,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 194,
+      "documentCount": 195,
       "fieldNames": [
         "aliases",
         "body",
@@ -3185,13 +3197,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8762886597938144,
-        "body": 48.74742268041237,
-        "headings": 3.634020618556701,
-        "path": 5.639175257731959,
-        "summary": 3.8711340206185567,
-        "symbols": 13.407216494845361,
-        "title": 4.309278350515464
+        "aliases": 2.871794871794872,
+        "body": 48.61025641025641,
+        "headings": 3.6153846153846154,
+        "path": 5.641025641025641,
+        "summary": 3.9641025641025642,
+        "symbols": 13.338461538461539,
+        "title": 4.312820512820513
       }
     },
     "entries": [
@@ -3418,6 +3430,38 @@
         "contentHash": "715edae67cdb05fb982dca41177f0c420f83422cf5af868a51e74d9e4fb42b41",
         "provenance": "declared",
         "confidence": "declared"
+      },
+      {
+        "id": "document:.changeset/align-agentskit-deps.md",
+        "kind": "document",
+        "path": ".changeset/align-agentskit-deps.md",
+        "title": "align-agentskit-deps.md",
+        "summary": "Align @agentskit/* dependencies with the latest releases: adapters ^0.19.0, core ^1.15.0, cross-platform ^0.3.0, ink 0.10.16, net ^0.2.3, runtime ^0.11.2, tools ^0.13.15.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "align-agentskit-deps.md",
+          "headings": "",
+          "path": ".changeset/align-agentskit-deps.md",
+          "symbols": "",
+          "summary": "Align @agentskit/* dependencies with the latest releases: adapters ^0.19.0, core ^1.15.0, cross-platform ^0.3.0, ink 0.10.16, net ^0.2.3, runtime ^0.11.2, tools ^0.13.15.",
+          "body": "Align @agentskit/ dependencies with the latest releases: adapters ^0.19.0, core ^1.15.0, cross-platform ^0.3.0, ink 0.10.16, net ^0.2.3, runtime ^0.11.2, tools ^0.13.15.",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "7c8cf03738bb721867da11fd2ba8b40de2ba9354f7874b75f7e07ea702bf4b53",
+        "provenance": "observed",
+        "confidence": "observed"
       },
       {
         "id": "document:.changeset/codex-prompt-over-stdin.md",
@@ -13904,7 +13948,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "d5d7596f0fe3e2cf11f692165adb4e1f091a5c95ca296f6b8b9cce4c1c1b6e43",
+        "contentHash": "cd3286013db3a8665a04d9eb640cec5657cf61d071be47544e8809b1d3300930",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
