@@ -125,13 +125,13 @@
     "docs:web:typecheck": "npm --prefix apps/docs run typecheck"
   },
   "dependencies": {
-    "@agentskit/adapters": "^0.17.0",
-    "@agentskit/core": "^1.14.1",
-    "@agentskit/cross-platform": "^0.1.0",
-    "@agentskit/ink": "0.10.11",
-    "@agentskit/net": "^0.2.2",
-    "@agentskit/runtime": "^0.10.17",
-    "@agentskit/tools": "^0.13.8",
+    "@agentskit/adapters": "^0.19.0",
+    "@agentskit/core": "^1.15.0",
+    "@agentskit/cross-platform": "^0.3.0",
+    "@agentskit/ink": "0.10.16",
+    "@agentskit/net": "^0.2.3",
+    "@agentskit/runtime": "^0.11.2",
+    "@agentskit/tools": "^0.13.15",
     "esbuild": "^0.28.2",
     "tsx": "^4.23.13",
     "zod": "^4.6.5"
