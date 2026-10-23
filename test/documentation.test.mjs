@@ -35,7 +35,7 @@ test('Changesets release automation is tokenless, gated, and recoverable', () =>
   const publishWorkflow = read('.github/workflows/publish.yml')
   const operations = read('docs/OPERATIONS.md')
 
-  assert.equal(manifest.devDependencies['@changesets/cli'], '^3.0.2')
+  assert.equal(manifest.devDependencies['@changesets/cli'], '^3.0.3')
   assert.equal(manifest.devDependencies['@changesets/changelog-github'], '^1.0.1')
   assert.equal(manifest.scripts.changeset, 'changeset')
   assert.match(manifest.scripts['version-packages'], /^changeset version && npm version --no-git-tag-version --ignore-scripts --allow-same-version .* && npm run docs:index && npm run readme:standard:refresh && npm run docs:index$/)

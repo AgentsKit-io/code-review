@@ -133,17 +133,17 @@
     "@agentskit/runtime": "^0.11.2",
     "@agentskit/tools": "^0.13.15",
     "esbuild": "^0.28.2",
-    "tsx": "^4.23.13",
-    "zod": "^4.6.5"
+    "tsx": "^4.23.15",
+    "zod": "^4.6.7"
   },
   "optionalDependencies": {
     "@agentskit/doc-bridge": "^2.4.0"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^1.0.1",
-    "@changesets/cli": "^3.0.2",
+    "@changesets/cli": "^3.0.3",
     "@types/json-schema": "^7.0.15",
-    "@types/node": "^22.20.3",
+    "@types/node": "^22.20.5",
     "typescript": "^7.0.2"
   },
   "engines": {
