@@ -124,7 +124,7 @@ exactly once with a deterministic terminal outcome.
 
 ![AgentsKit Code Review showing an APPROVE result after all configured review dimensions complete](docs/assets/code-review-terminal.png)
 
-The current command runs directly from GitHub. After the first npm release, the shorter form will be:
+The commands above run directly from GitHub. The package is also published to npm as [`@agentskit/code-review`](https://www.npmjs.com/package/@agentskit/code-review), so the shorter form works too:
 
 ```sh
 npx @agentskit/code-review --provider codex-cli
@@ -139,7 +139,7 @@ Add this to `.pre-commit-config.yaml`:
 ```yaml
 repos:
   - repo: https://github.com/AgentsKit-io/code-review
-    rev: main # pre-release; pin a release tag when one contains the hook
+    rev: v0.32.2 # pin an exact release tag
     hooks:
       - id: agentskit-review
         args: [--provider, codex-cli, --no-fail, --max-files, "20"]
@@ -192,7 +192,7 @@ jobs:
   review:
     runs-on: ubuntu-latest
     steps:
-      - uses: AgentsKit-io/code-review@v0.31.0
+      - uses: AgentsKit-io/code-review@v0.32.2
         with:
           provider: openai
           model: gpt-4o
@@ -215,7 +215,7 @@ GitLab is intentionally unsupported until an adapter passes the same tests.
 
 Building a conversational review experience? Use [AgentsKit Chat](https://chat.agentskit.io/docs) for the cross-framework application layer instead of embedding chat here. Need an issue-to-release SDLC loop? Explore [AgentsKit Harness](https://harness.agentskit.io).
 
-Pin the Action to an immutable release tag such as `@v0.31.0`; use a full commit SHA when your policy requires the strongest reproducibility.
+Pin the Action to an immutable release tag such as `@v0.32.2`; use a full commit SHA when your policy requires the strongest reproducibility.
 
 ## Choose how to run
 
@@ -491,7 +491,7 @@ node examples/verify-readme.mjs
 
 ## Maturity
 
-The repository is **pre-v1 (`0.31.x`)**. The CLI and Action are available for evaluation and advisory CI; use an exact release tag such as `@v0.31.0` or a commit SHA, and treat the future `v1` moving tag as a separate stability milestone. See [ROADMAP.md](ROADMAP.md) and the [release guidance](docs/OPERATIONS.md#releases-and-maturity).
+The repository is **pre-v1 (`0.32.x`)**. The CLI and Action are available for evaluation and advisory CI; use an exact release tag such as `@v0.32.2` or a commit SHA, and treat the future `v1` moving tag as a separate stability milestone. See [ROADMAP.md](ROADMAP.md) and the [release guidance](docs/OPERATIONS.md#releases-and-maturity).
 
 ## Compatibility
 
@@ -525,7 +525,7 @@ documented in [GOVERNANCE.md](GOVERNANCE.md).
 
 ## Roadmap
 
-The near-term roadmap focuses on a stable `v1` Action, npm distribution, provider smoke tests, better cost visibility, and more community-owned review lenses. See [ROADMAP.md](ROADMAP.md).
+The near-term roadmap focuses on a stable `v1` Action, signed release artifacts, provider smoke tests, better cost visibility, and more community-owned review lenses. See [ROADMAP.md](ROADMAP.md).
 
 ## License
 

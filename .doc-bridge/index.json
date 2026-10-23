@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "193c130570d67d1db07b867b29a8b8a2ac2c8581efb7a9e3b1d9e9f528a04459",
-  "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-03T23:53:59.922Z",
+  "contentHash": "0dfa99a4291fc61d9591e3961fcbfc3f804b1c1ccdce62969f9720bdf925f178",
+  "contentHashAlgo": "sha256-semantic-v1",
+  "generatedAt": "2026-10-23T12:31:42.845Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -428,7 +428,7 @@
         "document",
         "human"
       ],
-      "contentHash": "d4034a9be5153573cbf77accda2fa34377787079e13348add34cd3f5420fb5fa"
+      "contentHash": "b972204c1667cb7ebc82587a6c76ff2b7579a144f9092086e937c87a5adf579b"
     },
     {
       "id": "document:docs/plans/ecosystem-doc-quality-code-review.md",
@@ -488,7 +488,7 @@
         "document",
         "project"
       ],
-      "contentHash": "09d3367b44aa6e3163767d61bf9d771a5f5d6fe186067331f6717b4c9a75e878"
+      "contentHash": "39bcc1ae9b03a422993f5a9610559fd11813f9f6473b76ad40c2058bcd6961d9"
     },
     {
       "id": "document:ROADMAP.md",
@@ -2530,7 +2530,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "5d927caebbbff76636283c9b1fd5b951ef1549c11717955cc77149ba228bf862"
+      "contentHash": "ecbb19c3ada9ffc61c7dab650a9506fc785f8b7c2536f8f58888f7be62699235"
     },
     {
       "id": "module:test/domain-contracts.test.mjs",
@@ -3129,8 +3129,8 @@
     }
   },
   "inputs": {
-    "hash": "c8fb2c8561f69209218e2a4caba958049ddccf3440240e313c36c3c72129eebe",
-    "fileCount": 195,
+    "hash": "2bdc33bf5665141e5863bb93de55c8df8e6f5497de32794e57de890779a91f25",
+    "fileCount": 209,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3152,11 +3152,11 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "80d37f3ec38a99cdad3ce58cdab9b1e86b8b437125c260f083e944017e4575af",
-    "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "1658c82ee8445c9e66f18acd31f63484d625beb6084c8727569b6edeb372d6e4",
+    "contentHash": "b84eeaf11e7b8de32ccbd35fc072dd5c3bce3b9945bc5eab86eb94a17525b41a",
+    "contentHashAlgo": "sha256-semantic-v1",
+    "snapshotHash": "d7c86594ed0bfc3b691f0f17bffd74e50522cc59d58a3f2c367e362562656c5d",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
-    "configurationHash": "ced84278fbcb351ab6b18cbfbc1a8e974f7ec31dc52eba9e9fc6d9d842657143",
+    "configurationHash": "af8d8640b75a389e76f3cc41c135a12439a743104a8127b6e6c5f512facd4a1f",
     "lexiconVersion": 1,
     "graphMetricsVersion": "1.0.0",
     "weights": {
@@ -3930,7 +3930,7 @@
         },
         "graph": {
           "pagerank": 0.026284,
-          "inboundLinks": 2,
+          "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [
             "document:docs/OPERATIONS.md"
@@ -4091,7 +4091,7 @@
         },
         "graph": {
           "pagerank": 0.054674,
-          "inboundLinks": 3,
+          "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
             "document:GOVERNANCE.md"
@@ -4142,7 +4142,7 @@
         },
         "graph": {
           "pagerank": 0.03219,
-          "inboundLinks": 6,
+          "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
             "document:docs/getting-started.md",
@@ -4988,7 +4988,7 @@
         },
         "graph": {
           "pagerank": 0.08083,
-          "inboundLinks": 8,
+          "inboundLinks": 5,
           "coveredBy": [],
           "mentionedBy": [
             "document:AGENTS.md",
@@ -5189,7 +5189,7 @@
         },
         "graph": {
           "pagerank": 0.026284,
-          "inboundLinks": 3,
+          "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
             "document:docs/OPERATIONS.md",
@@ -5597,7 +5597,7 @@
             }
           ]
         },
-        "contentHash": "d4034a9be5153573cbf77accda2fa34377787079e13348add34cd3f5420fb5fa",
+        "contentHash": "b972204c1667cb7ebc82587a6c76ff2b7579a144f9092086e937c87a5adf579b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -5799,7 +5799,7 @@
         },
         "graph": {
           "pagerank": 0.042512,
-          "inboundLinks": 6,
+          "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
             "document:CONTRIBUTING.md",
@@ -5994,7 +5994,7 @@
             }
           ]
         },
-        "contentHash": "09d3367b44aa6e3163767d61bf9d771a5f5d6fe186067331f6717b4c9a75e878",
+        "contentHash": "39bcc1ae9b03a422993f5a9610559fd11813f9f6473b76ad40c2058bcd6961d9",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6020,7 +6020,7 @@
         },
         "graph": {
           "pagerank": 0.03219,
-          "inboundLinks": 6,
+          "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
             "document:docs/getting-started.md",
@@ -6094,7 +6094,7 @@
         },
         "graph": {
           "pagerank": 0.050258,
-          "inboundLinks": 8,
+          "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [
             "document:docs/getting-started.md",
@@ -6237,7 +6237,7 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 12,
+          "inboundLinks": 8,
           "coveredBy": [],
           "mentionedBy": [
             "document:CHANGELOG.md",
@@ -6245,11 +6245,7 @@
             "document:docs/adr/0008-verification-posture.md",
             "document:docs/adr/0010-single-step-calls.md",
             "document:docs/for-agents/code-review.md",
-            "document:CHANGELOG.md",
-            "document:docs/adr/0001-bounded-provider-neutral-cli-agents.md",
-            "document:docs/adr/0008-verification-posture.md",
             "document:docs/adr/0009-layered-language-rules.md",
-            "document:docs/adr/0010-single-step-calls.md",
             "document:docs/OPERATIONS.md",
             "document:docs/quality-matrix.md"
           ],
@@ -6522,14 +6518,13 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 5,
+          "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [
             "document:docs/adr/0001-bounded-provider-neutral-cli-agents.md",
             "document:docs/for-agents/code-review.md",
             "document:docs/OPERATIONS.md",
-            "document:CHANGELOG.md",
-            "document:docs/OPERATIONS.md"
+            "document:CHANGELOG.md"
           ],
           "areaId": "area:agents",
           "packageId": "package:@agentskit/code-review",
@@ -6698,13 +6693,12 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 4,
+          "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
             "document:CHANGELOG.md",
             "document:docs/adr/0009-layered-language-rules.md",
-            "document:docs/OPERATIONS.md",
-            "document:docs/adr/0009-layered-language-rules.md"
+            "document:docs/OPERATIONS.md"
           ],
           "areaId": "area:agents",
           "packageId": "package:@agentskit/code-review",
@@ -8318,11 +8312,9 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 4,
+          "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
-            "document:CHANGELOG.md",
-            "document:docs/OPERATIONS.md",
             "document:CHANGELOG.md",
             "document:docs/OPERATIONS.md"
           ],
@@ -10846,12 +10838,11 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 3,
+          "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
             "document:docs/baseline-protocol.md",
-            "document:CHANGELOG.md",
-            "document:docs/baseline-protocol.md"
+            "document:CHANGELOG.md"
           ],
           "packageId": "package:@agentskit/code-review",
           "inbound": [
@@ -11343,14 +11334,12 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 5,
+          "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
             "document:CHANGELOG.md",
             "document:docs/adr/0009-layered-language-rules.md",
-            "document:docs/OPERATIONS.md",
-            "document:CHANGELOG.md",
-            "document:docs/adr/0009-layered-language-rules.md"
+            "document:docs/OPERATIONS.md"
           ],
           "packageId": "package:@agentskit/code-review",
           "inbound": [
@@ -12330,7 +12319,7 @@
             }
           ]
         },
-        "contentHash": "5d927caebbbff76636283c9b1fd5b951ef1549c11717955cc77149ba228bf862",
+        "contentHash": "ecbb19c3ada9ffc61c7dab650a9506fc785f8b7c2536f8f58888f7be62699235",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13847,7 +13836,7 @@
         "id": "package:@agentskit/code-review",
         "kind": "package",
         "path": ".",
-        "title": "Code Review CLI handoff",
+        "title": "@agentskit/code-review",
         "summary": "Provider-neutral local and GitHub code review CLI, Action, reporters, Fumadocs site, and repository documentation.",
         "audience": "agent",
         "aliases": [
@@ -13859,7 +13848,7 @@
           "ownership"
         ],
         "fields": {
-          "title": "Code Review CLI handoff",
+          "title": "@agentskit/code-review",
           "headings": "Code Review CLI handoff Purpose Ownership map Boundaries Change routes Verification Ecosystem routes Human guide",
           "path": ".",
           "symbols": "",
@@ -13915,7 +13904,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "3cec18a9527595958567d19db74e8f8d3319ab7f618095b7eff15c5375bfea17",
+        "contentHash": "d5d7596f0fe3e2cf11f692165adb4e1f091a5c95ca296f6b8b9cce4c1c1b6e43",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
