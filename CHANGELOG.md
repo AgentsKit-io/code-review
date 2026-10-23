@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.32.5
+
+### Patch Changes
+
+- [#349](https://github.com/AgentsKit-io/code-review/pull/349) [`397778e`](https://github.com/AgentsKit-io/code-review/commit/397778eb9841287902866865e349a7fe123bb8c6) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Update runtime dependencies to their latest patch versions: `tsx` 4.23.15 and `zod` 4.6.7.
+
 ## 0.32.4
 
 ### Patch Changes

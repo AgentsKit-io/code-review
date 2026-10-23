@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "3c5ad380c36ec903aed6843dea58bf96dcb147a90be2748b5175e274eb1ae620",
+  "contentHash": "20efe456f9e61f5d833e3c7df20b6a7b53b55bae9e11859063428c494c62c2cb",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-10-23T19:59:13.111Z",
+  "generatedAt": "2026-10-23T20:07:39.668Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -21,18 +21,6 @@
       "title": "Code Review agent docs",
       "path": "docs/for-agents/index.md",
       "description": "- Code Review CLI handoff — ownership, change routes, security boundaries, and verification: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review.md - Concise machine map — discovery, raw sources, and all six ecosystem products: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms.txt - Full machine corpus — public, operational, governance,"
-    },
-    {
-      "id": "document:.changeset/third-party-minor-updates.md",
-      "type": "document",
-      "title": "third-party-minor-updates.md",
-      "path": ".changeset/third-party-minor-updates.md",
-      "description": "Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7.",
-      "tags": [
-        "document",
-        "unclassified"
-      ],
-      "contentHash": "621ececdbac8938ce3576839abe3177569652fdacd7ba928f3be5f8fa3cff7e1"
     },
     {
       "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
@@ -99,12 +87,12 @@
       "type": "document",
       "title": "Changelog",
       "path": "CHANGELOG.md",
-      "description": "#346 f1c19cb Thanks @EmersonBraun! - Run the publish job in the npm GitHub environment that the package's npm Trusted Publisher requires. The 0.32.3 publish was refused by npm because the job ran without it; this release ships those changes.",
+      "description": "#349 397778e Thanks @EmersonBraun! - Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7.",
       "tags": [
         "document",
         "project"
       ],
-      "contentHash": "21eafe209cc8a0b90cc2ef8f521c248c7d0cb4c516652efbaf724646dbc2237c"
+      "contentHash": "cd40f8b0d3b4bc8592a96c82f9b10a271becc3feeaadb5833b486d2c677fb467"
     },
     {
       "id": "document:CODE_OF_CONDUCT.md",
@@ -3033,8 +3021,8 @@
     }
   },
   "inputs": {
-    "hash": "e16bafee239e0a3638273ca10f7fa88b4c47b2ddacf96194ecff7965881cb20d",
-    "fileCount": 201,
+    "hash": "60a0d8ab2ae13d1f29896c0ebc34396393552a86de478058a61b9c364d92f80d",
+    "fileCount": 200,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3056,9 +3044,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "a6c9a7c840d8575130322706349c79b0824e7183f4463c1d15585b36aee14f95",
+    "contentHash": "b0c3e7d31d580b94a3e78d53c9ce97cf11e99d30ca81adbd2ae73dbf82ddf912",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "9fcf33f8c2211b79e866918120995837092fd005dda4b0b5fd57419baecebcba",
+    "snapshotHash": "38127bae490c0cc82df29be14bc1ab4e7cd91a7bb9eab3db2157351ddb2b1d63",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "af8d8640b75a389e76f3cc41c135a12439a743104a8127b6e6c5f512facd4a1f",
     "lexiconVersion": 1,
@@ -3078,7 +3066,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 186,
+      "documentCount": 185,
       "fieldNames": [
         "aliases",
         "body",
@@ -3089,13 +3077,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.913978494623656,
-        "body": 49.67204301075269,
-        "headings": 3.7903225806451615,
-        "path": 5.639784946236559,
-        "summary": 2.8333333333333335,
-        "symbols": 13.983870967741936,
-        "title": 4.295698924731183
+        "aliases": 2.918918918918919,
+        "body": 49.88648648648649,
+        "headings": 3.810810810810811,
+        "path": 5.632432432432433,
+        "summary": 2.718918918918919,
+        "symbols": 14.05945945945946,
+        "title": 4.286486486486487
       }
     },
     "entries": [
@@ -3324,38 +3312,6 @@
         "confidence": "declared"
       },
       {
-        "id": "document:.changeset/third-party-minor-updates.md",
-        "kind": "document",
-        "path": ".changeset/third-party-minor-updates.md",
-        "title": "third-party-minor-updates.md",
-        "summary": "Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7.",
-        "aliases": [],
-        "tags": [
-          "document",
-          "unclassified"
-        ],
-        "fields": {
-          "title": "third-party-minor-updates.md",
-          "headings": "",
-          "path": ".changeset/third-party-minor-updates.md",
-          "symbols": "",
-          "summary": "Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7.",
-          "body": "Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7.",
-          "aliases": "document unclassified"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "621ececdbac8938ce3576839abe3177569652fdacd7ba928f3be5f8fa3cff7e1",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
         "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
         "kind": "document",
         "path": ".github/PULL_REQUEST_TEMPLATE.md",
@@ -3560,7 +3516,7 @@
         "kind": "document",
         "path": "CHANGELOG.md",
         "title": "Changelog",
-        "summary": "#346 f1c19cb Thanks @EmersonBraun! - Run the publish job in the npm GitHub environment that the package's npm Trusted Publisher requires. The 0.32.3 publish was refused by npm because the job ran without it; this release ships those changes.",
+        "summary": "#349 397778e Thanks @EmersonBraun! - Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7.",
         "audience": "human",
         "aliases": [],
         "tags": [
@@ -3569,11 +3525,11 @@
         ],
         "fields": {
           "title": "Changelog",
-          "headings": "Changelog 0.32.4 Patch Changes 0.32.3 Patch Changes 0.32.2 Patch Changes 0.32.1 Patch Changes 0.32.0 Minor Changes 0.31.0 Minor Changes Patch Changes 0.30.19 Patch Changes 0.30.18 Patch Changes 0.30.17 Patch Changes 0.30.16 Patch Changes 0.30.15 Patch Changes 0.30.14 Patch Changes 0.30.13 Patch Changes 0.30.12 Patch Changes 0.30.11 Patch Changes 0.30.10 Patch Changes 0.30.9 Patch Changes 0.30.8 Patch Changes 0.30.7 Patch Changes 0.30.6 Patch Changes 0.30.5 Patch Changes 0.30.4 Patch Changes 0.30.3 Patch Changes 0.30.2 Patch Changes 0.30.1 Patch Changes 0.30.0 Minor Changes 0.29.0 Minor Changes 0.28.0 Minor Changes 0.27.0 Minor Changes 0.26.0 Minor Changes 0.25.0 Minor Changes",
+          "headings": "Changelog 0.32.5 Patch Changes 0.32.4 Patch Changes 0.32.3 Patch Changes 0.32.2 Patch Changes 0.32.1 Patch Changes 0.32.0 Minor Changes 0.31.0 Minor Changes Patch Changes 0.30.19 Patch Changes 0.30.18 Patch Changes 0.30.17 Patch Changes 0.30.16 Patch Changes 0.30.15 Patch Changes 0.30.14 Patch Changes 0.30.13 Patch Changes 0.30.12 Patch Changes 0.30.11 Patch Changes 0.30.10 Patch Changes 0.30.9 Patch Changes 0.30.8 Patch Changes 0.30.7 Patch Changes 0.30.6 Patch Changes 0.30.5 Patch Changes 0.30.4 Patch Changes 0.30.3 Patch Changes 0.30.2 Patch Changes 0.30.1 Patch Changes 0.30.0 Minor Changes 0.29.0 Minor Changes 0.28.0 Minor Changes 0.27.0 Minor Changes 0.26.0 Minor Changes",
           "path": "CHANGELOG.md",
           "symbols": "",
-          "summary": "#346 f1c19cb Thanks @EmersonBraun! - Run the publish job in the npm GitHub environment that the package's npm Trusted Publisher requires. The 0.32.3 publish was refused by npm because the job ran without it; this release ships those changes.",
-          "body": "Changelog 0.32.4 Patch Changes - Thanks ! - Run the publish job in the npm GitHub environment that the package's npm Trusted Publisher requires. The 0.32.3 publish was refused by npm because the job ran without it; this release ships those changes. 0.32.3 Patch Changes - Thanks ! - Align @agentskit/ dependencies with the latest releases: adapters ^0.19.0, core ^1.15.0, cross-platform ^0.3.0, ink 0.10.16, net ^0.2.3, runtime ^0.11.2, tools ^0.13.15. - Thanks ! - Codex lenses send the review prompt over stdin instead of as a command-line argument, so reviewing a large file no longer fails on Windows with spawn ENAMETOOLONG . - Thanks ! - Reuse AgentsKit Core's shared secret redactor for review source content and local CLI diagnostics. - Thanks ! - Route local CLI spawning, process-tree termination, and Windows-sensitive path/line handling through @agentskit/cross-platform instead of hand-rolled cross-spawn , negative-pid group kills, and shell: true probes. cross-spawn is no longer a direct dependency. npm run check now runs agentskit-cross-platform check against a committed baseline so new portability hazards fail. - Thanks ! - An incomplete review is published without the idempotency marker, so a later run at the same head reviews it again instead of printing SKIPPED: already reviewed without the requested --result . - Thanks ! - Recognise --provider minimax (MiniMax, MINIMAX API KEY ) as a stable API provider once @agentskit/adapters exports the minimax adapter. - Thanks ! - Use @agentskit/net for GitHub retry, per-attempt timeout, and bounded response-body handling. GETs now honor bounded Retry-After and jittered backoff; write reconciliation and the single-attempt mutation policy remain intact. - Thanks ! - Route GitHub REST traffic through one internal client with bounded JSON reads, API version and auth headers, same-origin redirect and pagination handling, and rate-limit-aware retries for GET requests. Keep all review and merge writes single-attempt. 0.32.2 Patch Changes - Thanks ! - Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies ( fumadocs-mdx: not found ). The workflow now installs apps/docs dependencies before npm run check , matching CI. 0.32.1 Patch Changes - Thanks ! - Fix local CLI providers ( claude-cli , codex-cli , ...) failing to spawn on Windows. npm's global install of any Node CLI produces a .cmd shim there, and Windows' CreateProcess cannot execute one without a shell, so the previous plain child process.spawn failed with ENOENT / EINVAL for every local provider regardless of the configured path — reproduced live via doctor --provider claude-cli , which reported executable: not found even though the CLI ran fine directly in the same shell. Switched to cross-spawn , which detects this case and re-execs through cmd.exe with the same argument escaping Node's own shell: true uses. 0.32.0 Minor Changes - Thanks ! - Migrate from zod v3 to zod v4, and drop zod-to-json-schema in favor of zod v4's native z.toJSONSchema() . zod-to-json-schema@3.25.2 declares zod v4 support in its peer dependencies, but its published types still import zod/v3 internally — passing it a native v4 schema fails to typecheck, so bumping the library alone doesn't work; the dependency has to go. This surfaced a real, pre-existing fragility during the migration: every structured tool-call schema in agents/code-review/agent.ts ( submit batched findings , submit verdicts , etc.) relied on zod-to-json-schema 's implicit default of additionalProperties: false for every z.object() , strict or not. z.toJSONSchema() only sets that when a schema is explicitly .strict() . Every one of those schemas is now .strict() by name, and a new test ( test/tool-schema-order.test.mjs ) locks additionalProperties: false in at every nesting level of the real tool-call schemas sent to providers, so this can't silently regress again. Oth",
+          "summary": "#349 397778e Thanks @EmersonBraun! - Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7.",
+          "body": "Changelog 0.32.5 Patch Changes - Thanks ! - Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7. 0.32.4 Patch Changes - Thanks ! - Run the publish job in the npm GitHub environment that the package's npm Trusted Publisher requires. The 0.32.3 publish was refused by npm because the job ran without it; this release ships those changes. 0.32.3 Patch Changes - Thanks ! - Align @agentskit/ dependencies with the latest releases: adapters ^0.19.0, core ^1.15.0, cross-platform ^0.3.0, ink 0.10.16, net ^0.2.3, runtime ^0.11.2, tools ^0.13.15. - Thanks ! - Codex lenses send the review prompt over stdin instead of as a command-line argument, so reviewing a large file no longer fails on Windows with spawn ENAMETOOLONG . - Thanks ! - Reuse AgentsKit Core's shared secret redactor for review source content and local CLI diagnostics. - Thanks ! - Route local CLI spawning, process-tree termination, and Windows-sensitive path/line handling through @agentskit/cross-platform instead of hand-rolled cross-spawn , negative-pid group kills, and shell: true probes. cross-spawn is no longer a direct dependency. npm run check now runs agentskit-cross-platform check against a committed baseline so new portability hazards fail. - Thanks ! - An incomplete review is published without the idempotency marker, so a later run at the same head reviews it again instead of printing SKIPPED: already reviewed without the requested --result . - Thanks ! - Recognise --provider minimax (MiniMax, MINIMAX API KEY ) as a stable API provider once @agentskit/adapters exports the minimax adapter. - Thanks ! - Use @agentskit/net for GitHub retry, per-attempt timeout, and bounded response-body handling. GETs now honor bounded Retry-After and jittered backoff; write reconciliation and the single-attempt mutation policy remain intact. - Thanks ! - Route GitHub REST traffic through one internal client with bounded JSON reads, API version and auth headers, same-origin redirect and pagination handling, and rate-limit-aware retries for GET requests. Keep all review and merge writes single-attempt. 0.32.2 Patch Changes - Thanks ! - Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies ( fumadocs-mdx: not found ). The workflow now installs apps/docs dependencies before npm run check , matching CI. 0.32.1 Patch Changes - Thanks ! - Fix local CLI providers ( claude-cli , codex-cli , ...) failing to spawn on Windows. npm's global install of any Node CLI produces a .cmd shim there, and Windows' CreateProcess cannot execute one without a shell, so the previous plain child process.spawn failed with ENOENT / EINVAL for every local provider regardless of the configured path — reproduced live via doctor --provider claude-cli , which reported executable: not found even though the CLI ran fine directly in the same shell. Switched to cross-spawn , which detects this case and re-execs through cmd.exe with the same argument escaping Node's own shell: true uses. 0.32.0 Minor Changes - Thanks ! - Migrate from zod v3 to zod v4, and drop zod-to-json-schema in favor of zod v4's native z.toJSONSchema() . zod-to-json-schema@3.25.2 declares zod v4 support in its peer dependencies, but its published types still import zod/v3 internally — passing it a native v4 schema fails to typecheck, so bumping the library alone doesn't work; the dependency has to go. This surfaced a real, pre-existing fragility during the migration: every structured tool-call schema in agents/code-review/agent.ts ( submit batched findings , submit verdicts , etc.) relied on zod-to-json-schema 's implicit default of additionalProperties: false for every z.object() , strict or not. z.toJSONSchema() only sets that when a schema is explicitly .strict() . Every one of those schemas is now .strict() by name, and a new test ( test/tool-schema-order.test.mjs ) locks additionalProperties: f",
           "aliases": "document project"
         },
         "graph": {
@@ -3713,7 +3669,7 @@
             }
           ]
         },
-        "contentHash": "21eafe209cc8a0b90cc2ef8f521c248c7d0cb4c516652efbaf724646dbc2237c",
+        "contentHash": "cd40f8b0d3b4bc8592a96c82f9b10a271becc3feeaadb5833b486d2c677fb467",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13552,7 +13508,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "75c0fdc7c9f62230445ff6372ad2724a3268ded3fd8fc1cbd1102284069e279b",
+        "contentHash": "2a5ffe876d680d6f7cfb8f8b8368a7f1a1cbd712eb8051177d5bb7836cbe041b",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
