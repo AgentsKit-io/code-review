@@ -17,6 +17,8 @@ jobs:
        github.event.pull_request.user.login == 'github-actions[bot]' &&
        github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
+    # npm Trusted Publisher for this package is bound to the `npm` environment.
+    environment: npm
     permissions:
       contents: write
       id-token: write
