@@ -11,18 +11,18 @@
     "cf:deploy": "npm run cf:build && npx -y wrangler@4 deploy"
   },
   "dependencies": {
-    "fumadocs-core": "16.15.4",
-    "fumadocs-mdx": "15.4.0",
-    "fumadocs-ui": "16.15.4",
+    "fumadocs-core": "16.17.7",
+    "fumadocs-mdx": "15.4.9",
+    "fumadocs-ui": "16.17.7",
     "next": "16.4.2",
-    "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.3.3",
-    "@types/node": "^26.4.0",
-    "@types/react": "19.2.18",
-    "@types/react-dom": "19.2.5",
+    "@types/node": "^26.6.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
     "tailwindcss": "4.3.3",
     "typescript": "^6.0.3"
   }
