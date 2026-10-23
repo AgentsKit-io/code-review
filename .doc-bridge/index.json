@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "8383a2461a124bc8e9faef34e56a09381b5e6b6a45af93dc948c3b800851f887",
+  "contentHash": "71b3612f02fbe6f9aef4349f4c7af5c1cf327bc8a25d6acfa4273d4ffd5fefed",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-10-23T16:15:46.033Z",
+  "generatedAt": "2026-10-23T16:46:00.966Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -2542,7 +2542,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "ecbb19c3ada9ffc61c7dab650a9506fc785f8b7c2536f8f58888f7be62699235"
+      "contentHash": "939a14e56d9381a6f97826a6259032b453b1de6ae899a44928c05e2e0586aa40"
     },
     {
       "id": "module:test/domain-contracts.test.mjs",
@@ -3141,7 +3141,7 @@
     }
   },
   "inputs": {
-    "hash": "fbd8cefc7557e9af2d0ef585f5685056501e7875d30b906201bc41052066d3f0",
+    "hash": "575f5f1b99985155be79fe6660df81702351f01e9fcd115106396f061d98ae81",
     "fileCount": 210,
     "projectionVersion": 2
   },
@@ -3164,9 +3164,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "1dad1393902a8c549b42c25249ffa2c92c7acad15628e5ef746defc5a6704b19",
+    "contentHash": "800d62a247834eff2f3c44510ba94ae8fc665bd8af07b190278b87e9e672ccd5",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "fc8b5aa263ab6cd6e78cd9ba11af3cc11bc49e925db0e6477b643b206785904a",
+    "snapshotHash": "34673dc53fc06bd52918759948b2329e19af07a8c6f720258a1e5751bb6f31e2",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "af8d8640b75a389e76f3cc41c135a12439a743104a8127b6e6c5f512facd4a1f",
     "lexiconVersion": 1,
@@ -12363,7 +12363,7 @@
             }
           ]
         },
-        "contentHash": "ecbb19c3ada9ffc61c7dab650a9506fc785f8b7c2536f8f58888f7be62699235",
+        "contentHash": "939a14e56d9381a6f97826a6259032b453b1de6ae899a44928c05e2e0586aa40",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13948,7 +13948,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "cd3286013db3a8665a04d9eb640cec5657cf61d071be47544e8809b1d3300930",
+        "contentHash": "073c61c1e2c9a7726ae65cb39e70dd5811524b8c1197a461694e07372e0b7e1f",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
