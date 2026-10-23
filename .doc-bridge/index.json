@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "6d577772ccc609c86628f8e13147d0db6e9f29c420cd9eba0632e7cfccaf9689",
+  "contentHash": "3c5ad380c36ec903aed6843dea58bf96dcb147a90be2748b5175e274eb1ae620",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-10-23T18:56:19.238Z",
+  "generatedAt": "2026-10-23T19:59:13.111Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -21,6 +21,18 @@
       "title": "Code Review agent docs",
       "path": "docs/for-agents/index.md",
       "description": "- Code Review CLI handoff — ownership, change routes, security boundaries, and verification: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review.md - Concise machine map — discovery, raw sources, and all six ecosystem products: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms.txt - Full machine corpus — public, operational, governance,"
+    },
+    {
+      "id": "document:.changeset/third-party-minor-updates.md",
+      "type": "document",
+      "title": "third-party-minor-updates.md",
+      "path": ".changeset/third-party-minor-updates.md",
+      "description": "Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "621ececdbac8938ce3576839abe3177569652fdacd7ba928f3be5f8fa3cff7e1"
     },
     {
       "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
@@ -2422,7 +2434,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "939a14e56d9381a6f97826a6259032b453b1de6ae899a44928c05e2e0586aa40"
+      "contentHash": "9762107a0ad1c17b0649dd531e36e6f4f2bc84e0f6157ccd53421097b09db2a7"
     },
     {
       "id": "module:test/domain-contracts.test.mjs",
@@ -3021,8 +3033,8 @@
     }
   },
   "inputs": {
-    "hash": "a9ae526f83224fcdf0d41fdf23224ff5817559b80ecad0ba8e42a4662e38475b",
-    "fileCount": 200,
+    "hash": "e16bafee239e0a3638273ca10f7fa88b4c47b2ddacf96194ecff7965881cb20d",
+    "fileCount": 201,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3044,9 +3056,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "ffd870671b60b14f364252e3ffd5b9783776801adfd20e2376fa7c9d3e8e09ef",
+    "contentHash": "a6c9a7c840d8575130322706349c79b0824e7183f4463c1d15585b36aee14f95",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "8491f67485e19604c4038a976e52ad49b4b1c5a09ca442e95ba7f741cc038045",
+    "snapshotHash": "9fcf33f8c2211b79e866918120995837092fd005dda4b0b5fd57419baecebcba",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "af8d8640b75a389e76f3cc41c135a12439a743104a8127b6e6c5f512facd4a1f",
     "lexiconVersion": 1,
@@ -3066,7 +3078,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 185,
+      "documentCount": 186,
       "fieldNames": [
         "aliases",
         "body",
@@ -3077,13 +3089,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.918918918918919,
-        "body": 49.88648648648649,
-        "headings": 3.810810810810811,
-        "path": 5.632432432432433,
-        "summary": 2.7945945945945945,
-        "symbols": 14.05945945945946,
-        "title": 4.286486486486487
+        "aliases": 2.913978494623656,
+        "body": 49.67204301075269,
+        "headings": 3.7903225806451615,
+        "path": 5.639784946236559,
+        "summary": 2.8333333333333335,
+        "symbols": 13.983870967741936,
+        "title": 4.295698924731183
       }
     },
     "entries": [
@@ -3310,6 +3322,38 @@
         "contentHash": "715edae67cdb05fb982dca41177f0c420f83422cf5af868a51e74d9e4fb42b41",
         "provenance": "declared",
         "confidence": "declared"
+      },
+      {
+        "id": "document:.changeset/third-party-minor-updates.md",
+        "kind": "document",
+        "path": ".changeset/third-party-minor-updates.md",
+        "title": "third-party-minor-updates.md",
+        "summary": "Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "third-party-minor-updates.md",
+          "headings": "",
+          "path": ".changeset/third-party-minor-updates.md",
+          "symbols": "",
+          "summary": "Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7.",
+          "body": "Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7.",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "621ececdbac8938ce3576839abe3177569652fdacd7ba928f3be5f8fa3cff7e1",
+        "provenance": "observed",
+        "confidence": "observed"
       },
       {
         "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
@@ -11923,7 +11967,7 @@
             }
           ]
         },
-        "contentHash": "939a14e56d9381a6f97826a6259032b453b1de6ae899a44928c05e2e0586aa40",
+        "contentHash": "9762107a0ad1c17b0649dd531e36e6f4f2bc84e0f6157ccd53421097b09db2a7",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13508,7 +13552,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "c3fd387d3e408c2bdf2d1d95f927639c987bb07ab221bbcf5a002833f32bca4b",
+        "contentHash": "75c0fdc7c9f62230445ff6372ad2724a3268ded3fd8fc1cbd1102284069e279b",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
