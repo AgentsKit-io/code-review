@@ -7,7 +7,7 @@
     "name": "AgentsKit Code Review",
     "root": "."
   },
-  "contentHash": "6f6c9ab5fca74ed9bf31d16909214bd91bd1196f4b34ca9337fd4ca20550addd",
+  "contentHash": "6d577772ccc609c86628f8e13147d0db6e9f29c420cd9eba0632e7cfccaf9689",
   "artifacts": {
     "index": ".doc-bridge/index.json",
     "llmsTxt": "llms.txt"

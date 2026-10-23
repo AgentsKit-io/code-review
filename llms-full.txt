@@ -2221,6 +2221,12 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.32.4
+
+### Patch Changes
+
+- [#346](https://github.com/AgentsKit-io/code-review/pull/346) [`f1c19cb`](https://github.com/AgentsKit-io/code-review/commit/f1c19cbbf2dc001f91c05b72403a186ae305697c) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Run the publish job in the `npm` GitHub environment that the package's npm Trusted Publisher requires. The 0.32.3 publish was refused by npm because the job ran without it; this release ships those changes.
+
 ## 0.32.3
 
 ### Patch Changes
