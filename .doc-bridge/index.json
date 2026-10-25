@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "20efe456f9e61f5d833e3c7df20b6a7b53b55bae9e11859063428c494c62c2cb",
+  "contentHash": "53d6c38889fa27c6c192571232a3c53f5ff4761150d36b493d127545dbac21ad",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-10-23T20:07:39.668Z",
+  "generatedAt": "2026-10-25T11:28:57.923Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -21,6 +21,18 @@
       "title": "Code Review agent docs",
       "path": "docs/for-agents/index.md",
       "description": "- Code Review CLI handoff — ownership, change routes, security boundaries, and verification: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review.md - Concise machine map — discovery, raw sources, and all six ecosystem products: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms.txt - Full machine corpus — public, operational, governance,"
+    },
+    {
+      "id": "document:.changeset/doc-bridge-2-5.md",
+      "type": "document",
+      "title": "doc-bridge-2-5.md",
+      "path": ".changeset/doc-bridge-2-5.md",
+      "description": "Update the optional @agentskit/doc-bridge dependency to ^2.5.0.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "066cb6c6bf99cf493abbb17c0773cd820606298d34d90473effa16a586e7d3fb"
     },
     {
       "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
@@ -152,7 +164,7 @@
         "document",
         "human"
       ],
-      "contentHash": "c461381e8dfaea096b91f42f371c38f5a26e10e2733f0ef5df07f1886b27cb2a"
+      "contentHash": "006039c2d7d362df3f82fc30cdf06ff8a9ea6fb0d84c02ae4bf2b023b7cf491d"
     },
     {
       "id": "document:docs/adr/0003-model-and-scm-adapter-boundaries.md",
@@ -164,7 +176,7 @@
         "document",
         "human"
       ],
-      "contentHash": "afa85bb98721b321967bb3fa6f8e5fc8c5e0e5a95aa8cfc33410173aa1035b78"
+      "contentHash": "806cf3c00d2cb7bddcc110f259000022f5fa8985e0652d5a0e7bf1ba4deadcfc"
     },
     {
       "id": "document:docs/adr/0004-diff-first-context-and-token-budgets.md",
@@ -176,7 +188,7 @@
         "document",
         "human"
       ],
-      "contentHash": "907f8bc4ae66910919ed5692cd3b7975cfc54634bd2599557c41816c097ee1fa"
+      "contentHash": "1b1f142c8d32d62ee51263a1a8a0633057fbbe9bb1dc9ed81366c17fd257ecf0"
     },
     {
       "id": "document:docs/adr/0005-separated-safe-review-memory.md",
@@ -188,7 +200,7 @@
         "document",
         "human"
       ],
-      "contentHash": "09d80e5831e7917c91c2762f6285e82de6b355d754297828fa3565911a061099"
+      "contentHash": "f54a8b694a0a83cdbf5802fba8e1cc35b52845e8f5e6d3170289fdc47b1c55e4"
     },
     {
       "id": "document:docs/adr/0006-measured-batch-completion.md",
@@ -200,7 +212,7 @@
         "document",
         "human"
       ],
-      "contentHash": "3a1eeb8e1f39a4581faef66fdba7682c875c5b10046ce4e30c4901f3df0f135d"
+      "contentHash": "4ea0fbc55363db6e45fd1835fa9bce7e8dfd827f43b9ad44364829a9703c9765"
     },
     {
       "id": "document:docs/adr/0007-whole-cycle-resource-accounting.md",
@@ -212,7 +224,7 @@
         "document",
         "human"
       ],
-      "contentHash": "8cd37e6858a6b6ba66975a8e8f82753c6cb947aec60f85625eb7bda11e5d8fe1"
+      "contentHash": "60cb936cd00afe6222bde1511e2afff2a0a059a74bf41560d109eacaa359a337"
     },
     {
       "id": "document:docs/adr/0008-verification-posture.md",
@@ -332,7 +344,7 @@
         "document",
         "human"
       ],
-      "contentHash": "b74fd59169902f4dde53ed3da28c7ca2832bbf38ad8edd591d1e5aa42b4eef66"
+      "contentHash": "90afc65ec761a001a1c5e2e8a692b981f956c724e0163fefe6513d393301a081"
     },
     {
       "id": "document:docs/provider-compatibility.md",
@@ -344,7 +356,7 @@
         "document",
         "human"
       ],
-      "contentHash": "6c9886374f1501d36b7226762a41e48e376c2ec70018491b1646d2c09e019bbf"
+      "contentHash": "8f3361bc7afcf8d0da6d88a40645152addff367ae9781fb927527e8a04c60516"
     },
     {
       "id": "document:docs/quality-matrix.md",
@@ -2422,7 +2434,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "9762107a0ad1c17b0649dd531e36e6f4f2bc84e0f6157ccd53421097b09db2a7"
+      "contentHash": "163204f853c93ece1e106af76749989756145e821f554d29a64179ea0f6003a8"
     },
     {
       "id": "module:test/domain-contracts.test.mjs",
@@ -3021,8 +3033,8 @@
     }
   },
   "inputs": {
-    "hash": "60a0d8ab2ae13d1f29896c0ebc34396393552a86de478058a61b9c364d92f80d",
-    "fileCount": 200,
+    "hash": "7401c0d5abb267ebb13d61382dce7f49965bcf406735b57b9d346952809c5e78",
+    "fileCount": 202,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3044,11 +3056,11 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "b0c3e7d31d580b94a3e78d53c9ce97cf11e99d30ca81adbd2ae73dbf82ddf912",
+    "contentHash": "875a3a458615544eec4e392bb8ac421339dd4e9fd5b18808191e70a248ae3765",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "38127bae490c0cc82df29be14bc1ab4e7cd91a7bb9eab3db2157351ddb2b1d63",
+    "snapshotHash": "93282074d3c20c1aac54500485fe86455f04a1438854661f5b9ce7f39192b701",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
-    "configurationHash": "af8d8640b75a389e76f3cc41c135a12439a743104a8127b6e6c5f512facd4a1f",
+    "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
     "graphMetricsVersion": "1.0.0",
     "weights": {
@@ -3066,7 +3078,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 185,
+      "documentCount": 186,
       "fieldNames": [
         "aliases",
         "body",
@@ -3077,13 +3089,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.918918918918919,
-        "body": 49.88648648648649,
-        "headings": 3.810810810810811,
-        "path": 5.632432432432433,
-        "summary": 2.718918918918919,
-        "symbols": 14.05945945945946,
-        "title": 4.286486486486487
+        "aliases": 2.913978494623656,
+        "body": 51.41935483870968,
+        "headings": 3.8225806451612905,
+        "path": 5.629032258064516,
+        "summary": 2.7419354838709675,
+        "symbols": 13.983870967741936,
+        "title": 4.28494623655914
       }
     },
     "entries": [
@@ -3107,11 +3119,19 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 0,
+          "inboundLinks": 1,
           "coveredBy": [],
-          "mentionedBy": [],
+          "mentionedBy": [
+            "document:docs/for-agents/code-review.md"
+          ],
           "packageId": "package:@agentskit/code-review",
-          "inbound": [],
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:docs/for-agents/code-review.md",
+              "confidence": "fuzzy"
+            }
+          ],
           "outbound": []
         },
         "contentHash": "f14b03164edb0900d72b3b08b4aabcdafa5c128b5dd3912dc1d22c915bd520ad",
@@ -3228,11 +3248,19 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 0,
+          "inboundLinks": 1,
           "coveredBy": [],
-          "mentionedBy": [],
+          "mentionedBy": [
+            "document:docs/for-agents/code-review.md"
+          ],
           "packageId": "package:@agentskit/code-review",
-          "inbound": [],
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:docs/for-agents/code-review.md",
+              "confidence": "fuzzy"
+            }
+          ],
           "outbound": []
         },
         "contentHash": "701c56fced664ee983fbd041296379dcbe7c61548135e0bc5030a616595cc94b",
@@ -3310,6 +3338,38 @@
         "contentHash": "715edae67cdb05fb982dca41177f0c420f83422cf5af868a51e74d9e4fb42b41",
         "provenance": "declared",
         "confidence": "declared"
+      },
+      {
+        "id": "document:.changeset/doc-bridge-2-5.md",
+        "kind": "document",
+        "path": ".changeset/doc-bridge-2-5.md",
+        "title": "doc-bridge-2-5.md",
+        "summary": "Update the optional @agentskit/doc-bridge dependency to ^2.5.0.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "doc-bridge-2-5.md",
+          "headings": "",
+          "path": ".changeset/doc-bridge-2-5.md",
+          "symbols": "",
+          "summary": "Update the optional @agentskit/doc-bridge dependency to ^2.5.0.",
+          "body": "Update the optional @agentskit/doc-bridge dependency to ^2.5.0.",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "066cb6c6bf99cf493abbb17c0773cd820606298d34d90473effa16a586e7d3fb",
+        "provenance": "observed",
+        "confidence": "observed"
       },
       {
         "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
@@ -3928,11 +3988,11 @@
         ],
         "fields": {
           "title": "ADR 0002: Deterministic campaign engine",
-          "headings": "ADR 0002: Deterministic campaign engine Status Decision Alternatives Considered Consequences",
+          "headings": "ADR 0002: Deterministic campaign engine Status Decision Alternatives Considered Consequences Implementation",
           "path": "docs/adr/0002-deterministic-campaign-engine.md",
           "symbols": "",
           "summary": "Accepted",
-          "body": "ADR 0002: Deterministic campaign engine Status Accepted Context: PRD 137, issue 138 Decision Keep the engine inside the existing package. A pure reducer is the only authority for campaign and pull-request state transitions. Effects, atomic persistence, leases, checkpoints, and replay are separate. Orca invokes one command; models perform semantic analysis only. Alternatives Considered - Continue orchestration in an external LLM: rejected because workflow state and retries would remain nondeterministic. - Adopt a workflow framework or event-sourcing service now: rejected because the package can meet the contract with a reducer and atomic local records. Consequences The current procedural cycle is replaced incrementally. Every discovered pull request must end in an explicit terminal state, and completed work must survive resume.",
+          "body": "ADR 0002: Deterministic campaign engine Status Accepted Context: PRD 137, issue 138 Decision Keep the engine inside the existing package. A pure reducer is the only authority for campaign and pull-request state transitions. Effects, atomic persistence, leases, checkpoints, and replay are separate. Orca invokes one command; models perform semantic analysis only. Alternatives Considered - Continue orchestration in an external LLM: rejected because workflow state and retries would remain nondeterministic. - Adopt a workflow framework or event-sourcing service now: rejected because the package can meet the contract with a reducer and atomic local records. Consequences The current procedural cycle is replaced incrementally. Every discovered pull request must end in an explicit terminal state, and completed work must survive resume. Implementation - src/campaign-reducer.ts : the pure reducer ( transitionCampaign , replayCampaign ) that owns campaign and pull-request state transitions. - src/campaign-store.ts : atomic persistence, leases, and checkpoints, kept separate from the reducer. - src/campaign-runner.ts : bounded multi-PR execution and terminal reporting around the reducer.",
           "aliases": "document human"
         },
         "graph": {
@@ -3947,9 +4007,30 @@
               "confidence": "observed"
             }
           ],
-          "outbound": []
+          "outbound": [
+            {
+              "kind": "mentions",
+              "id": "module:src/campaign-reducer.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:src/campaign-runner.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:src/campaign-store.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "module:src/campaign-reducer.ts",
+              "confidence": "observed"
+            }
+          ]
         },
-        "contentHash": "c461381e8dfaea096b91f42f371c38f5a26e10e2733f0ef5df07f1886b27cb2a",
+        "contentHash": "006039c2d7d362df3f82fc30cdf06ff8a9ea6fb0d84c02ae4bf2b023b7cf491d",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3967,11 +4048,11 @@
         ],
         "fields": {
           "title": "ADR 0003: Model and SCM adapter boundaries",
-          "headings": "ADR 0003: Model and SCM adapter boundaries Status Decision Alternatives Considered Consequences",
+          "headings": "ADR 0003: Model and SCM adapter boundaries Status Decision Alternatives Considered Consequences Implementation",
           "path": "docs/adr/0003-model-and-scm-adapter-boundaries.md",
           "symbols": "",
           "summary": "Accepted",
-          "body": "ADR 0003: Model and SCM adapter boundaries Status Accepted Context: PRD 137, issue 138 Decision Keep AgentsKit AdapterFactory as the model boundary and add reliability and capability handling around it. Define one internal SCM contract for discovery, diffs, review state, publication, readiness, and merge. GitHub is its first implementation; GitLab is not advertised until it passes the same contract tests. Alternatives Considered - Add a second model abstraction: rejected because it duplicates AgentsKit. - Split providers or SCM adapters into new packages: rejected because one package with internal boundaries is sufficient. Consequences Provider-specific and GitHub-specific behavior cannot leak into the deterministic engine. New implementations reuse the same contracts and tests.",
+          "body": "ADR 0003: Model and SCM adapter boundaries Status Accepted Context: PRD 137, issue 138 Decision Keep AgentsKit AdapterFactory as the model boundary and add reliability and capability handling around it. Define one internal SCM contract for discovery, diffs, review state, publication, readiness, and merge. GitHub is its first implementation; GitLab is not advertised until it passes the same contract tests. Alternatives Considered - Add a second model abstraction: rejected because it duplicates AgentsKit. - Split providers or SCM adapters into new packages: rejected because one package with internal boundaries is sufficient. Consequences Provider-specific and GitHub-specific behavior cannot leak into the deterministic engine. New implementations reuse the same contracts and tests. Implementation - src/provider-registry.ts : provider capabilities and the conservative execution policy around AgentsKit AdapterFactory instances. - src/scm-contract.ts : the internal SCM contract for change requests, diffs, publication, readiness, and merge. - src/github-scm-adapter.ts : the GitHub implementation of that contract ( createGithubScmAdapter ).",
           "aliases": "document human"
         },
         "graph": {
@@ -3986,9 +4067,30 @@
               "confidence": "observed"
             }
           ],
-          "outbound": []
+          "outbound": [
+            {
+              "kind": "mentions",
+              "id": "module:src/github-scm-adapter.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:src/provider-registry.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:src/scm-contract.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "module:src/github-scm-adapter.ts",
+              "confidence": "observed"
+            }
+          ]
         },
-        "contentHash": "afa85bb98721b321967bb3fa6f8e5fc8c5e0e5a95aa8cfc33410173aa1035b78",
+        "contentHash": "806cf3c00d2cb7bddcc110f259000022f5fa8985e0652d5a0e7bf1ba4deadcfc",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -4006,11 +4108,11 @@
         ],
         "fields": {
           "title": "ADR 0004: Diff-first context and token budgets",
-          "headings": "ADR 0004: Diff-first context and token budgets Status Decision Alternatives Considered Consequences",
+          "headings": "ADR 0004: Diff-first context and token budgets Status Decision Alternatives Considered Consequences Implementation",
           "path": "docs/adr/0004-diff-first-context-and-token-budgets.md",
           "symbols": "",
           "summary": "Accepted",
-          "body": "ADR 0004: Diff-first context and token budgets Status Accepted Context: PRD 137, issue 138 Decision Plan bounded context from changed hunks, adjacent code, directly related symbols, tests, and approved rules. A normal pack uses one multidimensional analysis call; deterministic risk may add specialized analysis. Budgets and accounting cover campaign, pull request, pack, analysis, verification, cache, retry, and memory. Alternatives Considered - Keep one full-source call per lens: rejected because it repeats nearly identical context. - Send the entire repository or require persistent provider sessions: rejected because both increase exposure and operational coupling. Consequences Missing context is requested explicitly and retrieved within bounds. Releases compare fixed corpus and real-canary evidence against the v0.8.0 baseline.",
+          "body": "ADR 0004: Diff-first context and token budgets Status Accepted Context: PRD 137, issue 138 Decision Plan bounded context from changed hunks, adjacent code, directly related symbols, tests, and approved rules. A normal pack uses one multidimensional analysis call; deterministic risk may add specialized analysis. Budgets and accounting cover campaign, pull request, pack, analysis, verification, cache, retry, and memory. Alternatives Considered - Keep one full-source call per lens: rejected because it repeats nearly identical context. - Send the entire repository or require persistent provider sessions: rejected because both increase exposure and operational coupling. Consequences Missing context is requested explicitly and retrieved within bounds. Releases compare fixed corpus and real-canary evidence against the v0.8.0 baseline. Implementation - agents/code-review/sources.ts : loads changed hunks and their surrounding source as review targets. - agents/code-review/agent.ts : plans bounded context packs and one analysis per normal pack. - agents/code-review/risk.ts : deterministic risk signals ( classifyContextPack ) that may add specialized analysis. - src/budget.ts : hierarchical budget compilation ( compileReviewBudget ) and usage accounting.",
           "aliases": "document human"
         },
         "graph": {
@@ -4025,9 +4127,40 @@
               "confidence": "observed"
             }
           ],
-          "outbound": []
+          "outbound": [
+            {
+              "kind": "mentions",
+              "id": "module:agents/code-review/agent.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:agents/code-review/risk.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:agents/code-review/sources.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:src/budget.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "module:agents/code-review/risk.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "module:src/budget.ts",
+              "confidence": "observed"
+            }
+          ]
         },
-        "contentHash": "907f8bc4ae66910919ed5692cd3b7975cfc54634bd2599557c41816c097ee1fa",
+        "contentHash": "1b1f142c8d32d62ee51263a1a8a0633057fbbe9bb1dc9ed81366c17fd257ecf0",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -4045,11 +4178,11 @@
         ],
         "fields": {
           "title": "ADR 0005: Separated safe review memory",
-          "headings": "ADR 0005: Separated safe review memory Status Decision Alternatives Considered Consequences",
+          "headings": "ADR 0005: Separated safe review memory Status Decision Alternatives Considered Consequences Implementation",
           "path": "docs/adr/0005-separated-safe-review-memory.md",
           "symbols": "",
           "summary": "Accepted",
-          "body": "ADR 0005: Separated safe review memory Status Accepted Context: PRD 137, issue 138 Decision Store operational state, reusable cache, feedback, and approved knowledge separately. Self-hosted structured storage is the default. Persistent knowledge excludes raw source, secrets, full prompts, and transcripts. Candidate rules require regression evidence and human approval by default; AgentsKit retrieval injects only bounded, scoped approved rules. Alternatives Considered - Reuse chat transcripts as knowledge: rejected because it mixes lifecycle, trust, and privacy boundaries. - Auto-promote observations or require a vector database: rejected because both add avoidable poisoning and operational risk. Consequences Rules retain provenance, scope, confidence, validation history, expiry, and rollback metadata. Semantic vector retrieval remains optional until measured rule volume justifies it.",
+          "body": "ADR 0005: Separated safe review memory Status Accepted Context: PRD 137, issue 138 Decision Store operational state, reusable cache, feedback, and approved knowledge separately. Self-hosted structured storage is the default. Persistent knowledge excludes raw source, secrets, full prompts, and transcripts. Candidate rules require regression evidence and human approval by default; AgentsKit retrieval injects only bounded, scoped approved rules. Alternatives Considered - Reuse chat transcripts as knowledge: rejected because it mixes lifecycle, trust, and privacy boundaries. - Auto-promote observations or require a vector database: rejected because both add avoidable poisoning and operational risk. Consequences Rules retain provenance, scope, confidence, validation history, expiry, and rollback metadata. Semantic vector retrieval remains optional until measured rule volume justifies it. Implementation - src/campaign-store.ts : operational campaign state. - src/review-cache.ts : the reusable review cache ( createReviewCache ). - src/review-stores.ts : separate feedback and approved-knowledge stores with bounded schemas and the scoped retriever. - src/review-learning.ts : injection of bounded, approved rules only ( loadApprovedReviewRules ).",
           "aliases": "document human"
         },
         "graph": {
@@ -4064,9 +4197,40 @@
               "confidence": "observed"
             }
           ],
-          "outbound": []
+          "outbound": [
+            {
+              "kind": "mentions",
+              "id": "module:src/campaign-store.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:src/review-cache.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:src/review-learning.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:src/review-stores.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "module:src/review-cache.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "module:src/review-learning.ts",
+              "confidence": "observed"
+            }
+          ]
         },
-        "contentHash": "09d80e5831e7917c91c2762f6285e82de6b355d754297828fa3565911a061099",
+        "contentHash": "f54a8b694a0a83cdbf5802fba8e1cc35b52845e8f5e6d3170289fdc47b1c55e4",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -4084,11 +4248,11 @@
         ],
         "fields": {
           "title": "ADR-0006: Measure batch invocations before execution",
-          "headings": "ADR-0006: Measure batch invocations before execution Context Decision Consequences",
+          "headings": "ADR-0006: Measure batch invocations before execution Context Decision Consequences Implementation",
           "path": "docs/adr/0006-measured-batch-completion.md",
           "symbols": "",
           "summary": "Status: Accepted",
-          "body": "ADR-0006: Measure batch invocations before execution Status: Accepted Context Fixed file-count batches could exceed token capacity, including when one generated API document exceeded an entire invocation. Suppressing the aggregate error postponed deterministic failures until after live provider work. Decision The CLI and campaign preflight share one planner. Each candidate is measured with the same agent preparation used by execution. Oversized groups split by file, then by context-pack identity for a single large file. A pack that cannot fit remains an explicit blocker. Planning reuses one in-memory source snapshot, with no provider calls. Optional packIds bind partial-file batches to their exact source preparation. Artifacts, canary validation, cache identity and consolidation must preserve those IDs. All planned batches are required; repeating a file across packs does not multiply the file-coverage denominator. Existing whole-file batches retain their shape. Verification groups are also measured before invocation and divided when necessary. An unreviewable single candidate remains unverified and cannot authorize approval. GitHub content recovery is limited to one retry at the identical immutable revision. Consequences Batch size is a maximum, not a guarantee of capacity. Known source and budget failures are discovered before model work. Model output, provider availability and runtime cost remain measured runtime outcomes; preflight cannot promise they will succeed. Planning adds deterministic local work but avoids repeated source downloads within an invocation. Quality reporting must distinguish intentionally skipped PRs from failed reviews and use provider-call denominators for provider-call waste. Blocked cycles still emit a current matrix with unmeasured areas, and running campaigns replace stale report pointers. Local study matrices remain outside the package.",
+          "body": "ADR-0006: Measure batch invocations before execution Status: Accepted Context Fixed file-count batches could exceed token capacity, including when one generated API document exceeded an entire invocation. Suppressing the aggregate error postponed deterministic failures until after live provider work. Decision The CLI and campaign preflight share one planner. Each candidate is measured with the same agent preparation used by execution. Oversized groups split by file, then by context-pack identity for a single large file. A pack that cannot fit remains an explicit blocker. Planning reuses one in-memory source snapshot, with no provider calls. Optional packIds bind partial-file batches to their exact source preparation. Artifacts, canary validation, cache identity and consolidation must preserve those IDs. All planned batches are required; repeating a file across packs does not multiply the file-coverage denominator. Existing whole-file batches retain their shape. Verification groups are also measured before invocation and divided when necessary. An unreviewable single candidate remains unverified and cannot authorize approval. GitHub content recovery is limited to one retry at the identical immutable revision. Consequences Batch size is a maximum, not a guarantee of capacity. Known source and budget failures are discovered before model work. Model output, provider availability and runtime cost remain measured runtime outcomes; preflight cannot promise they will succeed. Planning adds deterministic local work but avoids repeated source downloads within an invocation. Quality reporting must distinguish intentionally skipped PRs from failed reviews and use provider-call denominators for provider-call waste. Blocked cycles still emit a current matrix with unmeasured areas, and running campaigns replace stale report pointers. Local study matrices remain outside the package. Implementation - src/batch-mode.ts : the shared planner ( planReviewBatches ) and the batch-manifest completeness check. - src/cli.ts and src/campaign-preflight.ts : the two callers that plan batches before any provider call. - src/batch-coverage.ts : file and pack coverage of planned batches.",
           "aliases": "document human"
         },
         "graph": {
@@ -4108,9 +4272,35 @@
               "confidence": "observed"
             }
           ],
-          "outbound": []
+          "outbound": [
+            {
+              "kind": "mentions",
+              "id": "module:src/batch-coverage.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:src/batch-mode.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:src/campaign-preflight.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:src/cli.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "module:src/batch-mode.ts",
+              "confidence": "observed"
+            }
+          ]
         },
-        "contentHash": "3a1eeb8e1f39a4581faef66fdba7682c875c5b10046ce4e30c4901f3df0f135d",
+        "contentHash": "4ea0fbc55363db6e45fd1835fa9bce7e8dfd827f43b9ad44364829a9703c9765",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -4128,11 +4318,11 @@
         ],
         "fields": {
           "title": "ADR-0007: Reserve and reconcile the entire review cycle",
-          "headings": "ADR-0007: Reserve and reconcile the entire review cycle Context Decision Consequences",
+          "headings": "ADR-0007: Reserve and reconcile the entire review cycle Context Decision Consequences Implementation",
           "path": "docs/adr/0007-whole-cycle-resource-accounting.md",
           "symbols": "",
           "summary": "Status: Accepted",
-          "body": "ADR-0007: Reserve and reconcile the entire review cycle Status: Accepted Context Per-invocation limits did not bound combined batches, failed attempts, quality evaluation, and learning A/B. Missing optional usage fields disabled enforcement of otherwise known input/output counts. Dense generated declarations could also exhaust skeptical-verification context after successful analysis. Decision Reuse the cycle runner and its private atomic artifacts. Reserve shared token and call capacity before spawning each model-bearing child; pass tightening-only execution ceilings without changing semantic review identity. Reconcile reported input and output, keeping unknown usage conservatively charged across recovery. Never add cached input or reasoning twice. Preserve stricter configured hierarchy limits. No additional orchestrator or dependency is introduced. For a single oversized verification candidate, progressively reduce neighboring lines while preserving its entire claimed range. If that still cannot fit, fail closed. Do not drop required candidates, packs, or lenses. Consequences Cycles expose per-attempt usage alongside final-artifact usage; reuse is not new spend. Unknown usage may prevent further work rather than promise free recovery. Provider-reported usage can exceed an estimate for an in-flight request; this is recorded as a breach and blocks further execution, not hidden as a passed gate. Token limits cannot guarantee a remote provider's final bill.",
+          "body": "ADR-0007: Reserve and reconcile the entire review cycle Status: Accepted Context Per-invocation limits did not bound combined batches, failed attempts, quality evaluation, and learning A/B. Missing optional usage fields disabled enforcement of otherwise known input/output counts. Dense generated declarations could also exhaust skeptical-verification context after successful analysis. Decision Reuse the cycle runner and its private atomic artifacts. Reserve shared token and call capacity before spawning each model-bearing child; pass tightening-only execution ceilings without changing semantic review identity. Reconcile reported input and output, keeping unknown usage conservatively charged across recovery. Never add cached input or reasoning twice. Preserve stricter configured hierarchy limits. No additional orchestrator or dependency is introduced. For a single oversized verification candidate, progressively reduce neighboring lines while preserving its entire claimed range. If that still cannot fit, fail closed. Do not drop required candidates, packs, or lenses. Consequences Cycles expose per-attempt usage alongside final-artifact usage; reuse is not new spend. Unknown usage may prevent further work rather than promise free recovery. Provider-reported usage can exceed an estimate for an in-flight request; this is recorded as a breach and blocks further execution, not hidden as a passed gate. Token limits cannot guarantee a remote provider's final bill. Implementation - scripts/review-cycle.mjs : the cycle runner that reserves token and call capacity before each model-bearing child and reconciles reported usage. - src/budget.ts : budget compilation and the tightening-only execution ceilings ( tightenReviewBudget ).",
           "aliases": "document human"
         },
         "graph": {
@@ -4147,9 +4337,25 @@
               "confidence": "observed"
             }
           ],
-          "outbound": []
+          "outbound": [
+            {
+              "kind": "mentions",
+              "id": "module:scripts/review-cycle.mjs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:src/budget.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "module:src/budget.ts",
+              "confidence": "observed"
+            }
+          ]
         },
-        "contentHash": "8cd37e6858a6b6ba66975a8e8f82753c6cb947aec60f85625eb7bda11e5d8fe1",
+        "contentHash": "60cb936cd00afe6222bde1511e2afff2a0a059a74bf41560d109eacaa359a337",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -4587,7 +4793,7 @@
           "path": "docs/for-agents/code-review.md",
           "symbols": "",
           "summary": "Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and GitHub pull requests. Bounded diff-first context packs run one multidimensional analysis; adversarial votes remove weak findings; reporters emit Markdown, GitHub reviews, and SARIF.",
-          "body": "Code Review CLI handoff Purpose Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and GitHub pull requests. Bounded diff-first context packs run one multidimensional analysis; adversarial votes remove weak findings; reporters emit Markdown, GitHub reviews, and SARIF. Ownership map - src/cli.ts : public flags, source selection, provider selection, exit policy. - src/campaign-reducer.ts and src/campaign-store.ts : deterministic lifecycle, atomic checkpoints, leases, replay, and resume. - src/campaign-preflight.ts : provider-free campaign discovery, eligibility, source planning, budget checks, and worktree gating. - src/batch-mode.ts : shared measured batching, including single-file context-pack partitioning (ADR-0006); preserve pack identity in artifacts, cache keys, and consolidation. - src/budget.ts : provider-free hierarchical budget compilation, reservations, and dimension-aware usage accounting. - src/review-stores.ts : separate self-hosted feedback and approved-knowledge stores with bounded schemas, atomic writes, retention, concurrent-write serialization, and the scoped AgentsKit Retriever . - src/review-feedback.ts : deterministic feedback reconciliation, resumable checkpoints, metrics, and inactive candidate-rule evidence. - src/campaign-runner.ts and scripts/review-campaign.mjs : bounded multi-PR execution, leased atomic checkpoints, resume, per-PR isolation, and deterministic terminal reporting. - src/quality-matrix.ts : run and campaign quality scoring, evidence separation, cost/time accounting, and baseline regression gates. evaluateCampaignQuality() must be used when aggregating campaign outcomes. - src/<provider -adapter.ts : logged-in local CLI adapters. - src/provider-registry.ts : validated provider capabilities and conservative execution policy around AgentsKit adapters. - src/provider-execution.ts : typed provider failures, bounded retry delay, adaptive concurrency, and cancellation-aware queueing. - src/scm-contract.ts : provider-neutral change-request, publication, readiness, and merge contracts plus explicit capability checks. - src/github-scm-adapter.ts : GitHub REST/CLI binding for the common SCM contract; the only migrated path allowed to contain GitHub payloads or merge commands. - agents/code-review/ : review pipeline, lenses, input normalization, reporters. - agents/code-review/risk.ts : provider-free context-pack risk signals and specialized-depth selection. - action.yml : composite GitHub Action contract. - .github/workflows/release.yml : Changesets version-pull-request workflow. - .github/workflows/publish.yml : version-PR-gated npm Trusted Publishing and GitHub Release workflow. - examples/ : copy-ready Action workflows. - README.md and docs/OPERATIONS.md : public adoption and operations guidance. - ecosystem.json , llms.txt , and llms-full.txt : canonical product graph and machine-readable discovery/full-corpus surfaces. - test/ : credential-free CLI, Action, and documentation contract proofs. Boundaries - Depend on AgentsKit adapter/runtime/tool contracts; do not create a second model abstraction. - Preserve provider neutrality and advisory-by-default Action behavior. - Never expose provider keys in arguments, docs fixtures, logs, or PR output. - The Fumadocs site provides curated documentation only; the product runtime remains the CLI and GitHub Action. Do not add an embedded AgentsKit Chat runtime here. - The vendored review agent tracks the AgentsKit Registry source; keep divergences explicit. Change routes - CLI flag/provider behavior: start at src/cli.ts , then update README, operations docs, and tests. - Cycle entry-point changes must pass the npm-style symlink subprocess test; an import must remain side-effect free. - Fatal batch/provider errors must abort peers and drain active work before writing a terminal result. CLI SIGTERM must reach the provider subprocess, not just terminate its parent. - Local CLI subprocess behavior: start at the matching src/<provide",
+          "body": "Code Review CLI handoff Purpose Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and GitHub pull requests. Bounded diff-first context packs run one multidimensional analysis; adversarial votes remove weak findings; reporters emit Markdown, GitHub reviews, and SARIF. Ownership map - src/cli.ts : public flags, source selection, provider selection, exit policy. - src/campaign-reducer.ts and src/campaign-store.ts : deterministic lifecycle, atomic checkpoints, leases, replay, and resume. - src/campaign-preflight.ts : provider-free campaign discovery, eligibility, source planning, budget checks, and worktree gating. - src/batch-mode.ts : shared measured batching, including single-file context-pack partitioning (ADR-0006); preserve pack identity in artifacts, cache keys, and consolidation. - src/budget.ts : provider-free hierarchical budget compilation, reservations, and dimension-aware usage accounting. - src/review-stores.ts : separate self-hosted feedback and approved-knowledge stores with bounded schemas, atomic writes, retention, concurrent-write serialization, and the scoped AgentsKit Retriever . - src/review-feedback.ts : deterministic feedback reconciliation, resumable checkpoints, metrics, and inactive candidate-rule evidence. - src/campaign-runner.ts and scripts/review-campaign.mjs : bounded multi-PR execution, leased atomic checkpoints, resume, per-PR isolation, and deterministic terminal reporting. - src/quality-matrix.ts : run and campaign quality scoring, evidence separation, cost/time accounting, and baseline regression gates. evaluateCampaignQuality() must be used when aggregating campaign outcomes. - src/<provider -adapter.ts : logged-in local CLI adapters. - src/provider-registry.ts : validated provider capabilities and conservative execution policy around AgentsKit adapters. - src/provider-execution.ts : typed provider failures, bounded retry delay, adaptive concurrency, and cancellation-aware queueing. - src/scm-contract.ts : provider-neutral change-request, publication, readiness, and merge contracts plus explicit capability checks. - src/github-scm-adapter.ts : GitHub REST/CLI binding for the common SCM contract; the only migrated path allowed to contain GitHub payloads or merge commands. - agents/ : the vendored review agent in agents/code-review/ : review pipeline, lenses, input normalization, reporters. - agents/code-review/risk.ts : provider-free context-pack risk signals and specialized-depth selection. - action.yml : composite GitHub Action contract. - .github/workflows/release.yml : Changesets version-pull-request workflow. - .github/workflows/publish.yml : version-PR-gated npm Trusted Publishing and GitHub Release workflow. - examples/ : copy-ready Action workflows. - README.md and docs/OPERATIONS.md : public adoption and operations guidance. - ecosystem.json , llms.txt , and llms-full.txt : canonical product graph and machine-readable discovery/full-corpus surfaces. - test/ : credential-free CLI, Action, and documentation contract proofs. - scripts/ : Node entry points for the package scripts (review cycle, campaign, harness, quality matrix and baseline, fault injection, cycle benchmark, public-API snapshot, README Standard, llms-full.txt generation) and the standalone ecosystem public-output check. Boundaries - Depend on AgentsKit adapter/runtime/tool contracts; do not create a second model abstraction. - Preserve provider neutrality and advisory-by-default Action behavior. - Never expose provider keys in arguments, docs fixtures, logs, or PR output. - The Fumadocs site provides curated documentation only; the product runtime remains the CLI and GitHub Action. Do not add an embedded AgentsKit Chat runtime here. - The vendored review agent tracks the AgentsKit Registry source; keep divergences explicit. Change routes - CLI flag/provider behavior: start at src/cli.ts , then update README, operations docs, and tests. - Cycle entry-point changes must pass the npm-style symlink s",
           "aliases": "code-review document agent package"
         },
         "graph": {
@@ -4649,7 +4855,17 @@
             },
             {
               "kind": "mentions",
+              "id": "area:agents",
+              "confidence": "fuzzy"
+            },
+            {
+              "kind": "mentions",
               "id": "area:examples",
+              "confidence": "fuzzy"
+            },
+            {
+              "kind": "mentions",
+              "id": "area:scripts",
               "confidence": "fuzzy"
             },
             {
@@ -4764,7 +4980,7 @@
             }
           ]
         },
-        "contentHash": "5b8af8aa4cd53133a2ccd1dfc34c43d4a519a1a9c89d924d5a9e1a23225de973",
+        "contentHash": "bb932f43ec7c66496809908fb0ae04256f37546cf4ece43e4f3ef1cdebdcdec0",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -5223,7 +5439,7 @@
           "path": "docs/plans/ecosystem-doc-quality-code-review.md",
           "symbols": "",
           "summary": "Make Code Review a complete, repository-native member of the seven-product AgentsKit ecosystem without adding Fumadocs or an embedded chat surface.",
-          "body": "Ecosystem documentation — Code Review tracer Objective Make Code Review a complete, repository-native member of the seven-product AgentsKit ecosystem without adding Fumadocs or an embedded chat surface. Acceptance criteria - The canonical ecosystem manifest lists AgentsKit, Registry, Chat, Playbook, Doc Bridge, Code Review, and with stable public URLs. - The README remains concise, keeps its verified examples and maturity contract, and presents all six sibling products as contextual next steps. - Documentation-related guidance points to Doc Bridge, conversational UI guidance points to AgentsKit Chat, and enterprise operation guidance points to . - llms.txt is a compact discovery map with human, agent, raw-source, and ecosystem routes. - llms-full.txt exposes the complete repository documentation corpus without bloating llms.txt . - docs/for-agents/ identifies ownership, change routes, ecosystem hooks, and required checks. - Doc Bridge remains exactly 100/100 with fresh committed artifacts. Test plan Unit and contract tests - Verify the canonical manifest contains seven unique products in the expected order. - Verify Code Review resolves exactly six siblings and that every public URL is HTTPS. - Verify llms.txt stays concise and links llms-full.txt , raw sources, for-agents, and all six siblings. - Verify llms-full.txt contains the README, operations guide, and agent handoffs. - Verify the README contains the six-peer continuation table and the three strategic hooks. Integration and regression - Run TypeScript typecheck, build, offline CLI review, Action/documentation contract tests, and README Standard v1. - Run Doc Bridge index, gate, and doctor; require 100/100 and fresh artifacts. - Run npm pack --dry-run and confirm the two LLM surfaces, ecosystem manifest, and agent handoffs ship. - Preserve provider neutrality, advisory-by-default behavior, and the repository-native no-Fumadocs/no-AgentsChat-runtime boundary. Edge cases - Reject duplicate or missing ecosystem product identifiers. - Keep secrets and provider keys out of generated machine-readable docs. - Avoid claims of stable npm or v1 Action distribution while the project remains pre-v1. - Ensure GitHub raw-source links are pinned to the public main path and do not expose local filesystem paths. Documentation impact - README.md - llms.txt and llms-full.txt - docs/for-agents/ - docs/OPERATIONS.md - ecosystem.json - Doc Bridge generated artifacts and README freshness hash Definition of Done - All acceptance criteria are implemented. - npm run check passes. - npm pack --dry-run passes with the required documentation payload. - Doc Bridge reports 100/100 A with all gates passing. - No commit, push, release, or PR is created without explicit user authorization. Upstream adoption record - Reuse the approved seven-product ecosystem manifest and documentation-quality language from the central AgentsKit documentation contract. - Keep review primitives on AgentsKit adapters/runtime and the Registry-sourced review agent; no local model or agent abstraction is introduced.",
+          "body": "Ecosystem documentation — Code Review tracer Objective Make Code Review a complete, repository-native member of the seven-product AgentsKit ecosystem without adding Fumadocs or an embedded chat surface. Status: Doc Bridge 2.5.0 doctor reports 99/100 A (connectivity 90%, retrieval benchmark hit@3 0.97 over 34 cases); 100/100 remains the target. Acceptance criteria - The canonical ecosystem manifest lists AgentsKit, Registry, Chat, Playbook, Doc Bridge, Code Review, and with stable public URLs. - The README remains concise, keeps its verified examples and maturity contract, and presents all six sibling products as contextual next steps. - Documentation-related guidance points to Doc Bridge, conversational UI guidance points to AgentsKit Chat, and enterprise operation guidance points to . - llms.txt is a compact discovery map with human, agent, raw-source, and ecosystem routes. - llms-full.txt exposes the complete repository documentation corpus without bloating llms.txt . - docs/for-agents/ identifies ownership, change routes, ecosystem hooks, and required checks. - Doc Bridge remains exactly 100/100 with fresh committed artifacts. Test plan Unit and contract tests - Verify the canonical manifest contains seven unique products in the expected order. - Verify Code Review resolves exactly six siblings and that every public URL is HTTPS. - Verify llms.txt stays concise and links llms-full.txt , raw sources, for-agents, and all six siblings. - Verify llms-full.txt contains the README, operations guide, and agent handoffs. - Verify the README contains the six-peer continuation table and the three strategic hooks. Integration and regression - Run TypeScript typecheck, build, offline CLI review, Action/documentation contract tests, and README Standard v1. - Run Doc Bridge index, gate, and doctor; require 100/100 and fresh artifacts. - Run npm pack --dry-run and confirm the two LLM surfaces, ecosystem manifest, and agent handoffs ship. - Preserve provider neutrality, advisory-by-default behavior, and the repository-native no-Fumadocs/no-AgentsChat-runtime boundary. Edge cases - Reject duplicate or missing ecosystem product identifiers. - Keep secrets and provider keys out of generated machine-readable docs. - Avoid claims of stable npm or v1 Action distribution while the project remains pre-v1. - Ensure GitHub raw-source links are pinned to the public main path and do not expose local filesystem paths. Documentation impact - README.md - llms.txt and llms-full.txt - docs/for-agents/ - docs/OPERATIONS.md - ecosystem.json - Doc Bridge generated artifacts and README freshness hash Definition of Done - All acceptance criteria are implemented. - npm run check passes. - npm pack --dry-run passes with the required documentation payload. - Doc Bridge reports 100/100 A with all gates passing. - No commit, push, release, or PR is created without explicit user authorization. Upstream adoption record - Reuse the approved seven-product ecosystem manifest and documentation-quality language from the central AgentsKit documentation contract. - Keep review primitives on AgentsKit adapters/runtime and the Registry-sourced review agent; no local model or agent abstraction is introduced.",
           "aliases": "document human"
         },
         "graph": {
@@ -5250,7 +5466,7 @@
             }
           ]
         },
-        "contentHash": "b74fd59169902f4dde53ed3da28c7ca2832bbf38ad8edd591d1e5aa42b4eef66",
+        "contentHash": "90afc65ec761a001a1c5e2e8a692b981f956c724e0163fefe6513d393301a081",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -5272,7 +5488,7 @@
           "path": "docs/provider-compatibility.md",
           "symbols": "",
           "summary": "Code Review runs against supported local coding-agent CLIs or configured model providers. Provider capabilities and safe execution defaults are maintained in the compatibility source and validated before review work starts.",
-          "body": "Provider compatibility Code Review runs against supported local coding-agent CLIs or configured model providers. Provider capabilities and safe execution defaults are maintained in the and validated before review work starts. The package uses the provider already configured for the selected adapter. Provider execution is bounded by the review's call, token, and time budgets. Authentication failures and unsupported capabilities stop the affected work before a review can be approved. See for implementation ownership, and run npm run check before publishing changes to provider routing.",
+          "body": "Provider compatibility Code Review runs against supported local coding-agent CLIs or configured model providers. Provider capabilities and safe execution defaults are maintained in the and validated before review work starts. At runtime, src/provider-registry.ts resolves each provider's capabilities and execution policy, and src/provider-execution.ts applies bounded retries, adaptive concurrency, and cancellation. The package uses the provider already configured for the selected adapter. Provider execution is bounded by the review's call, token, and time budgets. Authentication failures and unsupported capabilities stop the affected work before a review can be approved. See for implementation ownership, and run npm run check before publishing changes to provider routing.",
           "aliases": "document human"
         },
         "graph": {
@@ -5307,10 +5523,20 @@
               "kind": "links-to",
               "id": "document:docs/for-agents/code-review.md",
               "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:src/provider-execution.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:src/provider-registry.ts",
+              "confidence": "observed"
             }
           ]
         },
-        "contentHash": "6c9886374f1501d36b7226762a41e48e376c2ec70018491b1646d2c09e019bbf",
+        "contentHash": "8f3361bc7afcf8d0da6d88a40645152addff367ae9781fb927527e8a04c60516",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -5841,11 +6067,12 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 8,
+          "inboundLinks": 9,
           "coveredBy": [],
           "mentionedBy": [
             "document:CHANGELOG.md",
             "document:docs/adr/0001-bounded-provider-neutral-cli-agents.md",
+            "document:docs/adr/0004-diff-first-context-and-token-budgets.md",
             "document:docs/adr/0008-verification-posture.md",
             "document:docs/adr/0010-single-step-calls.md",
             "document:docs/for-agents/code-review.md",
@@ -5904,6 +6131,11 @@
             {
               "kind": "mentions",
               "id": "document:docs/adr/0001-bounded-provider-neutral-cli-agents.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/adr/0004-diff-first-context-and-token-budgets.md",
               "confidence": "observed"
             },
             {
@@ -6240,9 +6472,10 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 1,
+          "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
+            "document:docs/adr/0004-diff-first-context-and-token-budgets.md",
             "document:docs/for-agents/code-review.md"
           ],
           "areaId": "area:agents",
@@ -6255,7 +6488,17 @@
             },
             {
               "kind": "mentions",
+              "id": "document:docs/adr/0004-diff-first-context-and-token-budgets.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
               "id": "document:docs/for-agents/code-review.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "document:docs/adr/0004-diff-first-context-and-token-budgets.md",
               "confidence": "observed"
             }
           ],
@@ -6368,9 +6611,10 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 1,
+          "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
+            "document:docs/adr/0004-diff-first-context-and-token-budgets.md",
             "document:docs/for-agents/code-review.md"
           ],
           "areaId": "area:agents",
@@ -6384,6 +6628,11 @@
             {
               "kind": "imports",
               "id": "module:src/cli.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/adr/0004-diff-first-context-and-token-budgets.md",
               "confidence": "observed"
             },
             {
@@ -7657,15 +7906,22 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 0,
+          "inboundLinks": 1,
           "coveredBy": [],
-          "mentionedBy": [],
+          "mentionedBy": [
+            "document:docs/adr/0007-whole-cycle-resource-accounting.md"
+          ],
           "areaId": "area:scripts",
           "packageId": "package:@agentskit/code-review",
           "inbound": [
             {
               "kind": "imports",
               "id": "module:test/review-cycle.test.mjs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/adr/0007-whole-cycle-resource-accounting.md",
               "confidence": "observed"
             }
           ],
@@ -7916,10 +8172,11 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 2,
+          "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
             "document:CHANGELOG.md",
+            "document:docs/adr/0006-measured-batch-completion.md",
             "document:docs/OPERATIONS.md"
           ],
           "packageId": "package:@agentskit/code-review",
@@ -7942,6 +8199,11 @@
             {
               "kind": "mentions",
               "id": "document:CHANGELOG.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/adr/0006-measured-batch-completion.md",
               "confidence": "observed"
             },
             {
@@ -8004,9 +8266,10 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 1,
+          "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
+            "document:docs/adr/0006-measured-batch-completion.md",
             "document:docs/for-agents/code-review.md"
           ],
           "packageId": "package:@agentskit/code-review",
@@ -8023,7 +8286,17 @@
             },
             {
               "kind": "mentions",
+              "id": "document:docs/adr/0006-measured-batch-completion.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
               "id": "document:docs/for-agents/code-review.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "document:docs/adr/0006-measured-batch-completion.md",
               "confidence": "observed"
             }
           ],
@@ -8077,9 +8350,11 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 1,
+          "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
+            "document:docs/adr/0004-diff-first-context-and-token-budgets.md",
+            "document:docs/adr/0007-whole-cycle-resource-accounting.md",
             "document:docs/for-agents/code-review.md"
           ],
           "packageId": "package:@agentskit/code-review",
@@ -8111,7 +8386,27 @@
             },
             {
               "kind": "mentions",
+              "id": "document:docs/adr/0004-diff-first-context-and-token-budgets.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/adr/0007-whole-cycle-resource-accounting.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
               "id": "document:docs/for-agents/code-review.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "document:docs/adr/0004-diff-first-context-and-token-budgets.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "document:docs/adr/0007-whole-cycle-resource-accounting.md",
               "confidence": "observed"
             },
             {
@@ -8156,9 +8451,10 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 1,
+          "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
+            "document:docs/adr/0006-measured-batch-completion.md",
             "document:docs/for-agents/code-review.md"
           ],
           "packageId": "package:@agentskit/code-review",
@@ -8166,6 +8462,11 @@
             {
               "kind": "imports",
               "id": "module:src/campaign-runner.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/adr/0006-measured-batch-completion.md",
               "confidence": "observed"
             },
             {
@@ -8250,9 +8551,10 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 1,
+          "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
+            "document:docs/adr/0002-deterministic-campaign-engine.md",
             "document:docs/for-agents/code-review.md"
           ],
           "packageId": "package:@agentskit/code-review",
@@ -8269,7 +8571,17 @@
             },
             {
               "kind": "mentions",
+              "id": "document:docs/adr/0002-deterministic-campaign-engine.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
               "id": "document:docs/for-agents/code-review.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "document:docs/adr/0002-deterministic-campaign-engine.md",
               "confidence": "observed"
             },
             {
@@ -8320,13 +8632,19 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 1,
+          "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
+            "document:docs/adr/0002-deterministic-campaign-engine.md",
             "document:docs/for-agents/code-review.md"
           ],
           "packageId": "package:@agentskit/code-review",
           "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:docs/adr/0002-deterministic-campaign-engine.md",
+              "confidence": "observed"
+            },
             {
               "kind": "mentions",
               "id": "document:docs/for-agents/code-review.md",
@@ -8409,9 +8727,11 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 1,
+          "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
+            "document:docs/adr/0002-deterministic-campaign-engine.md",
+            "document:docs/adr/0005-separated-safe-review-memory.md",
             "document:docs/for-agents/code-review.md"
           ],
           "packageId": "package:@agentskit/code-review",
@@ -8439,6 +8759,16 @@
             {
               "kind": "imports",
               "id": "module:src/review-stores.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/adr/0002-deterministic-campaign-engine.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/adr/0005-separated-safe-review-memory.md",
               "confidence": "observed"
             },
             {
@@ -8556,11 +8886,12 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 3,
+          "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [
             "document:CONTRIBUTING.md",
             "document:docs/adr/0001-bounded-provider-neutral-cli-agents.md",
+            "document:docs/adr/0006-measured-batch-completion.md",
             "document:docs/for-agents/code-review.md"
           ],
           "packageId": "package:@agentskit/code-review",
@@ -8573,6 +8904,11 @@
             {
               "kind": "mentions",
               "id": "document:docs/adr/0001-bounded-provider-neutral-cli-agents.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/adr/0006-measured-batch-completion.md",
               "confidence": "observed"
             },
             {
@@ -9115,9 +9451,10 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 1,
+          "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
+            "document:docs/adr/0003-model-and-scm-adapter-boundaries.md",
             "document:docs/for-agents/code-review.md"
           ],
           "packageId": "package:@agentskit/code-review",
@@ -9139,7 +9476,17 @@
             },
             {
               "kind": "mentions",
+              "id": "document:docs/adr/0003-model-and-scm-adapter-boundaries.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
               "id": "document:docs/for-agents/code-review.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "document:docs/adr/0003-model-and-scm-adapter-boundaries.md",
               "confidence": "observed"
             },
             {
@@ -10188,10 +10535,11 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 1,
+          "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
-            "document:docs/for-agents/code-review.md"
+            "document:docs/for-agents/code-review.md",
+            "document:docs/provider-compatibility.md"
           ],
           "packageId": "package:@agentskit/code-review",
           "inbound": [
@@ -10208,6 +10556,11 @@
             {
               "kind": "mentions",
               "id": "document:docs/for-agents/code-review.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/provider-compatibility.md",
               "confidence": "observed"
             },
             {
@@ -10272,10 +10625,12 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 1,
+          "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
-            "document:docs/for-agents/code-review.md"
+            "document:docs/adr/0003-model-and-scm-adapter-boundaries.md",
+            "document:docs/for-agents/code-review.md",
+            "document:docs/provider-compatibility.md"
           ],
           "packageId": "package:@agentskit/code-review",
           "inbound": [
@@ -10296,7 +10651,17 @@
             },
             {
               "kind": "mentions",
+              "id": "document:docs/adr/0003-model-and-scm-adapter-boundaries.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
               "id": "document:docs/for-agents/code-review.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/provider-compatibility.md",
               "confidence": "observed"
             },
             {
@@ -10593,11 +10958,23 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 0,
+          "inboundLinks": 1,
           "coveredBy": [],
-          "mentionedBy": [],
+          "mentionedBy": [
+            "document:docs/adr/0005-separated-safe-review-memory.md"
+          ],
           "packageId": "package:@agentskit/code-review",
           "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:docs/adr/0005-separated-safe-review-memory.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "document:docs/adr/0005-separated-safe-review-memory.md",
+              "confidence": "observed"
+            },
             {
               "kind": "re-exports",
               "id": "module:src/index.ts",
@@ -10810,14 +11187,26 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 0,
+          "inboundLinks": 1,
           "coveredBy": [],
-          "mentionedBy": [],
+          "mentionedBy": [
+            "document:docs/adr/0005-separated-safe-review-memory.md"
+          ],
           "packageId": "package:@agentskit/code-review",
           "inbound": [
             {
               "kind": "imports",
               "id": "module:agents/code-review/agent.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/adr/0005-separated-safe-review-memory.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "document:docs/adr/0005-separated-safe-review-memory.md",
               "confidence": "observed"
             },
             {
@@ -11033,9 +11422,10 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 1,
+          "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
+            "document:docs/adr/0005-separated-safe-review-memory.md",
             "document:docs/for-agents/code-review.md"
           ],
           "packageId": "package:@agentskit/code-review",
@@ -11058,6 +11448,11 @@
             {
               "kind": "imports",
               "id": "module:src/review-learning.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/adr/0005-separated-safe-review-memory.md",
               "confidence": "observed"
             },
             {
@@ -11143,9 +11538,10 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 2,
+          "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
+            "document:docs/adr/0003-model-and-scm-adapter-boundaries.md",
             "document:docs/for-agents/code-review.md",
             "document:docs/OPERATIONS.md"
           ],
@@ -11184,6 +11580,11 @@
             {
               "kind": "imports",
               "id": "module:src/review-config.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/adr/0003-model-and-scm-adapter-boundaries.md",
               "confidence": "observed"
             },
             {
@@ -11923,7 +12324,7 @@
             }
           ]
         },
-        "contentHash": "9762107a0ad1c17b0649dd531e36e6f4f2bc84e0f6157ccd53421097b09db2a7",
+        "contentHash": "163204f853c93ece1e106af76749989756145e821f554d29a64179ea0f6003a8",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13457,7 +13858,7 @@
           "path": ".",
           "symbols": "",
           "summary": "Provider-neutral local and GitHub code review CLI, Action, reporters, Fumadocs site, and repository documentation.",
-          "body": "Code Review CLI handoff Purpose Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and GitHub pull requests. Bounded diff-first context packs run one multidimensional analysis; adversarial votes remove weak findings; reporters emit Markdown, GitHub reviews, and SARIF. Ownership map - src/cli.ts : public flags, source selection, provider selection, exit policy. - src/campaign-reducer.ts and src/campaign-store.ts : deterministic lifecycle, atomic checkpoints, leases, replay, and resume. - src/campaign-preflight.ts : provider-free campaign discovery, eligibility, source planning, budget checks, and worktree gating. - src/batch-mode.ts : shared measured batching, including single-file context-pack partitioning (ADR-0006); preserve pack identity in artifacts, cache keys, and consolidation. - src/budget.ts : provider-free hierarchical budget compilation, reservations, and dimension-aware usage accounting. - src/review-stores.ts : separate self-hosted feedback and approved-knowledge stores with bounded schemas, atomic writes, retention, concurrent-write serialization, and the scoped AgentsKit Retriever . - src/review-feedback.ts : deterministic feedback reconciliation, resumable checkpoints, metrics, and inactive candidate-rule evidence. - src/campaign-runner.ts and scripts/review-campaign.mjs : bounded multi-PR execution, leased atomic checkpoints, resume, per-PR isolation, and deterministic terminal reporting. - src/quality-matrix.ts : run and campaign quality scoring, evidence separation, cost/time accounting, and baseline regression gates. evaluateCampaignQuality() must be used when aggregating campaign outcomes. - src/<provider -adapter.ts : logged-in local CLI adapters. - src/provider-registry.ts : validated provider capabilities and conservative execution policy around AgentsKit adapters. - src/provider-execution.ts : typed provider failures, bounded retry delay, adaptive concurrency, and cancellation-aware queueing. - src/scm-contract.ts : provider-neutral change-request, publication, readiness, and merge contracts plus explicit capability checks. - src/github-scm-adapter.ts : GitHub REST/CLI binding for the common SCM contract; the only migrated path allowed to contain GitHub payloads or merge commands. - agents/code-review/ : review pipeline, lenses, input normalization, reporters. - agents/code-review/risk.ts : provider-free context-pack risk signals and specialized-depth selection. - action.yml : composite GitHub Action contract. - .github/workflows/release.yml : Changesets version-pull-request workflow. - .github/workflows/publish.yml : version-PR-gated npm Trusted Publishing and GitHub Release workflow. - examples/ : copy-ready Action workflows. - README.md and docs/OPERATIONS.md : public adoption and operations guidance. - ecosystem.json , llms.txt , and llms-full.txt : canonical product graph and machine-readable discovery/full-corpus surfaces. - test/ : credential-free CLI, Action, and documentation contract proofs. Boundaries - Depend on AgentsKit adapter/runtime/tool contracts; do not create a second model abstraction. - Preserve provider neutrality and advisory-by-default Action behavior. - Never expose provider keys in arguments, docs fixtures, logs, or PR output. - The Fumadocs site provides curated documentation only; the product runtime remains the CLI and GitHub Action. Do not add an embedded AgentsKit Chat runtime here. - The vendored review agent tracks the AgentsKit Registry source; keep divergences explicit. Change routes - CLI flag/provider behavior: start at src/cli.ts , then update README, operations docs, and tests. - Cycle entry-point changes must pass the npm-style symlink subprocess test; an import must remain side-effect free. - Fatal batch/provider errors must abort peers and drain active work before writing a terminal result. CLI SIGTERM must reach the provider subprocess, not just terminate its parent. - Local CLI subprocess behavior: start at the matching src/<provide",
+          "body": "Code Review CLI handoff Purpose Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and GitHub pull requests. Bounded diff-first context packs run one multidimensional analysis; adversarial votes remove weak findings; reporters emit Markdown, GitHub reviews, and SARIF. Ownership map - src/cli.ts : public flags, source selection, provider selection, exit policy. - src/campaign-reducer.ts and src/campaign-store.ts : deterministic lifecycle, atomic checkpoints, leases, replay, and resume. - src/campaign-preflight.ts : provider-free campaign discovery, eligibility, source planning, budget checks, and worktree gating. - src/batch-mode.ts : shared measured batching, including single-file context-pack partitioning (ADR-0006); preserve pack identity in artifacts, cache keys, and consolidation. - src/budget.ts : provider-free hierarchical budget compilation, reservations, and dimension-aware usage accounting. - src/review-stores.ts : separate self-hosted feedback and approved-knowledge stores with bounded schemas, atomic writes, retention, concurrent-write serialization, and the scoped AgentsKit Retriever . - src/review-feedback.ts : deterministic feedback reconciliation, resumable checkpoints, metrics, and inactive candidate-rule evidence. - src/campaign-runner.ts and scripts/review-campaign.mjs : bounded multi-PR execution, leased atomic checkpoints, resume, per-PR isolation, and deterministic terminal reporting. - src/quality-matrix.ts : run and campaign quality scoring, evidence separation, cost/time accounting, and baseline regression gates. evaluateCampaignQuality() must be used when aggregating campaign outcomes. - src/<provider -adapter.ts : logged-in local CLI adapters. - src/provider-registry.ts : validated provider capabilities and conservative execution policy around AgentsKit adapters. - src/provider-execution.ts : typed provider failures, bounded retry delay, adaptive concurrency, and cancellation-aware queueing. - src/scm-contract.ts : provider-neutral change-request, publication, readiness, and merge contracts plus explicit capability checks. - src/github-scm-adapter.ts : GitHub REST/CLI binding for the common SCM contract; the only migrated path allowed to contain GitHub payloads or merge commands. - agents/ : the vendored review agent in agents/code-review/ : review pipeline, lenses, input normalization, reporters. - agents/code-review/risk.ts : provider-free context-pack risk signals and specialized-depth selection. - action.yml : composite GitHub Action contract. - .github/workflows/release.yml : Changesets version-pull-request workflow. - .github/workflows/publish.yml : version-PR-gated npm Trusted Publishing and GitHub Release workflow. - examples/ : copy-ready Action workflows. - README.md and docs/OPERATIONS.md : public adoption and operations guidance. - ecosystem.json , llms.txt , and llms-full.txt : canonical product graph and machine-readable discovery/full-corpus surfaces. - test/ : credential-free CLI, Action, and documentation contract proofs. - scripts/ : Node entry points for the package scripts (review cycle, campaign, harness, quality matrix and baseline, fault injection, cycle benchmark, public-API snapshot, README Standard, llms-full.txt generation) and the standalone ecosystem public-output check. Boundaries - Depend on AgentsKit adapter/runtime/tool contracts; do not create a second model abstraction. - Preserve provider neutrality and advisory-by-default Action behavior. - Never expose provider keys in arguments, docs fixtures, logs, or PR output. - The Fumadocs site provides curated documentation only; the product runtime remains the CLI and GitHub Action. Do not add an embedded AgentsKit Chat runtime here. - The vendored review agent tracks the AgentsKit Registry source; keep divergences explicit. Change routes - CLI flag/provider behavior: start at src/cli.ts , then update README, operations docs, and tests. - Cycle entry-point changes must pass the npm-style symlink s",
           "aliases": "code-review @agentskit/code-review package ownership"
         },
         "graph": {
@@ -13508,7 +13909,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "2a5ffe876d680d6f7cfb8f8b8368a7f1a1cbd712eb8051177d5bb7836cbe041b",
+        "contentHash": "77847a29030d0e46bab12cde37026b6b1628d20f61f5a996735004b14bae0bb6",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
