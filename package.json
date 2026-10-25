@@ -137,7 +137,7 @@
     "zod": "^4.6.7"
   },
   "optionalDependencies": {
-    "@agentskit/doc-bridge": "^2.4.0"
+    "@agentskit/doc-bridge": "^2.5.0"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^1.0.1",

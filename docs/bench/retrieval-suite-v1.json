@@ -1,0 +1,579 @@
+{
+  "evalFormatVersion": "2026-04",
+  "name": "code-review-retrieval-v1",
+  "description": "Golden retrieval queries for AgentsKit Code Review: exported symbols, file paths, natural-language questions, and ownership routing. A case passes when one of its expected targets ranks; targets are repository paths of the modules and maintained documents that answer it.",
+  "tags": [
+    "retrieval",
+    "code-review",
+    "deterministic"
+  ],
+  "cases": [
+    {
+      "id": "symbol-transition-campaign",
+      "input": "transitionCampaign",
+      "expected": {
+        "regex": {
+          "body": "src/campaign-reducer\\.ts"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "src/campaign-reducer.ts"
+        ],
+        "lang": "en",
+        "kind": "symbol"
+      }
+    },
+    {
+      "id": "symbol-create-github-scm-adapter",
+      "input": "createGithubScmAdapter",
+      "expected": {
+        "regex": {
+          "body": "src/github-scm-adapter\\.ts"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "src/github-scm-adapter.ts"
+        ],
+        "lang": "en",
+        "kind": "symbol"
+      }
+    },
+    {
+      "id": "symbol-plan-review-batches",
+      "input": "planReviewBatches",
+      "expected": {
+        "regex": {
+          "body": "src/batch-mode\\.ts"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "src/batch-mode.ts"
+        ],
+        "lang": "en",
+        "kind": "symbol"
+      }
+    },
+    {
+      "id": "symbol-compile-review-budget",
+      "input": "compileReviewBudget",
+      "expected": {
+        "regex": {
+          "body": "src/budget\\.ts"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "src/budget.ts"
+        ],
+        "lang": "en",
+        "kind": "symbol"
+      }
+    },
+    {
+      "id": "symbol-create-review-cache",
+      "input": "createReviewCache",
+      "expected": {
+        "regex": {
+          "body": "src/review-cache\\.ts"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "src/review-cache.ts"
+        ],
+        "lang": "en",
+        "kind": "symbol"
+      }
+    },
+    {
+      "id": "symbol-load-approved-review-rules",
+      "input": "loadApprovedReviewRules",
+      "expected": {
+        "regex": {
+          "body": "src/review-learning\\.ts"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "src/review-learning.ts"
+        ],
+        "lang": "en",
+        "kind": "symbol"
+      }
+    },
+    {
+      "id": "symbol-classify-context-pack",
+      "input": "classifyContextPack",
+      "expected": {
+        "regex": {
+          "body": "agents/code-review/risk\\.ts"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "agents/code-review/risk.ts"
+        ],
+        "lang": "en",
+        "kind": "symbol"
+      }
+    },
+    {
+      "id": "symbol-create-code-review-agent",
+      "input": "createCodeReviewAgent",
+      "expected": {
+        "regex": {
+          "body": "agents/code-review/agent\\.ts"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "agents/code-review/agent.ts"
+        ],
+        "lang": "en",
+        "kind": "symbol"
+      }
+    },
+    {
+      "id": "symbol-provider-execution-policy",
+      "input": "providerExecutionPolicy",
+      "expected": {
+        "regex": {
+          "body": "src/provider-registry\\.ts"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "src/provider-registry.ts"
+        ],
+        "lang": "en",
+        "kind": "symbol"
+      }
+    },
+    {
+      "id": "symbol-adaptive-concurrency-gate",
+      "input": "AdaptiveConcurrencyGate",
+      "expected": {
+        "regex": {
+          "body": "src/provider-execution\\.ts"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "src/provider-execution.ts"
+        ],
+        "lang": "en",
+        "kind": "symbol"
+      }
+    },
+    {
+      "id": "symbol-evaluate-campaign-quality",
+      "input": "evaluateCampaignQuality",
+      "expected": {
+        "regex": {
+          "body": "src/quality-matrix\\.ts"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "src/quality-matrix.ts"
+        ],
+        "lang": "en",
+        "kind": "symbol"
+      }
+    },
+    {
+      "id": "symbol-create-acp-cli-adapter",
+      "input": "createAcpCliAdapter",
+      "expected": {
+        "regex": {
+          "body": "src/acp-cli-adapter\\.ts"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "src/acp-cli-adapter.ts"
+        ],
+        "lang": "en",
+        "kind": "symbol"
+      }
+    },
+    {
+      "id": "path-cli",
+      "input": "src/cli.ts",
+      "expected": {
+        "regex": {
+          "body": "src/cli\\.ts"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "src/cli.ts"
+        ],
+        "lang": "en",
+        "kind": "path"
+      }
+    },
+    {
+      "id": "path-reporters",
+      "input": "agents/code-review/reporters.ts",
+      "expected": {
+        "regex": {
+          "body": "agents/code-review/reporters\\.ts"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "agents/code-review/reporters.ts"
+        ],
+        "lang": "en",
+        "kind": "path"
+      }
+    },
+    {
+      "id": "path-review-cycle-script",
+      "input": "scripts/review-cycle.mjs",
+      "expected": {
+        "regex": {
+          "body": "scripts/review-cycle\\.mjs"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "scripts/review-cycle.mjs"
+        ],
+        "lang": "en",
+        "kind": "path"
+      }
+    },
+    {
+      "id": "path-scm-contract",
+      "input": "src/scm-contract.ts",
+      "expected": {
+        "regex": {
+          "body": "src/scm-contract\\.ts"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "src/scm-contract.ts"
+        ],
+        "lang": "en",
+        "kind": "path"
+      }
+    },
+    {
+      "id": "question-first-local-review",
+      "input": "how do I run my first review of local changes",
+      "expected": {
+        "regex": {
+          "body": "docs/getting-started\\.md|README\\.md|docs/OPERATIONS\\.md"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "docs/getting-started.md",
+          "README.md",
+          "docs/OPERATIONS.md"
+        ],
+        "lang": "en",
+        "kind": "question"
+      }
+    },
+    {
+      "id": "question-provider-capabilities",
+      "input": "which providers are supported and how are their capabilities checked",
+      "expected": {
+        "regex": {
+          "body": "docs/provider-compatibility\\.md|docs/OPERATIONS\\.md|src/provider-registry\\.ts"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "docs/provider-compatibility.md",
+          "docs/OPERATIONS.md",
+          "src/provider-registry.ts"
+        ],
+        "lang": "en",
+        "kind": "question"
+      }
+    },
+    {
+      "id": "question-sarif-code-scanning",
+      "input": "write findings as SARIF for code scanning",
+      "expected": {
+        "regex": {
+          "body": "docs/OPERATIONS\\.md|docs/getting-started\\.md|README\\.md"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "docs/OPERATIONS.md",
+          "docs/getting-started.md",
+          "README.md"
+        ],
+        "lang": "en",
+        "kind": "question"
+      }
+    },
+    {
+      "id": "question-pure-reducer-campaign",
+      "input": "why is campaign state changed only by a pure reducer",
+      "expected": {
+        "regex": {
+          "body": "docs/adr/0002-deterministic-campaign-engine\\.md|src/campaign-reducer\\.ts"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "docs/adr/0002-deterministic-campaign-engine.md",
+          "src/campaign-reducer.ts"
+        ],
+        "lang": "en",
+        "kind": "question"
+      }
+    },
+    {
+      "id": "question-oversized-batches",
+      "input": "how are oversized review batches split before any provider call",
+      "expected": {
+        "regex": {
+          "body": "docs/adr/0006-measured-batch-completion\\.md|src/batch-mode\\.ts"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "docs/adr/0006-measured-batch-completion.md",
+          "src/batch-mode.ts"
+        ],
+        "lang": "en",
+        "kind": "question"
+      }
+    },
+    {
+      "id": "question-approved-knowledge-separate",
+      "input": "where are approved review rules kept apart from feedback and cache",
+      "expected": {
+        "regex": {
+          "body": "docs/adr/0005-separated-safe-review-memory\\.md|src/review-stores\\.ts"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "docs/adr/0005-separated-safe-review-memory.md",
+          "src/review-stores.ts"
+        ],
+        "lang": "en",
+        "kind": "question"
+      }
+    },
+    {
+      "id": "question-quality-matrix-scoring",
+      "input": "how is review quality scored and compared against a baseline",
+      "expected": {
+        "regex": {
+          "body": "docs/quality-matrix\\.md|docs/baseline-protocol\\.md|src/quality-matrix\\.ts"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "docs/quality-matrix.md",
+          "docs/baseline-protocol.md",
+          "src/quality-matrix.ts"
+        ],
+        "lang": "en",
+        "kind": "question"
+      }
+    },
+    {
+      "id": "question-capture-baseline",
+      "input": "how do I measure the baseline before changing review behavior",
+      "expected": {
+        "regex": {
+          "body": "docs/baseline-protocol\\.md|docs/continuous-improvement\\.md"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "docs/baseline-protocol.md",
+          "docs/continuous-improvement.md"
+        ],
+        "lang": "en",
+        "kind": "question"
+      }
+    },
+    {
+      "id": "question-verification-posture",
+      "input": "should the skeptic refute or keep unverified findings",
+      "expected": {
+        "regex": {
+          "body": "docs/adr/0008-verification-posture\\.md"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "docs/adr/0008-verification-posture.md"
+        ],
+        "lang": "en",
+        "kind": "question"
+      }
+    },
+    {
+      "id": "question-language-rules",
+      "input": "enable per-language review rules with globs",
+      "expected": {
+        "regex": {
+          "body": "docs/OPERATIONS\\.md|docs/adr/0009-layered-language-rules\\.md"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "docs/OPERATIONS.md",
+          "docs/adr/0009-layered-language-rules.md"
+        ],
+        "lang": "en",
+        "kind": "question"
+      }
+    },
+    {
+      "id": "question-report-vulnerability",
+      "input": "how do I report a vulnerability privately",
+      "expected": {
+        "regex": {
+          "body": "SECURITY\\.md"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "SECURITY.md"
+        ],
+        "lang": "en",
+        "kind": "question"
+      }
+    },
+    {
+      "id": "question-npm-publishing",
+      "input": "how does a release get published to npm",
+      "expected": {
+        "regex": {
+          "body": "docs/OPERATIONS\\.md|CONTRIBUTING\\.md"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "docs/OPERATIONS.md",
+          "CONTRIBUTING.md"
+        ],
+        "lang": "en",
+        "kind": "question"
+      }
+    },
+    {
+      "id": "ownership-cli-flag",
+      "input": "where do I start to change a CLI flag or provider",
+      "expected": {
+        "regex": {
+          "body": "docs/for-agents/code-review\\.md|src/cli\\.ts"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "docs/for-agents/code-review.md",
+          "src/cli.ts"
+        ],
+        "lang": "en",
+        "kind": "ownership"
+      }
+    },
+    {
+      "id": "question-cycle-token-reservation",
+      "input": "reserve token and call capacity for the whole review cycle",
+      "expected": {
+        "regex": {
+          "body": "docs/adr/0007-whole-cycle-resource-accounting\\.md|scripts/review-cycle\\.mjs|src/budget\\.ts"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "docs/adr/0007-whole-cycle-resource-accounting.md",
+          "scripts/review-cycle.mjs",
+          "src/budget.ts"
+        ],
+        "lang": "en",
+        "kind": "question"
+      }
+    },
+    {
+      "id": "question-gitlab-scm",
+      "input": "can I add GitLab as a source control provider",
+      "expected": {
+        "regex": {
+          "body": "docs/adr/0003-model-and-scm-adapter-boundaries\\.md|docs/OPERATIONS\\.md|src/scm-contract\\.ts"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "docs/adr/0003-model-and-scm-adapter-boundaries.md",
+          "docs/OPERATIONS.md",
+          "src/scm-contract.ts"
+        ],
+        "lang": "en",
+        "kind": "question"
+      }
+    },
+    {
+      "id": "question-agent-loop-compression",
+      "input": "should reviews use an agent loop with context compression",
+      "expected": {
+        "regex": {
+          "body": "docs/adr/0010-single-step-calls\\.md"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "docs/adr/0010-single-step-calls.md"
+        ],
+        "lang": "en",
+        "kind": "question"
+      }
+    },
+    {
+      "id": "question-github-action-permissions",
+      "input": "what permissions does the GitHub Action need to post comments",
+      "expected": {
+        "regex": {
+          "body": "docs/OPERATIONS\\.md|docs/getting-started\\.md|README\\.md"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "docs/OPERATIONS.md",
+          "docs/getting-started.md",
+          "README.md"
+        ],
+        "lang": "en",
+        "kind": "question"
+      }
+    },
+    {
+      "id": "question-ollama-local",
+      "input": "review offline with a local Ollama model",
+      "expected": {
+        "regex": {
+          "body": "docs/OPERATIONS\\.md|docs/getting-started\\.md|README\\.md"
+        }
+      },
+      "metadata": {
+        "expectedTargets": [
+          "docs/OPERATIONS.md",
+          "docs/getting-started.md",
+          "README.md"
+        ],
+        "lang": "en",
+        "kind": "question"
+      }
+    }
+  ]
+}

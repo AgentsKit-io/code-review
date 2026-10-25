@@ -4,6 +4,8 @@
 
 Make Code Review a complete, repository-native member of the seven-product AgentsKit ecosystem without adding Fumadocs or an embedded chat surface.
 
+Status: Doc Bridge 2.5.0 doctor reports 98/100 A (connectivity 88%, retrieval benchmark hit@3 0.97 over 34 cases); 100/100 remains the target.
+
 ## Acceptance criteria
 
 - The canonical ecosystem manifest lists AgentsKit, Registry, Chat, Playbook, Doc Bridge, Code Review, and  with stable public URLs.

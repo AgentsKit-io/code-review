@@ -237,7 +237,7 @@ test('published package keeps documentation generators and freshness enforcement
   ]) {
     assert.ok(manifest.files.includes(input), `published documentation input missing: ${input}`)
   }
-  assert.equal(manifest.optionalDependencies['@agentskit/doc-bridge'], '^2.4.0')
+  assert.equal(manifest.optionalDependencies['@agentskit/doc-bridge'], '^2.5.0')
   assert.ok(manifest.files.includes('docs/quality-matrix.md'))
   assert.ok(manifest.files.includes('scripts/evaluate-quality.mjs'))
   assert.match(manifest.scripts.prepack, /docs:gate/)

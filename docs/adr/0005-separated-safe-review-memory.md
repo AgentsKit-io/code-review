@@ -18,3 +18,10 @@ Store operational state, reusable cache, feedback, and approved knowledge separa
 ## Consequences
 
 Rules retain provenance, scope, confidence, validation history, expiry, and rollback metadata. Semantic vector retrieval remains optional until measured rule volume justifies it.
+
+## Implementation
+
+- `src/campaign-store.ts`: operational campaign state.
+- `src/review-cache.ts`: the reusable review cache (`createReviewCache`).
+- `src/review-stores.ts`: separate feedback and approved-knowledge stores with bounded schemas and the scoped retriever.
+- `src/review-learning.ts`: injection of bounded, approved rules only (`loadApprovedReviewRules`).

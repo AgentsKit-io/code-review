@@ -10,6 +10,32 @@
       "**/*.tsbuildinfo"
     ]
   },
+  "analysis": {
+    "documents": {
+      "exclude": [
+        {
+          "pattern": ".github/PULL_REQUEST_TEMPLATE.md",
+          "reason": "Pull request checklist for contributors; it describes the review process, not the code."
+        },
+        {
+          "pattern": "CODE_OF_CONDUCT.md",
+          "reason": "Community conduct policy; it does not describe the code."
+        },
+        {
+          "pattern": "GOVERNANCE.md",
+          "reason": "Maintainer and release governance; it does not describe the code."
+        },
+        {
+          "pattern": "apps/docs/{AGENTS,CLAUDE}.md",
+          "reason": "Next.js agent rules written by next dev; they describe the framework version, not this repository code."
+        },
+        {
+          "pattern": "test/fixtures/sources/README.md",
+          "reason": "Test fixture that exists to be ignored as a review target; it describes no code."
+        }
+      ]
+    }
+  },
   "corpus": {
     "agent": {
       "root": "docs/for-agents",

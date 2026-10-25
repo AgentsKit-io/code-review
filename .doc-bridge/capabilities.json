@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "type": "doc-bridge-capabilities",
   "package": "@agentskit/doc-bridge",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
   },
-  "contentHash": "20efe456f9e61f5d833e3c7df20b6a7b53b55bae9e11859063428c494c62c2cb",
+  "contentHash": "7e4283c77cb14f142ec1f2d7f06cf5c911a6fbf27b2bcbc25bd443df3a1e1407",
   "artifacts": {
     "index": ".doc-bridge/index.json",
     "llmsTxt": "llms.txt"
