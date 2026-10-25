@@ -389,15 +389,16 @@
     },
     {
       "id": "question-capture-baseline",
-      "input": "reproduce the fixture baseline before a release",
+      "input": "how do I measure the baseline before changing review behavior",
       "expected": {
         "regex": {
-          "body": "docs/baseline-protocol\\.md"
+          "body": "docs/baseline-protocol\\.md|docs/continuous-improvement\\.md"
         }
       },
       "metadata": {
         "expectedTargets": [
-          "docs/baseline-protocol.md"
+          "docs/baseline-protocol.md",
+          "docs/continuous-improvement.md"
         ],
         "lang": "en",
         "kind": "question"

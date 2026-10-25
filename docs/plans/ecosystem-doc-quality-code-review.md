@@ -4,7 +4,7 @@
 
 Make Code Review a complete, repository-native member of the seven-product AgentsKit ecosystem without adding Fumadocs or an embedded chat surface.
 
-Status: Doc Bridge 2.5.0 doctor reports 99/100 A (connectivity 90%, retrieval benchmark hit@3 0.97 over 34 cases); 100/100 remains the target.
+Status: Doc Bridge 2.5.0 doctor reports 98/100 A (connectivity 88%, retrieval benchmark hit@3 0.97 over 34 cases); 100/100 remains the target.
 
 ## Acceptance criteria
 
