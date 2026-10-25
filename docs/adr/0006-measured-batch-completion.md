@@ -19,3 +19,9 @@ Verification groups are also measured before invocation and divided when necessa
 Batch size is a maximum, not a guarantee of capacity. Known source and budget failures are discovered before model work. Model output, provider availability and runtime cost remain measured runtime outcomes; preflight cannot promise they will succeed. Planning adds deterministic local work but avoids repeated source downloads within an invocation.
 
 Quality reporting must distinguish intentionally skipped PRs from failed reviews and use provider-call denominators for provider-call waste. Blocked cycles still emit a current matrix with unmeasured areas, and running campaigns replace stale report pointers. Local study matrices remain outside the package.
+
+## Implementation
+
+- `src/batch-mode.ts`: the shared planner (`planReviewBatches`) and the batch-manifest completeness check.
+- `src/cli.ts` and `src/campaign-preflight.ts`: the two callers that plan batches before any provider call.
+- `src/batch-coverage.ts`: file and pack coverage of planned batches.

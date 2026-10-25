@@ -18,3 +18,9 @@ Keep the engine inside the existing package. A pure reducer is the only authorit
 ## Consequences
 
 The current procedural cycle is replaced incrementally. Every discovered pull request must end in an explicit terminal state, and completed work must survive resume.
+
+## Implementation
+
+- `src/campaign-reducer.ts`: the pure reducer (`transitionCampaign`, `replayCampaign`) that owns campaign and pull-request state transitions.
+- `src/campaign-store.ts`: atomic persistence, leases, and checkpoints, kept separate from the reducer.
+- `src/campaign-runner.ts`: bounded multi-PR execution and terminal reporting around the reducer.

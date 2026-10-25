@@ -18,3 +18,10 @@ Plan bounded context from changed hunks, adjacent code, directly related symbols
 ## Consequences
 
 Missing context is requested explicitly and retrieved within bounds. Releases compare fixed corpus and real-canary evidence against the v0.8.0 baseline.
+
+## Implementation
+
+- `agents/code-review/sources.ts`: loads changed hunks and their surrounding source as review targets.
+- `agents/code-review/agent.ts`: plans bounded context packs and one analysis per normal pack.
+- `agents/code-review/risk.ts`: deterministic risk signals (`classifyContextPack`) that may add specialized analysis.
+- `src/budget.ts`: hierarchical budget compilation (`compileReviewBudget`) and usage accounting.

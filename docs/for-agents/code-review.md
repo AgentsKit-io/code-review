@@ -29,7 +29,7 @@ Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and
 - `src/provider-execution.ts`: typed provider failures, bounded retry delay, adaptive concurrency, and cancellation-aware queueing.
 - `src/scm-contract.ts`: provider-neutral change-request, publication, readiness, and merge contracts plus explicit capability checks.
 - `src/github-scm-adapter.ts`: GitHub REST/CLI binding for the common SCM contract; the only migrated path allowed to contain GitHub payloads or merge commands.
-- `agents/code-review/`: review pipeline, lenses, input normalization, reporters.
+- `agents/`: the vendored review agent in `agents/code-review/`: review pipeline, lenses, input normalization, reporters.
 - `agents/code-review/risk.ts`: provider-free context-pack risk signals and specialized-depth selection.
 - `action.yml`: composite GitHub Action contract.
 - `.github/workflows/release.yml`: Changesets version-pull-request workflow.
@@ -38,6 +38,7 @@ Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and
 - `README.md` and `docs/OPERATIONS.md`: public adoption and operations guidance.
 - `ecosystem.json`, `llms.txt`, and `llms-full.txt`: canonical product graph and machine-readable discovery/full-corpus surfaces.
 - `test/`: credential-free CLI, Action, and documentation contract proofs.
+- `scripts/`: Node entry points for the package scripts (review cycle, campaign, harness, quality matrix and baseline, fault injection, cycle benchmark, public-API snapshot, README Standard, `llms-full.txt` generation) and the standalone ecosystem public-output check.
 
 ## Boundaries
 

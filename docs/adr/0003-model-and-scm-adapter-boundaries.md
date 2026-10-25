@@ -18,3 +18,9 @@ Keep AgentsKit `AdapterFactory` as the model boundary and add reliability and ca
 ## Consequences
 
 Provider-specific and GitHub-specific behavior cannot leak into the deterministic engine. New implementations reuse the same contracts and tests.
+
+## Implementation
+
+- `src/provider-registry.ts`: provider capabilities and the conservative execution policy around AgentsKit `AdapterFactory` instances.
+- `src/scm-contract.ts`: the internal SCM contract for change requests, diffs, publication, readiness, and merge.
+- `src/github-scm-adapter.ts`: the GitHub implementation of that contract (`createGithubScmAdapter`).

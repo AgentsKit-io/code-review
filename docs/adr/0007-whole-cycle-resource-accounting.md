@@ -29,3 +29,8 @@ spend. Unknown usage may prevent further work rather than promise free recovery.
 Provider-reported usage can exceed an estimate for an in-flight request; this is
 recorded as a breach and blocks further execution, not hidden as a passed gate.
 Token limits cannot guarantee a remote provider's final bill.
+
+## Implementation
+
+- `scripts/review-cycle.mjs`: the cycle runner that reserves token and call capacity before each model-bearing child and reconciles reported usage.
+- `src/budget.ts`: budget compilation and the tightening-only execution ceilings (`tightenReviewBudget`).
