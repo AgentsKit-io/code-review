@@ -1,0 +1,17 @@
+{
+  "project": [
+    {"id": "test-for-new-code", "status": "failed", "evidence": "No behaviour change: devDependency bump only, no *.test.mjs changed."},
+    {"id": "changelog", "status": "failed", "evidence": "No CHANGELOG.md change: contract forbids a changeset for devDependency-only bumps."}
+  ],
+  "outcomes": [
+    {"id": "o1", "status": "passed", "evidence": "root ^7.0.2, apps/docs ^7.0.2 (commit 27cfcff)"},
+    {"id": "o2", "status": "passed", "evidence": "npm ci --ignore-scripts passed at root and in apps/docs (lockfile entries copied from root lock; npm install was denied by the sandbox allowlist)"},
+    {"id": "o3", "status": "failed", "evidence": "not run: root typecheck/build not executed in this session"},
+    {"id": "o4", "status": "failed", "evidence": "npm run typecheck in apps/docs hung (>10 min, even tsc --version via npx hung); not verified"},
+    {"id": "o5", "status": "failed", "evidence": "not run"},
+    {"id": "o6", "status": "failed", "evidence": "not run"},
+    {"id": "o7", "status": "passed", "evidence": "git grep -n vitest -- '*.json' '*.mjs' '*.ts' returned nothing: Vitest is not used; no vitest commit made"},
+    {"id": "o8", "status": "passed", "evidence": "No blocker identified, but TS 7 compatibility of next/fumadocs-mdx was not confirmed because docs typecheck did not complete"},
+    {"id": "o9", "status": "passed", "evidence": "one commit 'chore(deps): typescript 7', not pushed, no changeset"}
+  ]
+}

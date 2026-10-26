@@ -1,0 +1,1 @@
+{"ranAt":"2026-10-26T05:00:00Z","command":"npm ci --ignore-scripts (root and apps/docs)","exitCode":0,"outcomes":[{"id":"o1","status":"passed","evidence":"both package.json at ^7.0.2"},{"id":"o2","status":"passed","evidence":"added 287 packages, found 0 vulnerabilities (apps/docs)"},{"id":"o7","status":"passed","evidence":"git grep vitest: no matches"}]}
