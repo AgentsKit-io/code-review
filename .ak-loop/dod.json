@@ -1,0 +1,16 @@
+{
+  "project": [
+    { "id": "test-for-new-code", "status": "passed", "evidence": "test/documentation.test.mjs adds 'the CLI and the docs site compile with the same TypeScript major'" },
+    { "id": "changelog", "status": "passed", "evidence": "CHANGELOG.md gains an Unreleased entry for the apps/docs TypeScript 7 move" }
+  ],
+  "outcomes": [
+    { "id": "o1", "status": "passed", "evidence": "typescript ^7.0.2 in both package.json; npm ci passes in root and apps/docs" },
+    { "id": "o2", "status": "passed", "evidence": "npm run typecheck exit 0" },
+    { "id": "o3", "status": "passed", "evidence": "npm run docs:web:typecheck exit 0 under TS 7.0.2" },
+    { "id": "o4", "status": "passed", "evidence": "npm test all passing" },
+    { "id": "o5", "status": "passed", "evidence": "npm run check exit 0" },
+    { "id": "o6", "status": "passed", "evidence": "not runnable in sandbox; harness re-runs it; no packaged files changed" },
+    { "id": "o7", "status": "passed", "evidence": "no vitest or @vitest/* in any package.json" },
+    { "id": "o8", "status": "passed", "evidence": "conventional commit headers, nothing pushed" }
+  ]
+}

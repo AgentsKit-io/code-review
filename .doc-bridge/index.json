@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "20efe456f9e61f5d833e3c7df20b6a7b53b55bae9e11859063428c494c62c2cb",
+  "contentHash": "6b0ecd6e041f195589c7516483f04b85dfbd63239916a1ed18461a5457fd8e47",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-10-23T20:07:39.668Z",
+  "generatedAt": "2026-10-26T13:56:19.652Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -87,12 +87,12 @@
       "type": "document",
       "title": "Changelog",
       "path": "CHANGELOG.md",
-      "description": "#349 397778e Thanks @EmersonBraun! - Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7.",
+      "description": "Move the apps/docs site from TypeScript 6.0.3 to 7.0.2 so both workspaces compile with the same major. Development tooling only; the published package is unchanged.",
       "tags": [
         "document",
         "project"
       ],
-      "contentHash": "cd40f8b0d3b4bc8592a96c82f9b10a271becc3feeaadb5833b486d2c677fb467"
+      "contentHash": "8a825ae8971e52b8c62ae568cf1a02f25156a4b14e5658a3c7e48a2a695e3e74"
     },
     {
       "id": "document:CODE_OF_CONDUCT.md",
@@ -2422,7 +2422,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "9762107a0ad1c17b0649dd531e36e6f4f2bc84e0f6157ccd53421097b09db2a7"
+      "contentHash": "b105a70fecbc152df039dafd6b09bb5855d1b40981cf59947b7c9a3756c600dd"
     },
     {
       "id": "module:test/domain-contracts.test.mjs",
@@ -3021,7 +3021,7 @@
     }
   },
   "inputs": {
-    "hash": "60a0d8ab2ae13d1f29896c0ebc34396393552a86de478058a61b9c364d92f80d",
+    "hash": "2b7aaca9981c6c03612959ff15471f5603a759a9dc4634416144e9c26d68f2f1",
     "fileCount": 200,
     "projectionVersion": 2
   },
@@ -3044,9 +3044,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "b0c3e7d31d580b94a3e78d53c9ce97cf11e99d30ca81adbd2ae73dbf82ddf912",
+    "contentHash": "300468d2ebe3266b1e3ca70af22c6c5170b29ad99f00361ec1fe382fc32b7590",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "38127bae490c0cc82df29be14bc1ab4e7cd91a7bb9eab3db2157351ddb2b1d63",
+    "snapshotHash": "23b2bfbdf0f94fc7ef318c5078f62f76ab30afe8d684a679b5b178bd95b87ad3",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "af8d8640b75a389e76f3cc41c135a12439a743104a8127b6e6c5f512facd4a1f",
     "lexiconVersion": 1,
@@ -3078,8 +3078,8 @@
       ],
       "averageFieldLength": {
         "aliases": 2.918918918918919,
-        "body": 49.88648648648649,
-        "headings": 3.810810810810811,
+        "body": 49.85945945945946,
+        "headings": 3.8054054054054056,
         "path": 5.632432432432433,
         "summary": 2.718918918918919,
         "symbols": 14.05945945945946,
@@ -3516,7 +3516,7 @@
         "kind": "document",
         "path": "CHANGELOG.md",
         "title": "Changelog",
-        "summary": "#349 397778e Thanks @EmersonBraun! - Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7.",
+        "summary": "Move the apps/docs site from TypeScript 6.0.3 to 7.0.2 so both workspaces compile with the same major. Development tooling only; the published package is unchanged.",
         "audience": "human",
         "aliases": [],
         "tags": [
@@ -3525,11 +3525,11 @@
         ],
         "fields": {
           "title": "Changelog",
-          "headings": "Changelog 0.32.5 Patch Changes 0.32.4 Patch Changes 0.32.3 Patch Changes 0.32.2 Patch Changes 0.32.1 Patch Changes 0.32.0 Minor Changes 0.31.0 Minor Changes Patch Changes 0.30.19 Patch Changes 0.30.18 Patch Changes 0.30.17 Patch Changes 0.30.16 Patch Changes 0.30.15 Patch Changes 0.30.14 Patch Changes 0.30.13 Patch Changes 0.30.12 Patch Changes 0.30.11 Patch Changes 0.30.10 Patch Changes 0.30.9 Patch Changes 0.30.8 Patch Changes 0.30.7 Patch Changes 0.30.6 Patch Changes 0.30.5 Patch Changes 0.30.4 Patch Changes 0.30.3 Patch Changes 0.30.2 Patch Changes 0.30.1 Patch Changes 0.30.0 Minor Changes 0.29.0 Minor Changes 0.28.0 Minor Changes 0.27.0 Minor Changes 0.26.0 Minor Changes",
+          "headings": "Changelog Unreleased 0.32.5 Patch Changes 0.32.4 Patch Changes 0.32.3 Patch Changes 0.32.2 Patch Changes 0.32.1 Patch Changes 0.32.0 Minor Changes 0.31.0 Minor Changes Patch Changes 0.30.19 Patch Changes 0.30.18 Patch Changes 0.30.17 Patch Changes 0.30.16 Patch Changes 0.30.15 Patch Changes 0.30.14 Patch Changes 0.30.13 Patch Changes 0.30.12 Patch Changes 0.30.11 Patch Changes 0.30.10 Patch Changes 0.30.9 Patch Changes 0.30.8 Patch Changes 0.30.7 Patch Changes 0.30.6 Patch Changes 0.30.5 Patch Changes 0.30.4 Patch Changes 0.30.3 Patch Changes 0.30.2 Patch Changes 0.30.1 Patch Changes 0.30.0 Minor Changes 0.29.0 Minor Changes 0.28.0 Minor Changes 0.27.0 Minor Changes 0.26.0",
           "path": "CHANGELOG.md",
           "symbols": "",
-          "summary": "#349 397778e Thanks @EmersonBraun! - Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7.",
-          "body": "Changelog 0.32.5 Patch Changes - Thanks ! - Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7. 0.32.4 Patch Changes - Thanks ! - Run the publish job in the npm GitHub environment that the package's npm Trusted Publisher requires. The 0.32.3 publish was refused by npm because the job ran without it; this release ships those changes. 0.32.3 Patch Changes - Thanks ! - Align @agentskit/ dependencies with the latest releases: adapters ^0.19.0, core ^1.15.0, cross-platform ^0.3.0, ink 0.10.16, net ^0.2.3, runtime ^0.11.2, tools ^0.13.15. - Thanks ! - Codex lenses send the review prompt over stdin instead of as a command-line argument, so reviewing a large file no longer fails on Windows with spawn ENAMETOOLONG . - Thanks ! - Reuse AgentsKit Core's shared secret redactor for review source content and local CLI diagnostics. - Thanks ! - Route local CLI spawning, process-tree termination, and Windows-sensitive path/line handling through @agentskit/cross-platform instead of hand-rolled cross-spawn , negative-pid group kills, and shell: true probes. cross-spawn is no longer a direct dependency. npm run check now runs agentskit-cross-platform check against a committed baseline so new portability hazards fail. - Thanks ! - An incomplete review is published without the idempotency marker, so a later run at the same head reviews it again instead of printing SKIPPED: already reviewed without the requested --result . - Thanks ! - Recognise --provider minimax (MiniMax, MINIMAX API KEY ) as a stable API provider once @agentskit/adapters exports the minimax adapter. - Thanks ! - Use @agentskit/net for GitHub retry, per-attempt timeout, and bounded response-body handling. GETs now honor bounded Retry-After and jittered backoff; write reconciliation and the single-attempt mutation policy remain intact. - Thanks ! - Route GitHub REST traffic through one internal client with bounded JSON reads, API version and auth headers, same-origin redirect and pagination handling, and rate-limit-aware retries for GET requests. Keep all review and merge writes single-attempt. 0.32.2 Patch Changes - Thanks ! - Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies ( fumadocs-mdx: not found ). The workflow now installs apps/docs dependencies before npm run check , matching CI. 0.32.1 Patch Changes - Thanks ! - Fix local CLI providers ( claude-cli , codex-cli , ...) failing to spawn on Windows. npm's global install of any Node CLI produces a .cmd shim there, and Windows' CreateProcess cannot execute one without a shell, so the previous plain child process.spawn failed with ENOENT / EINVAL for every local provider regardless of the configured path — reproduced live via doctor --provider claude-cli , which reported executable: not found even though the CLI ran fine directly in the same shell. Switched to cross-spawn , which detects this case and re-execs through cmd.exe with the same argument escaping Node's own shell: true uses. 0.32.0 Minor Changes - Thanks ! - Migrate from zod v3 to zod v4, and drop zod-to-json-schema in favor of zod v4's native z.toJSONSchema() . zod-to-json-schema@3.25.2 declares zod v4 support in its peer dependencies, but its published types still import zod/v3 internally — passing it a native v4 schema fails to typecheck, so bumping the library alone doesn't work; the dependency has to go. This surfaced a real, pre-existing fragility during the migration: every structured tool-call schema in agents/code-review/agent.ts ( submit batched findings , submit verdicts , etc.) relied on zod-to-json-schema 's implicit default of additionalProperties: false for every z.object() , strict or not. z.toJSONSchema() only sets that when a schema is explicitly .strict() . Every one of those schemas is now .strict() by name, and a new test ( test/tool-schema-order.test.mjs ) locks additionalProperties: f",
+          "summary": "Move the apps/docs site from TypeScript 6.0.3 to 7.0.2 so both workspaces compile with the same major. Development tooling only; the published package is unchanged.",
+          "body": "Changelog Unreleased - Move the apps/docs site from TypeScript 6.0.3 to 7.0.2 so both workspaces compile with the same major. Development tooling only; the published package is unchanged. 0.32.5 Patch Changes - Thanks ! - Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7. 0.32.4 Patch Changes - Thanks ! - Run the publish job in the npm GitHub environment that the package's npm Trusted Publisher requires. The 0.32.3 publish was refused by npm because the job ran without it; this release ships those changes. 0.32.3 Patch Changes - Thanks ! - Align @agentskit/ dependencies with the latest releases: adapters ^0.19.0, core ^1.15.0, cross-platform ^0.3.0, ink 0.10.16, net ^0.2.3, runtime ^0.11.2, tools ^0.13.15. - Thanks ! - Codex lenses send the review prompt over stdin instead of as a command-line argument, so reviewing a large file no longer fails on Windows with spawn ENAMETOOLONG . - Thanks ! - Reuse AgentsKit Core's shared secret redactor for review source content and local CLI diagnostics. - Thanks ! - Route local CLI spawning, process-tree termination, and Windows-sensitive path/line handling through @agentskit/cross-platform instead of hand-rolled cross-spawn , negative-pid group kills, and shell: true probes. cross-spawn is no longer a direct dependency. npm run check now runs agentskit-cross-platform check against a committed baseline so new portability hazards fail. - Thanks ! - An incomplete review is published without the idempotency marker, so a later run at the same head reviews it again instead of printing SKIPPED: already reviewed without the requested --result . - Thanks ! - Recognise --provider minimax (MiniMax, MINIMAX API KEY ) as a stable API provider once @agentskit/adapters exports the minimax adapter. - Thanks ! - Use @agentskit/net for GitHub retry, per-attempt timeout, and bounded response-body handling. GETs now honor bounded Retry-After and jittered backoff; write reconciliation and the single-attempt mutation policy remain intact. - Thanks ! - Route GitHub REST traffic through one internal client with bounded JSON reads, API version and auth headers, same-origin redirect and pagination handling, and rate-limit-aware retries for GET requests. Keep all review and merge writes single-attempt. 0.32.2 Patch Changes - Thanks ! - Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies ( fumadocs-mdx: not found ). The workflow now installs apps/docs dependencies before npm run check , matching CI. 0.32.1 Patch Changes - Thanks ! - Fix local CLI providers ( claude-cli , codex-cli , ...) failing to spawn on Windows. npm's global install of any Node CLI produces a .cmd shim there, and Windows' CreateProcess cannot execute one without a shell, so the previous plain child process.spawn failed with ENOENT / EINVAL for every local provider regardless of the configured path — reproduced live via doctor --provider claude-cli , which reported executable: not found even though the CLI ran fine directly in the same shell. Switched to cross-spawn , which detects this case and re-execs through cmd.exe with the same argument escaping Node's own shell: true uses. 0.32.0 Minor Changes - Thanks ! - Migrate from zod v3 to zod v4, and drop zod-to-json-schema in favor of zod v4's native z.toJSONSchema() . zod-to-json-schema@3.25.2 declares zod v4 support in its peer dependencies, but its published types still import zod/v3 internally — passing it a native v4 schema fails to typecheck, so bumping the library alone doesn't work; the dependency has to go. This surfaced a real, pre-existing fragility during the migration: every structured tool-call schema in agents/code-review/agent.ts ( submit batched findings , submit verdicts , etc.) relied on zod-to-json-schema 's implicit default of additionalProperties: false for every z.object() , strict or not. z.toJSONSchema() only sets ",
           "aliases": "document project"
         },
         "graph": {
@@ -3669,7 +3669,7 @@
             }
           ]
         },
-        "contentHash": "cd40f8b0d3b4bc8592a96c82f9b10a271becc3feeaadb5833b486d2c677fb467",
+        "contentHash": "8a825ae8971e52b8c62ae568cf1a02f25156a4b14e5658a3c7e48a2a695e3e74",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -11923,7 +11923,7 @@
             }
           ]
         },
-        "contentHash": "9762107a0ad1c17b0649dd531e36e6f4f2bc84e0f6157ccd53421097b09db2a7",
+        "contentHash": "b105a70fecbc152df039dafd6b09bb5855d1b40981cf59947b7c9a3756c600dd",
         "provenance": "observed",
         "confidence": "observed"
       },

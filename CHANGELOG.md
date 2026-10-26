@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Move the `apps/docs` site from TypeScript 6.0.3 to 7.0.2 so both workspaces compile with the same major. Development tooling only; the published package is unchanged.
+
 ## 0.32.5
 
 ### Patch Changes
