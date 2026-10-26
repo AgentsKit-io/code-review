@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Move the docs app (`apps/docs`) from TypeScript 6 to TypeScript 7 (`^7.0.2`), matching the root. Development-only; the published package is unchanged. Vitest is not a dependency, so no Vitest change applies.
+
 ## 0.32.5
 
 ### Patch Changes

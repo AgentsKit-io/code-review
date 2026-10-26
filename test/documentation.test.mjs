@@ -21,6 +21,11 @@ test('README communicates pipeline, maturity, contribution, and ecosystem role',
   assert.equal(new URL(siteLink[1]).origin, 'https://code-review.agentskit.io')
 })
 
+test('root and docs workspaces use the same TypeScript major', () => {
+  const major = path => JSON.parse(read(path)).devDependencies.typescript.replace(/^[^\d]*/, '').split('.')[0]
+  assert.equal(major('apps/docs/package.json'), major('package.json'))
+})
+
 test('operations guide covers every required security and release topic', () => {
   const operations = read('docs/OPERATIONS.md')
   for (const marker of ['## Provider and credential choices', '## pre-commit integration', '## Local Ollama review', '## GitHub Action permissions', '## Advisory and blocking behavior', '## Cost and latency controls', '## SARIF', '## Failure scenarios', '## Releases and maturity', '## Contribution and security', 'pull_request_target', 'security-events: write']) {

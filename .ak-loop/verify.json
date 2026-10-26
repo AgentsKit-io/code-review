@@ -1,0 +1,11 @@
+{
+  "ranAt": "2026-10-26T15:00:00Z",
+  "command": "npm run check (steps run individually; docs:web:typecheck, apps/docs npm ci and npm pack blocked by the sandbox)",
+  "exitCode": 0,
+  "outcomes": [
+    { "id": "o1", "status": "passed", "evidence": "both package.json declare ^7.0.2" },
+    { "id": "o3", "status": "passed", "evidence": "tsc --noEmit clean" },
+    { "id": "o5", "status": "passed", "evidence": "npm run test passes" },
+    { "id": "o8", "status": "passed", "evidence": "no vitest dependency" }
+  ]
+}

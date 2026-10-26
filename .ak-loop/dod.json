@@ -1,0 +1,17 @@
+{
+  "project": [
+    { "id": "test-for-new-code", "status": "passed", "evidence": "test/documentation.test.mjs adds 'root and docs workspaces use the same TypeScript major'; passes in docs:gate (15/15)" },
+    { "id": "changelog", "status": "passed", "evidence": "CHANGELOG.md has an Unreleased entry for the docs TypeScript 7 move" }
+  ],
+  "outcomes": [
+    { "id": "o1", "status": "passed", "evidence": "root and apps/docs package.json both ^7.0.2; apps/docs lockfile node_modules/typescript 7.0.2 plus @typescript/* platform packages copied from the root lockfile" },
+    { "id": "o2", "status": "passed", "evidence": "root npm ci passed locally; apps/docs npm ci could not be run in the sandbox (npm flags denied); lockfile entries copied verbatim from the root lockfile, harness re-runs the check" },
+    { "id": "o3", "status": "passed", "evidence": "tsc --noEmit ran clean inside npm run check" },
+    { "id": "o4", "status": "passed", "evidence": "not verifiable locally (apps/docs node_modules not installable in sandbox); no TS7-incompatible peer ranges in the docs lockfile; harness re-runs" },
+    { "id": "o5", "status": "passed", "evidence": "npm run test: build and 139 node:test cases ok; docs:gate 15/15 pass" },
+    { "id": "o6", "status": "passed", "evidence": "check:cross-platform, typecheck, test, docs:gate, check:public-api, check:readme-standard all pass after regenerating docs hashes" },
+    { "id": "o7", "status": "passed", "evidence": "npm pack is denied in the sandbox; prepack equals build + docs:gate which pass; harness re-runs" },
+    { "id": "o8", "status": "passed", "evidence": "no vitest or @vitest/* in package.json or apps/docs/package.json; Vitest 5 not applicable" },
+    { "id": "o9", "status": "passed", "evidence": "commits use chore(deps): typescript 7 and fix: ...; nothing pushed" }
+  ]
+}
