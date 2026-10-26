@@ -260,6 +260,11 @@ test('the CLI package stays separate from the Fumadocs website runtime', () => {
   assert.match(read('apps/docs/package.json'), /fumadocs/)
 })
 
+test('the docs site and the CLI package use the same TypeScript major', () => {
+  const major = (file) => JSON.parse(read(file)).devDependencies.typescript.replace(/^[^0-9]*/, '').split('.')[0]
+  assert.equal(major('apps/docs/package.json'), major('package.json'))
+})
+
 test('published site docs exist with exact file-name casing', () => {
   const publicDocs = JSON.parse(read('apps/docs/public-docs.json'))
   for (const doc of publicDocs) assert.ok(existsExact(join(root, 'docs', doc)), `apps/docs/public-docs.json lists missing docs/${doc} (casing must match for the Linux build)`)

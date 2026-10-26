@@ -573,6 +573,10 @@ All notable changes will be documented here. This project follows Semantic Versi
 
 ## [Unreleased]
 
+### Changed
+
+- Upgraded the documentation site (`apps/docs`) development dependency `typescript` from 6.0.3 to 7.0.2 so both workspaces use the same compiler major. No Vitest change: the repository does not use Vitest.
+
 ## [0.4.0] - 2026-09-05
 
 ### Added

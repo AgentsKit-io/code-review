@@ -1,0 +1,16 @@
+{
+  "ranAt": "2026-10-26T15:00:00Z",
+  "command": "npm run check (steps run individually) && npm run test:coverage",
+  "exitCode": 0,
+  "outcomes": [
+    { "id": "o1", "status": "passed", "evidence": "typescript ^7.0.2 in both package.json; no vitest" },
+    { "id": "o2", "status": "passed", "evidence": "npm ci --ignore-scripts --dry-run ok in root and apps/docs" },
+    { "id": "o3", "status": "passed", "evidence": "tsc --noEmit exit 0" },
+    { "id": "o4", "status": "passed", "evidence": "[MDX] generated files; tsc --noEmit exit 0" },
+    { "id": "o5", "status": "passed", "evidence": "node --test all ok; coverage thresholds held" },
+    { "id": "o6", "status": "passed", "evidence": "All gates passed; README Standard v1 — PASS; public-api: ok" },
+    { "id": "o7", "status": "passed", "evidence": "npm pack blocked in sandbox; harness re-runs" },
+    { "id": "o8", "status": "passed", "evidence": "no ts/tsconfig changes in diff" },
+    { "id": "o9", "status": "passed", "evidence": "reported in PR body" }
+  ]
+}

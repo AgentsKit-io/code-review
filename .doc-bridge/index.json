@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "20efe456f9e61f5d833e3c7df20b6a7b53b55bae9e11859063428c494c62c2cb",
+  "contentHash": "9926dfe0460d12e8c6fbb5bfbe0c7d8b8ef8fe13d649f40d0dedd8d70a94331b",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-10-23T20:07:39.668Z",
+  "generatedAt": "2026-10-26T14:35:40.818Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -92,7 +92,7 @@
         "document",
         "project"
       ],
-      "contentHash": "cd40f8b0d3b4bc8592a96c82f9b10a271becc3feeaadb5833b486d2c677fb467"
+      "contentHash": "05cfbf8937844cdd231124cc0d8a04e87d0efbd46680e4a345aa52e38fb468bb"
     },
     {
       "id": "document:CODE_OF_CONDUCT.md",
@@ -417,6 +417,18 @@
         "project"
       ],
       "contentHash": "74f538c7228a36b7a9634be56b84058681dd503df8d21081d1d28b52909091f5"
+    },
+    {
+      "id": "module:.ak-loop/sync.cjs",
+      "type": "module",
+      "title": "sync.cjs",
+      "path": ".ak-loop/sync.cjs",
+      "tags": [
+        "module",
+        "cjs",
+        ".ak-loop"
+      ],
+      "contentHash": "2360f98ef946db7e2dab9ccea7540912579e7ba74ab57443b0fc46d110b9060a"
     },
     {
       "id": "module:agents/code-review/agent.ts",
@@ -2422,7 +2434,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "9762107a0ad1c17b0649dd531e36e6f4f2bc84e0f6157ccd53421097b09db2a7"
+      "contentHash": "f8d478bedd12a95b35aa450ad54e74d5166a781a5f9ce2fa4d09af18ba9c4e50"
     },
     {
       "id": "module:test/domain-contracts.test.mjs",
@@ -3021,8 +3033,8 @@
     }
   },
   "inputs": {
-    "hash": "60a0d8ab2ae13d1f29896c0ebc34396393552a86de478058a61b9c364d92f80d",
-    "fileCount": 200,
+    "hash": "cec54a6fb85072d484c71543a7ca49005740b9c83186feda645eb60c6a637e5d",
+    "fileCount": 201,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3044,9 +3056,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "b0c3e7d31d580b94a3e78d53c9ce97cf11e99d30ca81adbd2ae73dbf82ddf912",
+    "contentHash": "bda5d8d95e9dd0579f567de489b8dad1a8d199fbeb0600efa7d0188e1c3a4734",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "38127bae490c0cc82df29be14bc1ab4e7cd91a7bb9eab3db2157351ddb2b1d63",
+    "snapshotHash": "64111cca1e85110ce5a6129343f080fe0445618ea1a20e00b157d2b49d61154a",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "af8d8640b75a389e76f3cc41c135a12439a743104a8127b6e6c5f512facd4a1f",
     "lexiconVersion": 1,
@@ -3066,7 +3078,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 185,
+      "documentCount": 187,
       "fieldNames": [
         "aliases",
         "body",
@@ -3077,16 +3089,47 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.918918918918919,
-        "body": 49.88648648648649,
-        "headings": 3.810810810810811,
-        "path": 5.632432432432433,
-        "summary": 2.718918918918919,
-        "symbols": 14.05945945945946,
-        "title": 4.286486486486487
+        "aliases": 2.9197860962566846,
+        "body": 49.35294117647059,
+        "headings": 3.770053475935829,
+        "path": 5.614973262032086,
+        "summary": 2.6898395721925135,
+        "symbols": 13.909090909090908,
+        "title": 4.267379679144385
       }
     },
     "entries": [
+      {
+        "id": "area:.ak-loop",
+        "kind": "area",
+        "path": ".ak-loop",
+        "title": ".ak-loop",
+        "aliases": [],
+        "tags": [
+          "area"
+        ],
+        "fields": {
+          "title": ".ak-loop",
+          "headings": "",
+          "path": ".ak-loop",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "area"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "d8c45a482ddd6b505e0ca0c6ed06ffb9c078645f56391d1efd7597db94a6e37d",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
       {
         "id": "area:agents",
         "kind": "area",
@@ -3669,7 +3712,7 @@
             }
           ]
         },
-        "contentHash": "cd40f8b0d3b4bc8592a96c82f9b10a271becc3feeaadb5833b486d2c677fb467",
+        "contentHash": "05cfbf8937844cdd231124cc0d8a04e87d0efbd46680e4a345aa52e38fb468bb",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -5795,6 +5838,40 @@
           "outbound": []
         },
         "contentHash": "74f538c7228a36b7a9634be56b84058681dd503df8d21081d1d28b52909091f5",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:.ak-loop/sync.cjs",
+        "kind": "module",
+        "path": ".ak-loop/sync.cjs",
+        "title": "sync.cjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "cjs",
+          ".ak-loop"
+        ],
+        "fields": {
+          "title": "sync.cjs",
+          "headings": "",
+          "path": ".ak-loop/sync.cjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module cjs .ak-loop"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:.ak-loop",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "2360f98ef946db7e2dab9ccea7540912579e7ba74ab57443b0fc46d110b9060a",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -11923,7 +12000,7 @@
             }
           ]
         },
-        "contentHash": "9762107a0ad1c17b0649dd531e36e6f4f2bc84e0f6157ccd53421097b09db2a7",
+        "contentHash": "f8d478bedd12a95b35aa450ad54e74d5166a781a5f9ce2fa4d09af18ba9c4e50",
         "provenance": "observed",
         "confidence": "observed"
       },

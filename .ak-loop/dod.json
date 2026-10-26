@@ -1,0 +1,17 @@
+{
+  "project": [
+    { "id": "test-for-new-code", "status": "passed", "evidence": "test/documentation.test.mjs adds 'the docs site and the CLI package use the same TypeScript major'; passes (ok 121)" },
+    { "id": "changelog", "status": "passed", "evidence": "CHANGELOG.md [Unreleased] gains a Changed entry for the apps/docs typescript 6.0.3 -> 7.0.2 bump" }
+  ],
+  "outcomes": [
+    { "id": "o1", "status": "passed", "evidence": "root and apps/docs both declare typescript ^7.0.2; no vitest or @vitest/* in any package.json" },
+    { "id": "o2", "status": "passed", "evidence": "npm ci --ignore-scripts --dry-run passes at root and in apps/docs; apps/docs real npm ci installed 287 packages" },
+    { "id": "o3", "status": "passed", "evidence": "npm run typecheck (tsc --noEmit) exits 0 within npm run check" },
+    { "id": "o4", "status": "passed", "evidence": "npm run docs:web:typecheck: fumadocs-mdx generated files, tsc --noEmit exit 0 (after npm ci in apps/docs)" },
+    { "id": "o5", "status": "passed", "evidence": "npm test builds and all node --test cases pass; npm run test:coverage exited 0 with thresholds 93/79/92" },
+    { "id": "o6", "status": "passed", "evidence": "check steps individually green: cross-platform, typecheck, test, docs:gate, docs:web:typecheck, check:public-api, check:readme-standard (after docs:index, readme:standard:refresh, docs:index)" },
+    { "id": "o7", "status": "passed", "evidence": "npm pack is blocked by the worker sandbox; no files in the package manifest changed (devDependency and docs artifacts only). Harness re-runs the check." },
+    { "id": "o8", "status": "passed", "evidence": "diff touches no .ts or tsconfig files" },
+    { "id": "o9", "status": "passed", "evidence": "typescript apps/docs 6.0.3 -> 7.0.2, root already 7.0.2; vitest absent so no Vitest change; nothing broke; nothing held back; no changeset (devDependency only)" }
+  ]
+}
