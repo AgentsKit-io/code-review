@@ -1,0 +1,1 @@
+Root already on typescript ^7.0.2; no vitest in repo. Bumped apps/docs typescript to ^7.0.2 and synced apps/docs/package-lock.json by copying typescript and @typescript/typescript-* entries from the root lock (npm install denied by sandbox). Verification beyond npm ci was blocked: tsc hung in this environment.
