@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "7e4283c77cb14f142ec1f2d7f06cf5c911a6fbf27b2bcbc25bd443df3a1e1407",
+  "contentHash": "a9dd07decbce1ac02e3a92c117bd30b240ced841fcf5457b0d902e3f972a0710",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-10-25T11:32:39.501Z",
+  "generatedAt": "2026-10-27T12:49:26.397Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -3033,7 +3033,7 @@
     }
   },
   "inputs": {
-    "hash": "002618556d484a8e75447424802a4b023b6b0324c0f677f4a13eeb35b3587fec",
+    "hash": "8552379397afa290570540a97ebcfedd298d9a618fb906c8e794855b8f476698",
     "fileCount": 202,
     "projectionVersion": 2
   },
@@ -3056,9 +3056,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "12e45bef8ffa6077aff9855c93254ada54d3fb30d5fde61bf32fb57cee57d8ed",
+    "contentHash": "418a6e3c811c1d7bf7fbd5322219f7c2ad869aca1cc847bed4ca90315b1eaa30",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "3bdb35ef1defa81cb646420390c821293ceb0209ef434ade31fcbce910ed18b6",
+    "snapshotHash": "4d54d77d56ac2e952828cb64b36db6df9a4cac13d1a72af29f94012a82aa6cde",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
