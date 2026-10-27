@@ -226,7 +226,6 @@ test('published package keeps documentation generators and freshness enforcement
     'CHANGELOG.md',
     'ecosystem-claims.json',
     'docs/assets',
-    'docs/plans',
     'test/cli-smoke.test.mjs',
     'test/documentation.test.mjs',
     '.doc-bridge/index.json',
