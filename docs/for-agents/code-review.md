@@ -37,6 +37,7 @@ Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and
 - `examples/`: copy-ready Action workflows.
 - `README.md` and `docs/OPERATIONS.md`: public adoption and operations guidance.
 - `ecosystem.json`, `llms.txt`, and `llms-full.txt`: canonical product graph and machine-readable discovery/full-corpus surfaces.
+- `src/reviewer-benchmark.ts`, `scripts/run-reviewer-benchmark.mjs`, `quality/benchmark/prs.json`: labelled-PR benchmark and entry criterion against the incumbent line reviewer (`docs/reviewer-benchmark.md`).
 - `test/`: credential-free CLI, Action, and documentation contract proofs.
 - `scripts/`: Node entry points for the package scripts (review cycle, campaign, harness, quality matrix and baseline, fault injection, cycle benchmark, public-API snapshot, README Standard, `llms-full.txt` generation) and the standalone ecosystem public-output check.
 

@@ -1,0 +1,686 @@
+{
+  "decision": "BLOCKED",
+  "reasons": [
+    "incumbent errored on 38 PR(s); rerun before comparing",
+    "code-review errored on 11 PR(s); rerun before comparing"
+  ],
+  "incumbent": {
+    "name": "incumbent",
+    "bugsFound": 0,
+    "bugsKnown": 32,
+    "falsePositives": 0,
+    "costUsd": 0,
+    "meanLatencyMs": 4,
+    "erroredPrs": 38,
+    "perPr": [
+      {
+        "id": "AgentsKit-io/code-review#178",
+        "bugsFound": 0,
+        "bugsKnown": 2,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 25,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/code-review#62",
+        "bugsFound": 0,
+        "bugsKnown": 2,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 18,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/code-review#40",
+        "bugsFound": 0,
+        "bugsKnown": 3,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 14,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/code-review#67",
+        "bugsFound": 0,
+        "bugsKnown": 2,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 11,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/code-review#130",
+        "bugsFound": 0,
+        "bugsKnown": 1,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 8,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/code-review#80",
+        "bugsFound": 0,
+        "bugsKnown": 1,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 4,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/code-review#180",
+        "bugsFound": 0,
+        "bugsKnown": 2,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 3,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/code-review#204",
+        "bugsFound": 0,
+        "bugsKnown": 1,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 2,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/code-review#186",
+        "bugsFound": 0,
+        "bugsKnown": 1,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 2,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/code-review#73",
+        "bugsFound": 0,
+        "bugsKnown": 1,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 2,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/harness#144",
+        "bugsFound": 0,
+        "bugsKnown": 1,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 2,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/harness#142",
+        "bugsFound": 0,
+        "bugsKnown": 2,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 2,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/harness#133",
+        "bugsFound": 0,
+        "bugsKnown": 1,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 3,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/harness#103",
+        "bugsFound": 0,
+        "bugsKnown": 1,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 2,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/harness#101",
+        "bugsFound": 0,
+        "bugsKnown": 2,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 3,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/harness#198",
+        "bugsFound": 0,
+        "bugsKnown": 2,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 1,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/harness#199",
+        "bugsFound": 0,
+        "bugsKnown": 1,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 2,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/harness#201",
+        "bugsFound": 0,
+        "bugsKnown": 2,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 2,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/harness#98",
+        "bugsFound": 0,
+        "bugsKnown": 1,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 2,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/harness#111",
+        "bugsFound": 0,
+        "bugsKnown": 1,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 3,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/harness#39",
+        "bugsFound": 0,
+        "bugsKnown": 1,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 1,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/harness#184",
+        "bugsFound": 0,
+        "bugsKnown": 1,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 3,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/code-review#27",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 1,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/code-review#166",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 1,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/code-review#280",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 3,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/code-review#319",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 2,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/harness#28",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 2,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/harness#29",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 2,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/harness#42",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 2,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/harness#44",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 2,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/harness#97",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 2,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/harness#107",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 2,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/doc-bridge#76",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 2,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/doc-bridge#197",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 3,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/doc-bridge#207",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 2,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/doc-bridge#317",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 3,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/doc-bridge#369",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 2,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      },
+      {
+        "id": "AgentsKit-io/doc-bridge#393",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 2,
+        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+      }
+    ]
+  },
+  "candidate": {
+    "name": "code-review",
+    "bugsFound": 8,
+    "bugsKnown": 32,
+    "falsePositives": 118,
+    "costUsd": 0,
+    "meanLatencyMs": 235158,
+    "erroredPrs": 11,
+    "perPr": [
+      {
+        "id": "AgentsKit-io/code-review#178",
+        "bugsFound": 2,
+        "bugsKnown": 2,
+        "falsePositives": 9,
+        "costUsd": 0,
+        "latencyMs": 525178
+      },
+      {
+        "id": "AgentsKit-io/code-review#62",
+        "bugsFound": 0,
+        "bugsKnown": 2,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 145590,
+        "error": "exit 2: shadow-review: review failed (exit 2)"
+      },
+      {
+        "id": "AgentsKit-io/code-review#40",
+        "bugsFound": 0,
+        "bugsKnown": 3,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 1205,
+        "error": "exit 2: shadow-review: review failed (exit 2)"
+      },
+      {
+        "id": "AgentsKit-io/code-review#67",
+        "bugsFound": 0,
+        "bugsKnown": 2,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 399777,
+        "error": "exit 2: shadow-review: review failed (exit 2)"
+      },
+      {
+        "id": "AgentsKit-io/code-review#130",
+        "bugsFound": 0,
+        "bugsKnown": 1,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 95669,
+        "error": "exit 2: shadow-review: review failed (exit 2)"
+      },
+      {
+        "id": "AgentsKit-io/code-review#80",
+        "bugsFound": 1,
+        "bugsKnown": 1,
+        "falsePositives": 1,
+        "costUsd": 0,
+        "latencyMs": 67498
+      },
+      {
+        "id": "AgentsKit-io/code-review#180",
+        "bugsFound": 0,
+        "bugsKnown": 2,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 298819,
+        "error": "exit 2: shadow-review: review failed (exit 2)"
+      },
+      {
+        "id": "AgentsKit-io/code-review#204",
+        "bugsFound": 0,
+        "bugsKnown": 1,
+        "falsePositives": 14,
+        "costUsd": 0,
+        "latencyMs": 367626
+      },
+      {
+        "id": "AgentsKit-io/code-review#186",
+        "bugsFound": 0,
+        "bugsKnown": 1,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 403065,
+        "error": "exit 2: shadow-review: review failed (exit 2)"
+      },
+      {
+        "id": "AgentsKit-io/code-review#73",
+        "bugsFound": 0,
+        "bugsKnown": 1,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 412254,
+        "error": "exit 2: shadow-review: review failed (exit 2)"
+      },
+      {
+        "id": "AgentsKit-io/harness#144",
+        "bugsFound": 1,
+        "bugsKnown": 1,
+        "falsePositives": 2,
+        "costUsd": 0,
+        "latencyMs": 160572
+      },
+      {
+        "id": "AgentsKit-io/harness#142",
+        "bugsFound": 1,
+        "bugsKnown": 2,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 84698
+      },
+      {
+        "id": "AgentsKit-io/harness#133",
+        "bugsFound": 0,
+        "bugsKnown": 1,
+        "falsePositives": 3,
+        "costUsd": 0,
+        "latencyMs": 109184
+      },
+      {
+        "id": "AgentsKit-io/harness#103",
+        "bugsFound": 0,
+        "bugsKnown": 1,
+        "falsePositives": 8,
+        "costUsd": 0,
+        "latencyMs": 297720
+      },
+      {
+        "id": "AgentsKit-io/harness#101",
+        "bugsFound": 0,
+        "bugsKnown": 2,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 796336,
+        "error": "exit 2: shadow-review: review failed (exit 2)"
+      },
+      {
+        "id": "AgentsKit-io/harness#198",
+        "bugsFound": 1,
+        "bugsKnown": 2,
+        "falsePositives": 9,
+        "costUsd": 0,
+        "latencyMs": 396732
+      },
+      {
+        "id": "AgentsKit-io/harness#199",
+        "bugsFound": 0,
+        "bugsKnown": 1,
+        "falsePositives": 2,
+        "costUsd": 0,
+        "latencyMs": 180482
+      },
+      {
+        "id": "AgentsKit-io/harness#201",
+        "bugsFound": 1,
+        "bugsKnown": 2,
+        "falsePositives": 2,
+        "costUsd": 0,
+        "latencyMs": 229988
+      },
+      {
+        "id": "AgentsKit-io/harness#98",
+        "bugsFound": 1,
+        "bugsKnown": 1,
+        "falsePositives": 12,
+        "costUsd": 0,
+        "latencyMs": 398171
+      },
+      {
+        "id": "AgentsKit-io/harness#111",
+        "bugsFound": 0,
+        "bugsKnown": 1,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 821808,
+        "error": "exit 2: shadow-review: review failed (exit 2)"
+      },
+      {
+        "id": "AgentsKit-io/harness#39",
+        "bugsFound": 0,
+        "bugsKnown": 1,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 565215,
+        "error": "exit 2: shadow-review: review failed (exit 2)"
+      },
+      {
+        "id": "AgentsKit-io/harness#184",
+        "bugsFound": 0,
+        "bugsKnown": 1,
+        "falsePositives": 3,
+        "costUsd": 0,
+        "latencyMs": 248508
+      },
+      {
+        "id": "AgentsKit-io/code-review#27",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 5,
+        "costUsd": 0,
+        "latencyMs": 161240
+      },
+      {
+        "id": "AgentsKit-io/code-review#166",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 3,
+        "costUsd": 0,
+        "latencyMs": 137063
+      },
+      {
+        "id": "AgentsKit-io/code-review#280",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 3,
+        "costUsd": 0,
+        "latencyMs": 60976
+      },
+      {
+        "id": "AgentsKit-io/code-review#319",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 45711
+      },
+      {
+        "id": "AgentsKit-io/harness#28",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 6,
+        "costUsd": 0,
+        "latencyMs": 159346
+      },
+      {
+        "id": "AgentsKit-io/harness#29",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 7,
+        "costUsd": 0,
+        "latencyMs": 186491
+      },
+      {
+        "id": "AgentsKit-io/harness#42",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 3,
+        "costUsd": 0,
+        "latencyMs": 72882
+      },
+      {
+        "id": "AgentsKit-io/harness#44",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 3,
+        "costUsd": 0,
+        "latencyMs": 160406
+      },
+      {
+        "id": "AgentsKit-io/harness#97",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 4,
+        "costUsd": 0,
+        "latencyMs": 86581
+      },
+      {
+        "id": "AgentsKit-io/harness#107",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 0,
+        "costUsd": 0,
+        "latencyMs": 170655,
+        "error": "exit 2: shadow-review: review failed (exit 2)"
+      },
+      {
+        "id": "AgentsKit-io/doc-bridge#76",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 2,
+        "costUsd": 0,
+        "latencyMs": 55276
+      },
+      {
+        "id": "AgentsKit-io/doc-bridge#197",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 2,
+        "costUsd": 0,
+        "latencyMs": 76121
+      },
+      {
+        "id": "AgentsKit-io/doc-bridge#207",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 5,
+        "costUsd": 0,
+        "latencyMs": 160952
+      },
+      {
+        "id": "AgentsKit-io/doc-bridge#317",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 2,
+        "costUsd": 0,
+        "latencyMs": 100982
+      },
+      {
+        "id": "AgentsKit-io/doc-bridge#369",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 6,
+        "costUsd": 0,
+        "latencyMs": 200681
+      },
+      {
+        "id": "AgentsKit-io/doc-bridge#393",
+        "bugsFound": 0,
+        "bugsKnown": 0,
+        "falsePositives": 2,
+        "costUsd": 0,
+        "latencyMs": 94541
+      }
+    ]
+  }
+}

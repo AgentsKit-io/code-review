@@ -9,7 +9,8 @@
     "agentskit-review-campaign": "scripts/review-campaign.mjs",
     "agentskit-review-cycle": "scripts/review-cycle.mjs",
     "agentskit-review-harness": "scripts/review-harness.mjs",
-    "agentskit-quality": "scripts/evaluate-quality.mjs"
+    "agentskit-quality": "scripts/evaluate-quality.mjs",
+    "agentskit-shadow-review": "scripts/shadow-review.mjs"
   },
   "exports": {
     ".": "./dist/src/index.js",
@@ -44,6 +45,7 @@
     "docs/baseline-protocol.md",
     "docs/continuous-improvement.md",
     "docs/quality-matrix.md",
+    "docs/reviewer-benchmark.md",
     "test/cli-smoke.test.mjs",
     "test/continuous-improvement.test.mjs",
     "test/context-packs.test.mjs",
@@ -51,6 +53,13 @@
     "test/release-workflow.test.mjs",
     "scripts/generate-llms-full.mjs",
     "scripts/run-cycle-benchmark.mjs",
+    "scripts/run-reviewer-benchmark.mjs",
+    "scripts/shadow-review.mjs",
+    "docs/reviewer-benchmark-report.md",
+    "quality/benchmark/report.json",
+    "test/shadow-review.test.mjs",
+    "quality/benchmark/prs.json",
+    "test/reviewer-benchmark.test.mjs",
     "scripts/capture-quality-baseline.mjs",
     "scripts/evaluate-quality.mjs",
     "scripts/review-harness.mjs",

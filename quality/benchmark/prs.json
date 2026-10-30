@@ -1,0 +1,613 @@
+{
+  "version": 1,
+  "prs": [
+    {
+      "id": "AgentsKit-io/code-review#178",
+      "repository": "AgentsKit-io/code-review",
+      "number": 178,
+      "label": "buggy",
+      "bugs": [
+        {
+          "file": "agents/code-review/reporters.ts",
+          "line": 196,
+          "lineTolerance": 25,
+          "note": "An incomplete review was posted with the head+fingerprint idempotency marker, so every retry at the same head skipped as already reviewed and the PR was stuck.",
+          "fix": {
+            "pr": 317,
+            "commit": "f7db2fb576df2b5b9a484932cf372da0cfda25bc"
+          }
+        },
+        {
+          "file": "src/github-scm-adapter.ts",
+          "line": 180,
+          "lineTolerance": 25,
+          "note": "Publication was not reconciled after an uncertain GitHub write (502 after commit): a retry could repeat the POST and repeat paid review work.",
+          "fix": {
+            "pr": 246,
+            "commit": "4da51645966ce4662eaca2dc7b455f6a08ff9e54"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AgentsKit-io/code-review#62",
+      "repository": "AgentsKit-io/code-review",
+      "number": 62,
+      "label": "buggy",
+      "bugs": [
+        {
+          "file": "src/codex-adapter.ts",
+          "line": 70,
+          "lineTolerance": 25,
+          "note": "The review prompt was passed as the last argv element of codex exec; large files exceed the Windows command-line limit and every lens failed.",
+          "fix": {
+            "pr": 315,
+            "commit": "d132f51507361a7786951b1416f555b9cd4f1ee6"
+          }
+        },
+        {
+          "file": "src/codex-adapter.ts",
+          "line": 44,
+          "lineTolerance": 25,
+          "note": "Finding schema was not compatible with Codex strict JSON Schema validation (optional fields), so the structured output call was rejected.",
+          "fix": {
+            "pr": 64,
+            "commit": "22420cf0d7861747a485a4eedc25654cd06d3ba9"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AgentsKit-io/code-review#40",
+      "repository": "AgentsKit-io/code-review",
+      "number": 40,
+      "label": "buggy",
+      "bugs": [
+        {
+          "file": "src/local-cli-process.ts",
+          "line": 103,
+          "lineTolerance": 25,
+          "note": "The prompt was sent as a CLI argument (spawn ENAMETOOLONG on large files) and temp cleanup was not retried.",
+          "fix": {
+            "pr": 296,
+            "commit": "504c72c657b0c0b0a03f70ebebbdf1687aab9869"
+          }
+        },
+        {
+          "file": "src/local-cli-process.ts",
+          "line": 47,
+          "lineTolerance": 25,
+          "note": "Hung provider workers were not killed on deadline (process group / direct child); callers waited forever for a close event.",
+          "fix": {
+            "pr": 128,
+            "commit": "f142fab7a5b4545e3d24764f7e420a3e74e65721"
+          }
+        },
+        {
+          "file": "src/local-cli-process.ts",
+          "line": 85,
+          "lineTolerance": 25,
+          "note": "Trusted-local providers ran from HOME instead of the review workspace, so Codex hooks and context resolved from the wrong place.",
+          "fix": {
+            "pr": 126,
+            "commit": "0828a570ea2b6c794b86f18cb9a34dfc8fcfcbf4"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AgentsKit-io/code-review#67",
+      "repository": "AgentsKit-io/code-review",
+      "number": 67,
+      "label": "buggy",
+      "bugs": [
+        {
+          "file": "agents/code-review/agent.ts",
+          "line": 417,
+          "lineTolerance": 25,
+          "note": "No hard review runtime deadline around the AgentsKit runtime call: after a provider abort the review waited indefinitely instead of returning incomplete evidence.",
+          "fix": {
+            "pr": 130,
+            "commit": "38bcd23f1512f59e166d7023bc750f310d387611"
+          }
+        },
+        {
+          "file": "agents/code-review/agent.ts",
+          "line": 713,
+          "lineTolerance": 25,
+          "note": "Adaptive budget guidance was untruthful: it recommended --votes although verification demand was not part of the estimate.",
+          "fix": {
+            "pr": 78,
+            "commit": "f50bb3daceb7e48c8cd1401e47352ebd33000a8f"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AgentsKit-io/code-review#130",
+      "repository": "AgentsKit-io/code-review",
+      "number": 130,
+      "label": "buggy",
+      "bugs": [
+        {
+          "file": "agents/code-review/agent.ts",
+          "line": 439,
+          "lineTolerance": 25,
+          "note": "The hard runtime deadline firing was not marked in the evidence, so the incomplete deadline artifact was not blocking.",
+          "fix": {
+            "pr": 132,
+            "commit": "2c0aa694c1a205328b6a7124d6e820585096b02c"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AgentsKit-io/code-review#80",
+      "repository": "AgentsKit-io/code-review",
+      "number": 80,
+      "label": "buggy",
+      "bugs": [
+        {
+          "file": "src/cli.ts",
+          "line": 289,
+          "lineTolerance": 25,
+          "note": "Configured batch settings were not executed by the CLI planning path, and GitHub ingestion capped per-file size below the documented ceiling, so batches were incomplete.",
+          "fix": {
+            "pr": 88,
+            "commit": "cb0b3b63fcfc59b3e23509ba66f00cf889c17fda"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AgentsKit-io/code-review#180",
+      "repository": "AgentsKit-io/code-review",
+      "number": 180,
+      "label": "buggy",
+      "bugs": [
+        {
+          "file": "src/review-policy.ts",
+          "line": 25,
+          "lineTolerance": 25,
+          "note": "Worker concurrency was part of the semantic review-policy fingerprint, so preflight (concurrency 1) and the worker (8) disagreed and a reviewed head looked eligible again.",
+          "fix": {
+            "pr": 233,
+            "commit": "cd8aef5fee8e25e933b9fb386b406ef3deed5e56"
+          }
+        },
+        {
+          "file": "src/campaign-preflight.ts",
+          "line": 113,
+          "lineTolerance": 25,
+          "note": "Preflight applied aggregate call/token budgets while per-file batches were enabled, producing false blockers for campaigns that already batched.",
+          "fix": {
+            "pr": 227,
+            "commit": "16459cdd8ba0840ce79a08ca568e9ee5bde81a95"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AgentsKit-io/code-review#204",
+      "repository": "AgentsKit-io/code-review",
+      "number": 204,
+      "label": "buggy",
+      "bugs": [
+        {
+          "file": "src/quality-matrix.ts",
+          "line": 255,
+          "lineTolerance": 25,
+          "note": "Token efficiency compared changed-line ratios across materially different PR sizes, giving a wrong quality verdict.",
+          "fix": {
+            "pr": 223,
+            "commit": "4d6763215e1c56d5ecac17090e761045c30d8edd"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AgentsKit-io/code-review#186",
+      "repository": "AgentsKit-io/code-review",
+      "number": 186,
+      "label": "buggy",
+      "bugs": [
+        {
+          "file": "agents/code-review/agent.ts",
+          "line": 947,
+          "lineTolerance": 25,
+          "note": "Oversized multi-line review targets were not chunked deterministically, blocking large generated documents and UI files.",
+          "fix": {
+            "pr": 212,
+            "commit": "11f8ea9d772fe0784c15dc79057759810d515bcd"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AgentsKit-io/code-review#73",
+      "repository": "AgentsKit-io/code-review",
+      "number": 73,
+      "label": "buggy",
+      "bugs": [
+        {
+          "file": "agents/code-review/sources.ts",
+          "line": 38,
+          "lineTolerance": 25,
+          "note": "Safe repository dotfiles and environment example templates were skipped as unreviewable.",
+          "fix": {
+            "pr": 94,
+            "commit": "11a9dfdf7127e5588ec77f05751de394a6fa22a1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AgentsKit-io/harness#144",
+      "repository": "AgentsKit-io/harness",
+      "number": 144,
+      "label": "buggy",
+      "bugs": [
+        {
+          "file": "src/loop/deliver.ts",
+          "line": 333,
+          "lineTolerance": 25,
+          "note": "A live idle agent whose CLI is not registered with Orca was treated as a bare shell and a second agent was launched into the same worktree.",
+          "fix": {
+            "pr": 151,
+            "commit": "8ad94d2712417dc8c4c3c009a3aac7bd95c6076c"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AgentsKit-io/harness#142",
+      "repository": "AgentsKit-io/harness",
+      "number": 142,
+      "label": "buggy",
+      "bugs": [
+        {
+          "file": "src/ui/api/actions.ts",
+          "line": 206,
+          "lineTolerance": 25,
+          "note": "Retry did not resume on a PR opened after the delivery stopped.",
+          "fix": {
+            "pr": 157,
+            "commit": "c0c3ea56daecadeff931b76785a2896a1b73b4f1"
+          }
+        },
+        {
+          "file": "src/ui/api/actions.ts",
+          "line": 215,
+          "lineTolerance": 25,
+          "note": "Retry on a blocked delivery kept incomplete reviews, so the PR stayed unreachable.",
+          "fix": {
+            "pr": 155,
+            "commit": "9a6a568f310598c4d2f6eb9aeec296ffe681c031"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AgentsKit-io/harness#133",
+      "repository": "AgentsKit-io/harness",
+      "number": 133,
+      "label": "buggy",
+      "bugs": [
+        {
+          "file": "src/loop/deliver.ts",
+          "line": 993,
+          "lineTolerance": 25,
+          "note": "Findings of the last review at a head were never replayed to the worker after Retry, so deliver waited forever for a push that nothing requested.",
+          "fix": {
+            "pr": 156,
+            "commit": "d5fd36cdd9ae2429d5e96609b46d25f7f2d31ea6"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AgentsKit-io/harness#103",
+      "repository": "AgentsKit-io/harness",
+      "number": 103,
+      "label": "buggy",
+      "bugs": [
+        {
+          "file": "src/loop/deliver.ts",
+          "line": 744,
+          "lineTolerance": 25,
+          "note": "After two incomplete reviews deliver returned a bare held every pass: no event, no finish, invisible and not resumable.",
+          "fix": {
+            "pr": 155,
+            "commit": "9a6a568f310598c4d2f6eb9aeec296ffe681c031"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AgentsKit-io/harness#101",
+      "repository": "AgentsKit-io/harness",
+      "number": 101,
+      "label": "buggy",
+      "bugs": [
+        {
+          "file": "src/loop/deliver.ts",
+          "line": 243,
+          "lineTolerance": 25,
+          "note": "A stale usage-limit banner on the worker screen re-marked the provider exhausted on every pass after the limit had reset.",
+          "fix": {
+            "pr": 164,
+            "commit": "6d236dc45a0df12eeb6dbbd7eab885e2cce8e197"
+          }
+        },
+        {
+          "file": "src/loop/tick.ts",
+          "line": 167,
+          "lineTolerance": 25,
+          "note": "A fresh worker worktree workspace-trust question was never answered.",
+          "fix": {
+            "pr": 183,
+            "commit": "724aa82bcb7f510a0882877ba6fd7672e2179cdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AgentsKit-io/harness#198",
+      "repository": "AgentsKit-io/harness",
+      "number": 198,
+      "label": "buggy",
+      "bugs": [
+        {
+          "file": "src/loop/fleet-runner.ts",
+          "line": 64,
+          "lineTolerance": 25,
+          "note": "The fleet probe ran the full doctor and blocked on checks that do not make the fleet unusable.",
+          "fix": {
+            "pr": 214,
+            "commit": "1808c625c32da1c1b6d82ee5193164e84a831bfc"
+          }
+        },
+        {
+          "file": "src/loop/fleet-runner.ts",
+          "line": 67,
+          "lineTolerance": 25,
+          "note": "A non-zero doctor exit counted as failed before its JSON checks were read, refusing install on warnings.",
+          "fix": {
+            "pr": 216,
+            "commit": "cff596167029a65dc95c949b869af739f3fa2c7e"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AgentsKit-io/harness#199",
+      "repository": "AgentsKit-io/harness",
+      "number": 199,
+      "label": "buggy",
+      "bugs": [
+        {
+          "file": "src/loop/fleet-runner.ts",
+          "line": 186,
+          "lineTolerance": 25,
+          "note": "headSha was not read from fleet collect --json.",
+          "fix": {
+            "pr": 200,
+            "commit": "e5ac0690f013a0a9f1db2e8aaa779bc744088c37"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AgentsKit-io/harness#201",
+      "repository": "AgentsKit-io/harness",
+      "number": 201,
+      "label": "buggy",
+      "bugs": [
+        {
+          "file": "src/loop/fleet-dod.ts",
+          "line": 83,
+          "lineTolerance": 25,
+          "note": "Definition-of-done re-ran the verify command on the control machine in a fresh checkout instead of trusting green PR CI, blocking clean PRs for 40 minutes.",
+          "fix": {
+            "pr": 213,
+            "commit": "b3a3111e971423d70d878a813055b677eadf721d"
+          }
+        },
+        {
+          "file": "src/loop/fleet-dod.ts",
+          "line": 104,
+          "lineTolerance": 25,
+          "note": "Queue-run PRs carried .ak-loop handoff files.",
+          "fix": {
+            "pr": 209,
+            "commit": "31f3e200e9c53933ad0a4119f99874827c6bd79b"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AgentsKit-io/harness#98",
+      "repository": "AgentsKit-io/harness",
+      "number": 98,
+      "label": "buggy",
+      "bugs": [
+        {
+          "file": "src/kernel/json-file.ts",
+          "line": 24,
+          "lineTolerance": 25,
+          "note": "Worker JSON written with a UTF-8 BOM failed to parse.",
+          "fix": {
+            "pr": 154,
+            "commit": "b918ba055448ceb83112c2e049730102d70097f2"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AgentsKit-io/harness#111",
+      "repository": "AgentsKit-io/harness",
+      "number": 111,
+      "label": "buggy",
+      "bugs": [
+        {
+          "file": "src/ui/api/store.ts",
+          "line": 153,
+          "lineTolerance": 25,
+          "note": "An archived attempt shadowed the one before it in the projection.",
+          "fix": {
+            "pr": 158,
+            "commit": "07833ce5ccd9e69e34a0b8f1401b537507700b47"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AgentsKit-io/harness#39",
+      "repository": "AgentsKit-io/harness",
+      "number": 39,
+      "label": "buggy",
+      "bugs": [
+        {
+          "file": "src/loop/contract.ts",
+          "line": 215,
+          "lineTolerance": 25,
+          "note": "Provider failures were classified on the whole CLI output instead of its tail.",
+          "fix": {
+            "pr": 153,
+            "commit": "c8ca8b7ff7a6bd853d290adfe302d3a9051a50c7"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AgentsKit-io/harness#184",
+      "repository": "AgentsKit-io/harness",
+      "number": 184,
+      "label": "buggy",
+      "bugs": [
+        {
+          "file": "src/loop/connectors.ts",
+          "line": 212,
+          "lineTolerance": 25,
+          "note": "Linear label filters dropped GitHub issues and brace globs did not match.",
+          "fix": {
+            "pr": 210,
+            "commit": "e55969d0ea8100b02ccfc3efd718271dfaf753f4"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AgentsKit-io/code-review#27",
+      "repository": "AgentsKit-io/code-review",
+      "number": 27,
+      "label": "clean",
+      "bugs": []
+    },
+    {
+      "id": "AgentsKit-io/code-review#166",
+      "repository": "AgentsKit-io/code-review",
+      "number": 166,
+      "label": "clean",
+      "bugs": []
+    },
+    {
+      "id": "AgentsKit-io/code-review#280",
+      "repository": "AgentsKit-io/code-review",
+      "number": 280,
+      "label": "clean",
+      "bugs": []
+    },
+    {
+      "id": "AgentsKit-io/code-review#319",
+      "repository": "AgentsKit-io/code-review",
+      "number": 319,
+      "label": "clean",
+      "bugs": []
+    },
+    {
+      "id": "AgentsKit-io/harness#28",
+      "repository": "AgentsKit-io/harness",
+      "number": 28,
+      "label": "clean",
+      "bugs": []
+    },
+    {
+      "id": "AgentsKit-io/harness#29",
+      "repository": "AgentsKit-io/harness",
+      "number": 29,
+      "label": "clean",
+      "bugs": []
+    },
+    {
+      "id": "AgentsKit-io/harness#42",
+      "repository": "AgentsKit-io/harness",
+      "number": 42,
+      "label": "clean",
+      "bugs": []
+    },
+    {
+      "id": "AgentsKit-io/harness#44",
+      "repository": "AgentsKit-io/harness",
+      "number": 44,
+      "label": "clean",
+      "bugs": []
+    },
+    {
+      "id": "AgentsKit-io/harness#97",
+      "repository": "AgentsKit-io/harness",
+      "number": 97,
+      "label": "clean",
+      "bugs": []
+    },
+    {
+      "id": "AgentsKit-io/harness#107",
+      "repository": "AgentsKit-io/harness",
+      "number": 107,
+      "label": "clean",
+      "bugs": []
+    },
+    {
+      "id": "AgentsKit-io/doc-bridge#76",
+      "repository": "AgentsKit-io/doc-bridge",
+      "number": 76,
+      "label": "clean",
+      "bugs": []
+    },
+    {
+      "id": "AgentsKit-io/doc-bridge#197",
+      "repository": "AgentsKit-io/doc-bridge",
+      "number": 197,
+      "label": "clean",
+      "bugs": []
+    },
+    {
+      "id": "AgentsKit-io/doc-bridge#207",
+      "repository": "AgentsKit-io/doc-bridge",
+      "number": 207,
+      "label": "clean",
+      "bugs": []
+    },
+    {
+      "id": "AgentsKit-io/doc-bridge#317",
+      "repository": "AgentsKit-io/doc-bridge",
+      "number": 317,
+      "label": "clean",
+      "bugs": []
+    },
+    {
+      "id": "AgentsKit-io/doc-bridge#369",
+      "repository": "AgentsKit-io/doc-bridge",
+      "number": 369,
+      "label": "clean",
+      "bugs": []
+    },
+    {
+      "id": "AgentsKit-io/doc-bridge#393",
+      "repository": "AgentsKit-io/doc-bridge",
+      "number": 393,
+      "label": "clean",
+      "bugs": []
+    }
+  ]
+}

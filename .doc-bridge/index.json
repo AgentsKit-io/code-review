@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "a9dd07decbce1ac02e3a92c117bd30b240ced841fcf5457b0d902e3f972a0710",
+  "contentHash": "be9d9d4f204f483c8c52014d86262e3f9c38963a10a25881211bb26669f17764",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-10-27T12:49:26.397Z",
+  "generatedAt": "2026-10-30T10:06:03.981Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -33,6 +33,18 @@
         "unclassified"
       ],
       "contentHash": "066cb6c6bf99cf493abbb17c0773cd820606298d34d90473effa16a586e7d3fb"
+    },
+    {
+      "id": "document:.changeset/reviewer-benchmark.md",
+      "type": "document",
+      "title": "reviewer-benchmark.md",
+      "path": ".changeset/reviewer-benchmark.md",
+      "description": "Add the reviewer benchmark: a 38-PR labelled dataset of real AgentsKit-io PRs, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, scripts/run-reviewer-benchmark.mjs to run it each release, and the agentskit-shadow-review wrapper for the line's shadow mode. The first run is BLOCKED (incumbent not reachable), so the switch stays off.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "f433196b09dee4a628f0dfb123d8884bd04ee04b21263bf69a31739873c66bcf"
     },
     {
       "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
@@ -369,6 +381,30 @@
         "human"
       ],
       "contentHash": "7461fb07837a711f0ceb6d94d84b17eca086cbb3a0dd640b5c0b0e589917741a"
+    },
+    {
+      "id": "document:docs/reviewer-benchmark-report.md",
+      "type": "document",
+      "title": "Reviewer benchmark: BLOCKED",
+      "path": "docs/reviewer-benchmark-report.md",
+      "description": "incumbent errored on 38 PR(s); rerun before comparing",
+      "tags": [
+        "document",
+        "human"
+      ],
+      "contentHash": "ca23bbd49e71a593e611279f616a908f1fa908657dc5e38de9b7afec1e1e8feb"
+    },
+    {
+      "id": "document:docs/reviewer-benchmark.md",
+      "type": "document",
+      "title": "Reviewer benchmark",
+      "path": "docs/reviewer-benchmark.md",
+      "description": "Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json; the scoring is in src/reviewer-benchmark.ts; the runner is scripts/run-reviewer-benchmark.mjs. Run it on every release.",
+      "tags": [
+        "document",
+        "human"
+      ],
+      "contentHash": "0f119fe43d609d936ca81fddfd780984368b7e2813a3b17975480ff4c168d553"
     },
     {
       "id": "document:GOVERNANCE.md",
@@ -1082,6 +1118,30 @@
         "scripts"
       ],
       "contentHash": "8fdb38f6b9fc1ca9959b2fa2243352ed1358adfb49a9623fc6e36bc634413552"
+    },
+    {
+      "id": "module:scripts/run-reviewer-benchmark.mjs",
+      "type": "module",
+      "title": "run-reviewer-benchmark.mjs",
+      "path": "scripts/run-reviewer-benchmark.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "6198f03132de3a659ef9d5a2334e5d0d560306dcbc010e6581a6142bf05b87fd"
+    },
+    {
+      "id": "module:scripts/shadow-review.mjs",
+      "type": "module",
+      "title": "shadow-review.mjs",
+      "path": "scripts/shadow-review.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "4f7872fbe89bf862fe22bdb5cb9f068e94d81e3fc3b061607435cc51ba4c8d74"
     },
     {
       "id": "module:scripts/verify-ecosystem-public-outputs.mjs",
@@ -2169,6 +2229,37 @@
       "contentHash": "5358ecddc632fe9c8a01db3e22a972f5afb1da3566ffbc01e6b06860aab37728"
     },
     {
+      "id": "module:src/reviewer-benchmark.ts",
+      "type": "module",
+      "title": "reviewer-benchmark.ts",
+      "path": "src/reviewer-benchmark.ts",
+      "symbols": [
+        "BenchmarkDataset",
+        "BenchmarkDecision",
+        "BenchmarkPr",
+        "BenchmarkReport",
+        "KnownBug",
+        "MAX_COST_RATIO",
+        "MIN_BENCHMARK_PRS",
+        "PrScore",
+        "ReviewerFinding",
+        "ReviewerRun",
+        "ReviewerSummary",
+        "bugMatches",
+        "evaluateBenchmark",
+        "parseBenchmarkDataset",
+        "renderBenchmarkMarkdown",
+        "scorePr",
+        "summarizeReviewer"
+      ],
+      "tags": [
+        "module",
+        "ts",
+        "src"
+      ],
+      "contentHash": "5c219c533c081449fe9a2fb059bfbfd9bfa23e2d773294a36280ad7d9fd8a39a"
+    },
+    {
       "id": "module:src/scm-contract.ts",
       "type": "module",
       "title": "scm-contract.ts",
@@ -2866,6 +2957,18 @@
       "contentHash": "00ae639d2cd783c7906b62934e81bdbe60f34d9b171af72103915052b661528d"
     },
     {
+      "id": "module:test/reviewer-benchmark.test.mjs",
+      "type": "module",
+      "title": "reviewer-benchmark.test.mjs",
+      "path": "test/reviewer-benchmark.test.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "test"
+      ],
+      "contentHash": "f1508a6886b17e28262be2394cffd9554b684a365a5c638adf8cd727b4cdce64"
+    },
+    {
       "id": "module:test/risk-depth.test.mjs",
       "type": "module",
       "title": "risk-depth.test.mjs",
@@ -2912,6 +3015,18 @@
         "test"
       ],
       "contentHash": "6d4a7daf67b326c17fb97263946d70b6bd22af93f4e9007edb2ae100d158ae9d"
+    },
+    {
+      "id": "module:test/shadow-review.test.mjs",
+      "type": "module",
+      "title": "shadow-review.test.mjs",
+      "path": "test/shadow-review.test.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "test"
+      ],
+      "contentHash": "fa0336a7230a466c6d0e8f641d1cc870cd29888dda66da37131a0163f134b3c5"
     },
     {
       "id": "module:test/sources-context.test.mjs",
@@ -3033,8 +3148,8 @@
     }
   },
   "inputs": {
-    "hash": "8552379397afa290570540a97ebcfedd298d9a618fb906c8e794855b8f476698",
-    "fileCount": 202,
+    "hash": "7a4c6cf1cf6554920886a3ea6573469b8572daabda7aa49a1953c23aae548920",
+    "fileCount": 212,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3056,9 +3171,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "418a6e3c811c1d7bf7fbd5322219f7c2ad869aca1cc847bed4ca90315b1eaa30",
+    "contentHash": "37d19718d57a22ef11f50a233a1399be48fd9a071fb87cc5fa6eb98e0763c3dc",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "4d54d77d56ac2e952828cb64b36db6df9a4cac13d1a72af29f94012a82aa6cde",
+    "snapshotHash": "3699de17285e8bcbffccbdbd92e34b093ba732b204a64ff50aabb6a080278c9b",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3078,7 +3193,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 186,
+      "documentCount": 194,
       "fieldNames": [
         "aliases",
         "body",
@@ -3089,13 +3204,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.913978494623656,
-        "body": 51.41935483870968,
-        "headings": 3.8225806451612905,
-        "path": 5.629032258064516,
-        "summary": 2.7419354838709675,
-        "symbols": 13.983870967741936,
-        "title": 4.28494623655914
+        "aliases": 2.902061855670103,
+        "body": 56.07216494845361,
+        "headings": 3.747422680412371,
+        "path": 5.623711340206185,
+        "summary": 3.0876288659793816,
+        "symbols": 13.690721649484535,
+        "title": 4.27319587628866
       }
     },
     "entries": [
@@ -3263,7 +3378,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "701c56fced664ee983fbd041296379dcbe7c61548135e0bc5030a616595cc94b",
+        "contentHash": "dc1a63778fd5738005884e94c8039e9aa8640e4dd1dcc21fb4373d21956b0f56",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3302,7 +3417,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "14dd5d1e11f26f4aa3c598542f4eee0ba3ee7762ef10d546d4bc9bfa23848e84",
+        "contentHash": "c87d016429f150be7349fafbf7ab5fca36e29378299712089296a0efe3765165",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3372,6 +3487,44 @@
         "confidence": "observed"
       },
       {
+        "id": "document:.changeset/reviewer-benchmark.md",
+        "kind": "document",
+        "path": ".changeset/reviewer-benchmark.md",
+        "title": "reviewer-benchmark.md",
+        "summary": "Add the reviewer benchmark: a 38-PR labelled dataset of real AgentsKit-io PRs, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, scripts/run-reviewer-benchmark.mjs to run it each release, and the agentskit-shadow-review wrapper for the line's shadow mode. The first run is BLOCKED (incumbent not reachable), so the switch stays off.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "reviewer-benchmark.md",
+          "headings": "",
+          "path": ".changeset/reviewer-benchmark.md",
+          "symbols": "",
+          "summary": "Add the reviewer benchmark: a 38-PR labelled dataset of real AgentsKit-io PRs, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, scripts/run-reviewer-benchmark.mjs to run it each release, and the agentskit-shadow-review wrapper for the line's shadow mode. The first run is BLOCKED (incumbent not reachable), so the switch stays off.",
+          "body": "Add the reviewer benchmark: a 38-PR labelled dataset of real AgentsKit-io PRs, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, scripts/run-reviewer-benchmark.mjs to run it each release, and the agentskit-shadow-review wrapper for the line's shadow mode. The first run is BLOCKED (incumbent not reachable), so the switch stays off.",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "mentions",
+              "id": "module:scripts/run-reviewer-benchmark.mjs",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "f433196b09dee4a628f0dfb123d8884bd04ee04b21263bf69a31739873c66bcf",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
         "kind": "document",
         "path": ".github/PULL_REQUEST_TEMPLATE.md",
@@ -3424,7 +3577,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.022925,
+          "pagerank": 0.021519,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -3593,7 +3746,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.026284,
+          "pagerank": 0.024672,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [
@@ -3754,7 +3907,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.054674,
+          "pagerank": 0.05132,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -3805,7 +3958,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.03219,
+          "pagerank": 0.030216,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -3931,7 +4084,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.024874,
+          "pagerank": 0.023349,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -3996,7 +4149,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.024874,
+          "pagerank": 0.023349,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4056,7 +4209,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.024874,
+          "pagerank": 0.023349,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4116,7 +4269,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.024874,
+          "pagerank": 0.023349,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4186,7 +4339,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.024874,
+          "pagerank": 0.023349,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4256,7 +4409,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.028233,
+          "pagerank": 0.026502,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4326,7 +4479,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.024874,
+          "pagerank": 0.023349,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4381,7 +4534,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.024874,
+          "pagerank": 0.023349,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -4448,7 +4601,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.024874,
+          "pagerank": 0.023349,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4518,7 +4671,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.024874,
+          "pagerank": 0.023349,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4573,7 +4726,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.022925,
+          "pagerank": 0.021519,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4657,7 +4810,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.07227,
+          "pagerank": 0.067838,
           "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [
@@ -4729,7 +4882,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.029068,
+          "pagerank": 0.027286,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4793,11 +4946,11 @@
           "path": "docs/for-agents/code-review.md",
           "symbols": "",
           "summary": "Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and GitHub pull requests. Bounded diff-first context packs run one multidimensional analysis; adversarial votes remove weak findings; reporters emit Markdown, GitHub reviews, and SARIF.",
-          "body": "Code Review CLI handoff Purpose Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and GitHub pull requests. Bounded diff-first context packs run one multidimensional analysis; adversarial votes remove weak findings; reporters emit Markdown, GitHub reviews, and SARIF. Ownership map - src/cli.ts : public flags, source selection, provider selection, exit policy. - src/campaign-reducer.ts and src/campaign-store.ts : deterministic lifecycle, atomic checkpoints, leases, replay, and resume. - src/campaign-preflight.ts : provider-free campaign discovery, eligibility, source planning, budget checks, and worktree gating. - src/batch-mode.ts : shared measured batching, including single-file context-pack partitioning (ADR-0006); preserve pack identity in artifacts, cache keys, and consolidation. - src/budget.ts : provider-free hierarchical budget compilation, reservations, and dimension-aware usage accounting. - src/review-stores.ts : separate self-hosted feedback and approved-knowledge stores with bounded schemas, atomic writes, retention, concurrent-write serialization, and the scoped AgentsKit Retriever . - src/review-feedback.ts : deterministic feedback reconciliation, resumable checkpoints, metrics, and inactive candidate-rule evidence. - src/campaign-runner.ts and scripts/review-campaign.mjs : bounded multi-PR execution, leased atomic checkpoints, resume, per-PR isolation, and deterministic terminal reporting. - src/quality-matrix.ts : run and campaign quality scoring, evidence separation, cost/time accounting, and baseline regression gates. evaluateCampaignQuality() must be used when aggregating campaign outcomes. - src/<provider -adapter.ts : logged-in local CLI adapters. - src/provider-registry.ts : validated provider capabilities and conservative execution policy around AgentsKit adapters. - src/provider-execution.ts : typed provider failures, bounded retry delay, adaptive concurrency, and cancellation-aware queueing. - src/scm-contract.ts : provider-neutral change-request, publication, readiness, and merge contracts plus explicit capability checks. - src/github-scm-adapter.ts : GitHub REST/CLI binding for the common SCM contract; the only migrated path allowed to contain GitHub payloads or merge commands. - agents/ : the vendored review agent in agents/code-review/ : review pipeline, lenses, input normalization, reporters. - agents/code-review/risk.ts : provider-free context-pack risk signals and specialized-depth selection. - action.yml : composite GitHub Action contract. - .github/workflows/release.yml : Changesets version-pull-request workflow. - .github/workflows/publish.yml : version-PR-gated npm Trusted Publishing and GitHub Release workflow. - examples/ : copy-ready Action workflows. - README.md and docs/OPERATIONS.md : public adoption and operations guidance. - ecosystem.json , llms.txt , and llms-full.txt : canonical product graph and machine-readable discovery/full-corpus surfaces. - test/ : credential-free CLI, Action, and documentation contract proofs. - scripts/ : Node entry points for the package scripts (review cycle, campaign, harness, quality matrix and baseline, fault injection, cycle benchmark, public-API snapshot, README Standard, llms-full.txt generation) and the standalone ecosystem public-output check. Boundaries - Depend on AgentsKit adapter/runtime/tool contracts; do not create a second model abstraction. - Preserve provider neutrality and advisory-by-default Action behavior. - Never expose provider keys in arguments, docs fixtures, logs, or PR output. - The Fumadocs site provides curated documentation only; the product runtime remains the CLI and GitHub Action. Do not add an embedded AgentsKit Chat runtime here. - The vendored review agent tracks the AgentsKit Registry source; keep divergences explicit. Change routes - CLI flag/provider behavior: start at src/cli.ts , then update README, operations docs, and tests. - Cycle entry-point changes must pass the npm-style symlink s",
+          "body": "Code Review CLI handoff Purpose Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and GitHub pull requests. Bounded diff-first context packs run one multidimensional analysis; adversarial votes remove weak findings; reporters emit Markdown, GitHub reviews, and SARIF. Ownership map - src/cli.ts : public flags, source selection, provider selection, exit policy. - src/campaign-reducer.ts and src/campaign-store.ts : deterministic lifecycle, atomic checkpoints, leases, replay, and resume. - src/campaign-preflight.ts : provider-free campaign discovery, eligibility, source planning, budget checks, and worktree gating. - src/batch-mode.ts : shared measured batching, including single-file context-pack partitioning (ADR-0006); preserve pack identity in artifacts, cache keys, and consolidation. - src/budget.ts : provider-free hierarchical budget compilation, reservations, and dimension-aware usage accounting. - src/review-stores.ts : separate self-hosted feedback and approved-knowledge stores with bounded schemas, atomic writes, retention, concurrent-write serialization, and the scoped AgentsKit Retriever . - src/review-feedback.ts : deterministic feedback reconciliation, resumable checkpoints, metrics, and inactive candidate-rule evidence. - src/campaign-runner.ts and scripts/review-campaign.mjs : bounded multi-PR execution, leased atomic checkpoints, resume, per-PR isolation, and deterministic terminal reporting. - src/quality-matrix.ts : run and campaign quality scoring, evidence separation, cost/time accounting, and baseline regression gates. evaluateCampaignQuality() must be used when aggregating campaign outcomes. - src/<provider -adapter.ts : logged-in local CLI adapters. - src/provider-registry.ts : validated provider capabilities and conservative execution policy around AgentsKit adapters. - src/provider-execution.ts : typed provider failures, bounded retry delay, adaptive concurrency, and cancellation-aware queueing. - src/scm-contract.ts : provider-neutral change-request, publication, readiness, and merge contracts plus explicit capability checks. - src/github-scm-adapter.ts : GitHub REST/CLI binding for the common SCM contract; the only migrated path allowed to contain GitHub payloads or merge commands. - agents/ : the vendored review agent in agents/code-review/ : review pipeline, lenses, input normalization, reporters. - agents/code-review/risk.ts : provider-free context-pack risk signals and specialized-depth selection. - action.yml : composite GitHub Action contract. - .github/workflows/release.yml : Changesets version-pull-request workflow. - .github/workflows/publish.yml : version-PR-gated npm Trusted Publishing and GitHub Release workflow. - examples/ : copy-ready Action workflows. - README.md and docs/OPERATIONS.md : public adoption and operations guidance. - ecosystem.json , llms.txt , and llms-full.txt : canonical product graph and machine-readable discovery/full-corpus surfaces. - src/reviewer-benchmark.ts , scripts/run-reviewer-benchmark.mjs , quality/benchmark/prs.json : labelled-PR benchmark and entry criterion against the incumbent line reviewer ( docs/reviewer-benchmark.md ). - test/ : credential-free CLI, Action, and documentation contract proofs. - scripts/ : Node entry points for the package scripts (review cycle, campaign, harness, quality matrix and baseline, fault injection, cycle benchmark, public-API snapshot, README Standard, llms-full.txt generation) and the standalone ecosystem public-output check. Boundaries - Depend on AgentsKit adapter/runtime/tool contracts; do not create a second model abstraction. - Preserve provider neutrality and advisory-by-default Action behavior. - Never expose provider keys in arguments, docs fixtures, logs, or PR output. - The Fumadocs site provides curated documentation only; the product runtime remains the CLI and GitHub Action. Do not add an embedded AgentsKit Chat runtime here. - The vendored review agent tracks the AgentsKit Registry sour",
           "aliases": "code-review document agent package"
         },
         "graph": {
-          "pagerank": 0.08083,
+          "pagerank": 0.075873,
           "inboundLinks": 5,
           "coveredBy": [],
           "mentionedBy": [
@@ -4880,6 +5033,11 @@
             },
             {
               "kind": "mentions",
+              "id": "document:docs/reviewer-benchmark.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
               "id": "document:README.md",
               "confidence": "observed"
             },
@@ -4906,6 +5064,11 @@
             {
               "kind": "mentions",
               "id": "module:scripts/review-campaign.mjs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:scripts/run-reviewer-benchmark.mjs",
               "confidence": "observed"
             },
             {
@@ -4975,12 +5138,17 @@
             },
             {
               "kind": "mentions",
+              "id": "module:src/reviewer-benchmark.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
               "id": "module:src/scm-contract.ts",
               "confidence": "observed"
             }
           ]
         },
-        "contentHash": "bb932f43ec7c66496809908fb0ae04256f37546cf4ece43e4f3ef1cdebdcdec0",
+        "contentHash": "3eb6a0a70719d90d8aecdcb3578e15ef29ee693ec6a70a0b7540e3b37e60a717",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -5008,7 +5176,7 @@
           "aliases": "index document agent"
         },
         "graph": {
-          "pagerank": 0.026284,
+          "pagerank": 0.024672,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -5060,7 +5228,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.025709,
+          "pagerank": 0.024133,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5185,7 +5353,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.022925,
+          "pagerank": 0.021519,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5254,7 +5422,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.031615,
+          "pagerank": 0.029676,
           "inboundLinks": 6,
           "coveredBy": [],
           "mentionedBy": [
@@ -5492,7 +5660,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.034974,
+          "pagerank": 0.032829,
           "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5562,7 +5730,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.025709,
+          "pagerank": 0.024133,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -5608,6 +5776,107 @@
         "confidence": "observed"
       },
       {
+        "id": "document:docs/reviewer-benchmark-report.md",
+        "kind": "document",
+        "path": "docs/reviewer-benchmark-report.md",
+        "title": "Reviewer benchmark: BLOCKED",
+        "summary": "incumbent errored on 38 PR(s); rerun before comparing",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "human"
+        ],
+        "fields": {
+          "title": "Reviewer benchmark: BLOCKED",
+          "headings": "Reviewer benchmark: BLOCKED Per PR",
+          "path": "docs/reviewer-benchmark-report.md",
+          "symbols": "",
+          "summary": "incumbent errored on 38 PR(s); rerun before comparing",
+          "body": "Reviewer benchmark: BLOCKED - incumbent errored on 38 PR(s); rerun before comparing - code-review errored on 11 PR(s); rerun before comparing Reviewer Bugs found False positives Cost (US$) Mean latency (ms) Errored PRs --- --- --- --- --- --- incumbent 0/32 0 0.00 4 38 code-review 8/32 118 0.00 235158 11 Per PR PR Reviewer Bugs False positives Cost (US$) Latency (ms) --- --- --- --- --- --- AgentsKit-io/code-review 178 incumbent 0/2 0 0.00 25 (error) AgentsKit-io/code-review 62 incumbent 0/2 0 0.00 18 (error) AgentsKit-io/code-review 40 incumbent 0/3 0 0.00 14 (error) AgentsKit-io/code-review 67 incumbent 0/2 0 0.00 11 (error) AgentsKit-io/code-review 130 incumbent 0/1 0 0.00 8 (error) AgentsKit-io/code-review 80 incumbent 0/1 0 0.00 4 (error) AgentsKit-io/code-review 180 incumbent 0/2 0 0.00 3 (error) AgentsKit-io/code-review 204 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/code-review 186 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/code-review 73 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/harness 144 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/harness 142 incumbent 0/2 0 0.00 2 (error) AgentsKit-io/harness 133 incumbent 0/1 0 0.00 3 (error) AgentsKit-io/harness 103 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/harness 101 incumbent 0/2 0 0.00 3 (error) AgentsKit-io/harness 198 incumbent 0/2 0 0.00 1 (error) AgentsKit-io/harness 199 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/harness 201 incumbent 0/2 0 0.00 2 (error) AgentsKit-io/harness 98 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/harness 111 incumbent 0/1 0 0.00 3 (error) AgentsKit-io/harness 39 incumbent 0/1 0 0.00 1 (error) AgentsKit-io/harness 184 incumbent 0/1 0 0.00 3 (error) AgentsKit-io/code-review 27 incumbent 0/0 0 0.00 1 (error) AgentsKit-io/code-review 166 incumbent 0/0 0 0.00 1 (error) AgentsKit-io/code-review 280 incumbent 0/0 0 0.00 3 (error) AgentsKit-io/code-review 319 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 28 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 29 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 42 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 44 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 97 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 107 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/doc-bridge 76 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/doc-bridge 197 incumbent 0/0 0 0.00 3 (error) AgentsKit-io/doc-bridge 207 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/doc-bridge 317 incumbent 0/0 0 0.00 3 (error) AgentsKit-io/doc-bridge 369 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/doc-bridge 393 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/code-review 178 code-review 2/2 9 0.00 525178 AgentsKit-io/code-review 62 code-review 0/2 0 0.00 145590 (error) AgentsKit-io/code-review 40 code-review 0/3 0 0.00 1205 (error) AgentsKit-io/code-review 67 code-review 0/2 0 0.00 399777 (error) AgentsKit-io/code-review 130 code-review 0/1 0 0.00 95669 (error) AgentsKit-io/code-review 80 code-review 1/1 1 0.00 67498 AgentsKit-io/code-review 180 code-review 0/2 0 0.00 298819 (error) AgentsKit-io/code-review 204 code-review 0/1 14 0.00 367626 AgentsKit-io/code-review 186 code-review 0/1 0 0.00 403065 (error) AgentsKit-io/code-review 73 code-review 0/1 0 0.00 412254 (error) AgentsKit-io/harness 144 code-review 1/1 2 0.00 160572 AgentsKit-io/harness 142 code-review 1/2 0 0.00 84698 AgentsKit-io/harness 133 code-review 0/1 3 0.00 109184 AgentsKit-io/harness 103 code-review 0/1 8 0.00 297720 AgentsKit-io/harness 101 code-review 0/2 0 0.00 796336 (error) AgentsKit-io/harness 198 code-review 1/2 9 0.00 396732 AgentsKit-io/harness 199 code-review 0/1 2 0.00 180482 AgentsKit-io/harness 201 code-review 1/2 2 0.00 229988 AgentsKit-io/harness 98 code-review 1/1 12 0.00 398171 AgentsKit-io/harness 111 code-review 0/1 0 0.00 821808 (error) AgentsKit-io/harness 39 code-review 0/1 0 0.00 565215 (error) AgentsKit-io/harness 184 code-review 0/1 3 0.00 248508 AgentsKit-io/code-review 27 code-review 0/0 5 0.00 161240 AgentsKit-io/code-review 166 code-re",
+          "aliases": "document human"
+        },
+        "graph": {
+          "pagerank": 0.039811,
+          "inboundLinks": 1,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [
+            {
+              "kind": "links-to",
+              "id": "document:docs/reviewer-benchmark.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "ca23bbd49e71a593e611279f616a908f1fa908657dc5e38de9b7afec1e1e8feb",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:docs/reviewer-benchmark.md",
+        "kind": "document",
+        "path": "docs/reviewer-benchmark.md",
+        "title": "Reviewer benchmark",
+        "summary": "Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json; the scoring is in src/reviewer-benchmark.ts; the runner is scripts/run-reviewer-benchmark.mjs. Run it on every release.",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "human"
+        ],
+        "fields": {
+          "title": "Reviewer benchmark",
+          "headings": "Reviewer benchmark Status Dataset Run Entry criterion Running on the line (shadow mode) After a pass",
+          "path": "docs/reviewer-benchmark.md",
+          "symbols": "",
+          "summary": "Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json; the scoring is in src/reviewer-benchmark.ts; the runner is scripts/run-reviewer-benchmark.mjs. Run it on every release.",
+          "body": "Reviewer benchmark Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json ; the scoring is in src/reviewer-benchmark.ts ; the runner is scripts/run-reviewer-benchmark.mjs . Run it on every release. Status Decision on 2026-10-30: BLOCKED, so the entry criterion is not met and the factory's review stage stays on the incumbent (the switch is off; shadow mode does not start). The report is (JSON: quality/benchmark/report.json ). - Code Review ran on all 38 PRs: 27 completed, 11 ended incomplete (exit 2: deadline or provider failure; reruns are needed). On the 27 completed PRs it found 8 of the 16 known bugs and reported 118 findings matching no known bug. - The incumbent was not run : the line reviewer is the review stage of the private factory-line repository, which this repository's automation cannot reach, and no standalone executable of it exists. Its 38 runs are recorded as errors, which is what makes the decision BLOCKED rather than FAIL . Run it with --incumbent-cmd from a machine that has it. - Cost is not measured : the run used claude-cli , which reports no token usage, so every cost shows 0.00. The Anthropic API provider was rejected (HTTP 401) with the credential available to the run. A cost comparison needs an API-provider run ( AGENTSKIT SHADOW PROVIDER=anthropic , AGENTSKIT SHADOW USD PER MTOK ). - \"False positives\" is an upper bound: a finding counts as false when it matches none of the bugs that were later fixed, so real defects nobody fixed are counted against the reviewer. The incumbent is scored the same way, so the comparison stays fair. - Only AgentsKit-io repositories are in the set (code-review, harness, doc-bridge); NoxCodeSolutions repositories were not reachable from this run. Dataset quality/benchmark/prs.json : 38 merged AgentsKit-io PRs, 22 buggy and 16 clean . A buggy PR is one whose merged code was later corrected by a fix PR: each bug lists file , line (in the reviewed PR's version of the file, from git blame of the lines the fix replaced), lineTolerance , a note , and fix (the fix PR number and commit that proves it was real). A clean PR is a feature PR that no later fix PR in the same repository touched (never the origin of any blamed line of a fix: commit). The set was mined from fix: commits in code-review, harness and doc-bridge; PRs are added by annotating real PRs, never by invention. The report is BLOCKED until the set has 30 PRs with both labels. Run An external reviewer command is run as <executable <owner/repo <number (no shell) and prints {\"findings\":[{\"file\",\"line\",\"title\"}],\"costUsd\":0} . Without --candidate-cmd the built-in CLI reviews each PR with --pr (needs GITHUB TOKEN ; provider keys come from the environment, never from arguments). Cost for the built-in reviewer is tokensUsed times --usd-per-mtok . Entry criterion PASS needs: at least as many real bugs found as the incumbent, strictly fewer false positives (any finding matching no known bug, and every finding on a clean PR), and cost at most 1.2x the incumbent. Any errored PR makes the report BLOCKED . The exit code is 2 unless PASS . Running on the line (shadow mode) The incumbent is the review stage of the factory line ( reviewPrompt in packages/factory-line/src/prompts.ts , private repository). The comparison runs it on the line through its shadow mode ( shadow-review.ts , enabled per repository by shadowReview in line.json ), which comments and does not decide. scripts/shadow-review.mjs (also the agentskit-shadow-review bin) is the Code Review side. Shadow mode runs it with the PR's checkout as the working directory and reads the last line of stdout : {\"comment\":\"<review markdown \",\"costUsd\":0,\"findings\":[{\"file\",\"line\",\"title\"}]} ; it reviews the files changed against AGENTSKIT SHADOW BASE (default origin/main ) and exits 0 for a completed review, with or without findings. Given <owner/repo <number it reviews that PR instead, which is how the benchmark runner calls i",
+          "aliases": "document human"
+        },
+        "graph": {
+          "pagerank": 0.021519,
+          "inboundLinks": 1,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:docs/for-agents/code-review.md"
+          ],
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:docs/for-agents/code-review.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": [
+            {
+              "kind": "links-to",
+              "id": "document:docs/reviewer-benchmark-report.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:scripts/run-reviewer-benchmark.mjs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:scripts/shadow-review.mjs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:src/reviewer-benchmark.ts",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "0f119fe43d609d936ca81fddfd780984368b7e2813a3b17975480ff4c168d553",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "document:GOVERNANCE.md",
         "kind": "document",
         "path": "GOVERNANCE.md",
@@ -5628,7 +5897,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.042512,
+          "pagerank": 0.039905,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -5717,7 +5986,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.022925,
+          "pagerank": 0.021519,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -5849,7 +6118,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.03219,
+          "pagerank": 0.030216,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -5923,7 +6192,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.050258,
+          "pagerank": 0.047175,
           "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [
@@ -8030,6 +8299,102 @@
           "outbound": []
         },
         "contentHash": "8fdb38f6b9fc1ca9959b2fa2243352ed1358adfb49a9623fc6e36bc634413552",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:scripts/run-reviewer-benchmark.mjs",
+        "kind": "module",
+        "path": "scripts/run-reviewer-benchmark.mjs",
+        "title": "run-reviewer-benchmark.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "run-reviewer-benchmark.mjs",
+          "headings": "",
+          "path": "scripts/run-reviewer-benchmark.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 3,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:.changeset/reviewer-benchmark.md",
+            "document:docs/for-agents/code-review.md",
+            "document:docs/reviewer-benchmark.md"
+          ],
+          "areaId": "area:scripts",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:.changeset/reviewer-benchmark.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/for-agents/code-review.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/reviewer-benchmark.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "6198f03132de3a659ef9d5a2334e5d0d560306dcbc010e6581a6142bf05b87fd",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:scripts/shadow-review.mjs",
+        "kind": "module",
+        "path": "scripts/shadow-review.mjs",
+        "title": "shadow-review.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "shadow-review.mjs",
+          "headings": "",
+          "path": "scripts/shadow-review.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 1,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:docs/reviewer-benchmark.md"
+          ],
+          "areaId": "area:scripts",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:docs/reviewer-benchmark.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "4f7872fbe89bf862fe22bdb5cb9f068e94d81e3fc3b061607435cc51ba4c8d74",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -11484,6 +11849,72 @@
         "confidence": "observed"
       },
       {
+        "id": "module:src/reviewer-benchmark.ts",
+        "kind": "module",
+        "path": "src/reviewer-benchmark.ts",
+        "title": "reviewer-benchmark.ts",
+        "aliases": [],
+        "symbols": [
+          "BenchmarkDataset",
+          "BenchmarkDecision",
+          "BenchmarkPr",
+          "BenchmarkReport",
+          "KnownBug",
+          "MAX_COST_RATIO",
+          "MIN_BENCHMARK_PRS",
+          "PrScore",
+          "ReviewerFinding",
+          "ReviewerRun",
+          "ReviewerSummary",
+          "bugMatches",
+          "evaluateBenchmark",
+          "parseBenchmarkDataset",
+          "renderBenchmarkMarkdown",
+          "scorePr",
+          "summarizeReviewer"
+        ],
+        "tags": [
+          "module",
+          "ts",
+          "src"
+        ],
+        "fields": {
+          "title": "reviewer-benchmark.ts",
+          "headings": "",
+          "path": "src/reviewer-benchmark.ts",
+          "symbols": "BenchmarkDataset BenchmarkDecision BenchmarkPr BenchmarkReport KnownBug MAX_COST_RATIO MIN_BENCHMARK_PRS PrScore ReviewerFinding ReviewerRun ReviewerSummary bugMatches evaluateBenchmark parseBenchmarkDataset renderBenchmarkMarkdown scorePr summarizeReviewer",
+          "summary": "",
+          "body": "",
+          "aliases": "module ts src"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 2,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:docs/for-agents/code-review.md",
+            "document:docs/reviewer-benchmark.md"
+          ],
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:docs/for-agents/code-review.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/reviewer-benchmark.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "5c219c533c081449fe9a2fb059bfbfd9bfa23e2d773294a36280ad7d9fd8a39a",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:src/scm-contract.ts",
         "kind": "module",
         "path": "src/scm-contract.ts",
@@ -13558,6 +13989,40 @@
         "confidence": "observed"
       },
       {
+        "id": "module:test/reviewer-benchmark.test.mjs",
+        "kind": "module",
+        "path": "test/reviewer-benchmark.test.mjs",
+        "title": "reviewer-benchmark.test.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "test"
+        ],
+        "fields": {
+          "title": "reviewer-benchmark.test.mjs",
+          "headings": "",
+          "path": "test/reviewer-benchmark.test.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs test"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:test",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "f1508a6886b17e28262be2394cffd9554b684a365a5c638adf8cd727b4cdce64",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:test/risk-depth.test.mjs",
         "kind": "module",
         "path": "test/risk-depth.test.mjs",
@@ -13690,6 +14155,40 @@
           "outbound": []
         },
         "contentHash": "6d4a7daf67b326c17fb97263946d70b6bd22af93f4e9007edb2ae100d158ae9d",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:test/shadow-review.test.mjs",
+        "kind": "module",
+        "path": "test/shadow-review.test.mjs",
+        "title": "shadow-review.test.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "test"
+        ],
+        "fields": {
+          "title": "shadow-review.test.mjs",
+          "headings": "",
+          "path": "test/shadow-review.test.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs test"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:test",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "fa0336a7230a466c6d0e8f641d1cc870cd29888dda66da37131a0163f134b3c5",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13858,11 +14357,11 @@
           "path": ".",
           "symbols": "",
           "summary": "Provider-neutral local and GitHub code review CLI, Action, reporters, Fumadocs site, and repository documentation.",
-          "body": "Code Review CLI handoff Purpose Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and GitHub pull requests. Bounded diff-first context packs run one multidimensional analysis; adversarial votes remove weak findings; reporters emit Markdown, GitHub reviews, and SARIF. Ownership map - src/cli.ts : public flags, source selection, provider selection, exit policy. - src/campaign-reducer.ts and src/campaign-store.ts : deterministic lifecycle, atomic checkpoints, leases, replay, and resume. - src/campaign-preflight.ts : provider-free campaign discovery, eligibility, source planning, budget checks, and worktree gating. - src/batch-mode.ts : shared measured batching, including single-file context-pack partitioning (ADR-0006); preserve pack identity in artifacts, cache keys, and consolidation. - src/budget.ts : provider-free hierarchical budget compilation, reservations, and dimension-aware usage accounting. - src/review-stores.ts : separate self-hosted feedback and approved-knowledge stores with bounded schemas, atomic writes, retention, concurrent-write serialization, and the scoped AgentsKit Retriever . - src/review-feedback.ts : deterministic feedback reconciliation, resumable checkpoints, metrics, and inactive candidate-rule evidence. - src/campaign-runner.ts and scripts/review-campaign.mjs : bounded multi-PR execution, leased atomic checkpoints, resume, per-PR isolation, and deterministic terminal reporting. - src/quality-matrix.ts : run and campaign quality scoring, evidence separation, cost/time accounting, and baseline regression gates. evaluateCampaignQuality() must be used when aggregating campaign outcomes. - src/<provider -adapter.ts : logged-in local CLI adapters. - src/provider-registry.ts : validated provider capabilities and conservative execution policy around AgentsKit adapters. - src/provider-execution.ts : typed provider failures, bounded retry delay, adaptive concurrency, and cancellation-aware queueing. - src/scm-contract.ts : provider-neutral change-request, publication, readiness, and merge contracts plus explicit capability checks. - src/github-scm-adapter.ts : GitHub REST/CLI binding for the common SCM contract; the only migrated path allowed to contain GitHub payloads or merge commands. - agents/ : the vendored review agent in agents/code-review/ : review pipeline, lenses, input normalization, reporters. - agents/code-review/risk.ts : provider-free context-pack risk signals and specialized-depth selection. - action.yml : composite GitHub Action contract. - .github/workflows/release.yml : Changesets version-pull-request workflow. - .github/workflows/publish.yml : version-PR-gated npm Trusted Publishing and GitHub Release workflow. - examples/ : copy-ready Action workflows. - README.md and docs/OPERATIONS.md : public adoption and operations guidance. - ecosystem.json , llms.txt , and llms-full.txt : canonical product graph and machine-readable discovery/full-corpus surfaces. - test/ : credential-free CLI, Action, and documentation contract proofs. - scripts/ : Node entry points for the package scripts (review cycle, campaign, harness, quality matrix and baseline, fault injection, cycle benchmark, public-API snapshot, README Standard, llms-full.txt generation) and the standalone ecosystem public-output check. Boundaries - Depend on AgentsKit adapter/runtime/tool contracts; do not create a second model abstraction. - Preserve provider neutrality and advisory-by-default Action behavior. - Never expose provider keys in arguments, docs fixtures, logs, or PR output. - The Fumadocs site provides curated documentation only; the product runtime remains the CLI and GitHub Action. Do not add an embedded AgentsKit Chat runtime here. - The vendored review agent tracks the AgentsKit Registry source; keep divergences explicit. Change routes - CLI flag/provider behavior: start at src/cli.ts , then update README, operations docs, and tests. - Cycle entry-point changes must pass the npm-style symlink s",
+          "body": "Code Review CLI handoff Purpose Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and GitHub pull requests. Bounded diff-first context packs run one multidimensional analysis; adversarial votes remove weak findings; reporters emit Markdown, GitHub reviews, and SARIF. Ownership map - src/cli.ts : public flags, source selection, provider selection, exit policy. - src/campaign-reducer.ts and src/campaign-store.ts : deterministic lifecycle, atomic checkpoints, leases, replay, and resume. - src/campaign-preflight.ts : provider-free campaign discovery, eligibility, source planning, budget checks, and worktree gating. - src/batch-mode.ts : shared measured batching, including single-file context-pack partitioning (ADR-0006); preserve pack identity in artifacts, cache keys, and consolidation. - src/budget.ts : provider-free hierarchical budget compilation, reservations, and dimension-aware usage accounting. - src/review-stores.ts : separate self-hosted feedback and approved-knowledge stores with bounded schemas, atomic writes, retention, concurrent-write serialization, and the scoped AgentsKit Retriever . - src/review-feedback.ts : deterministic feedback reconciliation, resumable checkpoints, metrics, and inactive candidate-rule evidence. - src/campaign-runner.ts and scripts/review-campaign.mjs : bounded multi-PR execution, leased atomic checkpoints, resume, per-PR isolation, and deterministic terminal reporting. - src/quality-matrix.ts : run and campaign quality scoring, evidence separation, cost/time accounting, and baseline regression gates. evaluateCampaignQuality() must be used when aggregating campaign outcomes. - src/<provider -adapter.ts : logged-in local CLI adapters. - src/provider-registry.ts : validated provider capabilities and conservative execution policy around AgentsKit adapters. - src/provider-execution.ts : typed provider failures, bounded retry delay, adaptive concurrency, and cancellation-aware queueing. - src/scm-contract.ts : provider-neutral change-request, publication, readiness, and merge contracts plus explicit capability checks. - src/github-scm-adapter.ts : GitHub REST/CLI binding for the common SCM contract; the only migrated path allowed to contain GitHub payloads or merge commands. - agents/ : the vendored review agent in agents/code-review/ : review pipeline, lenses, input normalization, reporters. - agents/code-review/risk.ts : provider-free context-pack risk signals and specialized-depth selection. - action.yml : composite GitHub Action contract. - .github/workflows/release.yml : Changesets version-pull-request workflow. - .github/workflows/publish.yml : version-PR-gated npm Trusted Publishing and GitHub Release workflow. - examples/ : copy-ready Action workflows. - README.md and docs/OPERATIONS.md : public adoption and operations guidance. - ecosystem.json , llms.txt , and llms-full.txt : canonical product graph and machine-readable discovery/full-corpus surfaces. - src/reviewer-benchmark.ts , scripts/run-reviewer-benchmark.mjs , quality/benchmark/prs.json : labelled-PR benchmark and entry criterion against the incumbent line reviewer ( docs/reviewer-benchmark.md ). - test/ : credential-free CLI, Action, and documentation contract proofs. - scripts/ : Node entry points for the package scripts (review cycle, campaign, harness, quality matrix and baseline, fault injection, cycle benchmark, public-API snapshot, README Standard, llms-full.txt generation) and the standalone ecosystem public-output check. Boundaries - Depend on AgentsKit adapter/runtime/tool contracts; do not create a second model abstraction. - Preserve provider neutrality and advisory-by-default Action behavior. - Never expose provider keys in arguments, docs fixtures, logs, or PR output. - The Fumadocs site provides curated documentation only; the product runtime remains the CLI and GitHub Action. Do not add an embedded AgentsKit Chat runtime here. - The vendored review agent tracks the AgentsKit Registry sour",
           "aliases": "code-review @agentskit/code-review package ownership"
         },
         "graph": {
-          "pagerank": 0.091631,
+          "pagerank": 0.086008,
           "inboundLinks": 6,
           "coveredBy": [
             "document:docs/for-agents/code-review.md"
@@ -13909,7 +14408,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "77847a29030d0e46bab12cde37026b6b1628d20f61f5a996735004b14bae0bb6",
+        "contentHash": "27659fca82a4b51853483b3fb7d392e077080e3a43330129659ddf13007ebf51",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
