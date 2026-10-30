@@ -1,0 +1,138 @@
+product: AgentsKit Code Review
+project: Code Review
+version_url: null
+repos:
+  - name: AgentsKit-io/code-review
+features:
+  # estado: publicada (v0.32.5 em 23/10, npm @agentskit/code-review 0.32.5; README "Run your first review")
+  - key: revisar-diff-local
+    group: produto
+    phase: A
+    name: "Revisar o diff local antes do push"
+    description: "Rodar uma revisão por IA do diff contra origin/main, de arquivos/pastas completos ou de stdin, direto no terminal."
+    milestone: null
+    tickets: []
+    acceptance: null
+    how_to_test: "Num repo com mudanças, rodar `npx --yes github:AgentsKit-io/code-review --provider claude-cli` e ver os achados."
+    blocked_reason: null
+  # estado: publicada (README tabela de provedores: codex/claude/grok/opencode CLI, APIs, ollama, openrouter)
+  - key: escolher-modelo
+    group: produto
+    phase: A
+    name: "Usar o modelo que já tenho"
+    description: "Escolher entre CLI logada (Codex, Claude, Grok, OpenCode), API paga, modelo local (Ollama) ou gateway próprio."
+    milestone: null
+    tickets: []
+    acceptance: null
+    how_to_test: "Rodar a mesma revisão com `--provider ollama --model llama3` e com `--provider codex-cli`."
+    blocked_reason: null
+  # estado: publicada (action.yml na raiz; README "Use the GitHub Action"; flag --pr/--post)
+  - key: revisar-pr-github
+    group: produto
+    phase: A
+    name: "Comentar a revisão no PR do GitHub"
+    description: "Revisar um PR pelo número e postar uma revisão agrupada, localmente ou via GitHub Action no CI."
+    milestone: null
+    tickets: ["gh:#334"]
+    acceptance: null
+    how_to_test: "Em um PR de teste, `--pr owner/repo#N --post` com GITHUB_TOKEN e conferir o comentário."
+    blocked_reason: null
+  # estado: publicada (README: votos adversariais --votes, --min-severity, --min-confidence)
+  - key: poucos-falsos-positivos
+    group: confianca
+    phase: A
+    name: "Achados verificados, com pouco ruído"
+    description: "Cada achado passa por votos de verificação independentes; o usuário ajusta severidade e confiança mínimas."
+    milestone: null
+    tickets: ["gh:#137"]
+    acceptance: null
+    how_to_test: "Rodar com `--votes 3 --min-severity high` e comparar com `--votes 1`."
+    blocked_reason: null
+  # estado: publicada (README "--plan --json", --max-files, profiles full|fast)
+  - key: custo-antes-de-rodar
+    group: produto
+    phase: A
+    name: "Ver o custo antes de executar"
+    description: "Pré-visualizar arquivos, lentes, chamadas estimadas e caminhos não revisados sem gastar com o modelo; limitar orçamento de arquivos."
+    milestone: null
+    tickets: []
+    acceptance: null
+    how_to_test: "Rodar `--plan --json` e conferir que nenhuma chamada ao provedor acontece."
+    blocked_reason: null
+  # estado: publicada (README "Complete coverage for large PRs"; caminhos UNREVIEWED com motivo)
+  - key: prs-grandes-cobertura
+    group: produto
+    phase: A
+    name: "Cobertura completa em PRs grandes"
+    description: "Revisar PRs grandes sem perder arquivos em silêncio; o que não foi revisado aparece com o motivo."
+    milestone: null
+    tickets: []
+    acceptance: null
+    how_to_test: "Revisar um PR com mais arquivos que o orçamento e conferir a lista UNREVIEWED."
+    blocked_reason: null
+  # estado: em andamento (PR #338 aberto, 1 check falhando)
+  - key: revisar-arquivos-apagados
+    group: produto
+    phase: B
+    name: "Revisar arquivos apagados"
+    description: "Arquivos removidos no PR passam a ser revisados pelo diff em vez de ficarem como não revisados."
+    milestone: null
+    tickets: ["gh:#338"]
+    acceptance: null
+    how_to_test: "Abrir um PR que apaga um arquivo e conferir que ele não aparece como UNREVIEWED."
+    blocked_reason: null
+  # estado: publicada (README: --sarif, pre-commit (.pre-commit-hooks.yaml), reviewdog)
+  - key: integrar-ferramentas
+    group: produto
+    phase: A
+    name: "Encaixar no fluxo existente (pre-commit, SARIF, reviewdog)"
+    description: "Rodar como hook de pre-commit, exportar SARIF para o code scanning e reutilizar anotações do reviewdog."
+    milestone: null
+    tickets: []
+    acceptance: null
+    how_to_test: "Instalar o hook do pre-commit e fazer um commit; rodar com `--sarif out.sarif`."
+    blocked_reason: null
+  # estado: publicada (PRs #327 redação de segredos, #330/#331/#346 Trusted Publishing, #332 snapshot da API)
+  - key: seguranca-e-procedencia
+    group: confianca
+    phase: A
+    name: "Segredos protegidos e pacote com procedência"
+    description: "Segredos são redigidos antes de ir ao modelo; o pacote npm é publicado com Trusted Publishing e API pública congelada por snapshot."
+    milestone: null
+    tickets: ["gh:#327", "gh:#330", "gh:#332"]
+    acceptance: null
+    how_to_test: "Revisar um diff com um token falso e conferir que ele não aparece no prompt/log."
+    blocked_reason: null
+  # estado: não começada (ROADMAP "Toward v1": todos os itens desmarcados)
+  - key: action-v1-imutavel
+    group: prontidao
+    phase: B
+    name: "GitHub Action v1 estável"
+    description: "Usar a Action por uma tag v1 móvel com releases imutáveis e artefatos assinados."
+    milestone: v1
+    tickets: []
+    acceptance: null
+    how_to_test: "Referenciar `AgentsKit-io/code-review@v1` num workflow e ver a execução."
+    blocked_reason: null
+  # estado: bloqueada (issue #282 com label precisa-ambiente; ROADMAP v1 "measured cost and latency" desmarcado)
+  - key: qualidade-medida
+    group: prontidao
+    phase: B
+    name: "Qualidade e custo medidos por configuração"
+    description: "Saber o custo, a latência e a taxa de acerto de cada configuração, comparados com a versão anterior."
+    milestone: v1
+    tickets: ["gh:#282"]
+    acceptance: null
+    how_to_test: "Rodar `quality:matrix` contra a baseline 0.30.17 e ler o relatório."
+    blocked_reason: "precisa de ambiente com provedores reais (label precisa-ambiente em gh:#282)"
+  # estado: em andamento (#354 version packages aberto e verde; #328/#320 deps com check falhando)
+  - key: manutencao-dependencias
+    group: prontidao
+    phase: A
+    name: "Próxima versão e dependências em dia"
+    description: "Publicar a próxima versão pendente e manter dependências atualizadas sem quebrar o CI."
+    milestone: null
+    tickets: ["gh:#354", "gh:#328", "gh:#320"]
+    acceptance: null
+    how_to_test: "Merge de #354 dispara a publicação; conferir nova versão no npm."
+    blocked_reason: null
