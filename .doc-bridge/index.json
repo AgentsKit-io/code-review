@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "98a4a57a0e2447ececc5796b11639f5366c97f012fd2bca50c2a921d7c04172a",
+  "contentHash": "be9d9d4f204f483c8c52014d86262e3f9c38963a10a25881211bb26669f17764",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-10-30T09:07:29.662Z",
+  "generatedAt": "2026-10-30T10:06:03.981Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -39,12 +39,12 @@
       "type": "document",
       "title": "reviewer-benchmark.md",
       "path": ".changeset/reviewer-benchmark.md",
-      "description": "Add the reviewer benchmark: a labelled PR dataset format, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, and scripts/run-reviewer-benchmark.mjs to run it each release.",
+      "description": "Add the reviewer benchmark: a 38-PR labelled dataset of real AgentsKit-io PRs, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, scripts/run-reviewer-benchmark.mjs to run it each release, and the agentskit-shadow-review wrapper for the line's shadow mode. The first run is BLOCKED (incumbent not reachable), so the switch stays off.",
       "tags": [
         "document",
         "unclassified"
       ],
-      "contentHash": "fb40e6b35e5dca221f3d90a2d81fc179df80061ce179b2f044d596ba44cbc55e"
+      "contentHash": "f433196b09dee4a628f0dfb123d8884bd04ee04b21263bf69a31739873c66bcf"
     },
     {
       "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
@@ -383,6 +383,18 @@
       "contentHash": "7461fb07837a711f0ceb6d94d84b17eca086cbb3a0dd640b5c0b0e589917741a"
     },
     {
+      "id": "document:docs/reviewer-benchmark-report.md",
+      "type": "document",
+      "title": "Reviewer benchmark: BLOCKED",
+      "path": "docs/reviewer-benchmark-report.md",
+      "description": "incumbent errored on 38 PR(s); rerun before comparing",
+      "tags": [
+        "document",
+        "human"
+      ],
+      "contentHash": "ca23bbd49e71a593e611279f616a908f1fa908657dc5e38de9b7afec1e1e8feb"
+    },
+    {
       "id": "document:docs/reviewer-benchmark.md",
       "type": "document",
       "title": "Reviewer benchmark",
@@ -392,7 +404,7 @@
         "document",
         "human"
       ],
-      "contentHash": "9cfd626cc988e99ebec7257b4f7f0a3503721d0479dd05a806b88cf213c45c51"
+      "contentHash": "0f119fe43d609d936ca81fddfd780984368b7e2813a3b17975480ff4c168d553"
     },
     {
       "id": "document:GOVERNANCE.md",
@@ -1117,7 +1129,19 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "346054f5f3a9c974fa3703bf438eaa344be4f0719f4a88a6ada446d170cdaffc"
+      "contentHash": "6198f03132de3a659ef9d5a2334e5d0d560306dcbc010e6581a6142bf05b87fd"
+    },
+    {
+      "id": "module:scripts/shadow-review.mjs",
+      "type": "module",
+      "title": "shadow-review.mjs",
+      "path": "scripts/shadow-review.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "4f7872fbe89bf862fe22bdb5cb9f068e94d81e3fc3b061607435cc51ba4c8d74"
     },
     {
       "id": "module:scripts/verify-ecosystem-public-outputs.mjs",
@@ -2233,7 +2257,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "a50262bd62d4d06109d58431151beae6bf90bc57a5f8ebe7152153b954f31c94"
+      "contentHash": "5c219c533c081449fe9a2fb059bfbfd9bfa23e2d773294a36280ad7d9fd8a39a"
     },
     {
       "id": "module:src/scm-contract.ts",
@@ -2942,7 +2966,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "b33a4aafda48608771bba5c1b236316792380c304fffe176dc59ca0b7cc33c4f"
+      "contentHash": "f1508a6886b17e28262be2394cffd9554b684a365a5c638adf8cd727b4cdce64"
     },
     {
       "id": "module:test/risk-depth.test.mjs",
@@ -2991,6 +3015,18 @@
         "test"
       ],
       "contentHash": "6d4a7daf67b326c17fb97263946d70b6bd22af93f4e9007edb2ae100d158ae9d"
+    },
+    {
+      "id": "module:test/shadow-review.test.mjs",
+      "type": "module",
+      "title": "shadow-review.test.mjs",
+      "path": "test/shadow-review.test.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "test"
+      ],
+      "contentHash": "fa0336a7230a466c6d0e8f641d1cc870cd29888dda66da37131a0163f134b3c5"
     },
     {
       "id": "module:test/sources-context.test.mjs",
@@ -3112,8 +3148,8 @@
     }
   },
   "inputs": {
-    "hash": "5bd446606380cf49de0047dce718b10e8401ba7a34b2a2f50e0dbcfcca0b343f",
-    "fileCount": 208,
+    "hash": "7a4c6cf1cf6554920886a3ea6573469b8572daabda7aa49a1953c23aae548920",
+    "fileCount": 212,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3135,9 +3171,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "13fa712a2708bba3da43fa82cec3b1d3c8e662ce1af2223fc8814a57dae677a6",
+    "contentHash": "37d19718d57a22ef11f50a233a1399be48fd9a071fb87cc5fa6eb98e0763c3dc",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "7e43ca05edb39360de13f4846c14fd6f8ef3532958aa0d560f39bd9863ed5972",
+    "snapshotHash": "3699de17285e8bcbffccbdbd92e34b093ba732b204a64ff50aabb6a080278c9b",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3157,7 +3193,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 191,
+      "documentCount": 194,
       "fieldNames": [
         "aliases",
         "body",
@@ -3168,13 +3204,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.905759162303665,
-        "body": 51.8848167539267,
-        "headings": 3.7853403141361257,
-        "path": 5.62303664921466,
-        "summary": 2.9842931937172774,
-        "symbols": 13.905759162303665,
-        "title": 4.277486910994765
+        "aliases": 2.902061855670103,
+        "body": 56.07216494845361,
+        "headings": 3.747422680412371,
+        "path": 5.623711340206185,
+        "summary": 3.0876288659793816,
+        "symbols": 13.690721649484535,
+        "title": 4.27319587628866
       }
     },
     "entries": [
@@ -3342,7 +3378,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "40658ac2ceed4b0b148201a722bd04f24e9644dc22598a090ee132495815828d",
+        "contentHash": "dc1a63778fd5738005884e94c8039e9aa8640e4dd1dcc21fb4373d21956b0f56",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3381,7 +3417,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "c22e4a2075b87b29bebab5b13ac1e1d008a6bba7f099e543a67196f3ea596e4a",
+        "contentHash": "c87d016429f150be7349fafbf7ab5fca36e29378299712089296a0efe3765165",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3455,7 +3491,7 @@
         "kind": "document",
         "path": ".changeset/reviewer-benchmark.md",
         "title": "reviewer-benchmark.md",
-        "summary": "Add the reviewer benchmark: a labelled PR dataset format, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, and scripts/run-reviewer-benchmark.mjs to run it each release.",
+        "summary": "Add the reviewer benchmark: a 38-PR labelled dataset of real AgentsKit-io PRs, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, scripts/run-reviewer-benchmark.mjs to run it each release, and the agentskit-shadow-review wrapper for the line's shadow mode. The first run is BLOCKED (incumbent not reachable), so the switch stays off.",
         "aliases": [],
         "tags": [
           "document",
@@ -3466,8 +3502,8 @@
           "headings": "",
           "path": ".changeset/reviewer-benchmark.md",
           "symbols": "",
-          "summary": "Add the reviewer benchmark: a labelled PR dataset format, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, and scripts/run-reviewer-benchmark.mjs to run it each release.",
-          "body": "Add the reviewer benchmark: a labelled PR dataset format, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, and scripts/run-reviewer-benchmark.mjs to run it each release.",
+          "summary": "Add the reviewer benchmark: a 38-PR labelled dataset of real AgentsKit-io PRs, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, scripts/run-reviewer-benchmark.mjs to run it each release, and the agentskit-shadow-review wrapper for the line's shadow mode. The first run is BLOCKED (incumbent not reachable), so the switch stays off.",
+          "body": "Add the reviewer benchmark: a 38-PR labelled dataset of real AgentsKit-io PRs, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, scripts/run-reviewer-benchmark.mjs to run it each release, and the agentskit-shadow-review wrapper for the line's shadow mode. The first run is BLOCKED (incumbent not reachable), so the switch stays off.",
           "aliases": "document unclassified"
         },
         "graph": {
@@ -3484,7 +3520,7 @@
             }
           ]
         },
-        "contentHash": "fb40e6b35e5dca221f3d90a2d81fc179df80061ce179b2f044d596ba44cbc55e",
+        "contentHash": "f433196b09dee4a628f0dfb123d8884bd04ee04b21263bf69a31739873c66bcf",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3541,7 +3577,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.022925,
+          "pagerank": 0.021519,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -3710,7 +3746,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.026284,
+          "pagerank": 0.024672,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [
@@ -3871,7 +3907,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.054674,
+          "pagerank": 0.05132,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -3922,7 +3958,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.03219,
+          "pagerank": 0.030216,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -4048,7 +4084,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.024874,
+          "pagerank": 0.023349,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4113,7 +4149,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.024874,
+          "pagerank": 0.023349,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4173,7 +4209,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.024874,
+          "pagerank": 0.023349,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4233,7 +4269,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.024874,
+          "pagerank": 0.023349,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4303,7 +4339,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.024874,
+          "pagerank": 0.023349,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4373,7 +4409,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.028233,
+          "pagerank": 0.026502,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4443,7 +4479,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.024874,
+          "pagerank": 0.023349,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4498,7 +4534,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.024874,
+          "pagerank": 0.023349,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -4565,7 +4601,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.024874,
+          "pagerank": 0.023349,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4635,7 +4671,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.024874,
+          "pagerank": 0.023349,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4690,7 +4726,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.022925,
+          "pagerank": 0.021519,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4774,7 +4810,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.07227,
+          "pagerank": 0.067838,
           "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [
@@ -4846,7 +4882,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.029068,
+          "pagerank": 0.027286,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4914,7 +4950,7 @@
           "aliases": "code-review document agent package"
         },
         "graph": {
-          "pagerank": 0.08083,
+          "pagerank": 0.075873,
           "inboundLinks": 5,
           "coveredBy": [],
           "mentionedBy": [
@@ -5140,7 +5176,7 @@
           "aliases": "index document agent"
         },
         "graph": {
-          "pagerank": 0.026284,
+          "pagerank": 0.024672,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -5192,7 +5228,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.025709,
+          "pagerank": 0.024133,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5317,7 +5353,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.022925,
+          "pagerank": 0.021519,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5386,7 +5422,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.031615,
+          "pagerank": 0.029676,
           "inboundLinks": 6,
           "coveredBy": [],
           "mentionedBy": [
@@ -5624,7 +5660,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.034974,
+          "pagerank": 0.032829,
           "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5694,7 +5730,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.025709,
+          "pagerank": 0.024133,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -5740,6 +5776,45 @@
         "confidence": "observed"
       },
       {
+        "id": "document:docs/reviewer-benchmark-report.md",
+        "kind": "document",
+        "path": "docs/reviewer-benchmark-report.md",
+        "title": "Reviewer benchmark: BLOCKED",
+        "summary": "incumbent errored on 38 PR(s); rerun before comparing",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "human"
+        ],
+        "fields": {
+          "title": "Reviewer benchmark: BLOCKED",
+          "headings": "Reviewer benchmark: BLOCKED Per PR",
+          "path": "docs/reviewer-benchmark-report.md",
+          "symbols": "",
+          "summary": "incumbent errored on 38 PR(s); rerun before comparing",
+          "body": "Reviewer benchmark: BLOCKED - incumbent errored on 38 PR(s); rerun before comparing - code-review errored on 11 PR(s); rerun before comparing Reviewer Bugs found False positives Cost (US$) Mean latency (ms) Errored PRs --- --- --- --- --- --- incumbent 0/32 0 0.00 4 38 code-review 8/32 118 0.00 235158 11 Per PR PR Reviewer Bugs False positives Cost (US$) Latency (ms) --- --- --- --- --- --- AgentsKit-io/code-review 178 incumbent 0/2 0 0.00 25 (error) AgentsKit-io/code-review 62 incumbent 0/2 0 0.00 18 (error) AgentsKit-io/code-review 40 incumbent 0/3 0 0.00 14 (error) AgentsKit-io/code-review 67 incumbent 0/2 0 0.00 11 (error) AgentsKit-io/code-review 130 incumbent 0/1 0 0.00 8 (error) AgentsKit-io/code-review 80 incumbent 0/1 0 0.00 4 (error) AgentsKit-io/code-review 180 incumbent 0/2 0 0.00 3 (error) AgentsKit-io/code-review 204 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/code-review 186 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/code-review 73 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/harness 144 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/harness 142 incumbent 0/2 0 0.00 2 (error) AgentsKit-io/harness 133 incumbent 0/1 0 0.00 3 (error) AgentsKit-io/harness 103 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/harness 101 incumbent 0/2 0 0.00 3 (error) AgentsKit-io/harness 198 incumbent 0/2 0 0.00 1 (error) AgentsKit-io/harness 199 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/harness 201 incumbent 0/2 0 0.00 2 (error) AgentsKit-io/harness 98 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/harness 111 incumbent 0/1 0 0.00 3 (error) AgentsKit-io/harness 39 incumbent 0/1 0 0.00 1 (error) AgentsKit-io/harness 184 incumbent 0/1 0 0.00 3 (error) AgentsKit-io/code-review 27 incumbent 0/0 0 0.00 1 (error) AgentsKit-io/code-review 166 incumbent 0/0 0 0.00 1 (error) AgentsKit-io/code-review 280 incumbent 0/0 0 0.00 3 (error) AgentsKit-io/code-review 319 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 28 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 29 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 42 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 44 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 97 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 107 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/doc-bridge 76 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/doc-bridge 197 incumbent 0/0 0 0.00 3 (error) AgentsKit-io/doc-bridge 207 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/doc-bridge 317 incumbent 0/0 0 0.00 3 (error) AgentsKit-io/doc-bridge 369 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/doc-bridge 393 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/code-review 178 code-review 2/2 9 0.00 525178 AgentsKit-io/code-review 62 code-review 0/2 0 0.00 145590 (error) AgentsKit-io/code-review 40 code-review 0/3 0 0.00 1205 (error) AgentsKit-io/code-review 67 code-review 0/2 0 0.00 399777 (error) AgentsKit-io/code-review 130 code-review 0/1 0 0.00 95669 (error) AgentsKit-io/code-review 80 code-review 1/1 1 0.00 67498 AgentsKit-io/code-review 180 code-review 0/2 0 0.00 298819 (error) AgentsKit-io/code-review 204 code-review 0/1 14 0.00 367626 AgentsKit-io/code-review 186 code-review 0/1 0 0.00 403065 (error) AgentsKit-io/code-review 73 code-review 0/1 0 0.00 412254 (error) AgentsKit-io/harness 144 code-review 1/1 2 0.00 160572 AgentsKit-io/harness 142 code-review 1/2 0 0.00 84698 AgentsKit-io/harness 133 code-review 0/1 3 0.00 109184 AgentsKit-io/harness 103 code-review 0/1 8 0.00 297720 AgentsKit-io/harness 101 code-review 0/2 0 0.00 796336 (error) AgentsKit-io/harness 198 code-review 1/2 9 0.00 396732 AgentsKit-io/harness 199 code-review 0/1 2 0.00 180482 AgentsKit-io/harness 201 code-review 1/2 2 0.00 229988 AgentsKit-io/harness 98 code-review 1/1 12 0.00 398171 AgentsKit-io/harness 111 code-review 0/1 0 0.00 821808 (error) AgentsKit-io/harness 39 code-review 0/1 0 0.00 565215 (error) AgentsKit-io/harness 184 code-review 0/1 3 0.00 248508 AgentsKit-io/code-review 27 code-review 0/0 5 0.00 161240 AgentsKit-io/code-review 166 code-re",
+          "aliases": "document human"
+        },
+        "graph": {
+          "pagerank": 0.039811,
+          "inboundLinks": 1,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [
+            {
+              "kind": "links-to",
+              "id": "document:docs/reviewer-benchmark.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "ca23bbd49e71a593e611279f616a908f1fa908657dc5e38de9b7afec1e1e8feb",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "document:docs/reviewer-benchmark.md",
         "kind": "document",
         "path": "docs/reviewer-benchmark.md",
@@ -5757,11 +5832,11 @@
           "path": "docs/reviewer-benchmark.md",
           "symbols": "",
           "summary": "Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json; the scoring is in src/reviewer-benchmark.ts; the runner is scripts/run-reviewer-benchmark.mjs. Run it on every release.",
-          "body": "Reviewer benchmark Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json ; the scoring is in src/reviewer-benchmark.ts ; the runner is scripts/run-reviewer-benchmark.mjs . Run it on every release. Status Not evaluated. The labelled set is empty and neither reviewer has been run, so the entry criterion has not been applied and the switch of the factory's review stage to Code Review is not going ahead . The comparison runs on the line itself, in a follow-up ticket, through the factory's shadow mode. Dataset At least 30 merged PRs from AgentsKit-io and NoxCodeSolutions. buggy PRs list the known bugs (review findings that became a fix: file , line , optional lineTolerance and titleIncludes , and a note ); clean PRs merged with no real defect. The report is BLOCKED until the set has 30 PRs with both labels. The shipped file starts empty: PRs are added by annotating real reviewed PRs, never by invention. Run An external reviewer command is run as <executable <owner/repo <number (no shell) and prints {\"findings\":[{\"file\",\"line\",\"title\"}],\"costUsd\":0} . Without --candidate-cmd the built-in CLI reviews each PR with --pr (needs GITHUB TOKEN ; provider keys come from the environment, never from arguments). Cost for the built-in reviewer is tokensUsed times --usd-per-mtok . Entry criterion PASS needs: at least as many real bugs found as the incumbent, strictly fewer false positives (any finding matching no known bug, and every finding on a clean PR), and cost at most 1.2x the incumbent. Any errored PR makes the report BLOCKED . The exit code is 2 unless PASS . Running on the line (shadow mode) The incumbent is not a standalone executable: it is the review stage of the factory line ( reviewPrompt in packages/factory-line/src/prompts.ts , private repository). The comparison therefore runs on the line through its shadow mode ( shadow-review.ts , enabled per repository by shadowReview in line.json ), which comments and does not decide. Shadow mode calls the Code Review command as <exe with the PR's checkout as the working directory, and reads the last line of stdout as JSON: {\"comment\":\"<review markdown \",\"costUsd\":0,...} . The command must print that line last, keep keys and tokens out of it, and exit 0. Any wrapper that reviews the checked-out PR with agentskit-review and prints that line satisfies the contract; this repository does not yet ship the wrapper. After a pass Run Code Review in shadow mode on the line for one week before replacing the incumbent. Shadow mode is an operational step in the factory line, not part of this repository's runtime.",
+          "body": "Reviewer benchmark Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json ; the scoring is in src/reviewer-benchmark.ts ; the runner is scripts/run-reviewer-benchmark.mjs . Run it on every release. Status Decision on 2026-10-30: BLOCKED, so the entry criterion is not met and the factory's review stage stays on the incumbent (the switch is off; shadow mode does not start). The report is (JSON: quality/benchmark/report.json ). - Code Review ran on all 38 PRs: 27 completed, 11 ended incomplete (exit 2: deadline or provider failure; reruns are needed). On the 27 completed PRs it found 8 of the 16 known bugs and reported 118 findings matching no known bug. - The incumbent was not run : the line reviewer is the review stage of the private factory-line repository, which this repository's automation cannot reach, and no standalone executable of it exists. Its 38 runs are recorded as errors, which is what makes the decision BLOCKED rather than FAIL . Run it with --incumbent-cmd from a machine that has it. - Cost is not measured : the run used claude-cli , which reports no token usage, so every cost shows 0.00. The Anthropic API provider was rejected (HTTP 401) with the credential available to the run. A cost comparison needs an API-provider run ( AGENTSKIT SHADOW PROVIDER=anthropic , AGENTSKIT SHADOW USD PER MTOK ). - \"False positives\" is an upper bound: a finding counts as false when it matches none of the bugs that were later fixed, so real defects nobody fixed are counted against the reviewer. The incumbent is scored the same way, so the comparison stays fair. - Only AgentsKit-io repositories are in the set (code-review, harness, doc-bridge); NoxCodeSolutions repositories were not reachable from this run. Dataset quality/benchmark/prs.json : 38 merged AgentsKit-io PRs, 22 buggy and 16 clean . A buggy PR is one whose merged code was later corrected by a fix PR: each bug lists file , line (in the reviewed PR's version of the file, from git blame of the lines the fix replaced), lineTolerance , a note , and fix (the fix PR number and commit that proves it was real). A clean PR is a feature PR that no later fix PR in the same repository touched (never the origin of any blamed line of a fix: commit). The set was mined from fix: commits in code-review, harness and doc-bridge; PRs are added by annotating real PRs, never by invention. The report is BLOCKED until the set has 30 PRs with both labels. Run An external reviewer command is run as <executable <owner/repo <number (no shell) and prints {\"findings\":[{\"file\",\"line\",\"title\"}],\"costUsd\":0} . Without --candidate-cmd the built-in CLI reviews each PR with --pr (needs GITHUB TOKEN ; provider keys come from the environment, never from arguments). Cost for the built-in reviewer is tokensUsed times --usd-per-mtok . Entry criterion PASS needs: at least as many real bugs found as the incumbent, strictly fewer false positives (any finding matching no known bug, and every finding on a clean PR), and cost at most 1.2x the incumbent. Any errored PR makes the report BLOCKED . The exit code is 2 unless PASS . Running on the line (shadow mode) The incumbent is the review stage of the factory line ( reviewPrompt in packages/factory-line/src/prompts.ts , private repository). The comparison runs it on the line through its shadow mode ( shadow-review.ts , enabled per repository by shadowReview in line.json ), which comments and does not decide. scripts/shadow-review.mjs (also the agentskit-shadow-review bin) is the Code Review side. Shadow mode runs it with the PR's checkout as the working directory and reads the last line of stdout : {\"comment\":\"<review markdown \",\"costUsd\":0,\"findings\":[{\"file\",\"line\",\"title\"}]} ; it reviews the files changed against AGENTSKIT SHADOW BASE (default origin/main ) and exits 0 for a completed review, with or without findings. Given <owner/repo <number it reviews that PR instead, which is how the benchmark runner calls i",
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0,
+          "pagerank": 0.021519,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [
@@ -5776,8 +5851,18 @@
           ],
           "outbound": [
             {
+              "kind": "links-to",
+              "id": "document:docs/reviewer-benchmark-report.md",
+              "confidence": "observed"
+            },
+            {
               "kind": "mentions",
               "id": "module:scripts/run-reviewer-benchmark.mjs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:scripts/shadow-review.mjs",
               "confidence": "observed"
             },
             {
@@ -5787,7 +5872,7 @@
             }
           ]
         },
-        "contentHash": "9cfd626cc988e99ebec7257b4f7f0a3503721d0479dd05a806b88cf213c45c51",
+        "contentHash": "0f119fe43d609d936ca81fddfd780984368b7e2813a3b17975480ff4c168d553",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -5812,7 +5897,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.042512,
+          "pagerank": 0.039905,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -5901,7 +5986,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.022925,
+          "pagerank": 0.021519,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -6033,7 +6118,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.03219,
+          "pagerank": 0.030216,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -6107,7 +6192,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.050258,
+          "pagerank": 0.047175,
           "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [
@@ -8267,7 +8352,49 @@
           ],
           "outbound": []
         },
-        "contentHash": "346054f5f3a9c974fa3703bf438eaa344be4f0719f4a88a6ada446d170cdaffc",
+        "contentHash": "6198f03132de3a659ef9d5a2334e5d0d560306dcbc010e6581a6142bf05b87fd",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:scripts/shadow-review.mjs",
+        "kind": "module",
+        "path": "scripts/shadow-review.mjs",
+        "title": "shadow-review.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "shadow-review.mjs",
+          "headings": "",
+          "path": "scripts/shadow-review.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 1,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:docs/reviewer-benchmark.md"
+          ],
+          "areaId": "area:scripts",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:docs/reviewer-benchmark.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "4f7872fbe89bf862fe22bdb5cb9f068e94d81e3fc3b061607435cc51ba4c8d74",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -11783,7 +11910,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "a50262bd62d4d06109d58431151beae6bf90bc57a5f8ebe7152153b954f31c94",
+        "contentHash": "5c219c533c081449fe9a2fb059bfbfd9bfa23e2d773294a36280ad7d9fd8a39a",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13891,7 +14018,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "b33a4aafda48608771bba5c1b236316792380c304fffe176dc59ca0b7cc33c4f",
+        "contentHash": "f1508a6886b17e28262be2394cffd9554b684a365a5c638adf8cd727b4cdce64",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -14028,6 +14155,40 @@
           "outbound": []
         },
         "contentHash": "6d4a7daf67b326c17fb97263946d70b6bd22af93f4e9007edb2ae100d158ae9d",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:test/shadow-review.test.mjs",
+        "kind": "module",
+        "path": "test/shadow-review.test.mjs",
+        "title": "shadow-review.test.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "test"
+        ],
+        "fields": {
+          "title": "shadow-review.test.mjs",
+          "headings": "",
+          "path": "test/shadow-review.test.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs test"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:test",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "fa0336a7230a466c6d0e8f641d1cc870cd29888dda66da37131a0163f134b3c5",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -14200,7 +14361,7 @@
           "aliases": "code-review @agentskit/code-review package ownership"
         },
         "graph": {
-          "pagerank": 0.091631,
+          "pagerank": 0.086008,
           "inboundLinks": 6,
           "coveredBy": [
             "document:docs/for-agents/code-review.md"
@@ -14247,7 +14408,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "6851e06beeb80f18b7a04936f72bc626efa6c3762e6b1f02e564b4f447e9c8d4",
+        "contentHash": "27659fca82a4b51853483b3fb7d392e077080e3a43330129659ddf13007ebf51",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
