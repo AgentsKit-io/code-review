@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "abd29f35eb3ac60b8de70159d25ec0a130d2b73122250c1b240afbeb11a26ed5",
+  "contentHash": "98a4a57a0e2447ececc5796b11639f5366c97f012fd2bca50c2a921d7c04172a",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-10-30T01:16:24.986Z",
+  "generatedAt": "2026-10-30T09:07:29.662Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -392,7 +392,7 @@
         "document",
         "human"
       ],
-      "contentHash": "c6f96e8808e1e675819b5bf5445d1d8a4bdb176fa9d6436580e946388bb9139f"
+      "contentHash": "9cfd626cc988e99ebec7257b4f7f0a3503721d0479dd05a806b88cf213c45c51"
     },
     {
       "id": "document:GOVERNANCE.md",
@@ -3112,7 +3112,7 @@
     }
   },
   "inputs": {
-    "hash": "9ebf0400a75d187aa23dbf00f31a0a28e607e5f3f417c26576bdd0528f9589b8",
+    "hash": "5bd446606380cf49de0047dce718b10e8401ba7a34b2a2f50e0dbcfcca0b343f",
     "fileCount": 208,
     "projectionVersion": 2
   },
@@ -3135,9 +3135,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "885148ae228966683ffda8cf55c078462176a9f6ccc1749e3231e08dacb7b72c",
+    "contentHash": "13fa712a2708bba3da43fa82cec3b1d3c8e662ce1af2223fc8814a57dae677a6",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "84e0c13402622d0633a7c3bad111887af88567ef059c5466fb1f0fde3048908b",
+    "snapshotHash": "7e43ca05edb39360de13f4846c14fd6f8ef3532958aa0d560f39bd9863ed5972",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3169,8 +3169,8 @@
       ],
       "averageFieldLength": {
         "aliases": 2.905759162303665,
-        "body": 51.282722513089006,
-        "headings": 3.7591623036649215,
+        "body": 51.8848167539267,
+        "headings": 3.7853403141361257,
         "path": 5.62303664921466,
         "summary": 2.9842931937172774,
         "symbols": 13.905759162303665,
@@ -5753,11 +5753,11 @@
         ],
         "fields": {
           "title": "Reviewer benchmark",
-          "headings": "Reviewer benchmark Dataset Run Entry criterion After a pass",
+          "headings": "Reviewer benchmark Status Dataset Run Entry criterion Running on the line (shadow mode) After a pass",
           "path": "docs/reviewer-benchmark.md",
           "symbols": "",
           "summary": "Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json; the scoring is in src/reviewer-benchmark.ts; the runner is scripts/run-reviewer-benchmark.mjs. Run it on every release.",
-          "body": "Reviewer benchmark Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json ; the scoring is in src/reviewer-benchmark.ts ; the runner is scripts/run-reviewer-benchmark.mjs . Run it on every release. Dataset At least 30 merged PRs from AgentsKit-io and NoxCodeSolutions. buggy PRs list the known bugs (review findings that became a fix: file , line , optional lineTolerance and titleIncludes , and a note ); clean PRs merged with no real defect. The report is BLOCKED until the set has 30 PRs with both labels. The shipped file starts empty: PRs are added by annotating real reviewed PRs, never by invention. Run An external reviewer command is run as <executable <owner/repo <number (no shell) and prints {\"findings\":[{\"file\",\"line\",\"title\"}],\"costUsd\":0} . Without --candidate-cmd the built-in CLI reviews each PR with --pr (needs GITHUB TOKEN ; provider keys come from the environment, never from arguments). Cost for the built-in reviewer is tokensUsed times --usd-per-mtok . Entry criterion PASS needs: at least as many real bugs found as the incumbent, strictly fewer false positives (any finding matching no known bug, and every finding on a clean PR), and cost at most 1.2x the incumbent. Any errored PR makes the report BLOCKED . The exit code is 2 unless PASS . After a pass Run Code Review in shadow mode on the line for one week (it comments and does not decide) before replacing the incumbent. Shadow mode is an operational step in the factory line, not part of this repository's runtime.",
+          "body": "Reviewer benchmark Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json ; the scoring is in src/reviewer-benchmark.ts ; the runner is scripts/run-reviewer-benchmark.mjs . Run it on every release. Status Not evaluated. The labelled set is empty and neither reviewer has been run, so the entry criterion has not been applied and the switch of the factory's review stage to Code Review is not going ahead . The comparison runs on the line itself, in a follow-up ticket, through the factory's shadow mode. Dataset At least 30 merged PRs from AgentsKit-io and NoxCodeSolutions. buggy PRs list the known bugs (review findings that became a fix: file , line , optional lineTolerance and titleIncludes , and a note ); clean PRs merged with no real defect. The report is BLOCKED until the set has 30 PRs with both labels. The shipped file starts empty: PRs are added by annotating real reviewed PRs, never by invention. Run An external reviewer command is run as <executable <owner/repo <number (no shell) and prints {\"findings\":[{\"file\",\"line\",\"title\"}],\"costUsd\":0} . Without --candidate-cmd the built-in CLI reviews each PR with --pr (needs GITHUB TOKEN ; provider keys come from the environment, never from arguments). Cost for the built-in reviewer is tokensUsed times --usd-per-mtok . Entry criterion PASS needs: at least as many real bugs found as the incumbent, strictly fewer false positives (any finding matching no known bug, and every finding on a clean PR), and cost at most 1.2x the incumbent. Any errored PR makes the report BLOCKED . The exit code is 2 unless PASS . Running on the line (shadow mode) The incumbent is not a standalone executable: it is the review stage of the factory line ( reviewPrompt in packages/factory-line/src/prompts.ts , private repository). The comparison therefore runs on the line through its shadow mode ( shadow-review.ts , enabled per repository by shadowReview in line.json ), which comments and does not decide. Shadow mode calls the Code Review command as <exe with the PR's checkout as the working directory, and reads the last line of stdout as JSON: {\"comment\":\"<review markdown \",\"costUsd\":0,...} . The command must print that line last, keep keys and tokens out of it, and exit 0. Any wrapper that reviews the checked-out PR with agentskit-review and prints that line satisfies the contract; this repository does not yet ship the wrapper. After a pass Run Code Review in shadow mode on the line for one week before replacing the incumbent. Shadow mode is an operational step in the factory line, not part of this repository's runtime.",
           "aliases": "document human"
         },
         "graph": {
@@ -5787,7 +5787,7 @@
             }
           ]
         },
-        "contentHash": "c6f96e8808e1e675819b5bf5445d1d8a4bdb176fa9d6436580e946388bb9139f",
+        "contentHash": "9cfd626cc988e99ebec7257b4f7f0a3503721d0479dd05a806b88cf213c45c51",
         "provenance": "observed",
         "confidence": "observed"
       },
