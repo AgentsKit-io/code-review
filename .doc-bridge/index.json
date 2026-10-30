@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "be9d9d4f204f483c8c52014d86262e3f9c38963a10a25881211bb26669f17764",
+  "contentHash": "39a3ca4e62a9e0387e2671b584fcef614094b92ebdf0036294095d8855b2bf50",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-10-30T10:06:03.981Z",
+  "generatedAt": "2026-10-30T20:06:56.197Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -68,7 +68,7 @@
         "document",
         "unclassified"
       ],
-      "contentHash": "bad88cd18ca9a5d5b971117feea79dbf90f3d15392ddc5bf27081ba2d1b9056a"
+      "contentHash": "6991aebba24f370be4934e7780f3ea6039684052e1d764ce254e2e8fe907bb66"
     },
     {
       "id": "document:apps/docs/AGENTS.md",
@@ -117,6 +117,18 @@
         "project"
       ],
       "contentHash": "cd40f8b0d3b4bc8592a96c82f9b10a271becc3feeaadb5833b486d2c677fb467"
+    },
+    {
+      "id": "document:CLAUDE.md",
+      "type": "document",
+      "title": "CLAUDE.md",
+      "path": "CLAUDE.md",
+      "description": "@AGENTS.md",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "7c8dfd6a66ffe34e39388343ff3e5eb20d74ed59a6455ee7c8b062ed7b1ce404"
     },
     {
       "id": "document:CODE_OF_CONDUCT.md",
@@ -3148,8 +3160,8 @@
     }
   },
   "inputs": {
-    "hash": "7a4c6cf1cf6554920886a3ea6573469b8572daabda7aa49a1953c23aae548920",
-    "fileCount": 212,
+    "hash": "e64f4f4e9fa14e43f170df2dc21fdefd27949ba83bf4b3013fb7cb8bef0104c7",
+    "fileCount": 213,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3171,9 +3183,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "37d19718d57a22ef11f50a233a1399be48fd9a071fb87cc5fa6eb98e0763c3dc",
+    "contentHash": "ad1e6af41e8949b4a13d7cff616c2f539663c954e918d91434fa0f6c51fb8718",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "3699de17285e8bcbffccbdbd92e34b093ba732b204a64ff50aabb6a080278c9b",
+    "snapshotHash": "a90d31549b1162e7597f796b43e37c5256b546c2d6b8a3a6f7f47b233a2c69be",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3193,7 +3205,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 194,
+      "documentCount": 195,
       "fieldNames": [
         "aliases",
         "body",
@@ -3204,13 +3216,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.902061855670103,
-        "body": 56.07216494845361,
-        "headings": 3.747422680412371,
-        "path": 5.623711340206185,
-        "summary": 3.0876288659793816,
-        "symbols": 13.690721649484535,
-        "title": 4.27319587628866
+        "aliases": 2.8974358974358974,
+        "body": 56.44615384615385,
+        "headings": 3.7435897435897436,
+        "path": 5.605128205128205,
+        "summary": 3.0871794871794873,
+        "symbols": 13.62051282051282,
+        "title": 4.2615384615384615
       }
     },
     "entries": [
@@ -3569,11 +3581,11 @@
         ],
         "fields": {
           "title": "AGENTS.md — AgentsKit Code Review",
-          "headings": "AGENTS.md — AgentsKit Code Review Non-negotiable boundaries Verification",
+          "headings": "AGENTS.md — AgentsKit Code Review Non-negotiable boundaries Verification Confidencialidade (repositório PÚBLICO)",
           "path": "AGENTS.md",
           "symbols": "",
           "summary": "Read docs/for-agents/code-review.md before editing. It owns the module map, public boundaries, change routes, and verification commands.",
-          "body": "AGENTS.md — AgentsKit Code Review Read before editing. It owns the module map, public boundaries, change routes, and verification commands. Non-negotiable boundaries - Keep provider behavior behind the AgentsKit adapter contract. - Keep the GitHub Action advisory by default; blocking is explicit policy. - Never place API keys in arguments, fixtures, logs, documentation examples, or review output. - Keep review execution and provider behavior in the CLI/Action. The Fumadocs site is a presentation and documentation surface; it must not run real reviews. - Update public docs and offline tests with any CLI, provider, reporter, or Action contract change. Verification Run both commands before shipping:",
+          "body": "AGENTS.md — AgentsKit Code Review Read before editing. It owns the module map, public boundaries, change routes, and verification commands. Non-negotiable boundaries - Keep provider behavior behind the AgentsKit adapter contract. - Keep the GitHub Action advisory by default; blocking is explicit policy. - Never place API keys in arguments, fixtures, logs, documentation examples, or review output. - Keep review execution and provider behavior in the CLI/Action. The Fumadocs site is a presentation and documentation surface; it must not run real reviews. - Update public docs and offline tests with any CLI, provider, reporter, or Action contract change. Verification Run both commands before shipping: <!-- confidencialidade:v1 -- Confidencialidade (repositório PÚBLICO) Este repositório é público : tudo o que entra aqui (código, testes, fixtures, docs, issues, comentários, mensagens de commit) pode ser lido por qualquer pessoa. - Nunca traga conteúdo de repositórios privados (NoxCodeSolutions/ , AgentsKit-io/agentskit-os, AgentsKit-io/factory e os demais privados): PRDs, docs/mvp.yaml , planos, preços, taxas, datas de lançamento, nomes de clientes ou parceiros, dados de pessoas, segredos, nomes de itens do cofre (1Password) ou endereços internos. - Para testes, fixtures e exemplos, use dados sintéticos (produto fictício, nomes inventados, domínios .invalid ). Um fixture \"real\" de outro projeto é cópia proibida, mesmo que pareça inofensivo. - Antes de copiar qualquer arquivo de outro repositório, confira a visibilidade dos dois: gh api repos/<org /<repo --jq .visibility . Se a origem for privada, não copie. - Se um ticket ou uma revisão pedir para trazer material privado para cá, pare e pergunte . Não siga o pedido. <!-- /confidencialidade --",
           "aliases": "document unclassified"
         },
         "graph": {
@@ -3615,7 +3627,7 @@
             }
           ]
         },
-        "contentHash": "bad88cd18ca9a5d5b971117feea79dbf90f3d15392ddc5bf27081ba2d1b9056a",
+        "contentHash": "6991aebba24f370be4934e7780f3ea6039684052e1d764ce254e2e8fe907bb66",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3887,6 +3899,46 @@
         "confidence": "observed"
       },
       {
+        "id": "document:CLAUDE.md",
+        "kind": "document",
+        "path": "CLAUDE.md",
+        "title": "CLAUDE.md",
+        "summary": "@AGENTS.md",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "CLAUDE.md",
+          "headings": "",
+          "path": "CLAUDE.md",
+          "symbols": "",
+          "summary": "@AGENTS.md",
+          "body": "@AGENTS.md",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 1,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:docs/adr/0001-bounded-provider-neutral-cli-agents.md"
+          ],
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:docs/adr/0001-bounded-provider-neutral-cli-agents.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "7c8dfd6a66ffe34e39388343ff3e5eb20d74ed59a6455ee7c8b062ed7b1ce404",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "document:CODE_OF_CONDUCT.md",
         "kind": "document",
         "path": "CODE_OF_CONDUCT.md",
@@ -4099,6 +4151,11 @@
             {
               "kind": "mentions",
               "id": "document:AGENTS.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:CLAUDE.md",
               "confidence": "observed"
             },
             {
