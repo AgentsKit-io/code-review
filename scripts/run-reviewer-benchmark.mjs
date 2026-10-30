@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 // Runs the incumbent line reviewer and code-review over quality/benchmark/prs.json and applies the entry criterion.
 //   node scripts/run-reviewer-benchmark.mjs --incumbent-cmd <executable> [--provider <p> --model <m> --usd-per-mtok <n>]
-//     [--candidate-cmd <executable>] [--dataset <file>] [--output <report.json>] [--markdown <report.md>]
+//     [--candidate-cmd <executable>] [--concurrency <n>] [--dataset <file>] [--output <report.json>] [--markdown <report.md>]
 // A reviewer command is run as `<executable> <owner/repo> <number>` (no shell) and must print
 // {"findings":[{"file","line","title"}],"costUsd":0} on stdout. Without --candidate-cmd the built-in CLI is used.
 // Credentials are inherited from the environment; none are accepted as arguments.
-import { runCommand } from '@agentskit/cross-platform'
+import { runCommand, splitLines } from '@agentskit/cross-platform'
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
@@ -23,7 +23,7 @@ async function runExternal(command, pr) {
   const run = await runCommand(command, [pr.repository, String(pr.number)], { timeoutMs: 1_800_000 })
   const latencyMs = Date.now() - startedAt
   try {
-    if (run.code !== 0) throw new Error(`exit ${run.code ?? run.signal}`)
+    if (run.code !== 0) throw new Error(`exit ${run.code ?? run.signal}: ${splitLines(run.stderr.trim()).at(-1) ?? ''}`.slice(0, 300))
     const out = JSON.parse(run.stdout)
     return { findings: out.findings ?? [], costUsd: Number(out.costUsd ?? 0), latencyMs }
   } catch (error) {
@@ -61,10 +61,14 @@ const workdir = mkdtempSync(join(tmpdir(), 'agentskit-reviewer-benchmark-'))
 try {
   const incumbentRuns = {}
   const candidateRuns = {}
-  for (const pr of dataset.prs) {
-    incumbentRuns[pr.id] = await runExternal(incumbentCmd, pr)
-    candidateRuns[pr.id] = candidateCmd ? await runExternal(candidateCmd, pr) : await runBuiltIn(pr, workdir)
+  const queue = [...dataset.prs]
+  const worker = async () => {
+    for (let pr = queue.shift(); pr; pr = queue.shift()) {
+      incumbentRuns[pr.id] = await runExternal(incumbentCmd, pr)
+      candidateRuns[pr.id] = candidateCmd ? await runExternal(candidateCmd, pr) : await runBuiltIn(pr, workdir)
+    }
   }
+  await Promise.all(Array.from({ length: Math.max(1, Number(value('concurrency') ?? 1)) }, worker))
   const report = evaluateBenchmark(dataset, incumbentRuns, candidateRuns)
   if (value('output')) writeFileSync(resolve(value('output')), `${JSON.stringify(report, null, 2)}\n`, { mode: 0o600 })
   const markdown = renderBenchmarkMarkdown(report)

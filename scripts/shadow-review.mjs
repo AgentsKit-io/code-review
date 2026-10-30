@@ -4,9 +4,9 @@
 //   shadow-review.mjs <owner/repo> <n>     review that GitHub PR (needs GITHUB_TOKEN)
 // The LAST line of stdout is {"comment","costUsd","findings":[{file,line,title}]}; progress goes to stderr and the
 // exit code is 0 for a completed review, even with findings (it comments, it does not decide).
-// Configuration comes from the environment only: AGENTSKIT_SHADOW_PROVIDER, AGENTSKIT_SHADOW_MODEL,
-// AGENTSKIT_SHADOW_USD_PER_MTOK (cost = tokens x rate; 0 when unset), AGENTSKIT_SHADOW_BASE (default origin/main).
-import { runCommand } from '@agentskit/cross-platform'
+// Configuration comes from the environment only: AGENTSKIT_SHADOW_PROVIDER, AGENTSKIT_SHADOW_MODEL, AGENTSKIT_SHADOW_MODE (isolated|trusted-local),
+// AGENTSKIT_SHADOW_CONFIG (a code-review config file, e.g. for a larger budget), AGENTSKIT_SHADOW_USD_PER_MTOK (cost = tokens x rate; 0 when unset), AGENTSKIT_SHADOW_BASE (default origin/main).
+import { runCommand, splitLines } from '@agentskit/cross-platform'
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
@@ -29,15 +29,17 @@ try {
   } else {
     const diff = await runCommand('git', ['diff', '--name-only', '--diff-filter=AM', `${env.AGENTSKIT_SHADOW_BASE ?? 'origin/main'}...HEAD`], { cwd: process.cwd(), timeoutMs: 60_000 })
     if (diff.code !== 0) fail('could not list the changed files (set AGENTSKIT_SHADOW_BASE)')
-    const files = diff.stdout.split('\n').filter(Boolean)
+    const files = splitLines(diff.stdout).filter(Boolean)
     if (!files.length) { emit({ comment: '## Code review\n\nNo changed files to review.', costUsd: 0, findings: [] }); process.exit(0) }
     args.push('--paths', ...files)
   }
   if (env.AGENTSKIT_SHADOW_PROVIDER) args.push('--provider', env.AGENTSKIT_SHADOW_PROVIDER)
+  if (env.AGENTSKIT_SHADOW_MODE) args.push('--mode', env.AGENTSKIT_SHADOW_MODE)
+  if (env.AGENTSKIT_SHADOW_CONFIG) args.push('--config', resolve(env.AGENTSKIT_SHADOW_CONFIG))
   if (env.AGENTSKIT_SHADOW_MODEL) args.push('--model', env.AGENTSKIT_SHADOW_MODEL)
   const run = await runCommand(process.execPath, args, { cwd: process.cwd(), timeoutMs: 1_800_000 })
   if (run.stderr) process.stderr.write(run.stderr)
-  if (run.code !== 0) fail(`review failed (exit ${run.code ?? run.signal})`)
+  if (run.code !== 0) fail(`review failed (exit ${run.code ?? run.signal}): ${splitLines(run.stderr.trim()).at(-1) ?? ''}`.slice(0, 280))
   const review = JSON.parse(readFileSync(result, 'utf8'))
   emit({
     comment: renderMarkdown(review),
