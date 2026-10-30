@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "39a3ca4e62a9e0387e2671b584fcef614094b92ebdf0036294095d8855b2bf50",
+  "contentHash": "29acbaabf7b55f7201fa9f0b91e3565f54021177d5a033f19a0cf0b291b25c8f",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-10-30T20:06:56.197Z",
+  "generatedAt": "2026-10-30T20:56:50.714Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -21,30 +21,6 @@
       "title": "Code Review agent docs",
       "path": "docs/for-agents/index.md",
       "description": "- Code Review CLI handoff — ownership, change routes, security boundaries, and verification: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review.md - Concise machine map — discovery, raw sources, and all six ecosystem products: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms.txt - Full machine corpus — public, operational, governance,"
-    },
-    {
-      "id": "document:.changeset/doc-bridge-2-5.md",
-      "type": "document",
-      "title": "doc-bridge-2-5.md",
-      "path": ".changeset/doc-bridge-2-5.md",
-      "description": "Update the optional @agentskit/doc-bridge dependency to ^2.5.0.",
-      "tags": [
-        "document",
-        "unclassified"
-      ],
-      "contentHash": "066cb6c6bf99cf493abbb17c0773cd820606298d34d90473effa16a586e7d3fb"
-    },
-    {
-      "id": "document:.changeset/reviewer-benchmark.md",
-      "type": "document",
-      "title": "reviewer-benchmark.md",
-      "path": ".changeset/reviewer-benchmark.md",
-      "description": "Add the reviewer benchmark: a 38-PR labelled dataset of real AgentsKit-io PRs, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, scripts/run-reviewer-benchmark.mjs to run it each release, and the agentskit-shadow-review wrapper for the line's shadow mode. The first run is BLOCKED (incumbent not reachable), so the switch stays off.",
-      "tags": [
-        "document",
-        "unclassified"
-      ],
-      "contentHash": "f433196b09dee4a628f0dfb123d8884bd04ee04b21263bf69a31739873c66bcf"
     },
     {
       "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
@@ -111,12 +87,12 @@
       "type": "document",
       "title": "Changelog",
       "path": "CHANGELOG.md",
-      "description": "#349 397778e Thanks @EmersonBraun! - Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7.",
+      "description": "#360 a3db09d Thanks @noxcode-factory! - Add the reviewer benchmark: a 38-PR labelled dataset of real AgentsKit-io PRs, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, scripts/run-reviewer-benchmark.mjs to run it each release, and the agentskit-shadow-review wrapper for the line's shadow mode.",
       "tags": [
         "document",
         "project"
       ],
-      "contentHash": "cd40f8b0d3b4bc8592a96c82f9b10a271becc3feeaadb5833b486d2c677fb467"
+      "contentHash": "7b33620d5b6bb9023acdb6e3531217302ba96c7ded4da31580ecf204fd30befa"
     },
     {
       "id": "document:CLAUDE.md",
@@ -3160,8 +3136,8 @@
     }
   },
   "inputs": {
-    "hash": "e64f4f4e9fa14e43f170df2dc21fdefd27949ba83bf4b3013fb7cb8bef0104c7",
-    "fileCount": 213,
+    "hash": "de6ea27bf2da6cd333026569633ae329307eb7149892b4b3da62979b5b3e4b76",
+    "fileCount": 211,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3183,9 +3159,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "ad1e6af41e8949b4a13d7cff616c2f539663c954e918d91434fa0f6c51fb8718",
+    "contentHash": "4e74944aa6c4d773be313ae5708486a84870caaf72976845c955a624a11727ce",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "a90d31549b1162e7597f796b43e37c5256b546c2d6b8a3a6f7f47b233a2c69be",
+    "snapshotHash": "a405cf23313e5d23a0daa06397e9045011c890fa2b8a36e189bb301893fce23d",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3205,7 +3181,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 195,
+      "documentCount": 193,
       "fieldNames": [
         "aliases",
         "body",
@@ -3216,13 +3192,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8974358974358974,
-        "body": 56.44615384615385,
-        "headings": 3.7435897435897436,
-        "path": 5.605128205128205,
-        "summary": 3.0871794871794873,
-        "symbols": 13.62051282051282,
-        "title": 4.2615384615384615
+        "aliases": 2.906735751295337,
+        "body": 56.72538860103627,
+        "headings": 3.7823834196891193,
+        "path": 5.61139896373057,
+        "summary": 2.994818652849741,
+        "symbols": 13.761658031088082,
+        "title": 4.2642487046632125
       }
     },
     "entries": [
@@ -3467,76 +3443,6 @@
         "confidence": "declared"
       },
       {
-        "id": "document:.changeset/doc-bridge-2-5.md",
-        "kind": "document",
-        "path": ".changeset/doc-bridge-2-5.md",
-        "title": "doc-bridge-2-5.md",
-        "summary": "Update the optional @agentskit/doc-bridge dependency to ^2.5.0.",
-        "aliases": [],
-        "tags": [
-          "document",
-          "unclassified"
-        ],
-        "fields": {
-          "title": "doc-bridge-2-5.md",
-          "headings": "",
-          "path": ".changeset/doc-bridge-2-5.md",
-          "symbols": "",
-          "summary": "Update the optional @agentskit/doc-bridge dependency to ^2.5.0.",
-          "body": "Update the optional @agentskit/doc-bridge dependency to ^2.5.0.",
-          "aliases": "document unclassified"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "066cb6c6bf99cf493abbb17c0773cd820606298d34d90473effa16a586e7d3fb",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
-        "id": "document:.changeset/reviewer-benchmark.md",
-        "kind": "document",
-        "path": ".changeset/reviewer-benchmark.md",
-        "title": "reviewer-benchmark.md",
-        "summary": "Add the reviewer benchmark: a 38-PR labelled dataset of real AgentsKit-io PRs, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, scripts/run-reviewer-benchmark.mjs to run it each release, and the agentskit-shadow-review wrapper for the line's shadow mode. The first run is BLOCKED (incumbent not reachable), so the switch stays off.",
-        "aliases": [],
-        "tags": [
-          "document",
-          "unclassified"
-        ],
-        "fields": {
-          "title": "reviewer-benchmark.md",
-          "headings": "",
-          "path": ".changeset/reviewer-benchmark.md",
-          "symbols": "",
-          "summary": "Add the reviewer benchmark: a 38-PR labelled dataset of real AgentsKit-io PRs, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, scripts/run-reviewer-benchmark.mjs to run it each release, and the agentskit-shadow-review wrapper for the line's shadow mode. The first run is BLOCKED (incumbent not reachable), so the switch stays off.",
-          "body": "Add the reviewer benchmark: a 38-PR labelled dataset of real AgentsKit-io PRs, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, scripts/run-reviewer-benchmark.mjs to run it each release, and the agentskit-shadow-review wrapper for the line's shadow mode. The first run is BLOCKED (incumbent not reachable), so the switch stays off.",
-          "aliases": "document unclassified"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
-          "outbound": [
-            {
-              "kind": "mentions",
-              "id": "module:scripts/run-reviewer-benchmark.mjs",
-              "confidence": "observed"
-            }
-          ]
-        },
-        "contentHash": "f433196b09dee4a628f0dfb123d8884bd04ee04b21263bf69a31739873c66bcf",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
         "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
         "kind": "document",
         "path": ".github/PULL_REQUEST_TEMPLATE.md",
@@ -3741,7 +3647,7 @@
         "kind": "document",
         "path": "CHANGELOG.md",
         "title": "Changelog",
-        "summary": "#349 397778e Thanks @EmersonBraun! - Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7.",
+        "summary": "#360 a3db09d Thanks @noxcode-factory! - Add the reviewer benchmark: a 38-PR labelled dataset of real AgentsKit-io PRs, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, scripts/run-reviewer-benchmark.mjs to run it each release, and the agentskit-shadow-review wrapper for the line's shadow mode.",
         "audience": "human",
         "aliases": [],
         "tags": [
@@ -3750,11 +3656,11 @@
         ],
         "fields": {
           "title": "Changelog",
-          "headings": "Changelog 0.32.5 Patch Changes 0.32.4 Patch Changes 0.32.3 Patch Changes 0.32.2 Patch Changes 0.32.1 Patch Changes 0.32.0 Minor Changes 0.31.0 Minor Changes Patch Changes 0.30.19 Patch Changes 0.30.18 Patch Changes 0.30.17 Patch Changes 0.30.16 Patch Changes 0.30.15 Patch Changes 0.30.14 Patch Changes 0.30.13 Patch Changes 0.30.12 Patch Changes 0.30.11 Patch Changes 0.30.10 Patch Changes 0.30.9 Patch Changes 0.30.8 Patch Changes 0.30.7 Patch Changes 0.30.6 Patch Changes 0.30.5 Patch Changes 0.30.4 Patch Changes 0.30.3 Patch Changes 0.30.2 Patch Changes 0.30.1 Patch Changes 0.30.0 Minor Changes 0.29.0 Minor Changes 0.28.0 Minor Changes 0.27.0 Minor Changes 0.26.0 Minor Changes",
+          "headings": "Changelog 0.33.0 Minor Changes Patch Changes 0.32.5 Patch Changes 0.32.4 Patch Changes 0.32.3 Patch Changes 0.32.2 Patch Changes 0.32.1 Patch Changes 0.32.0 Minor Changes 0.31.0 Minor Changes Patch Changes 0.30.19 Patch Changes 0.30.18 Patch Changes 0.30.17 Patch Changes 0.30.16 Patch Changes 0.30.15 Patch Changes 0.30.14 Patch Changes 0.30.13 Patch Changes 0.30.12 Patch Changes 0.30.11 Patch Changes 0.30.10 Patch Changes 0.30.9 Patch Changes 0.30.8 Patch Changes 0.30.7 Patch Changes 0.30.6 Patch Changes 0.30.5 Patch Changes 0.30.4 Patch Changes 0.30.3 Patch Changes 0.30.2 Patch Changes 0.30.1 Patch Changes 0.30.0 Minor Changes 0.29.0 Minor Changes 0.28.0 Minor Changes 0.27.0",
           "path": "CHANGELOG.md",
           "symbols": "",
-          "summary": "#349 397778e Thanks @EmersonBraun! - Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7.",
-          "body": "Changelog 0.32.5 Patch Changes - Thanks ! - Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7. 0.32.4 Patch Changes - Thanks ! - Run the publish job in the npm GitHub environment that the package's npm Trusted Publisher requires. The 0.32.3 publish was refused by npm because the job ran without it; this release ships those changes. 0.32.3 Patch Changes - Thanks ! - Align @agentskit/ dependencies with the latest releases: adapters ^0.19.0, core ^1.15.0, cross-platform ^0.3.0, ink 0.10.16, net ^0.2.3, runtime ^0.11.2, tools ^0.13.15. - Thanks ! - Codex lenses send the review prompt over stdin instead of as a command-line argument, so reviewing a large file no longer fails on Windows with spawn ENAMETOOLONG . - Thanks ! - Reuse AgentsKit Core's shared secret redactor for review source content and local CLI diagnostics. - Thanks ! - Route local CLI spawning, process-tree termination, and Windows-sensitive path/line handling through @agentskit/cross-platform instead of hand-rolled cross-spawn , negative-pid group kills, and shell: true probes. cross-spawn is no longer a direct dependency. npm run check now runs agentskit-cross-platform check against a committed baseline so new portability hazards fail. - Thanks ! - An incomplete review is published without the idempotency marker, so a later run at the same head reviews it again instead of printing SKIPPED: already reviewed without the requested --result . - Thanks ! - Recognise --provider minimax (MiniMax, MINIMAX API KEY ) as a stable API provider once @agentskit/adapters exports the minimax adapter. - Thanks ! - Use @agentskit/net for GitHub retry, per-attempt timeout, and bounded response-body handling. GETs now honor bounded Retry-After and jittered backoff; write reconciliation and the single-attempt mutation policy remain intact. - Thanks ! - Route GitHub REST traffic through one internal client with bounded JSON reads, API version and auth headers, same-origin redirect and pagination handling, and rate-limit-aware retries for GET requests. Keep all review and merge writes single-attempt. 0.32.2 Patch Changes - Thanks ! - Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies ( fumadocs-mdx: not found ). The workflow now installs apps/docs dependencies before npm run check , matching CI. 0.32.1 Patch Changes - Thanks ! - Fix local CLI providers ( claude-cli , codex-cli , ...) failing to spawn on Windows. npm's global install of any Node CLI produces a .cmd shim there, and Windows' CreateProcess cannot execute one without a shell, so the previous plain child process.spawn failed with ENOENT / EINVAL for every local provider regardless of the configured path — reproduced live via doctor --provider claude-cli , which reported executable: not found even though the CLI ran fine directly in the same shell. Switched to cross-spawn , which detects this case and re-execs through cmd.exe with the same argument escaping Node's own shell: true uses. 0.32.0 Minor Changes - Thanks ! - Migrate from zod v3 to zod v4, and drop zod-to-json-schema in favor of zod v4's native z.toJSONSchema() . zod-to-json-schema@3.25.2 declares zod v4 support in its peer dependencies, but its published types still import zod/v3 internally — passing it a native v4 schema fails to typecheck, so bumping the library alone doesn't work; the dependency has to go. This surfaced a real, pre-existing fragility during the migration: every structured tool-call schema in agents/code-review/agent.ts ( submit batched findings , submit verdicts , etc.) relied on zod-to-json-schema 's implicit default of additionalProperties: false for every z.object() , strict or not. z.toJSONSchema() only sets that when a schema is explicitly .strict() . Every one of those schemas is now .strict() by name, and a new test ( test/tool-schema-order.test.mjs ) locks additionalProperties: f",
+          "summary": "#360 a3db09d Thanks @noxcode-factory! - Add the reviewer benchmark: a 38-PR labelled dataset of real AgentsKit-io PRs, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, scripts/run-reviewer-benchmark.mjs to run it each release, and the agentskit-shadow-review wrapper for the line's shadow mode.",
+          "body": "Changelog 0.33.0 Minor Changes - Thanks ! - Add the reviewer benchmark: a 38-PR labelled dataset of real AgentsKit-io PRs, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, scripts/run-reviewer-benchmark.mjs to run it each release, and the agentskit-shadow-review wrapper for the line's shadow mode. The first run is BLOCKED (incumbent not reachable), so the switch stays off. Patch Changes - Thanks ! - Update the optional @agentskit/doc-bridge dependency to ^2.5.0. 0.32.5 Patch Changes - Thanks ! - Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7. 0.32.4 Patch Changes - Thanks ! - Run the publish job in the npm GitHub environment that the package's npm Trusted Publisher requires. The 0.32.3 publish was refused by npm because the job ran without it; this release ships those changes. 0.32.3 Patch Changes - Thanks ! - Align @agentskit/ dependencies with the latest releases: adapters ^0.19.0, core ^1.15.0, cross-platform ^0.3.0, ink 0.10.16, net ^0.2.3, runtime ^0.11.2, tools ^0.13.15. - Thanks ! - Codex lenses send the review prompt over stdin instead of as a command-line argument, so reviewing a large file no longer fails on Windows with spawn ENAMETOOLONG . - Thanks ! - Reuse AgentsKit Core's shared secret redactor for review source content and local CLI diagnostics. - Thanks ! - Route local CLI spawning, process-tree termination, and Windows-sensitive path/line handling through @agentskit/cross-platform instead of hand-rolled cross-spawn , negative-pid group kills, and shell: true probes. cross-spawn is no longer a direct dependency. npm run check now runs agentskit-cross-platform check against a committed baseline so new portability hazards fail. - Thanks ! - An incomplete review is published without the idempotency marker, so a later run at the same head reviews it again instead of printing SKIPPED: already reviewed without the requested --result . - Thanks ! - Recognise --provider minimax (MiniMax, MINIMAX API KEY ) as a stable API provider once @agentskit/adapters exports the minimax adapter. - Thanks ! - Use @agentskit/net for GitHub retry, per-attempt timeout, and bounded response-body handling. GETs now honor bounded Retry-After and jittered backoff; write reconciliation and the single-attempt mutation policy remain intact. - Thanks ! - Route GitHub REST traffic through one internal client with bounded JSON reads, API version and auth headers, same-origin redirect and pagination handling, and rate-limit-aware retries for GET requests. Keep all review and merge writes single-attempt. 0.32.2 Patch Changes - Thanks ! - Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies ( fumadocs-mdx: not found ). The workflow now installs apps/docs dependencies before npm run check , matching CI. 0.32.1 Patch Changes - Thanks ! - Fix local CLI providers ( claude-cli , codex-cli , ...) failing to spawn on Windows. npm's global install of any Node CLI produces a .cmd shim there, and Windows' CreateProcess cannot execute one without a shell, so the previous plain child process.spawn failed with ENOENT / EINVAL for every local provider regardless of the configured path — reproduced live via doctor --provider claude-cli , which reported executable: not found even though the CLI ran fine directly in the same shell. Switched to cross-spawn , which detects this case and re-execs through cmd.exe with the same argument escaping Node's own shell: true uses. 0.32.0 Minor Changes - Thanks ! - Migrate from zod v3 to zod v4, and drop zod-to-json-schema in favor of zod v4's native z.toJSONSchema() . zod-to-json-schema@3.25.2 declares zod v4 support in its peer dependencies, but its published types still import zod/v3 internally — passing it a native v4 schema fails to typecheck, so bumping the library alone doesn't work; the dependenc",
           "aliases": "document project"
         },
         "graph": {
@@ -3795,6 +3701,11 @@
             {
               "kind": "mentions",
               "id": "module:agents/code-review/rules.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:scripts/run-reviewer-benchmark.mjs",
               "confidence": "observed"
             },
             {
@@ -3894,7 +3805,7 @@
             }
           ]
         },
-        "contentHash": "cd40f8b0d3b4bc8592a96c82f9b10a271becc3feeaadb5833b486d2c677fb467",
+        "contentHash": "7b33620d5b6bb9023acdb6e3531217302ba96c7ded4da31580ecf204fd30befa",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -8384,7 +8295,7 @@
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
-            "document:.changeset/reviewer-benchmark.md",
+            "document:CHANGELOG.md",
             "document:docs/for-agents/code-review.md",
             "document:docs/reviewer-benchmark.md"
           ],
@@ -8393,7 +8304,7 @@
           "inbound": [
             {
               "kind": "mentions",
-              "id": "document:.changeset/reviewer-benchmark.md",
+              "id": "document:CHANGELOG.md",
               "confidence": "observed"
             },
             {
@@ -14465,7 +14376,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "27659fca82a4b51853483b3fb7d392e077080e3a43330129659ddf13007ebf51",
+        "contentHash": "d6ecd03997a3e58f6510f09b3476dbc9cee0226056f767b84a2818a2c143ac1c",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
