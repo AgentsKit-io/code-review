@@ -13,6 +13,8 @@ export interface KnownBug {
   /** Case-insensitive substrings; when present, the finding title must include at least one. */
   titleIncludes?: string[]
   note: string
+  /** The PR/commit that fixed the defect: the evidence that the finding was real. */
+  fix?: { pr: number; commit: string }
 }
 
 export interface BenchmarkPr {
@@ -74,6 +76,7 @@ export function parseBenchmarkDataset(value: unknown): BenchmarkDataset {
     if (label === 'buggy' && !bugs.length) throw new Error(`${id}: a buggy PR needs at least one known bug`)
     for (const bug of bugs) {
       if (typeof bug?.file !== 'string' || !Number.isInteger(bug.line) || typeof bug.note !== 'string' || !bug.note) throw new Error(`${id}: each bug needs file, integer line and note`)
+      if (bug.fix !== undefined && (!Number.isInteger(bug.fix.pr) || !/^[0-9a-f]{40}$/.test(bug.fix.commit ?? ''))) throw new Error(`${id}: bug.fix needs an integer pr and a 40-hex commit`)
     }
     return { id, repository, number, label, bugs }
   })

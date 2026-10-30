@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
 import { evaluateBenchmark, parseBenchmarkDataset } from '../dist/src/reviewer-benchmark.js'
 
@@ -34,7 +35,17 @@ test('is blocked for a small dataset or an errored run', () => {
   assert.equal(evaluateBenchmark(dataset, ok, broken).decision, 'BLOCKED')
 })
 
-test('rejects malformed labels and the shipped dataset parses', () => {
+test('the shipped dataset parses, has at least 30 PRs with both labels and cites a fix for every bug', () => {
+  const shipped = parseBenchmarkDataset(JSON.parse(readFileSync(new URL('../quality/benchmark/prs.json', import.meta.url), 'utf8')))
+  assert.ok(shipped.prs.length >= 30)
+  assert.ok(shipped.prs.some((pr) => pr.label === 'buggy'))
+  assert.ok(shipped.prs.some((pr) => pr.label === 'clean'))
+  assert.ok(shipped.prs.every((pr) => /^AgentsKit-io\//.test(pr.repository)))
+  for (const pr of shipped.prs.filter((p) => p.label === 'buggy')) for (const bug of pr.bugs) assert.ok(bug.fix, `${pr.id} ${bug.file}`)
+})
+
+test('rejects malformed labels and fix citations', () => {
   assert.throws(() => parseBenchmarkDataset({ version: 1, prs: [{ id: 'x', repository: 'o/r', number: 1, label: 'clean', bugs: [{ file: 'a', line: 1, note: 'n' }] }] }))
   assert.throws(() => parseBenchmarkDataset({ version: 1, prs: [{ id: 'x', repository: 'o/r', number: 1, label: 'buggy', bugs: [] }] }))
+  assert.throws(() => parseBenchmarkDataset({ version: 1, prs: [{ id: 'x', repository: 'o/r', number: 1, label: 'buggy', bugs: [{ file: 'a', line: 1, note: 'n', fix: { pr: 2, commit: 'abc' } }] }] }))
 })
