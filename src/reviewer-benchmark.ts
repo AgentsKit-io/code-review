@@ -133,12 +133,27 @@ export function evaluateBenchmark(dataset: BenchmarkDataset, incumbentRuns: Reco
   return { decision: failures.length ? 'FAIL' : 'PASS', reasons: failures, incumbent, candidate }
 }
 
+const cell = (p: PrScore | undefined) => (p ? `${p.error ? 'error' : `${p.bugsFound}/${p.bugsKnown}`} | ${p.error ? '-' : p.falsePositives}` : '- | -')
+
+/** Requirement RF-02 (`mvp:RF-02`): real bugs and false positives per PR and in total, both reviewers, one counting rule. */
 export function renderBenchmarkMarkdown(report: BenchmarkReport): string {
   const { incumbent, candidate } = report
   const lines = [
     `# Reviewer benchmark: ${report.decision}`,
     '',
+    'Requirement `mvp:RF-02`: real bugs found and false positives of both reviewers, per PR and in total.',
+    '',
     ...report.reasons.map((reason) => `- ${reason}`),
+    '',
+    '## Counting rule',
+    '',
+    'Both reviewers run over the same labelled PRs (`quality/benchmark/prs.json`) and are scored by the same function (`scorePr` in `src/reviewer-benchmark.ts`):',
+    '',
+    '- A **real bug** is a known bug (a defect later fixed by a fix PR) matched by at least one finding on the same file within the line tolerance (default 3 lines); each known bug counts once.',
+    '- A **false positive** is any finding that matches no known bug, including every finding on a clean PR.',
+    '- A PR where the reviewer errored shows `error` and is not counted; any error makes the decision `BLOCKED`.',
+    '',
+    '## Totals',
     '',
     '| Reviewer | Bugs found | False positives | Cost (US$) | Mean latency (ms) | Errored PRs |',
     '| --- | --- | --- | --- | --- | --- |',
@@ -146,9 +161,22 @@ export function renderBenchmarkMarkdown(report: BenchmarkReport): string {
     '',
     '## Per PR',
     '',
-    '| PR | Reviewer | Bugs | False positives | Cost (US$) | Latency (ms) |',
-    '| --- | --- | --- | --- | --- | --- |',
-    ...[incumbent, candidate].flatMap((s) => s.perPr.map((p) => `| ${p.id} | ${s.name} | ${p.bugsFound}/${p.bugsKnown} | ${p.falsePositives} | ${p.costUsd.toFixed(2)} | ${p.latencyMs}${p.error ? ' (error)' : ''} |`)),
+    '| PR | incumbent bugs | incumbent false positives | code-review bugs | code-review false positives |',
+    '| --- | --- | --- | --- | --- |',
+    ...incumbent.perPr.map((p) => `| ${p.id} | ${cell(p)} | ${cell(candidate.perPr.find((c) => c.id === p.id))} |`),
+    `| **Total** | **${incumbent.bugsFound}/${incumbent.bugsKnown}** | **${incumbent.falsePositives}** | **${candidate.bugsFound}/${candidate.bugsKnown}** | **${candidate.falsePositives}** |`,
+    '',
+    '## Reproduce',
+    '',
+    '```bash',
+    'npm ci && npm run build',
+    'export GITHUB_TOKEN=... AGENTSKIT_SHADOW_PROVIDER=anthropic AGENTSKIT_SHADOW_USD_PER_MTOK=<price>',
+    'node scripts/run-reviewer-benchmark.mjs --incumbent-cmd <line reviewer executable> \\',
+    '  --candidate-cmd ./scripts/shadow-review.mjs --concurrency 6 \\',
+    '  --output quality/benchmark/report.json --markdown docs/reviewer-benchmark-report.md',
+    '```',
+    '',
+    'The incumbent command is run as `<executable> <owner/repo> <number>` and prints `{"findings":[{"file","line","title"}],"costUsd":0}`; see `docs/reviewer-benchmark.md`.',
   ]
   return `${lines.join('\n')}\n`
 }
