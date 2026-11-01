@@ -49,3 +49,17 @@ test('rejects malformed labels and fix citations', () => {
   assert.throws(() => parseBenchmarkDataset({ version: 1, prs: [{ id: 'x', repository: 'o/r', number: 1, label: 'buggy', bugs: [] }] }))
   assert.throws(() => parseBenchmarkDataset({ version: 1, prs: [{ id: 'x', repository: 'o/r', number: 1, label: 'buggy', bugs: [{ file: 'a', line: 1, note: 'n', fix: { pr: 2, commit: 'abc' } }] }] }))
 })
+
+test('RF-05: reports the candidate p90 latency and fails when it exceeds the review-stage time', () => {
+  const incumbent = runs((pr) => run(pr.bugs.length ? [hit, noise] : [noise], 1))
+  // 27 PRs at 1s and 3 at 10s: the nearest-rank p90 is the 27th value, still 1s.
+  const timed = (slowCount) => runs((pr) => ({ ...run(pr.bugs.length ? [hit] : [], 1), latencyMs: Number(pr.id.split('#')[1]) < slowCount * 2 ? 10_000 : 1_000 }))
+  const within = evaluateBenchmark(dataset, incumbent, timed(0), { stageTimeoutMs: 2_000 })
+  assert.equal(within.candidate.p90LatencyMs, 1_000)
+  assert.equal(within.decision, 'PASS')
+  const over = evaluateBenchmark(dataset, incumbent, timed(5), { stageTimeoutMs: 2_000 })
+  assert.equal(over.candidate.p90LatencyMs, 10_000)
+  assert.equal(over.decision, 'FAIL')
+  assert.match(over.reasons.join('\n'), /p90 latency/)
+  assert.equal(evaluateBenchmark(dataset, incumbent, timed(5)).decision, 'PASS')
+})
