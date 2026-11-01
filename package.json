@@ -54,6 +54,7 @@
     "scripts/generate-llms-full.mjs",
     "scripts/run-cycle-benchmark.mjs",
     "scripts/run-reviewer-benchmark.mjs",
+    "scripts/check-version-pin.mjs",
     "scripts/shadow-review.mjs",
     "docs/reviewer-benchmark-report.md",
     "quality/benchmark/report.json",

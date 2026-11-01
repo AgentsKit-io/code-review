@@ -26,6 +26,8 @@ node scripts/run-reviewer-benchmark.mjs --incumbent-cmd ./path/to/line-reviewer 
 
 An external reviewer command is run as `<executable> <owner/repo> <number>` (no shell) and prints `{"findings":[{"file","line","title"}],"costUsd":0}`. Without `--candidate-cmd` the built-in CLI reviews each PR with `--pr` (needs `GITHUB_TOKEN`; provider keys come from the environment, never from arguments). Cost for the built-in reviewer is `tokensUsed` times `--usd-per-mtok`.
 
+The report records `candidateVersion` (this package's version, or `--candidate-version` when `--candidate-cmd` runs another build) and `datasetSha256` (the labelled set that was run).
+
 ## Entry criterion
 
 `PASS` needs: at least as many real bugs found as the incumbent, strictly fewer false positives (any finding matching no known bug, and every finding on a clean PR), and cost at most 1.2x the incumbent. Any errored PR makes the report `BLOCKED`. The exit code is 2 unless `PASS`.
@@ -44,6 +46,17 @@ export GITHUB_TOKEN=... AGENTSKIT_SHADOW_PROVIDER=claude-cli AGENTSKIT_SHADOW_MO
 node scripts/run-reviewer-benchmark.mjs --incumbent-cmd <line reviewer executable> \
   --candidate-cmd ./scripts/shadow-review.mjs --concurrency 6 --output quality/benchmark/report.json --markdown docs/reviewer-benchmark-report.md
 ```
+
+## Pinning the measured version
+
+The line installs Code Review at the exact version that was measured, never `@latest`, a tag or a range. Before it pins or changes that version it runs:
+
+```bash
+node node_modules/@agentskit/code-review/scripts/check-version-pin.mjs --pin 0.33.0 \
+  [--report quality/benchmark/report.json] [--dataset quality/benchmark/prs.json]
+```
+
+It exits 0 only when the pin is an exact version, the report's decision is `PASS`, the report's `candidateVersion` is that version and its `datasetSha256` matches the current labelled set; otherwise it exits 2 and lists the reasons. A new version, or a changed `prs.json`, therefore needs a new benchmark run against the incumbent before the line may use it. The shipped report is `BLOCKED`, so no version can be pinned yet; the one-week shadow run (after a `PASS`) must use the same pinned version.
 
 ## After a pass
 
