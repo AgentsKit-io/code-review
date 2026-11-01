@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "39a3ca4e62a9e0387e2671b584fcef614094b92ebdf0036294095d8855b2bf50",
+  "contentHash": "cb18a4908c46246a99d417eaec5742e617886eaf466464079c110b8c34d876e4",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-10-30T20:06:56.197Z",
+  "generatedAt": "2026-11-01T08:10:25.645Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -105,6 +105,18 @@
         "human"
       ],
       "contentHash": "4aec718b2e2371cda20dc868a638cc903907b5000e164a0a63abd0244ce6b6d4"
+    },
+    {
+      "id": "document:changelog.d/370.md",
+      "type": "document",
+      "title": "370.md",
+      "path": "changelog.d/370.md",
+      "description": "feat: shadow week protocol and offline report generator (mvp:RF-08)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "c0ec9c327958c24d5a6aea18b91e0805fef6bcff479b3f31b6276e742ea50d50"
     },
     {
       "id": "document:CHANGELOG.md",
@@ -417,6 +429,18 @@
         "human"
       ],
       "contentHash": "0f119fe43d609d936ca81fddfd780984368b7e2813a3b17975480ff4c168d553"
+    },
+    {
+      "id": "document:docs/shadow-week-protocol.md",
+      "type": "document",
+      "title": "Shadow week protocol",
+      "path": "docs/shadow-week-protocol.md",
+      "description": "After the reviewer benchmark returns PASS, Code Review runs in shadow mode (it comments, it does not decide) next to the incumbent line reviewer for 7 consecutive days on the 2 or 3 repositories of the line with the most PRs. This page is the protocol and the offline report generator.",
+      "tags": [
+        "document",
+        "human"
+      ],
+      "contentHash": "c4cae949541bae1e8e8f6908fcc88f78e17dd752eaf404c4bdde7857c6bff2e8"
     },
     {
       "id": "document:GOVERNANCE.md",
@@ -1063,6 +1087,18 @@
         "scripts"
       ],
       "contentHash": "6492825828a01eb5ed0671a003a633f90a724b444ebdf3568d5444a60d336818"
+    },
+    {
+      "id": "module:scripts/render-shadow-week-report.mjs",
+      "type": "module",
+      "title": "render-shadow-week-report.mjs",
+      "path": "scripts/render-shadow-week-report.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "dd1476ccc92ba4ddfbc216c14b5d47078aae35b38cd560a5848d361d3d508324"
     },
     {
       "id": "module:scripts/review-campaign.mjs",
@@ -2317,6 +2353,37 @@
       "contentHash": "b13b2860d25036f9c862843727c17624007b8b7f807fdcfd5fec62f8dd19838c"
     },
     {
+      "id": "module:src/shadow-week.ts",
+      "type": "module",
+      "title": "shadow-week.ts",
+      "path": "src/shadow-week.ts",
+      "symbols": [
+        "MAX_SHADOW_REPOSITORIES",
+        "MIN_SHADOW_DAYS",
+        "MIN_SHADOW_REPOSITORIES",
+        "SHADOW_REVIEWERS",
+        "ShadowDecision",
+        "ShadowFinding",
+        "ShadowPr",
+        "ShadowPrScore",
+        "ShadowReviewerName",
+        "ShadowReviewerRun",
+        "ShadowReviewerTotals",
+        "ShadowVerdict",
+        "ShadowWeekData",
+        "ShadowWeekReport",
+        "evaluateShadowWeek",
+        "parseShadowWeekData",
+        "renderShadowWeekMarkdown"
+      ],
+      "tags": [
+        "module",
+        "ts",
+        "src"
+      ],
+      "contentHash": "9f2380c1dfbff3427ab69761597a14a6c55bb7e695984b407f83e2bcfb49c7b6"
+    },
+    {
       "id": "module:src/stable-fingerprint.ts",
       "type": "module",
       "title": "stable-fingerprint.ts",
@@ -3041,6 +3108,18 @@
       "contentHash": "fa0336a7230a466c6d0e8f641d1cc870cd29888dda66da37131a0163f134b3c5"
     },
     {
+      "id": "module:test/shadow-week.test.mjs",
+      "type": "module",
+      "title": "shadow-week.test.mjs",
+      "path": "test/shadow-week.test.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "test"
+      ],
+      "contentHash": "4578d9881ee7abd69a4c549ce18d5dbad0afcc53ef71ee8684d09afc71a880e2"
+    },
+    {
       "id": "module:test/sources-context.test.mjs",
       "type": "module",
       "title": "sources-context.test.mjs",
@@ -3160,8 +3239,8 @@
     }
   },
   "inputs": {
-    "hash": "e64f4f4e9fa14e43f170df2dc21fdefd27949ba83bf4b3013fb7cb8bef0104c7",
-    "fileCount": 213,
+    "hash": "a068648c2579984101610406dbd5651d767c5c4b01041ed147f32d4bd53b7440",
+    "fileCount": 219,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3183,9 +3262,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "ad1e6af41e8949b4a13d7cff616c2f539663c954e918d91434fa0f6c51fb8718",
+    "contentHash": "9aa9c8d81873e1081156bcb82392fdc5943efeffe0691b3931d00860816e7f9f",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "a90d31549b1162e7597f796b43e37c5256b546c2d6b8a3a6f7f47b233a2c69be",
+    "snapshotHash": "98a5f6224cef5acb7fc51aa4a341386a132e39a1c54f97df7b7ae6e4ff5ddd17",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3205,7 +3284,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 195,
+      "documentCount": 200,
       "fieldNames": [
         "aliases",
         "body",
@@ -3216,13 +3295,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8974358974358974,
-        "body": 56.44615384615385,
-        "headings": 3.7435897435897436,
-        "path": 5.605128205128205,
-        "summary": 3.0871794871794873,
-        "symbols": 13.62051282051282,
-        "title": 4.2615384615384615
+        "aliases": 2.89,
+        "body": 55.96,
+        "headings": 3.68,
+        "path": 5.605,
+        "summary": 3.195,
+        "symbols": 13.605,
+        "title": 4.255
       }
     },
     "entries": [
@@ -3390,7 +3469,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "dc1a63778fd5738005884e94c8039e9aa8640e4dd1dcc21fb4373d21956b0f56",
+        "contentHash": "9c5290c5df12e0dfeb86105146f5e9fb6e187965b4436f50cc33da3763b3414b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3429,7 +3508,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "c87d016429f150be7349fafbf7ab5fca36e29378299712089296a0efe3765165",
+        "contentHash": "fa9ad8b36d8d4323ae0fd42cee34ddf802f3aa2daa2927c30c1ca51a5a67164b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3589,7 +3668,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.021519,
+          "pagerank": 0.020391,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -3737,6 +3816,39 @@
         "confidence": "observed"
       },
       {
+        "id": "document:changelog.d/370.md",
+        "kind": "document",
+        "path": "changelog.d/370.md",
+        "title": "370.md",
+        "summary": "feat: shadow week protocol and offline report generator (mvp:RF-08)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "370.md",
+          "headings": "",
+          "path": "changelog.d/370.md",
+          "symbols": "",
+          "summary": "feat: shadow week protocol and offline report generator (mvp:RF-08)",
+          "body": "feat: shadow week protocol and offline report generator (mvp:RF-08) Adds docs/shadow-week-protocol.md and scripts/render-shadow-week-report.mjs, which apply the benchmark criteria (fixes, false alarms, cost <= 1.2x by tokens) to a week of shadow-mode data. Synthetic example only.",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "c0ec9c327958c24d5a6aea18b91e0805fef6bcff479b3f31b6276e742ea50d50",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "document:CHANGELOG.md",
         "kind": "document",
         "path": "CHANGELOG.md",
@@ -3758,7 +3870,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.024672,
+          "pagerank": 0.023378,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [
@@ -3959,7 +4071,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.05132,
+          "pagerank": 0.048629,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -4010,7 +4122,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.030216,
+          "pagerank": 0.028631,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -4136,7 +4248,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.023349,
+          "pagerank": 0.022124,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4206,7 +4318,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.023349,
+          "pagerank": 0.022124,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4266,7 +4378,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.023349,
+          "pagerank": 0.022124,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4326,7 +4438,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.023349,
+          "pagerank": 0.022124,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4396,7 +4508,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.023349,
+          "pagerank": 0.022124,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4466,7 +4578,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.026502,
+          "pagerank": 0.025111,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4536,7 +4648,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.023349,
+          "pagerank": 0.022124,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4591,7 +4703,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.023349,
+          "pagerank": 0.022124,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -4658,7 +4770,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.023349,
+          "pagerank": 0.022124,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4728,7 +4840,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.023349,
+          "pagerank": 0.022124,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4783,7 +4895,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.021519,
+          "pagerank": 0.020391,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4867,7 +4979,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.067838,
+          "pagerank": 0.064279,
           "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [
@@ -4939,7 +5051,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.027286,
+          "pagerank": 0.025854,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5007,7 +5119,7 @@
           "aliases": "code-review document agent package"
         },
         "graph": {
-          "pagerank": 0.075873,
+          "pagerank": 0.071892,
           "inboundLinks": 5,
           "coveredBy": [],
           "mentionedBy": [
@@ -5233,7 +5345,7 @@
           "aliases": "index document agent"
         },
         "graph": {
-          "pagerank": 0.024672,
+          "pagerank": 0.023378,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -5285,7 +5397,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.024133,
+          "pagerank": 0.022867,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5410,7 +5522,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.021519,
+          "pagerank": 0.020391,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5479,7 +5591,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.029676,
+          "pagerank": 0.028119,
           "inboundLinks": 6,
           "coveredBy": [],
           "mentionedBy": [
@@ -5717,7 +5829,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.032829,
+          "pagerank": 0.031107,
           "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5787,7 +5899,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.024133,
+          "pagerank": 0.022867,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -5854,7 +5966,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.039811,
+          "pagerank": 0.052455,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5893,13 +6005,18 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.021519,
-          "inboundLinks": 1,
+          "pagerank": 0.037722,
+          "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
             "document:docs/for-agents/code-review.md"
           ],
           "inbound": [
+            {
+              "kind": "links-to",
+              "id": "document:docs/shadow-week-protocol.md",
+              "confidence": "observed"
+            },
             {
               "kind": "mentions",
               "id": "document:docs/for-agents/code-review.md",
@@ -5934,6 +6051,50 @@
         "confidence": "observed"
       },
       {
+        "id": "document:docs/shadow-week-protocol.md",
+        "kind": "document",
+        "path": "docs/shadow-week-protocol.md",
+        "title": "Shadow week protocol",
+        "summary": "After the reviewer benchmark returns PASS, Code Review runs in shadow mode (it comments, it does not decide) next to the incumbent line reviewer for 7 consecutive days on the 2 or 3 repositories of the line with the most PRs. This page is the protocol and the offline report generator.",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "human"
+        ],
+        "fields": {
+          "title": "Shadow week protocol",
+          "headings": "Shadow week protocol Run Input Criteria",
+          "path": "docs/shadow-week-protocol.md",
+          "symbols": "",
+          "summary": "After the reviewer benchmark returns PASS, Code Review runs in shadow mode (it comments, it does not decide) next to the incumbent line reviewer for 7 consecutive days on the 2 or 3 repositories of the line with the most PRs. This page is the protocol and the offline report generator.",
+          "body": "Shadow week protocol After the returns PASS , Code Review runs in shadow mode (it comments, it does not decide) next to the incumbent line reviewer for 7 consecutive days on the 2 or 3 repositories of the line with the most PRs. This page is the protocol and the offline report generator. The real week's data and report live in the line's private repository, not here; the example in quality/shadow-week/example.json is synthetic. Run 1. Enable shadow mode ( scripts/shadow-review.mjs , see the benchmark page) on the chosen repositories. Both reviewers see every PR; neither blocks. 2. At the end of the week, for each reviewed PR classify each finding of each reviewer: fix (it became a correction in the PR or a later fix) or false-alarm . Record the tokens each reviewer used. 3. Write one JSON file and render the report: Input One usdPerMtok applies to both reviewers: cost is counted from tokens with the same price table. Every finding must be classified. Criteria Same three as the benchmark, on the week's totals: fixes at least the incumbent's, strictly fewer false alarms, cost at most 1.2x. The report is BLOCKED when the data spans fewer than 7 days or does not cover 2 or 3 repositories. The exit code is 2 unless PASS . The report lists, per PR, each reviewer's fixes, false alarms, tokens and cost. Requirement: mvp:RF-08 .",
+          "aliases": "document human"
+        },
+        "graph": {
+          "pagerank": 0.020391,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "links-to",
+              "id": "document:docs/reviewer-benchmark.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:scripts/shadow-review.mjs",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "c4cae949541bae1e8e8f6908fcc88f78e17dd752eaf404c4bdde7857c6bff2e8",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "document:GOVERNANCE.md",
         "kind": "document",
         "path": "GOVERNANCE.md",
@@ -5954,7 +6115,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.039905,
+          "pagerank": 0.037811,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -6043,7 +6204,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.021519,
+          "pagerank": 0.020391,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -6175,7 +6336,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.030216,
+          "pagerank": 0.028631,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -6249,7 +6410,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.047175,
+          "pagerank": 0.044701,
           "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [
@@ -8162,6 +8323,40 @@
         "confidence": "observed"
       },
       {
+        "id": "module:scripts/render-shadow-week-report.mjs",
+        "kind": "module",
+        "path": "scripts/render-shadow-week-report.mjs",
+        "title": "render-shadow-week-report.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "render-shadow-week-report.mjs",
+          "headings": "",
+          "path": "scripts/render-shadow-week-report.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:scripts",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "dd1476ccc92ba4ddfbc216c14b5d47078aae35b38cd560a5848d361d3d508324",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:scripts/review-campaign.mjs",
         "kind": "module",
         "path": "scripts/review-campaign.mjs",
@@ -8435,10 +8630,11 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 1,
+          "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
-            "document:docs/reviewer-benchmark.md"
+            "document:docs/reviewer-benchmark.md",
+            "document:docs/shadow-week-protocol.md"
           ],
           "areaId": "area:scripts",
           "packageId": "package:@agentskit/code-review",
@@ -8446,6 +8642,11 @@
             {
               "kind": "mentions",
               "id": "document:docs/reviewer-benchmark.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/shadow-week-protocol.md",
               "confidence": "observed"
             }
           ],
@@ -11955,6 +12156,11 @@
           "packageId": "package:@agentskit/code-review",
           "inbound": [
             {
+              "kind": "imports",
+              "id": "module:src/shadow-week.ts",
+              "confidence": "observed"
+            },
+            {
               "kind": "mentions",
               "id": "document:docs/for-agents/code-review.md",
               "confidence": "observed"
@@ -12094,6 +12300,64 @@
           "outbound": []
         },
         "contentHash": "b13b2860d25036f9c862843727c17624007b8b7f807fdcfd5fec62f8dd19838c",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:src/shadow-week.ts",
+        "kind": "module",
+        "path": "src/shadow-week.ts",
+        "title": "shadow-week.ts",
+        "aliases": [],
+        "symbols": [
+          "MAX_SHADOW_REPOSITORIES",
+          "MIN_SHADOW_DAYS",
+          "MIN_SHADOW_REPOSITORIES",
+          "SHADOW_REVIEWERS",
+          "ShadowDecision",
+          "ShadowFinding",
+          "ShadowPr",
+          "ShadowPrScore",
+          "ShadowReviewerName",
+          "ShadowReviewerRun",
+          "ShadowReviewerTotals",
+          "ShadowVerdict",
+          "ShadowWeekData",
+          "ShadowWeekReport",
+          "evaluateShadowWeek",
+          "parseShadowWeekData",
+          "renderShadowWeekMarkdown"
+        ],
+        "tags": [
+          "module",
+          "ts",
+          "src"
+        ],
+        "fields": {
+          "title": "shadow-week.ts",
+          "headings": "",
+          "path": "src/shadow-week.ts",
+          "symbols": "MAX_SHADOW_REPOSITORIES MIN_SHADOW_DAYS MIN_SHADOW_REPOSITORIES SHADOW_REVIEWERS ShadowDecision ShadowFinding ShadowPr ShadowPrScore ShadowReviewerName ShadowReviewerRun ShadowReviewerTotals ShadowVerdict ShadowWeekData ShadowWeekReport evaluateShadowWeek parseShadowWeekData renderShadowWeekMarkdown",
+          "summary": "",
+          "body": "",
+          "aliases": "module ts src"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:src/reviewer-benchmark.ts",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "9f2380c1dfbff3427ab69761597a14a6c55bb7e695984b407f83e2bcfb49c7b6",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -14250,6 +14514,40 @@
         "confidence": "observed"
       },
       {
+        "id": "module:test/shadow-week.test.mjs",
+        "kind": "module",
+        "path": "test/shadow-week.test.mjs",
+        "title": "shadow-week.test.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "test"
+        ],
+        "fields": {
+          "title": "shadow-week.test.mjs",
+          "headings": "",
+          "path": "test/shadow-week.test.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs test"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:test",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "4578d9881ee7abd69a4c549ce18d5dbad0afcc53ef71ee8684d09afc71a880e2",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:test/sources-context.test.mjs",
         "kind": "module",
         "path": "test/sources-context.test.mjs",
@@ -14418,7 +14716,7 @@
           "aliases": "code-review @agentskit/code-review package ownership"
         },
         "graph": {
-          "pagerank": 0.086008,
+          "pagerank": 0.081501,
           "inboundLinks": 6,
           "coveredBy": [
             "document:docs/for-agents/code-review.md"
@@ -14465,7 +14763,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "27659fca82a4b51853483b3fb7d392e077080e3a43330129659ddf13007ebf51",
+        "contentHash": "3ae1d6960320d61648e46fa775fa0dc040db72d692d68cb7787cc0490bf3deaa",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"

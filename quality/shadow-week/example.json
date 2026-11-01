@@ -1,0 +1,363 @@
+{
+  "version": 1,
+  "usdPerMtok": 5,
+  "prs": [
+    {
+      "id": "example-org/alpha#100",
+      "repository": "example-org/alpha",
+      "number": 100,
+      "date": "2030-01-01",
+      "reviewers": {
+        "incumbent": {
+          "findings": [
+            {
+              "title": "finding 0.0",
+              "verdict": "fix"
+            },
+            {
+              "title": "finding 0.0",
+              "verdict": "false-alarm"
+            }
+          ],
+          "tokens": 10000
+        },
+        "code-review": {
+          "findings": [
+            {
+              "title": "finding 0.0",
+              "verdict": "fix"
+            },
+            {
+              "title": "finding 0.0",
+              "verdict": "false-alarm"
+            }
+          ],
+          "tokens": 11000
+        }
+      }
+    },
+    {
+      "id": "example-org/beta#101",
+      "repository": "example-org/beta",
+      "number": 101,
+      "date": "2030-01-01",
+      "reviewers": {
+        "incumbent": {
+          "findings": [
+            {
+              "title": "finding 1.0",
+              "verdict": "false-alarm"
+            }
+          ],
+          "tokens": 10000
+        },
+        "code-review": {
+          "findings": [],
+          "tokens": 11000
+        }
+      }
+    },
+    {
+      "id": "example-org/alpha#102",
+      "repository": "example-org/alpha",
+      "number": 102,
+      "date": "2030-01-02",
+      "reviewers": {
+        "incumbent": {
+          "findings": [
+            {
+              "title": "finding 2.0",
+              "verdict": "false-alarm"
+            }
+          ],
+          "tokens": 10000
+        },
+        "code-review": {
+          "findings": [],
+          "tokens": 11000
+        }
+      }
+    },
+    {
+      "id": "example-org/beta#103",
+      "repository": "example-org/beta",
+      "number": 103,
+      "date": "2030-01-02",
+      "reviewers": {
+        "incumbent": {
+          "findings": [
+            {
+              "title": "finding 3.0",
+              "verdict": "fix"
+            },
+            {
+              "title": "finding 3.0",
+              "verdict": "false-alarm"
+            }
+          ],
+          "tokens": 10000
+        },
+        "code-review": {
+          "findings": [
+            {
+              "title": "finding 3.0",
+              "verdict": "fix"
+            }
+          ],
+          "tokens": 11000
+        }
+      }
+    },
+    {
+      "id": "example-org/alpha#104",
+      "repository": "example-org/alpha",
+      "number": 104,
+      "date": "2030-01-03",
+      "reviewers": {
+        "incumbent": {
+          "findings": [
+            {
+              "title": "finding 4.0",
+              "verdict": "false-alarm"
+            }
+          ],
+          "tokens": 10000
+        },
+        "code-review": {
+          "findings": [
+            {
+              "title": "finding 4.0",
+              "verdict": "false-alarm"
+            }
+          ],
+          "tokens": 11000
+        }
+      }
+    },
+    {
+      "id": "example-org/beta#105",
+      "repository": "example-org/beta",
+      "number": 105,
+      "date": "2030-01-03",
+      "reviewers": {
+        "incumbent": {
+          "findings": [
+            {
+              "title": "finding 5.0",
+              "verdict": "false-alarm"
+            }
+          ],
+          "tokens": 10000
+        },
+        "code-review": {
+          "findings": [],
+          "tokens": 11000
+        }
+      }
+    },
+    {
+      "id": "example-org/alpha#106",
+      "repository": "example-org/alpha",
+      "number": 106,
+      "date": "2030-01-04",
+      "reviewers": {
+        "incumbent": {
+          "findings": [
+            {
+              "title": "finding 6.0",
+              "verdict": "fix"
+            },
+            {
+              "title": "finding 6.0",
+              "verdict": "false-alarm"
+            }
+          ],
+          "tokens": 10000
+        },
+        "code-review": {
+          "findings": [
+            {
+              "title": "finding 6.0",
+              "verdict": "fix"
+            }
+          ],
+          "tokens": 11000
+        }
+      }
+    },
+    {
+      "id": "example-org/beta#107",
+      "repository": "example-org/beta",
+      "number": 107,
+      "date": "2030-01-04",
+      "reviewers": {
+        "incumbent": {
+          "findings": [
+            {
+              "title": "finding 7.0",
+              "verdict": "false-alarm"
+            }
+          ],
+          "tokens": 10000
+        },
+        "code-review": {
+          "findings": [],
+          "tokens": 11000
+        }
+      }
+    },
+    {
+      "id": "example-org/alpha#108",
+      "repository": "example-org/alpha",
+      "number": 108,
+      "date": "2030-01-05",
+      "reviewers": {
+        "incumbent": {
+          "findings": [
+            {
+              "title": "finding 8.0",
+              "verdict": "false-alarm"
+            }
+          ],
+          "tokens": 10000
+        },
+        "code-review": {
+          "findings": [
+            {
+              "title": "finding 8.0",
+              "verdict": "false-alarm"
+            }
+          ],
+          "tokens": 11000
+        }
+      }
+    },
+    {
+      "id": "example-org/beta#109",
+      "repository": "example-org/beta",
+      "number": 109,
+      "date": "2030-01-05",
+      "reviewers": {
+        "incumbent": {
+          "findings": [
+            {
+              "title": "finding 9.0",
+              "verdict": "fix"
+            },
+            {
+              "title": "finding 9.0",
+              "verdict": "false-alarm"
+            }
+          ],
+          "tokens": 10000
+        },
+        "code-review": {
+          "findings": [
+            {
+              "title": "finding 9.0",
+              "verdict": "fix"
+            }
+          ],
+          "tokens": 11000
+        }
+      }
+    },
+    {
+      "id": "example-org/alpha#110",
+      "repository": "example-org/alpha",
+      "number": 110,
+      "date": "2030-01-06",
+      "reviewers": {
+        "incumbent": {
+          "findings": [
+            {
+              "title": "finding 10.0",
+              "verdict": "false-alarm"
+            }
+          ],
+          "tokens": 10000
+        },
+        "code-review": {
+          "findings": [],
+          "tokens": 11000
+        }
+      }
+    },
+    {
+      "id": "example-org/beta#111",
+      "repository": "example-org/beta",
+      "number": 111,
+      "date": "2030-01-06",
+      "reviewers": {
+        "incumbent": {
+          "findings": [
+            {
+              "title": "finding 11.0",
+              "verdict": "false-alarm"
+            }
+          ],
+          "tokens": 10000
+        },
+        "code-review": {
+          "findings": [],
+          "tokens": 11000
+        }
+      }
+    },
+    {
+      "id": "example-org/alpha#112",
+      "repository": "example-org/alpha",
+      "number": 112,
+      "date": "2030-01-07",
+      "reviewers": {
+        "incumbent": {
+          "findings": [
+            {
+              "title": "finding 12.0",
+              "verdict": "fix"
+            },
+            {
+              "title": "finding 12.0",
+              "verdict": "false-alarm"
+            }
+          ],
+          "tokens": 10000
+        },
+        "code-review": {
+          "findings": [
+            {
+              "title": "finding 12.0",
+              "verdict": "fix"
+            },
+            {
+              "title": "finding 12.0",
+              "verdict": "false-alarm"
+            }
+          ],
+          "tokens": 11000
+        }
+      }
+    },
+    {
+      "id": "example-org/beta#113",
+      "repository": "example-org/beta",
+      "number": 113,
+      "date": "2030-01-07",
+      "reviewers": {
+        "incumbent": {
+          "findings": [
+            {
+              "title": "finding 13.0",
+              "verdict": "false-alarm"
+            }
+          ],
+          "tokens": 10000
+        },
+        "code-review": {
+          "findings": [],
+          "tokens": 11000
+        }
+      }
+    }
+  ]
+}
