@@ -1,0 +1,144 @@
+# MVP do code-review: os requisitos, um a um (aprovado pelo dono).
+# REPO PÚBLICO: nada de preços, valores de orçamento, clientes ou datas internas neste arquivo.
+# Objetivo: o code-review vira o revisor da linha da fábrica, mas só depois de vencer o revisor atual (incumbente)
+#   num benchmark interno com os mesmos PRs: achar pelo menos tantos bugs reais, ter menos falsos positivos e custar
+#   no máximo +20%, com o custo dos dois contado pelos tokens e pela mesma tabela de preço; depois 1 semana em sombra
+#   nos 2 ou 3 repositórios da linha com mais PRs.
+# MVP = benchmark interno com os dois revisores + PASS + semana de sombra + ligado na fábrica.
+# O ReviewBench (review-bench.ai, F1) NÃO está no caminho crítico: só se o code-review vencer o incumbente ele é
+#   medido no ReviewBench, como passo seguinte, fora do MVP (#361).
+# Base: docs/reviewer-benchmark.md (critério de entrada já codificado em src/reviewer-benchmark.ts), #359, decisões do dono.
+# Para aprovar: o dono confere a lista e preenche approval.by, approval.at e
+# approval.digest = `python3 mvp_manifest.py digest docs/mvp.yaml`. Mudou a lista depois? O digest não bate: nova aprovação.
+# Evidência por requisito (o que não dá para verificar é "sem evidência" e não conta):
+#   prs:        PRs do código; nível "mergeado com CI verde".
+#   acceptance: - test: caminho do teste + ci: {job, step} que o roda; ou - ci: job; nível "aceite verde".
+#   homolog:    - url: https://... ou /caminho sobre homolog.base_url (expect: 200, contains: "texto");
+#               - ci: {job: homolog-smoke}; ou - run: docs/homolog/rf-01.json (registro: status pass, at, env homolog).
+#   issues:     só ligam o requisito ao trabalho; não contam.
+#
+# out_of_scope (fora do MVP, uma linha cada):
+#   - ReviewBench (#361): runner em bench/reviewbench/, F1 no showcase de 25 PRs, juiz com chave isolada e teto, análise
+#     de erros e melhorias medidas por versão. Passo seguinte, só depois do PASS do RF-06.
+#   - Rodar o conjunto completo de 219 PRs do ReviewBench e enviar resultado ao leaderboard público.
+#   - Itens do ROADMAP "Toward v1": Action v1 com tag móvel, artefatos assinados, testes de contrato sem credencial.
+#   - #282 comparação do quality:matrix contra 0.30.17 (fechamento da 0.31).
+#   - #338 revisar arquivos apagados pelo diff (entra só se o benchmark interno apontar como causa de perda).
+#   - Novos adaptadores de provedor/SCM, reporters para outros hosts, melhorias de SARIF/monorepo.
+version: 1
+product: code-review
+repo: AgentsKit-io/code-review
+source: docs/reviewer-benchmark.md + #359 + decisões do dono (benchmark interno antes do ReviewBench)
+approval: {by: EmersonBraun, at: "2026-11-01T02:00:00Z", digest: aa2a3640657470a0}
+requirements:
+- id: RF-01
+  title: Conjunto rotulado comum aos dois revisores
+  done_when: >-
+    quality/benchmark/prs.json tem pelo menos 30 PRs reais com os dois rótulos (buggy com a correção que prova o
+    bug, clean), vindos dos repositórios onde os dois revisores rodam; o runner dá aos dois revisores exatamente os
+    mesmos PRs, no mesmo commit, e o relatório diz qual conjunto e qual versão foram usados
+  weight: 2
+  acceptance: []
+  homolog: []
+  issues: [359]
+  prs: []
+- id: RF-02
+  title: Bugs reais e falsos positivos medidos nos dois revisores
+  done_when: >-
+    quality/benchmark/report.json e docs/reviewer-benchmark-report.md mostram, por PR e no total, os bugs reais
+    encontrados e os falsos positivos do code-review e do incumbente, contados pela mesma regra, com os comandos
+    para reproduzir
+  weight: 2
+  acceptance: []
+  homolog: []
+  issues: [359]
+  prs: []
+- id: RF-03
+  title: Revisor incumbente executável no benchmark
+  done_when: >-
+    Existe um comando do revisor atual da linha que recebe `<owner/repo> <number>` e imprime
+    {"findings":[{file,line,title}],"costUsd"}; o run-reviewer-benchmark com --incumbent-cmd termina sem nenhum PR
+    do incumbente em erro
+  weight: 2
+  acceptance: []
+  homolog: []
+  issues: [359]
+  prs: []
+- id: RF-04
+  title: Custo dos dois revisores pelos tokens, com a mesma tabela de preço
+  done_when: >-
+    Cada revisão (code-review e incumbente) registra os tokens de entrada e de saída usados, e o custo dos dois é
+    calculado pela mesma tabela de preço por modelo, versionada no repositório; o relatório não mostra custo zero em
+    nenhum PR completo
+  weight: 1
+  acceptance: []
+  homolog: []
+  issues: []
+  prs: []
+- id: RF-05
+  title: Revisão completa dentro do prazo
+  done_when: >-
+    No conjunto rotulado, com a configuração que vai para a linha, o code-review termina todos os PRs (nenhum exit 2
+    por prazo ou falha de provedor) e a latência p90 cabe no tempo do estágio de revisão da linha
+  weight: 1
+  acceptance: []
+  homolog: []
+  issues: []
+  prs: []
+- id: RF-06
+  title: Critério de entrada aprovado (PASS)
+  done_when: >-
+    quality/benchmark/report.json e docs/reviewer-benchmark-report.md mostram decisão PASS contra o incumbente:
+    bugs reais encontrados ≥ incumbente, falsos positivos < incumbente e custo ≤ 1,2× o do incumbente, sem PR em erro
+  # a regra (PASS/FAIL/BLOCKED, MAX_COST_RATIO 1.2) já existe em src/reviewer-benchmark.ts, test/reviewer-benchmark.test.mjs;
+  # o último relatório é BLOCKED (incumbente não rodou, 11 PRs incompletos, custo não medido).
+  weight: 2
+  acceptance: []
+  homolog: []
+  issues: [359]
+  prs: [360]
+- id: RF-07
+  title: Comando de sombra para a linha
+  done_when: >-
+    agentskit-shadow-review roda no checkout do PR, imprime na última linha {"comment","costUsd","findings"} e sai 0
+    numa revisão completa, com configuração só por ambiente e sem chaves na saída
+  # já pronto: scripts/shadow-review.mjs (bin agentskit-shadow-review), test/shadow-review.test.mjs
+  weight: 1
+  acceptance:
+  - test: test/shadow-review.test.mjs
+    ci: {job: check, step: "npm run test:coverage"}
+  homolog: []
+  issues: [359]
+  prs: [360]
+- id: RF-08
+  title: Uma semana em modo sombra nos repositórios com mais PRs
+  done_when: >-
+    Depois do PASS, a linha roda o code-review em sombra (comenta, não decide) por 7 dias seguidos nos 2 ou 3
+    repositórios da linha com mais PRs; ao fim há um relatório com, por PR, os achados de cada revisor que viraram
+    correção, os falsos alarmes e o custo pelos tokens, e os três critérios (bugs ≥, falsos positivos <, custo ≤
+    +20%) continuam valendo
+  weight: 2
+  acceptance: []
+  homolog: []
+  issues: []
+  prs: []
+- id: RF-09
+  title: Versão medida publicada e fixada
+  done_when: >-
+    A versão do pacote que passou no RF-06 e no RF-08 está publicada no npm e a linha usa exatamente essa versão
+    (sem @latest); trocar de versão exige remedir o conjunto rotulado contra o incumbente
+  weight: 1
+  acceptance: []
+  homolog: []
+  issues: []
+  prs: []
+- id: RF-10
+  title: Ligado como revisor da fábrica
+  done_when: >-
+    O estágio de revisão da linha decide com o code-review; uma revisão incompleta ou com falha nunca aprova (volta
+    para o incumbente ou bloqueia) e o primeiro PR real revisado assim fica registrado
+  weight: 2
+  acceptance: []
+  homolog: []
+  issues: []
+  prs: []
