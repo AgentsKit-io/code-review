@@ -28,7 +28,7 @@ An external reviewer command is run as `<executable> <owner/repo> <number>` (no 
 
 ## Entry criterion
 
-`PASS` needs: at least as many real bugs found as the incumbent, strictly fewer false positives (any finding matching no known bug, and every finding on a clean PR), and cost at most 1.2x the incumbent. Any errored PR makes the report `BLOCKED`. The exit code is 2 unless `PASS`.
+`PASS` needs: at least as many real bugs found as the incumbent, strictly fewer false positives (any finding matching no known bug, and every finding on a clean PR), and cost at most 1.2x the incumbent. Any errored PR (exit 2 for a deadline or provider failure) makes the report `BLOCKED`. With `--stage-timeout-ms <n>` (the time the line gives its review stage) the candidate's p90 latency, shown in the report, must also fit in it or the report is `FAIL` (RF-05: every PR completes, with the configuration that goes to the line, within the stage time). The exit code is 2 unless `PASS`.
 
 ## Running on the line (shadow mode)
 

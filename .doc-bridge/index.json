@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "39a3ca4e62a9e0387e2671b584fcef614094b92ebdf0036294095d8855b2bf50",
+  "contentHash": "f0d936a23ca9ebbb2f5d10f66fdb2cc8f2f6e5f9141c4af19896d3cb173c257a",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-10-30T20:06:56.197Z",
+  "generatedAt": "2026-11-01T07:17:06.853Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -45,6 +45,18 @@
         "unclassified"
       ],
       "contentHash": "f433196b09dee4a628f0dfb123d8884bd04ee04b21263bf69a31739873c66bcf"
+    },
+    {
+      "id": "document:.changeset/rf05-p90-latency.md",
+      "type": "document",
+      "title": "rf05-p90-latency.md",
+      "path": ".changeset/rf05-p90-latency.md",
+      "description": "Reviewer benchmark: report p90 latency and accept --stage-timeout-ms so the candidate must finish every PR within the line's review-stage time (RF-05).",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "eb326e8e60cc087b411cbb3e490dc96783c6cb40d371d43688b3832644d61168"
     },
     {
       "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
@@ -416,7 +428,7 @@
         "document",
         "human"
       ],
-      "contentHash": "0f119fe43d609d936ca81fddfd780984368b7e2813a3b17975480ff4c168d553"
+      "contentHash": "407221bc1bc54655f87bd08011861c5002e3512cc5db15614bb0573a381afaef"
     },
     {
       "id": "document:GOVERNANCE.md",
@@ -1141,7 +1153,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "6198f03132de3a659ef9d5a2334e5d0d560306dcbc010e6581a6142bf05b87fd"
+      "contentHash": "b308877ce2755a4cd5ff67dd97ef8f444a9acd2824e877e8a1a039e68a307bc3"
     },
     {
       "id": "module:scripts/shadow-review.mjs",
@@ -2248,6 +2260,7 @@
       "symbols": [
         "BenchmarkDataset",
         "BenchmarkDecision",
+        "BenchmarkOptions",
         "BenchmarkPr",
         "BenchmarkReport",
         "KnownBug",
@@ -2260,6 +2273,7 @@
         "bugMatches",
         "evaluateBenchmark",
         "parseBenchmarkDataset",
+        "percentile",
         "renderBenchmarkMarkdown",
         "scorePr",
         "summarizeReviewer"
@@ -2269,7 +2283,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "5c219c533c081449fe9a2fb059bfbfd9bfa23e2d773294a36280ad7d9fd8a39a"
+      "contentHash": "98225e069f6da5252ae492ec17fe29e24085888abb7efb5336fa803b1d089378"
     },
     {
       "id": "module:src/scm-contract.ts",
@@ -2978,7 +2992,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "f1508a6886b17e28262be2394cffd9554b684a365a5c638adf8cd727b4cdce64"
+      "contentHash": "cad77b856fed3cf8b79fd2294e13100acda8c9b9d5f11baab1f684730ec7dcb8"
     },
     {
       "id": "module:test/risk-depth.test.mjs",
@@ -3160,8 +3174,8 @@
     }
   },
   "inputs": {
-    "hash": "e64f4f4e9fa14e43f170df2dc21fdefd27949ba83bf4b3013fb7cb8bef0104c7",
-    "fileCount": 213,
+    "hash": "2e34b181e339cfaf3d0f574a645ab75b9b75f44f2ac6e1c4f97c83a2bc6148c1",
+    "fileCount": 214,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3183,9 +3197,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "ad1e6af41e8949b4a13d7cff616c2f539663c954e918d91434fa0f6c51fb8718",
+    "contentHash": "cce1d34d35b80bc8179a17c726e6f78ddd404bc29c9f9f803589f742775e0fb0",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "a90d31549b1162e7597f796b43e37c5256b546c2d6b8a3a6f7f47b233a2c69be",
+    "snapshotHash": "1fab7e09dcac08597c5348d9d4e0eb3d08072f8695561de97788194d47781d12",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3205,7 +3219,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 195,
+      "documentCount": 196,
       "fieldNames": [
         "aliases",
         "body",
@@ -3216,13 +3230,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8974358974358974,
-        "body": 56.44615384615385,
-        "headings": 3.7435897435897436,
-        "path": 5.605128205128205,
-        "summary": 3.0871794871794873,
-        "symbols": 13.62051282051282,
-        "title": 4.2615384615384615
+        "aliases": 2.892857142857143,
+        "body": 56.265306122448976,
+        "headings": 3.7244897959183674,
+        "path": 5.607142857142857,
+        "summary": 3.188775510204082,
+        "symbols": 13.571428571428571,
+        "title": 4.26530612244898
       }
     },
     "entries": [
@@ -3533,6 +3547,38 @@
           ]
         },
         "contentHash": "f433196b09dee4a628f0dfb123d8884bd04ee04b21263bf69a31739873c66bcf",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:.changeset/rf05-p90-latency.md",
+        "kind": "document",
+        "path": ".changeset/rf05-p90-latency.md",
+        "title": "rf05-p90-latency.md",
+        "summary": "Reviewer benchmark: report p90 latency and accept --stage-timeout-ms so the candidate must finish every PR within the line's review-stage time (RF-05).",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "rf05-p90-latency.md",
+          "headings": "",
+          "path": ".changeset/rf05-p90-latency.md",
+          "symbols": "",
+          "summary": "Reviewer benchmark: report p90 latency and accept --stage-timeout-ms so the candidate must finish every PR within the line's review-stage time (RF-05).",
+          "body": "Reviewer benchmark: report p90 latency and accept --stage-timeout-ms so the candidate must finish every PR within the line's review-stage time (RF-05).",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "eb326e8e60cc087b411cbb3e490dc96783c6cb40d371d43688b3832644d61168",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -5889,7 +5935,7 @@
           "path": "docs/reviewer-benchmark.md",
           "symbols": "",
           "summary": "Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json; the scoring is in src/reviewer-benchmark.ts; the runner is scripts/run-reviewer-benchmark.mjs. Run it on every release.",
-          "body": "Reviewer benchmark Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json ; the scoring is in src/reviewer-benchmark.ts ; the runner is scripts/run-reviewer-benchmark.mjs . Run it on every release. Status Decision on 2026-10-30: BLOCKED, so the entry criterion is not met and the factory's review stage stays on the incumbent (the switch is off; shadow mode does not start). The report is (JSON: quality/benchmark/report.json ). - Code Review ran on all 38 PRs: 27 completed, 11 ended incomplete (exit 2: deadline or provider failure; reruns are needed). On the 27 completed PRs it found 8 of the 16 known bugs and reported 118 findings matching no known bug. - The incumbent was not run : the line reviewer is the review stage of the private factory-line repository, which this repository's automation cannot reach, and no standalone executable of it exists. Its 38 runs are recorded as errors, which is what makes the decision BLOCKED rather than FAIL . Run it with --incumbent-cmd from a machine that has it. - Cost is not measured : the run used claude-cli , which reports no token usage, so every cost shows 0.00. The Anthropic API provider was rejected (HTTP 401) with the credential available to the run. A cost comparison needs an API-provider run ( AGENTSKIT SHADOW PROVIDER=anthropic , AGENTSKIT SHADOW USD PER MTOK ). - \"False positives\" is an upper bound: a finding counts as false when it matches none of the bugs that were later fixed, so real defects nobody fixed are counted against the reviewer. The incumbent is scored the same way, so the comparison stays fair. - Only AgentsKit-io repositories are in the set (code-review, harness, doc-bridge); NoxCodeSolutions repositories were not reachable from this run. Dataset quality/benchmark/prs.json : 38 merged AgentsKit-io PRs, 22 buggy and 16 clean . A buggy PR is one whose merged code was later corrected by a fix PR: each bug lists file , line (in the reviewed PR's version of the file, from git blame of the lines the fix replaced), lineTolerance , a note , and fix (the fix PR number and commit that proves it was real). A clean PR is a feature PR that no later fix PR in the same repository touched (never the origin of any blamed line of a fix: commit). The set was mined from fix: commits in code-review, harness and doc-bridge; PRs are added by annotating real PRs, never by invention. The report is BLOCKED until the set has 30 PRs with both labels. Run An external reviewer command is run as <executable <owner/repo <number (no shell) and prints {\"findings\":[{\"file\",\"line\",\"title\"}],\"costUsd\":0} . Without --candidate-cmd the built-in CLI reviews each PR with --pr (needs GITHUB TOKEN ; provider keys come from the environment, never from arguments). Cost for the built-in reviewer is tokensUsed times --usd-per-mtok . Entry criterion PASS needs: at least as many real bugs found as the incumbent, strictly fewer false positives (any finding matching no known bug, and every finding on a clean PR), and cost at most 1.2x the incumbent. Any errored PR makes the report BLOCKED . The exit code is 2 unless PASS . Running on the line (shadow mode) The incumbent is the review stage of the factory line ( reviewPrompt in packages/factory-line/src/prompts.ts , private repository). The comparison runs it on the line through its shadow mode ( shadow-review.ts , enabled per repository by shadowReview in line.json ), which comments and does not decide. scripts/shadow-review.mjs (also the agentskit-shadow-review bin) is the Code Review side. Shadow mode runs it with the PR's checkout as the working directory and reads the last line of stdout : {\"comment\":\"<review markdown \",\"costUsd\":0,\"findings\":[{\"file\",\"line\",\"title\"}]} ; it reviews the files changed against AGENTSKIT SHADOW BASE (default origin/main ) and exits 0 for a completed review, with or without findings. Given <owner/repo <number it reviews that PR instead, which is how the benchmark runner calls i",
+          "body": "Reviewer benchmark Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json ; the scoring is in src/reviewer-benchmark.ts ; the runner is scripts/run-reviewer-benchmark.mjs . Run it on every release. Status Decision on 2026-10-30: BLOCKED, so the entry criterion is not met and the factory's review stage stays on the incumbent (the switch is off; shadow mode does not start). The report is (JSON: quality/benchmark/report.json ). - Code Review ran on all 38 PRs: 27 completed, 11 ended incomplete (exit 2: deadline or provider failure; reruns are needed). On the 27 completed PRs it found 8 of the 16 known bugs and reported 118 findings matching no known bug. - The incumbent was not run : the line reviewer is the review stage of the private factory-line repository, which this repository's automation cannot reach, and no standalone executable of it exists. Its 38 runs are recorded as errors, which is what makes the decision BLOCKED rather than FAIL . Run it with --incumbent-cmd from a machine that has it. - Cost is not measured : the run used claude-cli , which reports no token usage, so every cost shows 0.00. The Anthropic API provider was rejected (HTTP 401) with the credential available to the run. A cost comparison needs an API-provider run ( AGENTSKIT SHADOW PROVIDER=anthropic , AGENTSKIT SHADOW USD PER MTOK ). - \"False positives\" is an upper bound: a finding counts as false when it matches none of the bugs that were later fixed, so real defects nobody fixed are counted against the reviewer. The incumbent is scored the same way, so the comparison stays fair. - Only AgentsKit-io repositories are in the set (code-review, harness, doc-bridge); NoxCodeSolutions repositories were not reachable from this run. Dataset quality/benchmark/prs.json : 38 merged AgentsKit-io PRs, 22 buggy and 16 clean . A buggy PR is one whose merged code was later corrected by a fix PR: each bug lists file , line (in the reviewed PR's version of the file, from git blame of the lines the fix replaced), lineTolerance , a note , and fix (the fix PR number and commit that proves it was real). A clean PR is a feature PR that no later fix PR in the same repository touched (never the origin of any blamed line of a fix: commit). The set was mined from fix: commits in code-review, harness and doc-bridge; PRs are added by annotating real PRs, never by invention. The report is BLOCKED until the set has 30 PRs with both labels. Run An external reviewer command is run as <executable <owner/repo <number (no shell) and prints {\"findings\":[{\"file\",\"line\",\"title\"}],\"costUsd\":0} . Without --candidate-cmd the built-in CLI reviews each PR with --pr (needs GITHUB TOKEN ; provider keys come from the environment, never from arguments). Cost for the built-in reviewer is tokensUsed times --usd-per-mtok . Entry criterion PASS needs: at least as many real bugs found as the incumbent, strictly fewer false positives (any finding matching no known bug, and every finding on a clean PR), and cost at most 1.2x the incumbent. Any errored PR (exit 2 for a deadline or provider failure) makes the report BLOCKED . With --stage-timeout-ms <n (the time the line gives its review stage) the candidate's p90 latency, shown in the report, must also fit in it or the report is FAIL (RF-05: every PR completes, with the configuration that goes to the line, within the stage time). The exit code is 2 unless PASS . Running on the line (shadow mode) The incumbent is the review stage of the factory line ( reviewPrompt in packages/factory-line/src/prompts.ts , private repository). The comparison runs it on the line through its shadow mode ( shadow-review.ts , enabled per repository by shadowReview in line.json ), which comments and does not decide. scripts/shadow-review.mjs (also the agentskit-shadow-review bin) is the Code Review side. Shadow mode runs it with the PR's checkout as the working directory and reads the last line of stdout : {\"comment\":\"<revie",
           "aliases": "document human"
         },
         "graph": {
@@ -5929,7 +5975,7 @@
             }
           ]
         },
-        "contentHash": "0f119fe43d609d936ca81fddfd780984368b7e2813a3b17975480ff4c168d553",
+        "contentHash": "407221bc1bc54655f87bd08011861c5002e3512cc5db15614bb0573a381afaef",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -8409,7 +8455,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "6198f03132de3a659ef9d5a2334e5d0d560306dcbc010e6581a6142bf05b87fd",
+        "contentHash": "b308877ce2755a4cd5ff67dd97ef8f444a9acd2824e877e8a1a039e68a307bc3",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -11914,6 +11960,7 @@
         "symbols": [
           "BenchmarkDataset",
           "BenchmarkDecision",
+          "BenchmarkOptions",
           "BenchmarkPr",
           "BenchmarkReport",
           "KnownBug",
@@ -11926,6 +11973,7 @@
           "bugMatches",
           "evaluateBenchmark",
           "parseBenchmarkDataset",
+          "percentile",
           "renderBenchmarkMarkdown",
           "scorePr",
           "summarizeReviewer"
@@ -11939,7 +11987,7 @@
           "title": "reviewer-benchmark.ts",
           "headings": "",
           "path": "src/reviewer-benchmark.ts",
-          "symbols": "BenchmarkDataset BenchmarkDecision BenchmarkPr BenchmarkReport KnownBug MAX_COST_RATIO MIN_BENCHMARK_PRS PrScore ReviewerFinding ReviewerRun ReviewerSummary bugMatches evaluateBenchmark parseBenchmarkDataset renderBenchmarkMarkdown scorePr summarizeReviewer",
+          "symbols": "BenchmarkDataset BenchmarkDecision BenchmarkOptions BenchmarkPr BenchmarkReport KnownBug MAX_COST_RATIO MIN_BENCHMARK_PRS PrScore ReviewerFinding ReviewerRun ReviewerSummary bugMatches evaluateBenchmark parseBenchmarkDataset percentile renderBenchmarkMarkdown scorePr summarizeReviewer",
           "summary": "",
           "body": "",
           "aliases": "module ts src"
@@ -11967,7 +12015,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "5c219c533c081449fe9a2fb059bfbfd9bfa23e2d773294a36280ad7d9fd8a39a",
+        "contentHash": "98225e069f6da5252ae492ec17fe29e24085888abb7efb5336fa803b1d089378",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -14075,7 +14123,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "f1508a6886b17e28262be2394cffd9554b684a365a5c638adf8cd727b4cdce64",
+        "contentHash": "cad77b856fed3cf8b79fd2294e13100acda8c9b9d5f11baab1f684730ec7dcb8",
         "provenance": "observed",
         "confidence": "observed"
       },
