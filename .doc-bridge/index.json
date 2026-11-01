@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "39a3ca4e62a9e0387e2671b584fcef614094b92ebdf0036294095d8855b2bf50",
+  "contentHash": "df86ca637ba7497a8d413ddce98a1ba12dd6d7c5180378a4efea8e4ac125e675",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-10-30T20:06:56.197Z",
+  "generatedAt": "2026-11-01T07:53:43.660Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -45,6 +45,18 @@
         "unclassified"
       ],
       "contentHash": "f433196b09dee4a628f0dfb123d8884bd04ee04b21263bf69a31739873c66bcf"
+    },
+    {
+      "id": "document:.changeset/rf-02-benchmark-report.md",
+      "type": "document",
+      "title": "rf-02-benchmark-report.md",
+      "path": ".changeset/rf-02-benchmark-report.md",
+      "description": "Reviewer benchmark report now shows bugs and false positives of both reviewers per PR and in total, with the counting rule and reproduction commands (mvp:RF-02).",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "bfb037b4f0d8d7f6b96742583c5962cab9f3819a4ca4922cfe5dcb1eaaa5196b"
     },
     {
       "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
@@ -399,12 +411,12 @@
       "type": "document",
       "title": "Reviewer benchmark: BLOCKED",
       "path": "docs/reviewer-benchmark-report.md",
-      "description": "incumbent errored on 38 PR(s); rerun before comparing",
+      "description": "Requirement mvp:RF-02: real bugs found and false positives of both reviewers, per PR and in total.",
       "tags": [
         "document",
         "human"
       ],
-      "contentHash": "ca23bbd49e71a593e611279f616a908f1fa908657dc5e38de9b7afec1e1e8feb"
+      "contentHash": "12f81807dcc1ee86fb95bf31f304d7a03aa12df67f25f6399262979d1257aa05"
     },
     {
       "id": "document:docs/reviewer-benchmark.md",
@@ -2269,7 +2281,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "5c219c533c081449fe9a2fb059bfbfd9bfa23e2d773294a36280ad7d9fd8a39a"
+      "contentHash": "7c799148c3a1b1197f988a00fdcacbd5a7313421215b66b8adbe571007da286e"
     },
     {
       "id": "module:src/scm-contract.ts",
@@ -2978,7 +2990,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "f1508a6886b17e28262be2394cffd9554b684a365a5c638adf8cd727b4cdce64"
+      "contentHash": "e741c92baea9dce07cb1fd0807194914351649c5a2fee2c0c73cfe3317700602"
     },
     {
       "id": "module:test/risk-depth.test.mjs",
@@ -3160,8 +3172,8 @@
     }
   },
   "inputs": {
-    "hash": "e64f4f4e9fa14e43f170df2dc21fdefd27949ba83bf4b3013fb7cb8bef0104c7",
-    "fileCount": 213,
+    "hash": "ef2e55e915be9d49e7c3fbaf3271a0ab8e1ad675bffb46321b0ae01dd90652c9",
+    "fileCount": 214,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3183,9 +3195,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "ad1e6af41e8949b4a13d7cff616c2f539663c954e918d91434fa0f6c51fb8718",
+    "contentHash": "0be377a388cc7e5775db0319d22a793d83d2882a6469de106a389d0a343a9584",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "a90d31549b1162e7597f796b43e37c5256b546c2d6b8a3a6f7f47b233a2c69be",
+    "snapshotHash": "2cf6044caa0851ea27093013536f568fcb6933f7716981ac07ac9f5c86e126c4",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3205,7 +3217,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 195,
+      "documentCount": 196,
       "fieldNames": [
         "aliases",
         "body",
@@ -3216,13 +3228,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8974358974358974,
-        "body": 56.44615384615385,
-        "headings": 3.7435897435897436,
-        "path": 5.605128205128205,
-        "summary": 3.0871794871794873,
-        "symbols": 13.62051282051282,
-        "title": 4.2615384615384615
+        "aliases": 2.892857142857143,
+        "body": 54.86224489795919,
+        "headings": 3.7448979591836733,
+        "path": 5.612244897959184,
+        "summary": 3.204081632653061,
+        "symbols": 13.551020408163266,
+        "title": 4.270408163265306
       }
     },
     "entries": [
@@ -3533,6 +3545,38 @@
           ]
         },
         "contentHash": "f433196b09dee4a628f0dfb123d8884bd04ee04b21263bf69a31739873c66bcf",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:.changeset/rf-02-benchmark-report.md",
+        "kind": "document",
+        "path": ".changeset/rf-02-benchmark-report.md",
+        "title": "rf-02-benchmark-report.md",
+        "summary": "Reviewer benchmark report now shows bugs and false positives of both reviewers per PR and in total, with the counting rule and reproduction commands (mvp:RF-02).",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "rf-02-benchmark-report.md",
+          "headings": "",
+          "path": ".changeset/rf-02-benchmark-report.md",
+          "symbols": "",
+          "summary": "Reviewer benchmark report now shows bugs and false positives of both reviewers per PR and in total, with the counting rule and reproduction commands (mvp:RF-02).",
+          "body": "Reviewer benchmark report now shows bugs and false positives of both reviewers per PR and in total, with the counting rule and reproduction commands ( mvp:RF-02 ).",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "bfb037b4f0d8d7f6b96742583c5962cab9f3819a4ca4922cfe5dcb1eaaa5196b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -5837,7 +5881,7 @@
         "kind": "document",
         "path": "docs/reviewer-benchmark-report.md",
         "title": "Reviewer benchmark: BLOCKED",
-        "summary": "incumbent errored on 38 PR(s); rerun before comparing",
+        "summary": "Requirement mvp:RF-02: real bugs found and false positives of both reviewers, per PR and in total.",
         "audience": "human",
         "aliases": [],
         "tags": [
@@ -5846,11 +5890,11 @@
         ],
         "fields": {
           "title": "Reviewer benchmark: BLOCKED",
-          "headings": "Reviewer benchmark: BLOCKED Per PR",
+          "headings": "Reviewer benchmark: BLOCKED Counting rule Totals Per PR Reproduce",
           "path": "docs/reviewer-benchmark-report.md",
           "symbols": "",
-          "summary": "incumbent errored on 38 PR(s); rerun before comparing",
-          "body": "Reviewer benchmark: BLOCKED - incumbent errored on 38 PR(s); rerun before comparing - code-review errored on 11 PR(s); rerun before comparing Reviewer Bugs found False positives Cost (US$) Mean latency (ms) Errored PRs --- --- --- --- --- --- incumbent 0/32 0 0.00 4 38 code-review 8/32 118 0.00 235158 11 Per PR PR Reviewer Bugs False positives Cost (US$) Latency (ms) --- --- --- --- --- --- AgentsKit-io/code-review 178 incumbent 0/2 0 0.00 25 (error) AgentsKit-io/code-review 62 incumbent 0/2 0 0.00 18 (error) AgentsKit-io/code-review 40 incumbent 0/3 0 0.00 14 (error) AgentsKit-io/code-review 67 incumbent 0/2 0 0.00 11 (error) AgentsKit-io/code-review 130 incumbent 0/1 0 0.00 8 (error) AgentsKit-io/code-review 80 incumbent 0/1 0 0.00 4 (error) AgentsKit-io/code-review 180 incumbent 0/2 0 0.00 3 (error) AgentsKit-io/code-review 204 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/code-review 186 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/code-review 73 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/harness 144 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/harness 142 incumbent 0/2 0 0.00 2 (error) AgentsKit-io/harness 133 incumbent 0/1 0 0.00 3 (error) AgentsKit-io/harness 103 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/harness 101 incumbent 0/2 0 0.00 3 (error) AgentsKit-io/harness 198 incumbent 0/2 0 0.00 1 (error) AgentsKit-io/harness 199 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/harness 201 incumbent 0/2 0 0.00 2 (error) AgentsKit-io/harness 98 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/harness 111 incumbent 0/1 0 0.00 3 (error) AgentsKit-io/harness 39 incumbent 0/1 0 0.00 1 (error) AgentsKit-io/harness 184 incumbent 0/1 0 0.00 3 (error) AgentsKit-io/code-review 27 incumbent 0/0 0 0.00 1 (error) AgentsKit-io/code-review 166 incumbent 0/0 0 0.00 1 (error) AgentsKit-io/code-review 280 incumbent 0/0 0 0.00 3 (error) AgentsKit-io/code-review 319 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 28 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 29 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 42 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 44 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 97 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 107 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/doc-bridge 76 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/doc-bridge 197 incumbent 0/0 0 0.00 3 (error) AgentsKit-io/doc-bridge 207 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/doc-bridge 317 incumbent 0/0 0 0.00 3 (error) AgentsKit-io/doc-bridge 369 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/doc-bridge 393 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/code-review 178 code-review 2/2 9 0.00 525178 AgentsKit-io/code-review 62 code-review 0/2 0 0.00 145590 (error) AgentsKit-io/code-review 40 code-review 0/3 0 0.00 1205 (error) AgentsKit-io/code-review 67 code-review 0/2 0 0.00 399777 (error) AgentsKit-io/code-review 130 code-review 0/1 0 0.00 95669 (error) AgentsKit-io/code-review 80 code-review 1/1 1 0.00 67498 AgentsKit-io/code-review 180 code-review 0/2 0 0.00 298819 (error) AgentsKit-io/code-review 204 code-review 0/1 14 0.00 367626 AgentsKit-io/code-review 186 code-review 0/1 0 0.00 403065 (error) AgentsKit-io/code-review 73 code-review 0/1 0 0.00 412254 (error) AgentsKit-io/harness 144 code-review 1/1 2 0.00 160572 AgentsKit-io/harness 142 code-review 1/2 0 0.00 84698 AgentsKit-io/harness 133 code-review 0/1 3 0.00 109184 AgentsKit-io/harness 103 code-review 0/1 8 0.00 297720 AgentsKit-io/harness 101 code-review 0/2 0 0.00 796336 (error) AgentsKit-io/harness 198 code-review 1/2 9 0.00 396732 AgentsKit-io/harness 199 code-review 0/1 2 0.00 180482 AgentsKit-io/harness 201 code-review 1/2 2 0.00 229988 AgentsKit-io/harness 98 code-review 1/1 12 0.00 398171 AgentsKit-io/harness 111 code-review 0/1 0 0.00 821808 (error) AgentsKit-io/harness 39 code-review 0/1 0 0.00 565215 (error) AgentsKit-io/harness 184 code-review 0/1 3 0.00 248508 AgentsKit-io/code-review 27 code-review 0/0 5 0.00 161240 AgentsKit-io/code-review 166 code-re",
+          "summary": "Requirement mvp:RF-02: real bugs found and false positives of both reviewers, per PR and in total.",
+          "body": "Reviewer benchmark: BLOCKED Requirement mvp:RF-02 : real bugs found and false positives of both reviewers, per PR and in total. - incumbent errored on 38 PR(s); rerun before comparing - code-review errored on 11 PR(s); rerun before comparing Counting rule Both reviewers run over the same labelled PRs ( quality/benchmark/prs.json ) and are scored by the same function ( scorePr in src/reviewer-benchmark.ts ): - A real bug is a known bug (a defect later fixed by a fix PR) matched by at least one finding on the same file within the line tolerance (default 3 lines); each known bug counts once. - A false positive is any finding that matches no known bug, including every finding on a clean PR. - A PR where the reviewer errored shows error and is not counted; any error makes the decision BLOCKED . Totals Reviewer Bugs found False positives Cost (US$) Mean latency (ms) Errored PRs --- --- --- --- --- --- incumbent 0/32 0 0.00 4 38 code-review 8/32 118 0.00 235158 11 Per PR PR incumbent bugs incumbent false positives code-review bugs code-review false positives --- --- --- --- --- AgentsKit-io/code-review 178 error - 2/2 9 AgentsKit-io/code-review 62 error - error - AgentsKit-io/code-review 40 error - error - AgentsKit-io/code-review 67 error - error - AgentsKit-io/code-review 130 error - error - AgentsKit-io/code-review 80 error - 1/1 1 AgentsKit-io/code-review 180 error - error - AgentsKit-io/code-review 204 error - 0/1 14 AgentsKit-io/code-review 186 error - error - AgentsKit-io/code-review 73 error - error - AgentsKit-io/harness 144 error - 1/1 2 AgentsKit-io/harness 142 error - 1/2 0 AgentsKit-io/harness 133 error - 0/1 3 AgentsKit-io/harness 103 error - 0/1 8 AgentsKit-io/harness 101 error - error - AgentsKit-io/harness 198 error - 1/2 9 AgentsKit-io/harness 199 error - 0/1 2 AgentsKit-io/harness 201 error - 1/2 2 AgentsKit-io/harness 98 error - 1/1 12 AgentsKit-io/harness 111 error - error - AgentsKit-io/harness 39 error - error - AgentsKit-io/harness 184 error - 0/1 3 AgentsKit-io/code-review 27 error - 0/0 5 AgentsKit-io/code-review 166 error - 0/0 3 AgentsKit-io/code-review 280 error - 0/0 3 AgentsKit-io/code-review 319 error - 0/0 0 AgentsKit-io/harness 28 error - 0/0 6 AgentsKit-io/harness 29 error - 0/0 7 AgentsKit-io/harness 42 error - 0/0 3 AgentsKit-io/harness 44 error - 0/0 3 AgentsKit-io/harness 97 error - 0/0 4 AgentsKit-io/harness 107 error - error - AgentsKit-io/doc-bridge 76 error - 0/0 2 AgentsKit-io/doc-bridge 197 error - 0/0 2 AgentsKit-io/doc-bridge 207 error - 0/0 5 AgentsKit-io/doc-bridge 317 error - 0/0 2 AgentsKit-io/doc-bridge 369 error - 0/0 6 AgentsKit-io/doc-bridge 393 error - 0/0 2 Total 0/32 0 8/32 118 Reproduce The incumbent command is run as <executable <owner/repo <number and prints {\"findings\":[{\"file\",\"line\",\"title\"}],\"costUsd\":0} ; see docs/reviewer-benchmark.md .",
           "aliases": "document human"
         },
         "graph": {
@@ -5865,9 +5909,25 @@
               "confidence": "observed"
             }
           ],
-          "outbound": []
+          "outbound": [
+            {
+              "kind": "mentions",
+              "id": "document:docs/reviewer-benchmark.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:src/reviewer-benchmark.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "module:src/reviewer-benchmark.ts",
+              "confidence": "observed"
+            }
+          ]
         },
-        "contentHash": "ca23bbd49e71a593e611279f616a908f1fa908657dc5e38de9b7afec1e1e8feb",
+        "contentHash": "12f81807dcc1ee86fb95bf31f304d7a03aa12df67f25f6399262979d1257aa05",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -5894,15 +5954,21 @@
         },
         "graph": {
           "pagerank": 0.021519,
-          "inboundLinks": 1,
+          "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
-            "document:docs/for-agents/code-review.md"
+            "document:docs/for-agents/code-review.md",
+            "document:docs/reviewer-benchmark-report.md"
           ],
           "inbound": [
             {
               "kind": "mentions",
               "id": "document:docs/for-agents/code-review.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/reviewer-benchmark-report.md",
               "confidence": "observed"
             }
           ],
@@ -11946,10 +12012,11 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 2,
+          "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
             "document:docs/for-agents/code-review.md",
+            "document:docs/reviewer-benchmark-report.md",
             "document:docs/reviewer-benchmark.md"
           ],
           "packageId": "package:@agentskit/code-review",
@@ -11961,13 +12028,23 @@
             },
             {
               "kind": "mentions",
+              "id": "document:docs/reviewer-benchmark-report.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
               "id": "document:docs/reviewer-benchmark.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "document:docs/reviewer-benchmark-report.md",
               "confidence": "observed"
             }
           ],
           "outbound": []
         },
-        "contentHash": "5c219c533c081449fe9a2fb059bfbfd9bfa23e2d773294a36280ad7d9fd8a39a",
+        "contentHash": "7c799148c3a1b1197f988a00fdcacbd5a7313421215b66b8adbe571007da286e",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -14075,7 +14152,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "f1508a6886b17e28262be2394cffd9554b684a365a5c638adf8cd727b4cdce64",
+        "contentHash": "e741c92baea9dce07cb1fd0807194914351649c5a2fee2c0c73cfe3317700602",
         "provenance": "observed",
         "confidence": "observed"
       },

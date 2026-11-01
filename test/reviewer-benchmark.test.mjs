@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
-import { evaluateBenchmark, parseBenchmarkDataset } from '../dist/src/reviewer-benchmark.js'
+import { evaluateBenchmark, parseBenchmarkDataset, renderBenchmarkMarkdown } from '../dist/src/reviewer-benchmark.js'
 
 const prs = Array.from({ length: 30 }, (_, i) => i % 2
   ? { id: `r#${i}`, repository: 'o/r', number: i + 1, label: 'clean', bugs: [] }
@@ -48,4 +48,15 @@ test('rejects malformed labels and fix citations', () => {
   assert.throws(() => parseBenchmarkDataset({ version: 1, prs: [{ id: 'x', repository: 'o/r', number: 1, label: 'clean', bugs: [{ file: 'a', line: 1, note: 'n' }] }] }))
   assert.throws(() => parseBenchmarkDataset({ version: 1, prs: [{ id: 'x', repository: 'o/r', number: 1, label: 'buggy', bugs: [] }] }))
   assert.throws(() => parseBenchmarkDataset({ version: 1, prs: [{ id: 'x', repository: 'o/r', number: 1, label: 'buggy', bugs: [{ file: 'a', line: 1, note: 'n', fix: { pr: 2, commit: 'abc' } }] }] }))
+})
+
+test('the report shows both reviewers per PR and in total with the counting rule and reproduction commands', () => {
+  const incumbent = runs((pr) => run(pr.bugs.length ? [hit, noise] : [noise], 1))
+  const candidate = runs((pr) => run(pr.bugs.length ? [hit] : [], 1))
+  const markdown = renderBenchmarkMarkdown(evaluateBenchmark(dataset, incumbent, candidate))
+  assert.match(markdown, /mvp:RF-02/)
+  assert.match(markdown, /\| r#0 \| 1\/1 \| 1 \| 1\/1 \| 0 \|/)
+  assert.match(markdown, /\| \*\*Total\*\* \| \*\*15\/15\*\* \| \*\*30\*\* \| \*\*15\/15\*\* \| \*\*0\*\* \|/)
+  assert.match(markdown, /## Counting rule/)
+  assert.match(markdown, /run-reviewer-benchmark\.mjs/)
 })
