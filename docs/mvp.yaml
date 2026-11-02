@@ -61,7 +61,8 @@ requirements:
     {"findings":[{file,line,title}],"costUsd"}; o run-reviewer-benchmark com --incumbent-cmd termina sem nenhum PR
     do incumbente em erro
   weight: 2
-  acceptance: []
+  acceptance:
+    - test: test/incumbent-review.test.mjs
   homolog: []
   issues: [359]
   prs: []

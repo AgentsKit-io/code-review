@@ -26,6 +26,15 @@ node scripts/run-reviewer-benchmark.mjs --incumbent-cmd ./path/to/line-reviewer 
 
 An external reviewer command is run as `<executable> <owner/repo> <number>` (no shell) and prints `{"findings":[{"file","line","title"}],"costUsd":0}`. Without `--candidate-cmd` the built-in CLI reviews each PR with `--pr` (needs `GITHUB_TOKEN`; provider keys come from the environment, never from arguments). Cost for the built-in reviewer is `tokensUsed` times `--usd-per-mtok`.
 
+### The incumbent command (`mvp:RF-03`)
+
+`scripts/incumbent-review.mjs <owner/repo> <number>` (also the `agentskit-incumbent-review` bin) is the incumbent as an executable: the line's single-pass review (no lenses). It fetches the PR diff (`GITHUB_TOKEN`; `GITHUB_API_URL` for another API host), sends it to a headless model CLI on stdin and prints one line, `{"findings":[{"file","line","title"}],"costUsd":0}`. A failure (diff not fetched or too large, model exit, unparseable answer) exits non-zero, so the benchmark records that PR as an error and never scores it as clean. Environment only: `AGENTSKIT_INCUMBENT_CMD` (default `claude`), `AGENTSKIT_INCUMBENT_ARGS` (JSON array, default `["-p","--output-format","json"]`), `AGENTSKIT_INCUMBENT_USD_PER_MTOK` (cost is the tokens of the CLI's `usage` times this price), `AGENTSKIT_INCUMBENT_MAX_DIFF_CHARS`.
+
+```bash
+export GITHUB_TOKEN=... AGENTSKIT_INCUMBENT_USD_PER_MTOK=5
+node scripts/run-reviewer-benchmark.mjs --incumbent-cmd ./scripts/incumbent-review.mjs --candidate-cmd ./scripts/shadow-review.mjs
+```
+
 ## Entry criterion
 
 `PASS` needs: at least as many real bugs found as the incumbent, strictly fewer false positives (any finding matching no known bug, and every finding on a clean PR), and cost at most 1.2x the incumbent. Any errored PR makes the report `BLOCKED`. The exit code is 2 unless `PASS`.

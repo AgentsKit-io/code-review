@@ -11,7 +11,8 @@
     "agentskit-review-harness": "scripts/review-harness.mjs",
     "agentskit-quality": "scripts/evaluate-quality.mjs",
     "agentskit-shadow-review": "scripts/shadow-review.mjs",
-    "agentskit-line-review": "scripts/line-review.mjs"
+    "agentskit-line-review": "scripts/line-review.mjs",
+    "agentskit-incumbent-review": "scripts/incumbent-review.mjs"
   },
   "exports": {
     ".": "./dist/src/index.js",
@@ -57,11 +58,14 @@
     "scripts/run-reviewer-benchmark.mjs",
     "scripts/shadow-review.mjs",
     "scripts/line-review.mjs",
+    "scripts/incumbent-review.mjs",
     "scripts/reviewer-run.mjs",
     "docs/reviewer-benchmark-report.md",
     "quality/benchmark/report.json",
     "test/shadow-review.test.mjs",
     "test/line-review.test.mjs",
+    "test/incumbent-review.test.mjs",
+    "test/fixtures/bin/incumbent-model",
     "quality/benchmark/prs.json",
     "test/reviewer-benchmark.test.mjs",
     "scripts/capture-quality-baseline.mjs",
