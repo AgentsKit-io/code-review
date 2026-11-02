@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "df86ca637ba7497a8d413ddce98a1ba12dd6d7c5180378a4efea8e4ac125e675",
+  "contentHash": "fe9a9181971edb0ecb722bb0cc58636c187122546db515400fd4b097a6ff0cf7",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-01T07:53:43.660Z",
+  "generatedAt": "2026-11-02T20:51:07.829Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -57,6 +57,18 @@
         "unclassified"
       ],
       "contentHash": "bfb037b4f0d8d7f6b96742583c5962cab9f3819a4ca4922cfe5dcb1eaaa5196b"
+    },
+    {
+      "id": "document:.changeset/rf-04-token-cost.md",
+      "type": "document",
+      "title": "rf-04-token-cost.md",
+      "path": ".changeset/rf-04-token-cost.md",
+      "description": "Reviewer benchmark records input and output tokens of both reviewers and prices them with one versioned per-model table (quality/benchmark/prices.json); a completed PR with no measured cost blocks the report instead of showing zero (mvp:RF-04).",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "212f34f36634cace910714fe523da86b89c5744157496b46b8ad3a621335174f"
     },
     {
       "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
@@ -428,7 +440,7 @@
         "document",
         "human"
       ],
-      "contentHash": "0f119fe43d609d936ca81fddfd780984368b7e2813a3b17975480ff4c168d553"
+      "contentHash": "c9bb4f18447fff2f68f0cede85898938d768740c5ff69020f700f130c374b3e1"
     },
     {
       "id": "document:GOVERNANCE.md",
@@ -1153,7 +1165,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "6198f03132de3a659ef9d5a2334e5d0d560306dcbc010e6581a6142bf05b87fd"
+      "contentHash": "823b6ee1a05d93ef1649b9759a13ce89ac12308f366254c59ef387da72c28297"
     },
     {
       "id": "module:scripts/shadow-review.mjs",
@@ -1165,7 +1177,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "4f7872fbe89bf862fe22bdb5cb9f068e94d81e3fc3b061607435cc51ba4c8d74"
+      "contentHash": "ae29fc97027e5bb0e3152bafa08d2735098a29ff89a27ffe2a2871d1fb1a7dd2"
     },
     {
       "id": "module:scripts/verify-ecosystem-public-outputs.mjs",
@@ -2266,12 +2278,15 @@
         "MAX_COST_RATIO",
         "MIN_BENCHMARK_PRS",
         "PrScore",
+        "PriceTable",
         "ReviewerFinding",
         "ReviewerRun",
         "ReviewerSummary",
         "bugMatches",
         "evaluateBenchmark",
         "parseBenchmarkDataset",
+        "parsePriceTable",
+        "priceRun",
         "renderBenchmarkMarkdown",
         "scorePr",
         "summarizeReviewer"
@@ -2281,7 +2296,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "7c799148c3a1b1197f988a00fdcacbd5a7313421215b66b8adbe571007da286e"
+      "contentHash": "50ff74abb3d9816f08515953315124ff9dd4e15de49caa1d570f16ca076cd2fc"
     },
     {
       "id": "module:src/scm-contract.ts",
@@ -2990,7 +3005,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "e741c92baea9dce07cb1fd0807194914351649c5a2fee2c0c73cfe3317700602"
+      "contentHash": "2a720f966cf0478015a566dec67d99516c25c2323f4807a2476fc51b82cf5c4f"
     },
     {
       "id": "module:test/risk-depth.test.mjs",
@@ -3050,7 +3065,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "fa0336a7230a466c6d0e8f641d1cc870cd29888dda66da37131a0163f134b3c5"
+      "contentHash": "a1ca9dae6a716a4fce0cb0f41101153af8b47d8d895ac3e431ca982305466554"
     },
     {
       "id": "module:test/sources-context.test.mjs",
@@ -3172,8 +3187,8 @@
     }
   },
   "inputs": {
-    "hash": "ef2e55e915be9d49e7c3fbaf3271a0ab8e1ad675bffb46321b0ae01dd90652c9",
-    "fileCount": 214,
+    "hash": "781b2b3a9af0942daf168bf309c7791a26dfc9bb52fd6c45b0386bc473bea13a",
+    "fileCount": 216,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3195,9 +3210,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "0be377a388cc7e5775db0319d22a793d83d2882a6469de106a389d0a343a9584",
+    "contentHash": "8bab0458282ea4d7b9b0f80016af178b991718baa13033941d756e30c7095028",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "2cf6044caa0851ea27093013536f568fcb6933f7716981ac07ac9f5c86e126c4",
+    "snapshotHash": "043c6ed8665f62e426b492b938e8e7bc525a07667e9a2988ae08f9ce8c08afd5",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3217,7 +3232,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 196,
+      "documentCount": 197,
       "fieldNames": [
         "aliases",
         "body",
@@ -3228,13 +3243,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.892857142857143,
-        "body": 54.86224489795919,
-        "headings": 3.7448979591836733,
-        "path": 5.612244897959184,
-        "summary": 3.204081632653061,
-        "symbols": 13.551020408163266,
-        "title": 4.270408163265306
+        "aliases": 2.8883248730964466,
+        "body": 54.746192893401016,
+        "headings": 3.7258883248730963,
+        "path": 5.619289340101523,
+        "summary": 3.3451776649746194,
+        "symbols": 13.532994923857869,
+        "title": 4.279187817258883
       }
     },
     "entries": [
@@ -3577,6 +3592,38 @@
           "outbound": []
         },
         "contentHash": "bfb037b4f0d8d7f6b96742583c5962cab9f3819a4ca4922cfe5dcb1eaaa5196b",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:.changeset/rf-04-token-cost.md",
+        "kind": "document",
+        "path": ".changeset/rf-04-token-cost.md",
+        "title": "rf-04-token-cost.md",
+        "summary": "Reviewer benchmark records input and output tokens of both reviewers and prices them with one versioned per-model table (quality/benchmark/prices.json); a completed PR with no measured cost blocks the report instead of showing zero (mvp:RF-04).",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "rf-04-token-cost.md",
+          "headings": "",
+          "path": ".changeset/rf-04-token-cost.md",
+          "symbols": "",
+          "summary": "Reviewer benchmark records input and output tokens of both reviewers and prices them with one versioned per-model table (quality/benchmark/prices.json); a completed PR with no measured cost blocks the report instead of showing zero (mvp:RF-04).",
+          "body": "Reviewer benchmark records input and output tokens of both reviewers and prices them with one versioned per-model table ( quality/benchmark/prices.json ); a completed PR with no measured cost blocks the report instead of showing zero ( mvp:RF-04 ).",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "212f34f36634cace910714fe523da86b89c5744157496b46b8ad3a621335174f",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -5949,7 +5996,7 @@
           "path": "docs/reviewer-benchmark.md",
           "symbols": "",
           "summary": "Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json; the scoring is in src/reviewer-benchmark.ts; the runner is scripts/run-reviewer-benchmark.mjs. Run it on every release.",
-          "body": "Reviewer benchmark Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json ; the scoring is in src/reviewer-benchmark.ts ; the runner is scripts/run-reviewer-benchmark.mjs . Run it on every release. Status Decision on 2026-10-30: BLOCKED, so the entry criterion is not met and the factory's review stage stays on the incumbent (the switch is off; shadow mode does not start). The report is (JSON: quality/benchmark/report.json ). - Code Review ran on all 38 PRs: 27 completed, 11 ended incomplete (exit 2: deadline or provider failure; reruns are needed). On the 27 completed PRs it found 8 of the 16 known bugs and reported 118 findings matching no known bug. - The incumbent was not run : the line reviewer is the review stage of the private factory-line repository, which this repository's automation cannot reach, and no standalone executable of it exists. Its 38 runs are recorded as errors, which is what makes the decision BLOCKED rather than FAIL . Run it with --incumbent-cmd from a machine that has it. - Cost is not measured : the run used claude-cli , which reports no token usage, so every cost shows 0.00. The Anthropic API provider was rejected (HTTP 401) with the credential available to the run. A cost comparison needs an API-provider run ( AGENTSKIT SHADOW PROVIDER=anthropic , AGENTSKIT SHADOW USD PER MTOK ). - \"False positives\" is an upper bound: a finding counts as false when it matches none of the bugs that were later fixed, so real defects nobody fixed are counted against the reviewer. The incumbent is scored the same way, so the comparison stays fair. - Only AgentsKit-io repositories are in the set (code-review, harness, doc-bridge); NoxCodeSolutions repositories were not reachable from this run. Dataset quality/benchmark/prs.json : 38 merged AgentsKit-io PRs, 22 buggy and 16 clean . A buggy PR is one whose merged code was later corrected by a fix PR: each bug lists file , line (in the reviewed PR's version of the file, from git blame of the lines the fix replaced), lineTolerance , a note , and fix (the fix PR number and commit that proves it was real). A clean PR is a feature PR that no later fix PR in the same repository touched (never the origin of any blamed line of a fix: commit). The set was mined from fix: commits in code-review, harness and doc-bridge; PRs are added by annotating real PRs, never by invention. The report is BLOCKED until the set has 30 PRs with both labels. Run An external reviewer command is run as <executable <owner/repo <number (no shell) and prints {\"findings\":[{\"file\",\"line\",\"title\"}],\"costUsd\":0} . Without --candidate-cmd the built-in CLI reviews each PR with --pr (needs GITHUB TOKEN ; provider keys come from the environment, never from arguments). Cost for the built-in reviewer is tokensUsed times --usd-per-mtok . Entry criterion PASS needs: at least as many real bugs found as the incumbent, strictly fewer false positives (any finding matching no known bug, and every finding on a clean PR), and cost at most 1.2x the incumbent. Any errored PR makes the report BLOCKED . The exit code is 2 unless PASS . Running on the line (shadow mode) The incumbent is the review stage of the factory line ( reviewPrompt in packages/factory-line/src/prompts.ts , private repository). The comparison runs it on the line through its shadow mode ( shadow-review.ts , enabled per repository by shadowReview in line.json ), which comments and does not decide. scripts/shadow-review.mjs (also the agentskit-shadow-review bin) is the Code Review side. Shadow mode runs it with the PR's checkout as the working directory and reads the last line of stdout : {\"comment\":\"<review markdown \",\"costUsd\":0,\"findings\":[{\"file\",\"line\",\"title\"}]} ; it reviews the files changed against AGENTSKIT SHADOW BASE (default origin/main ) and exits 0 for a completed review, with or without findings. Given <owner/repo <number it reviews that PR instead, which is how the benchmark runner calls i",
+          "body": "Reviewer benchmark Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json ; the scoring is in src/reviewer-benchmark.ts ; the runner is scripts/run-reviewer-benchmark.mjs . Run it on every release. Status Decision on 2026-10-30: BLOCKED, so the entry criterion is not met and the factory's review stage stays on the incumbent (the switch is off; shadow mode does not start). The report is (JSON: quality/benchmark/report.json ). - Code Review ran on all 38 PRs: 27 completed, 11 ended incomplete (exit 2: deadline or provider failure; reruns are needed). On the 27 completed PRs it found 8 of the 16 known bugs and reported 118 findings matching no known bug. - The incumbent was not run : the line reviewer is the review stage of the private factory-line repository, which this repository's automation cannot reach, and no standalone executable of it exists. Its 38 runs are recorded as errors, which is what makes the decision BLOCKED rather than FAIL . Run it with --incumbent-cmd from a machine that has it. - Cost is not measured : the run used claude-cli , which reports no token usage, so every cost shows 0.00. The Anthropic API provider was rejected (HTTP 401) with the credential available to the run. A cost comparison needs an API-provider run ( AGENTSKIT SHADOW PROVIDER=anthropic , AGENTSKIT SHADOW MODEL ). Since mvp:RF-04 the runner no longer lets a completed PR show cost 0: it is BLOCKED until both reviewers report tokens. - \"False positives\" is an upper bound: a finding counts as false when it matches none of the bugs that were later fixed, so real defects nobody fixed are counted against the reviewer. The incumbent is scored the same way, so the comparison stays fair. - Only AgentsKit-io repositories are in the set (code-review, harness, doc-bridge); NoxCodeSolutions repositories were not reachable from this run. Dataset quality/benchmark/prs.json : 38 merged AgentsKit-io PRs, 22 buggy and 16 clean . A buggy PR is one whose merged code was later corrected by a fix PR: each bug lists file , line (in the reviewed PR's version of the file, from git blame of the lines the fix replaced), lineTolerance , a note , and fix (the fix PR number and commit that proves it was real). A clean PR is a feature PR that no later fix PR in the same repository touched (never the origin of any blamed line of a fix: commit). The set was mined from fix: commits in code-review, harness and doc-bridge; PRs are added by annotating real PRs, never by invention. The report is BLOCKED until the set has 30 PRs with both labels. Run An external reviewer command is run as <executable <owner/repo <number (no shell) and prints {\"findings\":[{\"file\",\"line\",\"title\"}],\"model\":\"<id in prices.json \",\"inputTokens\":0,\"outputTokens\":0} . Without --candidate-cmd the built-in CLI reviews each PR with --pr (needs GITHUB TOKEN ; provider keys come from the environment, never from arguments). Cost ( mvp:RF-04 ) is never reported by a reviewer: both record input and output tokens (the built-in one from evidence.usage , with --model ), and the runner prices them with the same per-model table, quality/benchmark/prices.json (US$ per million tokens, versioned, --prices overrides). A completed PR without tokens or without its model in the table makes the report BLOCKED ; the report lists tokens and cost per PR and in total. Entry criterion PASS needs: at least as many real bugs found as the incumbent, strictly fewer false positives (any finding matching no known bug, and every finding on a clean PR), and cost at most 1.2x the incumbent. Any errored PR makes the report BLOCKED . The exit code is 2 unless PASS . Running on the line (shadow mode) The incumbent is the review stage of the factory line ( reviewPrompt in packages/factory-line/src/prompts.ts , private repository). The comparison runs it on the line through its shadow mode ( shadow-review.ts , enabled per repository by shadowReview in line.json ), which comments and doe",
           "aliases": "document human"
         },
         "graph": {
@@ -5995,7 +6042,7 @@
             }
           ]
         },
-        "contentHash": "0f119fe43d609d936ca81fddfd780984368b7e2813a3b17975480ff4c168d553",
+        "contentHash": "c9bb4f18447fff2f68f0cede85898938d768740c5ff69020f700f130c374b3e1",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -8475,7 +8522,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "6198f03132de3a659ef9d5a2334e5d0d560306dcbc010e6581a6142bf05b87fd",
+        "contentHash": "823b6ee1a05d93ef1649b9759a13ce89ac12308f366254c59ef387da72c28297",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -8517,7 +8564,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "4f7872fbe89bf862fe22bdb5cb9f068e94d81e3fc3b061607435cc51ba4c8d74",
+        "contentHash": "ae29fc97027e5bb0e3152bafa08d2735098a29ff89a27ffe2a2871d1fb1a7dd2",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -11986,12 +12033,15 @@
           "MAX_COST_RATIO",
           "MIN_BENCHMARK_PRS",
           "PrScore",
+          "PriceTable",
           "ReviewerFinding",
           "ReviewerRun",
           "ReviewerSummary",
           "bugMatches",
           "evaluateBenchmark",
           "parseBenchmarkDataset",
+          "parsePriceTable",
+          "priceRun",
           "renderBenchmarkMarkdown",
           "scorePr",
           "summarizeReviewer"
@@ -12005,7 +12055,7 @@
           "title": "reviewer-benchmark.ts",
           "headings": "",
           "path": "src/reviewer-benchmark.ts",
-          "symbols": "BenchmarkDataset BenchmarkDecision BenchmarkPr BenchmarkReport KnownBug MAX_COST_RATIO MIN_BENCHMARK_PRS PrScore ReviewerFinding ReviewerRun ReviewerSummary bugMatches evaluateBenchmark parseBenchmarkDataset renderBenchmarkMarkdown scorePr summarizeReviewer",
+          "symbols": "BenchmarkDataset BenchmarkDecision BenchmarkPr BenchmarkReport KnownBug MAX_COST_RATIO MIN_BENCHMARK_PRS PrScore PriceTable ReviewerFinding ReviewerRun ReviewerSummary bugMatches evaluateBenchmark parseBenchmarkDataset parsePriceTable priceRun renderBenchmarkMarkdown scorePr summarizeReviewer",
           "summary": "",
           "body": "",
           "aliases": "module ts src"
@@ -12044,7 +12094,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "7c799148c3a1b1197f988a00fdcacbd5a7313421215b66b8adbe571007da286e",
+        "contentHash": "50ff74abb3d9816f08515953315124ff9dd4e15de49caa1d570f16ca076cd2fc",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -14152,7 +14202,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "e741c92baea9dce07cb1fd0807194914351649c5a2fee2c0c73cfe3317700602",
+        "contentHash": "2a720f966cf0478015a566dec67d99516c25c2323f4807a2476fc51b82cf5c4f",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -14322,7 +14372,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "fa0336a7230a466c6d0e8f641d1cc870cd29888dda66da37131a0163f134b3c5",
+        "contentHash": "a1ca9dae6a716a4fce0cb0f41101153af8b47d8d895ac3e431ca982305466554",
         "provenance": "observed",
         "confidence": "observed"
       },

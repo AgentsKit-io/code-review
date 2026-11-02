@@ -2,15 +2,16 @@
 // Reviewer wrapper for the factory line's shadow mode and for scripts/run-reviewer-benchmark.mjs.
 //   shadow-review.mjs                      review the changed files of the checkout in the working directory
 //   shadow-review.mjs <owner/repo> <n>     review that GitHub PR (needs GITHUB_TOKEN)
-// The LAST line of stdout is {"comment","costUsd","findings":[{file,line,title}]}; progress goes to stderr and the
+// The LAST line of stdout is {"comment","costUsd","model","inputTokens","outputTokens","findings":[{file,line,title}]}; progress goes to stderr and the
 // exit code is 0 for a completed review, even with findings (it comments, it does not decide).
 // Configuration comes from the environment only: AGENTSKIT_SHADOW_PROVIDER, AGENTSKIT_SHADOW_MODEL, AGENTSKIT_SHADOW_MODE (isolated|trusted-local),
-// AGENTSKIT_SHADOW_CONFIG (a code-review config file, e.g. for a larger budget), AGENTSKIT_SHADOW_USD_PER_MTOK (cost = tokens x rate; 0 when unset), AGENTSKIT_SHADOW_BASE (default origin/main).
+// AGENTSKIT_SHADOW_CONFIG (a code-review config file, e.g. for a larger budget), cost = input/output tokens x the model's rate in quality/benchmark/prices.json (the table the benchmark uses for both reviewers; null when tokens or the model are missing), AGENTSKIT_SHADOW_BASE (default origin/main).
 import { runCommand, splitLines } from '@agentskit/cross-platform'
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { parsePriceTable, priceRun } from '../dist/src/reviewer-benchmark.js'
 import { renderMarkdown } from '../dist/agents/code-review/reporters.js'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -41,9 +42,12 @@ try {
   if (run.stderr) process.stderr.write(run.stderr)
   if (run.code !== 0) fail(`review failed (exit ${run.code ?? run.signal}): ${splitLines(run.stderr.trim()).at(-1) ?? ''}`.slice(0, 280))
   const review = JSON.parse(readFileSync(result, 'utf8'))
+  const prices = parsePriceTable(JSON.parse(readFileSync(join(root, 'quality/benchmark/prices.json'), 'utf8')))
+  const tokens = { model: env.AGENTSKIT_SHADOW_MODEL, inputTokens: review.evidence?.usage?.inputTokens, outputTokens: review.evidence?.usage?.outputTokens }
   emit({
     comment: renderMarkdown(review),
-    costUsd: ((review.evidence?.tokensUsed ?? 0) / 1e6) * Number(env.AGENTSKIT_SHADOW_USD_PER_MTOK ?? 0),
+    ...tokens,
+    costUsd: priceRun(prices, tokens) ?? null,
     findings: review.findings.map((f) => ({ file: f.file, line: f.line, title: f.title })),
   })
 } finally {

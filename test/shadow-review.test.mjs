@@ -23,12 +23,13 @@ test('the shadow wrapper prints the comment JSON as its last stdout line and exi
     git(home, 'commit', '-q', '-m', 'change')
     const run = spawnSync(process.execPath, [join(root, 'scripts/shadow-review.mjs')], {
       cwd: home, encoding: 'utf8', timeout: 60_000,
-      env: { ...process.env, HOME: home, AGENTSKIT_SHADOW_BASE: 'main', AGENTSKIT_SHADOW_PROVIDER: 'codex-cli', AGENTSKIT_SHADOW_USD_PER_MTOK: '5', PATH: `${join(root, 'test/fixtures/bin')}:${process.env.PATH ?? ''}` },
+      env: { ...process.env, HOME: home, AGENTSKIT_SHADOW_BASE: 'main', AGENTSKIT_SHADOW_PROVIDER: 'codex-cli', AGENTSKIT_SHADOW_MODEL: 'claude-sonnet-5-5', PATH: `${join(root, 'test/fixtures/bin')}:${process.env.PATH ?? ''}` },
     })
     assert.equal(run.status, 0, run.stderr)
     const last = JSON.parse(run.stdout.trimEnd().split('\n').at(-1))
     assert.match(last.comment, /^## Code review/)
-    assert.equal(typeof last.costUsd, 'number')
+    assert.ok(last.costUsd === null || typeof last.costUsd === 'number')
+    assert.ok('inputTokens' in last && 'outputTokens' in last)
     assert.ok(Array.isArray(last.findings))
   } finally { rmSync(home, { recursive: true, force: true }) }
 })

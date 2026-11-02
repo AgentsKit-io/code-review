@@ -1,16 +1,17 @@
 #!/usr/bin/env node
 // Runs the incumbent line reviewer and code-review over quality/benchmark/prs.json and applies the entry criterion.
-//   node scripts/run-reviewer-benchmark.mjs --incumbent-cmd <executable> [--provider <p> --model <m> --usd-per-mtok <n>]
-//     [--candidate-cmd <executable>] [--concurrency <n>] [--dataset <file>] [--output <report.json>] [--markdown <report.md>]
+//   node scripts/run-reviewer-benchmark.mjs --incumbent-cmd <executable> [--provider <p> --model <m>]
+//     [--candidate-cmd <executable>] [--concurrency <n>] [--dataset <file>] [--prices <file>] [--output <report.json>] [--markdown <report.md>]
 // A reviewer command is run as `<executable> <owner/repo> <number>` (no shell) and must print
-// {"findings":[{"file","line","title"}],"costUsd":0} on stdout. Without --candidate-cmd the built-in CLI is used.
+// {"findings":[{"file","line","title"}],"model":"<id in prices.json>","inputTokens":0,"outputTokens":0} on stdout; the runner
+// computes both reviewers' cost from those tokens with the one price table (quality/benchmark/prices.json). Without --candidate-cmd the built-in CLI is used.
 // Credentials are inherited from the environment; none are accepted as arguments.
 import { runCommand, splitLines } from '@agentskit/cross-platform'
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { evaluateBenchmark, parseBenchmarkDataset, renderBenchmarkMarkdown } from '../dist/src/reviewer-benchmark.js'
+import { evaluateBenchmark, parseBenchmarkDataset, parsePriceTable, renderBenchmarkMarkdown } from '../dist/src/reviewer-benchmark.js'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const value = (name) => {
@@ -25,15 +26,14 @@ async function runExternal(command, pr) {
   try {
     if (run.code !== 0) throw new Error(`exit ${run.code ?? run.signal}: ${splitLines(run.stderr.trim()).at(-1) ?? ''}`.slice(0, 300))
     const out = JSON.parse(run.stdout)
-    return { findings: out.findings ?? [], costUsd: Number(out.costUsd ?? 0), latencyMs }
+    return { findings: out.findings ?? [], model: out.model, inputTokens: out.inputTokens, outputTokens: out.outputTokens, latencyMs }
   } catch (error) {
-    return { findings: [], costUsd: 0, latencyMs, error: error instanceof Error ? error.message : String(error) }
+    return { findings: [], latencyMs, error: error instanceof Error ? error.message : String(error) }
   }
 }
 
 async function runBuiltIn(pr, workdir) {
   const provider = value('provider')
-  const usdPerMtok = Number(value('usd-per-mtok') ?? 0)
   const result = join(workdir, `${pr.id.replace(/[^\w.-]/g, '_')}.json`)
   const args = ['dist/src/cli.js', '--pr', `${pr.repository}#${pr.number}`, '--result', result, '--no-fail']
   if (provider) args.push('--provider', provider)
@@ -44,9 +44,9 @@ async function runBuiltIn(pr, workdir) {
   try {
     if (run.code !== 0) throw new Error(`exit ${run.code ?? run.signal}`)
     const review = JSON.parse(readFileSync(result, 'utf8'))
-    return { findings: review.findings.map((f) => ({ file: f.file, line: f.line, title: f.title })), costUsd: ((review.evidence?.tokensUsed ?? 0) / 1e6) * usdPerMtok, latencyMs }
+    return { findings: review.findings.map((f) => ({ file: f.file, line: f.line, title: f.title })), model: value('model'), inputTokens: review.evidence?.usage?.inputTokens, outputTokens: review.evidence?.usage?.outputTokens, latencyMs }
   } catch (error) {
-    return { findings: [], costUsd: 0, latencyMs, error: error instanceof Error ? error.message : String(error) }
+    return { findings: [], latencyMs, error: error instanceof Error ? error.message : String(error) }
   }
 }
 
@@ -56,6 +56,7 @@ if (!incumbentCmd) {
   process.exit(64)
 }
 const dataset = parseBenchmarkDataset(JSON.parse(readFileSync(resolve(value('dataset') ?? join(root, 'quality/benchmark/prs.json')), 'utf8')))
+const prices = parsePriceTable(JSON.parse(readFileSync(resolve(value('prices') ?? join(root, 'quality/benchmark/prices.json')), 'utf8')))
 const candidateCmd = value('candidate-cmd')
 const workdir = mkdtempSync(join(tmpdir(), 'agentskit-reviewer-benchmark-'))
 try {
@@ -69,7 +70,7 @@ try {
     }
   }
   await Promise.all(Array.from({ length: Math.max(1, Number(value('concurrency') ?? 1)) }, worker))
-  const report = evaluateBenchmark(dataset, incumbentRuns, candidateRuns)
+  const report = evaluateBenchmark(dataset, incumbentRuns, candidateRuns, prices)
   if (value('output')) writeFileSync(resolve(value('output')), `${JSON.stringify(report, null, 2)}\n`, { mode: 0o600 })
   const markdown = renderBenchmarkMarkdown(report)
   if (value('markdown')) writeFileSync(resolve(value('markdown')), markdown)
