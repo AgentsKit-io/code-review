@@ -48,3 +48,20 @@ node scripts/run-reviewer-benchmark.mjs --incumbent-cmd <line reviewer executabl
 ## After a pass
 
 Not reached: the decision is `BLOCKED`, so the one-week shadow-mode start is not scheduled and the switch stays off. Rerun the benchmark with the incumbent and an API provider (measured cost) and no errored PRs; on `PASS`, enable `shadowReview` on the line for one week before replacing the incumbent. Shadow mode is an operational step in the factory line, not part of this repository's runtime.
+
+## Deciding on the line (`mvp:RF-10`)
+
+`scripts/line-review.mjs` (also the `agentskit-line-review` bin) is the command the line's review stage calls once Code Review replaces the incumbent. It runs like the shadow command (PR checkout as working directory, or `<owner/repo> <number>`), but it **decides**. The last line of stdout is `{"decision","decidedBy","reason","comment","costUsd","findings","at","benchmarkDecision"}` and the exit code follows the decision:
+
+| decision | decidedBy | exit | when |
+| --- | --- | --- | --- |
+| `approve` | `code-review` | 0 | complete review, no blocking finding |
+| `request_changes` | `code-review` | 1 | complete review with a blocking finding (`REQUEST CHANGES` or `blocking`) |
+| `block` | `none` | 2 | failed or incomplete review with `AGENTSKIT_LINE_ON_FAILURE=block`; also usage errors |
+| `fallback` | `incumbent` | 3 | the benchmark report is not `PASS`, or a failed or incomplete review (default policy) |
+
+It fails closed. It reads the `decision` of the benchmark report shipped with the installed version (`quality/benchmark/report.json`, or `AGENTSKIT_LINE_BENCHMARK_REPORT`), and anything other than `PASS` returns `fallback` without calling a provider, so the switch stays off until the measured version passes. A review is complete only when it is not `incomplete`, has no unreviewed file and no missing required lens, did not pass its deadline, and every lens execution succeeded. Anything else (including a non-zero CLI exit, a missing result, or a change with no added or modified file) never approves. Configuration is environment only: `AGENTSKIT_LINE_PROVIDER`, `AGENTSKIT_LINE_MODEL`, `AGENTSKIT_LINE_MODE`, `AGENTSKIT_LINE_CONFIG`, `AGENTSKIT_LINE_USD_PER_MTOK`, `AGENTSKIT_LINE_BASE`, `AGENTSKIT_LINE_ON_FAILURE` (`incumbent` by default, or `block`).
+
+`AGENTSKIT_LINE_RECORD=<file.jsonl>` appends every decision (`at`, PR, `decision`, `decidedBy`, `reason`, `benchmarkDecision`, `costUsd`, finding count) to that file, so its first `decidedBy: "code-review"` line is the record of the first real PR the line decided with Code Review.
+
+First real PR decided by Code Review: **none yet**. The shipped report is `BLOCKED`, so the command falls back to the incumbent. Record the PR here once the line runs with a `PASS` version.
