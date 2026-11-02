@@ -79,3 +79,14 @@ test('check-version-pin rejects the shipped report, which is not PASS', () => {
   assert.match(result.stderr, /not PASS/)
   assert.equal(spawnSync(process.execPath, [script], { encoding: 'utf8' }).status, 64)
 })
+
+test('the report shows both reviewers per PR and in total with the counting rule and reproduction commands', () => {
+  const incumbent = runs((pr) => run(pr.bugs.length ? [hit, noise] : [noise], 1))
+  const candidate = runs((pr) => run(pr.bugs.length ? [hit] : [], 1))
+  const markdown = renderBenchmarkMarkdown(evaluateBenchmark(dataset, incumbent, candidate))
+  assert.match(markdown, /mvp:RF-02/)
+  assert.match(markdown, /\| r#0 \| 1\/1 \| 1 \| 1\/1 \| 0 \|/)
+  assert.match(markdown, /\| \*\*Total\*\* \| \*\*15\/15\*\* \| \*\*30\*\* \| \*\*15\/15\*\* \| \*\*0\*\* \|/)
+  assert.match(markdown, /## Counting rule/)
+  assert.match(markdown, /run-reviewer-benchmark\.mjs/)
+})
