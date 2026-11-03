@@ -14,7 +14,7 @@ Decision on 2026-10-30: **BLOCKED, so the entry criterion is not met and the fac
 
 ## Dataset
 
-`quality/benchmark/prs.json`: 38 merged AgentsKit-io PRs, 22 `buggy` and 16 `clean`. A `buggy` PR is one whose merged code was later corrected by a fix PR: each bug lists `file`, `line` (in the reviewed PR's version of the file, from `git blame` of the lines the fix replaced), `lineTolerance`, a `note`, and `fix` (the fix PR number and commit that proves it was real). A `clean` PR is a feature PR that no later fix PR in the same repository touched (never the origin of any blamed line of a `fix:` commit). The set was mined from `fix:` commits in code-review, harness and doc-bridge; PRs are added by annotating real PRs, never by invention. The report is `BLOCKED` until the set has 30 PRs with both labels.
+`quality/benchmark/prs.json`: 38 merged AgentsKit-io PRs, 22 `buggy` and 16 `clean`, from the repositories where both reviewers run (code-review, harness, doc-bridge). Every PR pins `commit`, the 40-hex head commit that both reviewers are given. A `buggy` PR is one whose merged code was later corrected by a fix PR: each bug lists `file`, `line` (in the reviewed PR's version of the file, from `git blame` of the lines the fix replaced), `lineTolerance`, a `note`, and `fix` (the fix PR number and commit that proves it was real). A `clean` PR is a feature PR that no later fix PR in the same repository touched (never the origin of any blamed line of a `fix:` commit). The set was mined from `fix:` commits in code-review, harness and doc-bridge; PRs are added by annotating real PRs, never by invention. The report is `BLOCKED` until the set has 30 PRs with both labels.
 
 ## Run
 
@@ -24,7 +24,13 @@ node scripts/run-reviewer-benchmark.mjs --incumbent-cmd ./path/to/line-reviewer 
   --provider claude-cli --usd-per-mtok 5 --output report.json --markdown report.md
 ```
 
-An external reviewer command is run as `<executable> <owner/repo> <number>` (no shell) and prints `{"findings":[{"file","line","title"}],"costUsd":0}`. Without `--candidate-cmd` the built-in CLI reviews each PR with `--pr` (needs `GITHUB_TOKEN`; provider keys come from the environment, never from arguments). Cost for the built-in reviewer is `tokensUsed` times `--usd-per-mtok`.
+An external reviewer command is run as `<executable> <owner/repo> <number> <commit>` (no shell; `<commit>` is the pinned head of the set) and prints `{"findings":[{"file","line","title"}],"costUsd":0}`. Without `--candidate-cmd` the built-in CLI reviews each PR with `--pr` (needs `GITHUB_TOKEN`; provider keys come from the environment, never from arguments). Cost for the built-in reviewer is `tokensUsed` times `--usd-per-mtok`.
+
+## Same PRs, same commit, which set and version (`mvp:RF-01`)
+
+The runner gives the incumbent and code-review exactly the PRs of the set, one after the other, and reads each PR's head from GitHub (`GITHUB_TOKEN`; `AGENTSKIT_BENCHMARK_GITHUB_API` overrides the API address) before and after the two runs. A head that is not the pinned `commit` records an error for both reviewers on that PR (the PR is not reviewed, or its result is discarded), which makes the decision `BLOCKED`, so neither reviewer is ever scored on a different commit than the other. The report (`set` and `run` in the JSON, section "Set and version" in the Markdown) states the set path, its format version, its sha256 digest, the PR counts and repositories, the commit given for every PR, and the code-review package version and git commit that ran. The digest changes whenever a PR, label, bug or pinned commit of the set changes.
+
+The committed `report.json` predates this section: it was measured before the commits were pinned and lists a PR that has since been corrected in the set (`code-review#40` is an issue; the PR is `#51`). The next run replaces it.
 
 ## Entry criterion
 
