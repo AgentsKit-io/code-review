@@ -10,7 +10,8 @@
     "agentskit-review-cycle": "scripts/review-cycle.mjs",
     "agentskit-review-harness": "scripts/review-harness.mjs",
     "agentskit-quality": "scripts/evaluate-quality.mjs",
-    "agentskit-shadow-review": "scripts/shadow-review.mjs"
+    "agentskit-shadow-review": "scripts/shadow-review.mjs",
+    "agentskit-line-review": "scripts/line-review.mjs"
   },
   "exports": {
     ".": "./dist/src/index.js",
@@ -58,10 +59,13 @@
     "scripts/shadow-review.mjs",
     "scripts/render-shadow-week-report.mjs",
     "quality/shadow-week/example.json",
+    "scripts/line-review.mjs",
+    "scripts/reviewer-run.mjs",
     "docs/reviewer-benchmark-report.md",
     "quality/benchmark/report.json",
     "test/shadow-review.test.mjs",
     "test/shadow-week.test.mjs",
+    "test/line-review.test.mjs",
     "quality/benchmark/prs.json",
     "test/reviewer-benchmark.test.mjs",
     "scripts/capture-quality-baseline.mjs",

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "a4946e503edf99bd3097d81862a08b6242a4afe1f466802aeb319298bfcd55b8",
+  "contentHash": "a69416433d25b291e0fedd43ff46336bea6d06aa29fa0e3d47d87bd8509e7446",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-02T20:49:44.043Z",
+  "generatedAt": "2026-11-03T01:23:07.138Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -57,6 +57,18 @@
         "unclassified"
       ],
       "contentHash": "bfb037b4f0d8d7f6b96742583c5962cab9f3819a4ca4922cfe5dcb1eaaa5196b"
+    },
+    {
+      "id": "document:.changeset/rf-10-line-reviewer.md",
+      "type": "document",
+      "title": "rf-10-line-reviewer.md",
+      "path": ".changeset/rf-10-line-reviewer.md",
+      "description": "New agentskit-line-review command (mvp:RF-10) decides the factory line's review stage with Code Review and fails closed. It decides only when the shipped benchmark report is PASS. A failed or incomplete review never approves: it falls back to the incumbent, or blocks with AGENTSKIT_LINE_ON_FAILURE=block. With AGENTSKIT_LINE_RECORD every decision is appended to a log.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "115a4320a4c9f1805c63518fa232e6dc1bc0fb80f6d915cfca5c797c80729c21"
     },
     {
       "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
@@ -440,7 +452,7 @@
         "document",
         "human"
       ],
-      "contentHash": "0f119fe43d609d936ca81fddfd780984368b7e2813a3b17975480ff4c168d553"
+      "contentHash": "da64efee714e26d5fed5466fb8b80e71c8eb8aacafcd241cab1a9b19623bc0b1"
     },
     {
       "id": "document:docs/shadow-week-protocol.md",
@@ -1076,6 +1088,18 @@
       "contentHash": "4420f7e52b2072201e6363cd9724df1f3ee3ccc0ccf48943dd3a0c853eef52fe"
     },
     {
+      "id": "module:scripts/line-review.mjs",
+      "type": "module",
+      "title": "line-review.mjs",
+      "path": "scripts/line-review.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "15032bb93e8f1de4f8c6b3e57e9fe177d514b307d274c3b98a9dbe2a1de9d190"
+    },
+    {
       "id": "module:scripts/readme-standard.test.mjs",
       "type": "module",
       "title": "readme-standard.test.mjs",
@@ -1156,6 +1180,23 @@
       "contentHash": "3ba50e607f8ab877d19ee86e3e33d5fae3f3988fc177142bc5f1c1b76e0409d9"
     },
     {
+      "id": "module:scripts/reviewer-run.mjs",
+      "type": "module",
+      "title": "reviewer-run.mjs",
+      "path": "scripts/reviewer-run.mjs",
+      "symbols": [
+        "isPrReference",
+        "packageRoot",
+        "runReview"
+      ],
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "3b9923f7a012fd70eeb115b876040cd5a19ba0dd4a61a84afa9ec8d65213a0d5"
+    },
+    {
       "id": "module:scripts/run-cycle-benchmark.mjs",
       "type": "module",
       "title": "run-cycle-benchmark.mjs",
@@ -1201,7 +1242,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "4f7872fbe89bf862fe22bdb5cb9f068e94d81e3fc3b061607435cc51ba4c8d74"
+      "contentHash": "d9f28ec3df0eab69b5b011e5243456ff934792afa9cd9e3a55d5dab6793e03fb"
     },
     {
       "id": "module:scripts/verify-ecosystem-public-outputs.mjs",
@@ -1904,6 +1945,29 @@
         "src"
       ],
       "contentHash": "ea6b7c3d82dd6f3d18528e37844347f0819e6a9bb9cc31218aa5edab9d013322"
+    },
+    {
+      "id": "module:src/line-reviewer.ts",
+      "type": "module",
+      "title": "line-reviewer.ts",
+      "path": "src/line-reviewer.ts",
+      "symbols": [
+        "LINE_DECISION_EXIT",
+        "LineDecision",
+        "LineFailurePolicy",
+        "LineReviewDecision",
+        "LineReviewInput",
+        "LineReviewResult",
+        "decideLineReview",
+        "incompleteReason",
+        "parseLineFailurePolicy"
+      ],
+      "tags": [
+        "module",
+        "ts",
+        "src"
+      ],
+      "contentHash": "816acdbbf543f32cba9b3653f14bf48064dcecf7bf707e2fd9ebfa4b27052603"
     },
     {
       "id": "module:src/local-cli-process.ts",
@@ -2772,6 +2836,18 @@
       "contentHash": "b3b97c6e311776ed769eb96fcfdc30b9243120f4fa4fd51fbfc9d1f81608ecdc"
     },
     {
+      "id": "module:test/line-review.test.mjs",
+      "type": "module",
+      "title": "line-review.test.mjs",
+      "path": "test/line-review.test.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "test"
+      ],
+      "contentHash": "62402692b086126f0b167743e0d156b8825d9e5453a93f832dcdf289a8e0371f"
+    },
+    {
       "id": "module:test/local-cli-process.test.mjs",
       "type": "module",
       "title": "local-cli-process.test.mjs",
@@ -3251,8 +3327,8 @@
     }
   },
   "inputs": {
-    "hash": "463b3ed31a27659b7de3f585cc3a6923c386d7b216492d5f28508a99c09b11e1",
-    "fileCount": 220,
+    "hash": "2c9f0c526729cf3a818737fcda629e5ea15b329182ef578237111a8d92d9b88c",
+    "fileCount": 225,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3274,9 +3350,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "7dc53bd527e8110eb6629f3ef0a0adf6e5cf9db2a557a44e732a77cb0ba7b487",
+    "contentHash": "a57b40e5a32bd2a7349c08528bf70b8d3148d5b19b1b2ed26e018a23730bea75",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "93f7703e70e1d68a8be6a8b3e481c5ee7620a5cb3a55f73a1cdb072eb2de9045",
+    "snapshotHash": "8064b8d937a4f2794f9f081356b21301fe3fe0b76b35ffb7cc9e1fdaeddef549",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3296,7 +3372,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 201,
+      "documentCount": 206,
       "fieldNames": [
         "aliases",
         "body",
@@ -3307,13 +3383,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8855721393034828,
-        "body": 54.417910447761194,
-        "headings": 3.681592039800995,
-        "path": 5.611940298507463,
-        "summary": 3.308457711442786,
-        "symbols": 13.537313432835822,
-        "title": 4.263681592039801
+        "aliases": 2.883495145631068,
+        "body": 53.36893203883495,
+        "headings": 3.621359223300971,
+        "path": 5.611650485436893,
+        "summary": 3.4514563106796117,
+        "symbols": 13.422330097087379,
+        "title": 4.271844660194175
       }
     },
     "entries": [
@@ -3481,7 +3557,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "9c5290c5df12e0dfeb86105146f5e9fb6e187965b4436f50cc33da3763b3414b",
+        "contentHash": "3b22a90e7b535b02f461052903b87d85aa52dc00fe39dc7aa56fa2f4dfa5f4cb",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3520,7 +3596,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "fa9ad8b36d8d4323ae0fd42cee34ddf802f3aa2daa2927c30c1ca51a5a67164b",
+        "contentHash": "2461a2c7579ac2d8d989375cfca1e7357e15df1bd89a8bce3af025e51421954a",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3656,6 +3732,38 @@
           "outbound": []
         },
         "contentHash": "bfb037b4f0d8d7f6b96742583c5962cab9f3819a4ca4922cfe5dcb1eaaa5196b",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:.changeset/rf-10-line-reviewer.md",
+        "kind": "document",
+        "path": ".changeset/rf-10-line-reviewer.md",
+        "title": "rf-10-line-reviewer.md",
+        "summary": "New agentskit-line-review command (mvp:RF-10) decides the factory line's review stage with Code Review and fails closed. It decides only when the shipped benchmark report is PASS. A failed or incomplete review never approves: it falls back to the incumbent, or blocks with AGENTSKIT_LINE_ON_FAILURE=block. With AGENTSKIT_LINE_RECORD every decision is appended to a log.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "rf-10-line-reviewer.md",
+          "headings": "",
+          "path": ".changeset/rf-10-line-reviewer.md",
+          "symbols": "",
+          "summary": "New agentskit-line-review command (mvp:RF-10) decides the factory line's review stage with Code Review and fails closed. It decides only when the shipped benchmark report is PASS. A failed or incomplete review never approves: it falls back to the incumbent, or blocks with AGENTSKIT_LINE_ON_FAILURE=block. With AGENTSKIT_LINE_RECORD every decision is appended to a log.",
+          "body": "New agentskit-line-review command ( mvp:RF-10 ) decides the factory line's review stage with Code Review and fails closed. It decides only when the shipped benchmark report is PASS . A failed or incomplete review never approves: it falls back to the incumbent, or blocks with AGENTSKIT LINE ON FAILURE=block . With AGENTSKIT LINE RECORD every decision is appended to a log.",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "115a4320a4c9f1805c63518fa232e6dc1bc0fb80f6d915cfca5c797c80729c21",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -5159,7 +5267,7 @@
           "path": "docs/for-agents/code-review.md",
           "symbols": "",
           "summary": "Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and GitHub pull requests. Bounded diff-first context packs run one multidimensional analysis; adversarial votes remove weak findings; reporters emit Markdown, GitHub reviews, and SARIF.",
-          "body": "Code Review CLI handoff Purpose Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and GitHub pull requests. Bounded diff-first context packs run one multidimensional analysis; adversarial votes remove weak findings; reporters emit Markdown, GitHub reviews, and SARIF. Ownership map - src/cli.ts : public flags, source selection, provider selection, exit policy. - src/campaign-reducer.ts and src/campaign-store.ts : deterministic lifecycle, atomic checkpoints, leases, replay, and resume. - src/campaign-preflight.ts : provider-free campaign discovery, eligibility, source planning, budget checks, and worktree gating. - src/batch-mode.ts : shared measured batching, including single-file context-pack partitioning (ADR-0006); preserve pack identity in artifacts, cache keys, and consolidation. - src/budget.ts : provider-free hierarchical budget compilation, reservations, and dimension-aware usage accounting. - src/review-stores.ts : separate self-hosted feedback and approved-knowledge stores with bounded schemas, atomic writes, retention, concurrent-write serialization, and the scoped AgentsKit Retriever . - src/review-feedback.ts : deterministic feedback reconciliation, resumable checkpoints, metrics, and inactive candidate-rule evidence. - src/campaign-runner.ts and scripts/review-campaign.mjs : bounded multi-PR execution, leased atomic checkpoints, resume, per-PR isolation, and deterministic terminal reporting. - src/quality-matrix.ts : run and campaign quality scoring, evidence separation, cost/time accounting, and baseline regression gates. evaluateCampaignQuality() must be used when aggregating campaign outcomes. - src/<provider -adapter.ts : logged-in local CLI adapters. - src/provider-registry.ts : validated provider capabilities and conservative execution policy around AgentsKit adapters. - src/provider-execution.ts : typed provider failures, bounded retry delay, adaptive concurrency, and cancellation-aware queueing. - src/scm-contract.ts : provider-neutral change-request, publication, readiness, and merge contracts plus explicit capability checks. - src/github-scm-adapter.ts : GitHub REST/CLI binding for the common SCM contract; the only migrated path allowed to contain GitHub payloads or merge commands. - agents/ : the vendored review agent in agents/code-review/ : review pipeline, lenses, input normalization, reporters. - agents/code-review/risk.ts : provider-free context-pack risk signals and specialized-depth selection. - action.yml : composite GitHub Action contract. - .github/workflows/release.yml : Changesets version-pull-request workflow. - .github/workflows/publish.yml : version-PR-gated npm Trusted Publishing and GitHub Release workflow. - examples/ : copy-ready Action workflows. - README.md and docs/OPERATIONS.md : public adoption and operations guidance. - ecosystem.json , llms.txt , and llms-full.txt : canonical product graph and machine-readable discovery/full-corpus surfaces. - src/reviewer-benchmark.ts , scripts/run-reviewer-benchmark.mjs , quality/benchmark/prs.json : labelled-PR benchmark and entry criterion against the incumbent line reviewer ( docs/reviewer-benchmark.md ). - test/ : credential-free CLI, Action, and documentation contract proofs. - scripts/ : Node entry points for the package scripts (review cycle, campaign, harness, quality matrix and baseline, fault injection, cycle benchmark, public-API snapshot, README Standard, llms-full.txt generation) and the standalone ecosystem public-output check. Boundaries - Depend on AgentsKit adapter/runtime/tool contracts; do not create a second model abstraction. - Preserve provider neutrality and advisory-by-default Action behavior. - Never expose provider keys in arguments, docs fixtures, logs, or PR output. - The Fumadocs site provides curated documentation only; the product runtime remains the CLI and GitHub Action. Do not add an embedded AgentsKit Chat runtime here. - The vendored review agent tracks the AgentsKit Registry sour",
+          "body": "Code Review CLI handoff Purpose Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and GitHub pull requests. Bounded diff-first context packs run one multidimensional analysis; adversarial votes remove weak findings; reporters emit Markdown, GitHub reviews, and SARIF. Ownership map - src/cli.ts : public flags, source selection, provider selection, exit policy. - src/campaign-reducer.ts and src/campaign-store.ts : deterministic lifecycle, atomic checkpoints, leases, replay, and resume. - src/campaign-preflight.ts : provider-free campaign discovery, eligibility, source planning, budget checks, and worktree gating. - src/batch-mode.ts : shared measured batching, including single-file context-pack partitioning (ADR-0006); preserve pack identity in artifacts, cache keys, and consolidation. - src/budget.ts : provider-free hierarchical budget compilation, reservations, and dimension-aware usage accounting. - src/review-stores.ts : separate self-hosted feedback and approved-knowledge stores with bounded schemas, atomic writes, retention, concurrent-write serialization, and the scoped AgentsKit Retriever . - src/review-feedback.ts : deterministic feedback reconciliation, resumable checkpoints, metrics, and inactive candidate-rule evidence. - src/campaign-runner.ts and scripts/review-campaign.mjs : bounded multi-PR execution, leased atomic checkpoints, resume, per-PR isolation, and deterministic terminal reporting. - src/quality-matrix.ts : run and campaign quality scoring, evidence separation, cost/time accounting, and baseline regression gates. evaluateCampaignQuality() must be used when aggregating campaign outcomes. - src/<provider -adapter.ts : logged-in local CLI adapters. - src/provider-registry.ts : validated provider capabilities and conservative execution policy around AgentsKit adapters. - src/provider-execution.ts : typed provider failures, bounded retry delay, adaptive concurrency, and cancellation-aware queueing. - src/scm-contract.ts : provider-neutral change-request, publication, readiness, and merge contracts plus explicit capability checks. - src/github-scm-adapter.ts : GitHub REST/CLI binding for the common SCM contract; the only migrated path allowed to contain GitHub payloads or merge commands. - agents/ : the vendored review agent in agents/code-review/ : review pipeline, lenses, input normalization, reporters. - agents/code-review/risk.ts : provider-free context-pack risk signals and specialized-depth selection. - action.yml : composite GitHub Action contract. - .github/workflows/release.yml : Changesets version-pull-request workflow. - .github/workflows/publish.yml : version-PR-gated npm Trusted Publishing and GitHub Release workflow. - examples/ : copy-ready Action workflows. - README.md and docs/OPERATIONS.md : public adoption and operations guidance. - ecosystem.json , llms.txt , and llms-full.txt : canonical product graph and machine-readable discovery/full-corpus surfaces. - src/reviewer-benchmark.ts , scripts/run-reviewer-benchmark.mjs , quality/benchmark/prs.json : labelled-PR benchmark and entry criterion against the incumbent line reviewer ( docs/reviewer-benchmark.md ). - src/line-reviewer.ts , scripts/line-review.mjs (bin agentskit-line-review ), scripts/reviewer-run.mjs : fail-closed decision of the factory line's review stage (RF-10); it decides only after a benchmark PASS , and a failed or incomplete review falls back to the incumbent or blocks, never approves ( docs/reviewer-benchmark.md ). - test/ : credential-free CLI, Action, and documentation contract proofs. - scripts/ : Node entry points for the package scripts (review cycle, campaign, harness, quality matrix and baseline, fault injection, cycle benchmark, public-API snapshot, README Standard, llms-full.txt generation) and the standalone ecosystem public-output check. Boundaries - Depend on AgentsKit adapter/runtime/tool contracts; do not create a second model abstraction. - Preserve provider neutrality and advisory-",
           "aliases": "code-review document agent package"
         },
         "graph": {
@@ -5276,7 +5384,17 @@
             },
             {
               "kind": "mentions",
+              "id": "module:scripts/line-review.mjs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
               "id": "module:scripts/review-campaign.mjs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:scripts/reviewer-run.mjs",
               "confidence": "observed"
             },
             {
@@ -5326,6 +5444,11 @@
             },
             {
               "kind": "mentions",
+              "id": "module:src/line-reviewer.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
               "id": "module:src/provider-execution.ts",
               "confidence": "observed"
             },
@@ -5361,7 +5484,7 @@
             }
           ]
         },
-        "contentHash": "3eb6a0a70719d90d8aecdcb3578e15ef29ee693ec6a70a0b7540e3b37e60a717",
+        "contentHash": "f680ca62335918484cca011c2d11687155839a8760fc74947b84cf5b2d769870",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6057,7 +6180,7 @@
         ],
         "fields": {
           "title": "Reviewer benchmark",
-          "headings": "Reviewer benchmark Status Dataset Run Entry criterion Running on the line (shadow mode) After a pass",
+          "headings": "Reviewer benchmark Status Dataset Run Entry criterion Running on the line (shadow mode) After a pass Deciding on the line (mvp:RF-10)",
           "path": "docs/reviewer-benchmark.md",
           "symbols": "",
           "summary": "Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json; the scoring is in src/reviewer-benchmark.ts; the runner is scripts/run-reviewer-benchmark.mjs. Run it on every release.",
@@ -6097,6 +6220,11 @@
             },
             {
               "kind": "mentions",
+              "id": "module:scripts/line-review.mjs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
               "id": "module:scripts/run-reviewer-benchmark.mjs",
               "confidence": "observed"
             },
@@ -6109,10 +6237,15 @@
               "kind": "mentions",
               "id": "module:src/reviewer-benchmark.ts",
               "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "package:@agentskit/code-review",
+              "confidence": "observed"
             }
           ]
         },
-        "contentHash": "0f119fe43d609d936ca81fddfd780984368b7e2813a3b17975480ff4c168d553",
+        "contentHash": "da64efee714e26d5fed5466fb8b80e71c8eb8aacafcd241cab1a9b19623bc0b1",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -8308,6 +8441,60 @@
         "confidence": "observed"
       },
       {
+        "id": "module:scripts/line-review.mjs",
+        "kind": "module",
+        "path": "scripts/line-review.mjs",
+        "title": "line-review.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "line-review.mjs",
+          "headings": "",
+          "path": "scripts/line-review.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 2,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:docs/for-agents/code-review.md",
+            "document:docs/reviewer-benchmark.md"
+          ],
+          "areaId": "area:scripts",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:docs/for-agents/code-review.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/reviewer-benchmark.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:scripts/reviewer-run.mjs",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "15032bb93e8f1de4f8c6b3e57e9fe177d514b307d274c3b98a9dbe2a1de9d190",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:scripts/readme-standard.test.mjs",
         "kind": "module",
         "path": "scripts/readme-standard.test.mjs",
@@ -8553,6 +8740,63 @@
         "confidence": "observed"
       },
       {
+        "id": "module:scripts/reviewer-run.mjs",
+        "kind": "module",
+        "path": "scripts/reviewer-run.mjs",
+        "title": "reviewer-run.mjs",
+        "aliases": [],
+        "symbols": [
+          "isPrReference",
+          "packageRoot",
+          "runReview"
+        ],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "reviewer-run.mjs",
+          "headings": "",
+          "path": "scripts/reviewer-run.mjs",
+          "symbols": "isPrReference packageRoot runReview",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 1,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:docs/for-agents/code-review.md"
+          ],
+          "areaId": "area:scripts",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "imports",
+              "id": "module:scripts/line-review.mjs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
+              "id": "module:scripts/shadow-review.mjs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/for-agents/code-review.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "3b9923f7a012fd70eeb115b876040cd5a19ba0dd4a61a84afa9ec8d65213a0d5",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:scripts/run-cycle-benchmark.mjs",
         "kind": "module",
         "path": "scripts/run-cycle-benchmark.mjs",
@@ -8716,9 +8960,15 @@
               "confidence": "observed"
             }
           ],
-          "outbound": []
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:scripts/reviewer-run.mjs",
+              "confidence": "observed"
+            }
+          ]
         },
-        "contentHash": "4f7872fbe89bf862fe22bdb5cb9f068e94d81e3fc3b061607435cc51ba4c8d74",
+        "contentHash": "d9f28ec3df0eab69b5b011e5243456ff934792afa9cd9e3a55d5dab6793e03fb",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -10873,6 +11123,58 @@
           ]
         },
         "contentHash": "ea6b7c3d82dd6f3d18528e37844347f0819e6a9bb9cc31218aa5edab9d013322",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:src/line-reviewer.ts",
+        "kind": "module",
+        "path": "src/line-reviewer.ts",
+        "title": "line-reviewer.ts",
+        "aliases": [],
+        "symbols": [
+          "LINE_DECISION_EXIT",
+          "LineDecision",
+          "LineFailurePolicy",
+          "LineReviewDecision",
+          "LineReviewInput",
+          "LineReviewResult",
+          "decideLineReview",
+          "incompleteReason",
+          "parseLineFailurePolicy"
+        ],
+        "tags": [
+          "module",
+          "ts",
+          "src"
+        ],
+        "fields": {
+          "title": "line-reviewer.ts",
+          "headings": "",
+          "path": "src/line-reviewer.ts",
+          "symbols": "LINE_DECISION_EXIT LineDecision LineFailurePolicy LineReviewDecision LineReviewInput LineReviewResult decideLineReview incompleteReason parseLineFailurePolicy",
+          "summary": "",
+          "body": "",
+          "aliases": "module ts src"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 1,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:docs/for-agents/code-review.md"
+          ],
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:docs/for-agents/code-review.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "816acdbbf543f32cba9b3653f14bf48064dcecf7bf707e2fd9ebfa4b27052603",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13583,6 +13885,40 @@
         "confidence": "observed"
       },
       {
+        "id": "module:test/line-review.test.mjs",
+        "kind": "module",
+        "path": "test/line-review.test.mjs",
+        "title": "line-review.test.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "test"
+        ],
+        "fields": {
+          "title": "line-review.test.mjs",
+          "headings": "",
+          "path": "test/line-review.test.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs test"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:test",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "62402692b086126f0b167743e0d156b8825d9e5453a93f832dcdf289a8e0371f",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:test/local-cli-process.test.mjs",
         "kind": "module",
         "path": "test/local-cli-process.test.mjs",
@@ -14789,12 +15125,12 @@
           "path": ".",
           "symbols": "",
           "summary": "Provider-neutral local and GitHub code review CLI, Action, reporters, Fumadocs site, and repository documentation.",
-          "body": "Code Review CLI handoff Purpose Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and GitHub pull requests. Bounded diff-first context packs run one multidimensional analysis; adversarial votes remove weak findings; reporters emit Markdown, GitHub reviews, and SARIF. Ownership map - src/cli.ts : public flags, source selection, provider selection, exit policy. - src/campaign-reducer.ts and src/campaign-store.ts : deterministic lifecycle, atomic checkpoints, leases, replay, and resume. - src/campaign-preflight.ts : provider-free campaign discovery, eligibility, source planning, budget checks, and worktree gating. - src/batch-mode.ts : shared measured batching, including single-file context-pack partitioning (ADR-0006); preserve pack identity in artifacts, cache keys, and consolidation. - src/budget.ts : provider-free hierarchical budget compilation, reservations, and dimension-aware usage accounting. - src/review-stores.ts : separate self-hosted feedback and approved-knowledge stores with bounded schemas, atomic writes, retention, concurrent-write serialization, and the scoped AgentsKit Retriever . - src/review-feedback.ts : deterministic feedback reconciliation, resumable checkpoints, metrics, and inactive candidate-rule evidence. - src/campaign-runner.ts and scripts/review-campaign.mjs : bounded multi-PR execution, leased atomic checkpoints, resume, per-PR isolation, and deterministic terminal reporting. - src/quality-matrix.ts : run and campaign quality scoring, evidence separation, cost/time accounting, and baseline regression gates. evaluateCampaignQuality() must be used when aggregating campaign outcomes. - src/<provider -adapter.ts : logged-in local CLI adapters. - src/provider-registry.ts : validated provider capabilities and conservative execution policy around AgentsKit adapters. - src/provider-execution.ts : typed provider failures, bounded retry delay, adaptive concurrency, and cancellation-aware queueing. - src/scm-contract.ts : provider-neutral change-request, publication, readiness, and merge contracts plus explicit capability checks. - src/github-scm-adapter.ts : GitHub REST/CLI binding for the common SCM contract; the only migrated path allowed to contain GitHub payloads or merge commands. - agents/ : the vendored review agent in agents/code-review/ : review pipeline, lenses, input normalization, reporters. - agents/code-review/risk.ts : provider-free context-pack risk signals and specialized-depth selection. - action.yml : composite GitHub Action contract. - .github/workflows/release.yml : Changesets version-pull-request workflow. - .github/workflows/publish.yml : version-PR-gated npm Trusted Publishing and GitHub Release workflow. - examples/ : copy-ready Action workflows. - README.md and docs/OPERATIONS.md : public adoption and operations guidance. - ecosystem.json , llms.txt , and llms-full.txt : canonical product graph and machine-readable discovery/full-corpus surfaces. - src/reviewer-benchmark.ts , scripts/run-reviewer-benchmark.mjs , quality/benchmark/prs.json : labelled-PR benchmark and entry criterion against the incumbent line reviewer ( docs/reviewer-benchmark.md ). - test/ : credential-free CLI, Action, and documentation contract proofs. - scripts/ : Node entry points for the package scripts (review cycle, campaign, harness, quality matrix and baseline, fault injection, cycle benchmark, public-API snapshot, README Standard, llms-full.txt generation) and the standalone ecosystem public-output check. Boundaries - Depend on AgentsKit adapter/runtime/tool contracts; do not create a second model abstraction. - Preserve provider neutrality and advisory-by-default Action behavior. - Never expose provider keys in arguments, docs fixtures, logs, or PR output. - The Fumadocs site provides curated documentation only; the product runtime remains the CLI and GitHub Action. Do not add an embedded AgentsKit Chat runtime here. - The vendored review agent tracks the AgentsKit Registry sour",
+          "body": "Code Review CLI handoff Purpose Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and GitHub pull requests. Bounded diff-first context packs run one multidimensional analysis; adversarial votes remove weak findings; reporters emit Markdown, GitHub reviews, and SARIF. Ownership map - src/cli.ts : public flags, source selection, provider selection, exit policy. - src/campaign-reducer.ts and src/campaign-store.ts : deterministic lifecycle, atomic checkpoints, leases, replay, and resume. - src/campaign-preflight.ts : provider-free campaign discovery, eligibility, source planning, budget checks, and worktree gating. - src/batch-mode.ts : shared measured batching, including single-file context-pack partitioning (ADR-0006); preserve pack identity in artifacts, cache keys, and consolidation. - src/budget.ts : provider-free hierarchical budget compilation, reservations, and dimension-aware usage accounting. - src/review-stores.ts : separate self-hosted feedback and approved-knowledge stores with bounded schemas, atomic writes, retention, concurrent-write serialization, and the scoped AgentsKit Retriever . - src/review-feedback.ts : deterministic feedback reconciliation, resumable checkpoints, metrics, and inactive candidate-rule evidence. - src/campaign-runner.ts and scripts/review-campaign.mjs : bounded multi-PR execution, leased atomic checkpoints, resume, per-PR isolation, and deterministic terminal reporting. - src/quality-matrix.ts : run and campaign quality scoring, evidence separation, cost/time accounting, and baseline regression gates. evaluateCampaignQuality() must be used when aggregating campaign outcomes. - src/<provider -adapter.ts : logged-in local CLI adapters. - src/provider-registry.ts : validated provider capabilities and conservative execution policy around AgentsKit adapters. - src/provider-execution.ts : typed provider failures, bounded retry delay, adaptive concurrency, and cancellation-aware queueing. - src/scm-contract.ts : provider-neutral change-request, publication, readiness, and merge contracts plus explicit capability checks. - src/github-scm-adapter.ts : GitHub REST/CLI binding for the common SCM contract; the only migrated path allowed to contain GitHub payloads or merge commands. - agents/ : the vendored review agent in agents/code-review/ : review pipeline, lenses, input normalization, reporters. - agents/code-review/risk.ts : provider-free context-pack risk signals and specialized-depth selection. - action.yml : composite GitHub Action contract. - .github/workflows/release.yml : Changesets version-pull-request workflow. - .github/workflows/publish.yml : version-PR-gated npm Trusted Publishing and GitHub Release workflow. - examples/ : copy-ready Action workflows. - README.md and docs/OPERATIONS.md : public adoption and operations guidance. - ecosystem.json , llms.txt , and llms-full.txt : canonical product graph and machine-readable discovery/full-corpus surfaces. - src/reviewer-benchmark.ts , scripts/run-reviewer-benchmark.mjs , quality/benchmark/prs.json : labelled-PR benchmark and entry criterion against the incumbent line reviewer ( docs/reviewer-benchmark.md ). - src/line-reviewer.ts , scripts/line-review.mjs (bin agentskit-line-review ), scripts/reviewer-run.mjs : fail-closed decision of the factory line's review stage (RF-10); it decides only after a benchmark PASS , and a failed or incomplete review falls back to the incumbent or blocks, never approves ( docs/reviewer-benchmark.md ). - test/ : credential-free CLI, Action, and documentation contract proofs. - scripts/ : Node entry points for the package scripts (review cycle, campaign, harness, quality matrix and baseline, fault injection, cycle benchmark, public-API snapshot, README Standard, llms-full.txt generation) and the standalone ecosystem public-output check. Boundaries - Depend on AgentsKit adapter/runtime/tool contracts; do not create a second model abstraction. - Preserve provider neutrality and advisory-",
           "aliases": "code-review @agentskit/code-review package ownership"
         },
         "graph": {
           "pagerank": 0.081501,
-          "inboundLinks": 6,
+          "inboundLinks": 7,
           "coveredBy": [
             "document:docs/for-agents/code-review.md"
           ],
@@ -14802,6 +15138,7 @@
             "document:CHANGELOG.md",
             "document:docs/getting-started.md",
             "document:docs/OPERATIONS.md",
+            "document:docs/reviewer-benchmark.md",
             "document:README.md",
             "document:ROADMAP.md"
           ],
@@ -14829,6 +15166,11 @@
             },
             {
               "kind": "mentions",
+              "id": "document:docs/reviewer-benchmark.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
               "id": "document:README.md",
               "confidence": "observed"
             },
@@ -14840,7 +15182,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "3ae1d6960320d61648e46fa775fa0dc040db72d692d68cb7787cc0490bf3deaa",
+        "contentHash": "7def156d7a92b7302f986d7df4a61494824ca3ac44d319974877af59d5457d69",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
