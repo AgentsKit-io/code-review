@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Requirement RF-03 (`mvp:RF-03`): the incumbent reviewer (the factory line's single-pass `review` stage) as an
-// executable the benchmark can run:  incumbent-review.mjs <owner/repo> <number>
+// executable the benchmark can run:  incumbent-review.mjs <owner/repo> <number> [<commit>]
+// With <commit> (40-hex, the benchmark's pinned head) it fails non-zero when the PR head is another commit.
 // It prints ONE JSON line on stdout: {"findings":[{"file","line","title"}],"costUsd":0}. Any failure exits non-zero
 // with the reason on stderr (the benchmark records that PR as an error), so a PR is never silently scored as clean.
 // Single pass, no lenses: the PR diff (GITHUB_TOKEN; GITHUB_API_URL overrides https://api.github.com) goes to a
@@ -13,9 +14,9 @@ import { runCommand, splitLines } from '@agentskit/cross-platform'
 const env = process.env
 const fail = (message) => { process.stderr.write(`incumbent-review: ${message}\n`); process.exit(1) }
 
-const [repository, number] = process.argv.slice(2)
-if (!/^[\w.-]+\/[\w.-]+$/.test(repository ?? '') || !/^\d+$/.test(number ?? '')) {
-  process.stderr.write('usage: incumbent-review.mjs <owner/repo> <number>\n')
+const [repository, number, commit] = process.argv.slice(2)
+if (!/^[\w.-]+\/[\w.-]+$/.test(repository ?? '') || !/^\d+$/.test(number ?? '') || (commit !== undefined && !/^[0-9a-f]{40}$/i.test(commit))) {
+  process.stderr.write('usage: incumbent-review.mjs <owner/repo> <number> [<commit: 40-hex>]\n')
   process.exit(64)
 }
 
@@ -28,9 +29,20 @@ export function extractJson(text) {
   return undefined
 }
 
+const base = (env.GITHUB_API_URL || 'https://api.github.com').replace(/\/$/, '')
+const token = env.GITHUB_TOKEN || env.GH_TOKEN
+
+async function checkHead() {
+  const response = await fetch(`${base}/repos/${repository}/pulls/${number}`, {
+    headers: { accept: 'application/vnd.github+json', 'user-agent': 'agentskit-incumbent-review', ...(token ? { authorization: `Bearer ${token}` } : {}) },
+    signal: AbortSignal.timeout(120_000),
+  })
+  if (!response.ok) fail(`could not read the head of ${repository}#${number}: HTTP ${response.status}`)
+  const head = (await response.json())?.head?.sha
+  if (typeof head !== 'string' || head.toLowerCase() !== commit.toLowerCase()) fail(`the head of ${repository}#${number} is ${head ?? 'unknown'}, not the pinned commit ${commit}`)
+}
+
 async function fetchDiff() {
-  const base = (env.GITHUB_API_URL || 'https://api.github.com').replace(/\/$/, '')
-  const token = env.GITHUB_TOKEN || env.GH_TOKEN
   const response = await fetch(`${base}/repos/${repository}/pulls/${number}`, {
     headers: { accept: 'application/vnd.github.v3.diff', 'user-agent': 'agentskit-incumbent-review', ...(token ? { authorization: `Bearer ${token}` } : {}) },
     signal: AbortSignal.timeout(120_000),
@@ -46,7 +58,9 @@ function runModel(prompt) {
   return runCommand(env.AGENTSKIT_INCUMBENT_CMD || 'claude', args, { input: prompt, timeoutMs: 1_800_000 })
 }
 
+if (commit) await checkHead()
 const diff = await fetchDiff()
+if (commit) await checkHead() // the head did not move while the diff was fetched
 if (!diff.trim()) fail(`${repository}#${number} has an empty diff`)
 if (diff.length > Number(env.AGENTSKIT_INCUMBENT_MAX_DIFF_CHARS ?? 400_000)) fail(`the diff of ${repository}#${number} is larger than AGENTSKIT_INCUMBENT_MAX_DIFF_CHARS`)
 

@@ -13,6 +13,8 @@ const model = join(root, 'test/fixtures/bin/incumbent-model')
 async function withGithub(fn) {
   const server = createServer((req, res) => {
     if (/^\/repos\/o\/r\/pulls\/404$/.test(req.url)) { res.statusCode = 404; res.end('no'); return }
+    const head = /^\/repos\/o\/r\/pulls\/\d+$/.test(req.url) && String(req.headers.accept).includes('application/vnd.github+json')
+    if (head) { res.setHeader('content-type', 'application/json'); res.end(JSON.stringify({ head: { sha: 'a'.repeat(40) } })); return }
     res.end('diff --git a/a.ts b/a.ts\n+const x = null\n')
   })
   await new Promise((done) => server.listen(0, '127.0.0.1', done))
@@ -46,21 +48,26 @@ test('RF-03: a reviewer without findings is a clean answer; failures exit non-ze
   }
   assert.notEqual((await incumbent(api, ['o/r', '404'])).status, 0)
   assert.equal((await incumbent(api, ['not-a-repo', 'x'])).status, 64)
+  assert.equal((await incumbent(api, ['o/r', '7', 'xyz'])).status, 64)
+  assert.equal((await incumbent(api, ['o/r', '7', 'a'.repeat(40)])).status, 0)
+  const moved = await incumbent(api, ['o/r', '7', 'b'.repeat(40)])
+  assert.notEqual(moved.status, 0)
+  assert.match(moved.stderr, /pinned commit/)
 }))
 
 test('RF-03: run-reviewer-benchmark --incumbent-cmd finishes with no incumbent PR in error', () => withGithub(async (api) => {
   const dir = mkdtempSync(join(tmpdir(), 'incumbent-benchmark-'))
   try {
     const prs = Array.from({ length: 30 }, (_, i) => i % 2
-      ? { id: `r#${i}`, repository: 'o/r', number: i + 1, label: 'clean', bugs: [] }
-      : { id: `r#${i}`, repository: 'o/r', number: i + 1, label: 'buggy', bugs: [{ file: 'a.ts', line: 10, note: 'null deref' }] })
+      ? { id: `r#${i}`, repository: 'o/r', number: i + 1, commit: 'a'.repeat(40), label: 'clean', bugs: [] }
+      : { id: `r#${i}`, repository: 'o/r', number: i + 1, commit: 'a'.repeat(40), label: 'buggy', bugs: [{ file: 'a.ts', line: 10, note: 'null deref' }] })
     const dataset = join(dir, 'prs.json')
     const output = join(dir, 'report.json')
     const { writeFileSync } = await import('node:fs')
     writeFileSync(dataset, JSON.stringify({ version: 1, prs }))
     const bench = await run(process.execPath, [join(root, 'scripts/run-reviewer-benchmark.mjs'), '--incumbent-cmd', join(root, 'scripts/incumbent-review.mjs'),
       '--candidate-cmd', join(root, 'scripts/incumbent-review.mjs'), '--dataset', dataset, '--output', output, '--concurrency', '4'], {
-      GITHUB_API_URL: api, AGENTSKIT_INCUMBENT_CMD: model, AGENTSKIT_INCUMBENT_ARGS: '[]', AGENTSKIT_INCUMBENT_USD_PER_MTOK: '5',
+      GITHUB_API_URL: api, AGENTSKIT_BENCHMARK_GITHUB_API: api, AGENTSKIT_INCUMBENT_CMD: model, AGENTSKIT_INCUMBENT_ARGS: '[]', AGENTSKIT_INCUMBENT_USD_PER_MTOK: '5',
     })
     assert.ok([0, 2].includes(bench.status), bench.stderr)
     const report = JSON.parse(readFileSync(output, 'utf8'))

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Reviewer wrapper for the factory line's shadow mode and for scripts/run-reviewer-benchmark.mjs.
 //   shadow-review.mjs                      review the changed files of the checkout in the working directory
-//   shadow-review.mjs <owner/repo> <n>     review that GitHub PR (needs GITHUB_TOKEN)
+//   shadow-review.mjs <owner/repo> <n> [<commit>]  review that GitHub PR (needs GITHUB_TOKEN; the benchmark runner checks <commit> is its head)
 // The LAST line of stdout is {"comment","costUsd","findings":[{file,line,title}]}; progress goes to stderr and the
 // exit code is 0 for a completed review, even with findings (it comments, it does not decide).
 // Configuration comes from the environment only: AGENTSKIT_SHADOW_PROVIDER, AGENTSKIT_SHADOW_MODEL, AGENTSKIT_SHADOW_MODE (isolated|trusted-local),
