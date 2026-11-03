@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "a69416433d25b291e0fedd43ff46336bea6d06aa29fa0e3d47d87bd8509e7446",
+  "contentHash": "c654bf08782b4baac8968ad1d6b364541e77cc7e50d3cf18408f2c6fb8c9e72e",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-03T01:23:07.138Z",
+  "generatedAt": "2026-11-03T08:17:47.500Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -57,6 +57,18 @@
         "unclassified"
       ],
       "contentHash": "bfb037b4f0d8d7f6b96742583c5962cab9f3819a4ca4922cfe5dcb1eaaa5196b"
+    },
+    {
+      "id": "document:.changeset/rf-03-incumbent-command.md",
+      "type": "document",
+      "title": "rf-03-incumbent-command.md",
+      "path": ".changeset/rf-03-incumbent-command.md",
+      "description": "New agentskit-incumbent-review <owner/repo> <number> command (mvp:RF-03): the incumbent line reviewer as an executable for run-reviewer-benchmark --incumbent-cmd. It prints {\"findings\":[{file,line,title}],\"costUsd\"} and exits non-zero on any failure, so an errored PR is never scored as clean.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "18853803a8bf24f9bc49b7fa7ea907593f5fcd98b156afb0725ecffcae02e8ab"
     },
     {
       "id": "document:.changeset/rf-10-line-reviewer.md",
@@ -452,7 +464,7 @@
         "document",
         "human"
       ],
-      "contentHash": "da64efee714e26d5fed5466fb8b80e71c8eb8aacafcd241cab1a9b19623bc0b1"
+      "contentHash": "ecd855716f44bedb9e8c1ba8d9fd31187e3919f5686266362a615d14a30251fd"
     },
     {
       "id": "document:docs/shadow-week-protocol.md",
@@ -1070,6 +1082,21 @@
         "scripts"
       ],
       "contentHash": "9dd507f782491e88e72b6848794893d063cabe41a6057e5bdf042b6dd88d9bc9"
+    },
+    {
+      "id": "module:scripts/incumbent-review.mjs",
+      "type": "module",
+      "title": "incumbent-review.mjs",
+      "path": "scripts/incumbent-review.mjs",
+      "symbols": [
+        "extractJson"
+      ],
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "af31147fc033c67cf42430a58bd3fa919bc03349539b60fcd7ae4b5ad0e7ec56"
     },
     {
       "id": "module:scripts/lib/readme-standard.mjs",
@@ -2836,6 +2863,18 @@
       "contentHash": "b3b97c6e311776ed769eb96fcfdc30b9243120f4fa4fd51fbfc9d1f81608ecdc"
     },
     {
+      "id": "module:test/incumbent-review.test.mjs",
+      "type": "module",
+      "title": "incumbent-review.test.mjs",
+      "path": "test/incumbent-review.test.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "test"
+      ],
+      "contentHash": "8934d217be5e3c29813305db12dc9ec065af48bb72e54bb05f41d7c210c46f77"
+    },
+    {
       "id": "module:test/line-review.test.mjs",
       "type": "module",
       "title": "line-review.test.mjs",
@@ -3327,8 +3366,8 @@
     }
   },
   "inputs": {
-    "hash": "2c9f0c526729cf3a818737fcda629e5ea15b329182ef578237111a8d92d9b88c",
-    "fileCount": 225,
+    "hash": "944a4bbaf9ac026fa9a2274531f1dcf933d0596cbe4845bdbcaa880fc66e0e91",
+    "fileCount": 228,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3350,9 +3389,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "a57b40e5a32bd2a7349c08528bf70b8d3148d5b19b1b2ed26e018a23730bea75",
+    "contentHash": "18aba23f34e3184555da89b3fc7f93b5d68d652e8b2269916c76909d2de2cf5f",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "8064b8d937a4f2794f9f081356b21301fe3fe0b76b35ffb7cc9e1fdaeddef549",
+    "snapshotHash": "ba21d083f76d31212c4d5a838c5fd691ef1b8a4dcf4fbd2290c6d1d52a5375cc",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3372,7 +3411,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 206,
+      "documentCount": 209,
       "fieldNames": [
         "aliases",
         "body",
@@ -3383,13 +3422,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.883495145631068,
-        "body": 53.36893203883495,
-        "headings": 3.621359223300971,
-        "path": 5.611650485436893,
-        "summary": 3.4514563106796117,
-        "symbols": 13.422330097087379,
-        "title": 4.271844660194175
+        "aliases": 2.8803827751196174,
+        "body": 52.8421052631579,
+        "headings": 3.598086124401914,
+        "path": 5.617224880382775,
+        "summary": 3.6076555023923444,
+        "symbols": 13.24401913875598,
+        "title": 4.282296650717703
       }
     },
     "entries": [
@@ -3557,7 +3596,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "3b22a90e7b535b02f461052903b87d85aa52dc00fe39dc7aa56fa2f4dfa5f4cb",
+        "contentHash": "79c4922903dc027b2bdd3668e1e55c5c55db5cd4816a58f31cceb0c69e7e6254",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3596,7 +3635,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "2461a2c7579ac2d8d989375cfca1e7357e15df1bd89a8bce3af025e51421954a",
+        "contentHash": "f748814d54b927541700d023abf97a3d7f2762b3055a3a7fcb8876cc97472c6b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3732,6 +3771,38 @@
           "outbound": []
         },
         "contentHash": "bfb037b4f0d8d7f6b96742583c5962cab9f3819a4ca4922cfe5dcb1eaaa5196b",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:.changeset/rf-03-incumbent-command.md",
+        "kind": "document",
+        "path": ".changeset/rf-03-incumbent-command.md",
+        "title": "rf-03-incumbent-command.md",
+        "summary": "New agentskit-incumbent-review <owner/repo> <number> command (mvp:RF-03): the incumbent line reviewer as an executable for run-reviewer-benchmark --incumbent-cmd. It prints {\"findings\":[{file,line,title}],\"costUsd\"} and exits non-zero on any failure, so an errored PR is never scored as clean.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "rf-03-incumbent-command.md",
+          "headings": "",
+          "path": ".changeset/rf-03-incumbent-command.md",
+          "symbols": "",
+          "summary": "New agentskit-incumbent-review <owner/repo> <number> command (mvp:RF-03): the incumbent line reviewer as an executable for run-reviewer-benchmark --incumbent-cmd. It prints {\"findings\":[{file,line,title}],\"costUsd\"} and exits non-zero on any failure, so an errored PR is never scored as clean.",
+          "body": "New agentskit-incumbent-review <owner/repo <number command ( mvp:RF-03 ): the incumbent line reviewer as an executable for run-reviewer-benchmark --incumbent-cmd . It prints {\"findings\":[{file,line,title}],\"costUsd\"} and exits non-zero on any failure, so an errored PR is never scored as clean.",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "18853803a8bf24f9bc49b7fa7ea907593f5fcd98b156afb0725ecffcae02e8ab",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6180,11 +6251,11 @@
         ],
         "fields": {
           "title": "Reviewer benchmark",
-          "headings": "Reviewer benchmark Status Dataset Run Entry criterion Running on the line (shadow mode) After a pass Deciding on the line (mvp:RF-10)",
+          "headings": "Reviewer benchmark Status Dataset Run The incumbent command (mvp:RF-03) Entry criterion Running on the line (shadow mode) After a pass Deciding on the line (mvp:RF-10)",
           "path": "docs/reviewer-benchmark.md",
           "symbols": "",
           "summary": "Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json; the scoring is in src/reviewer-benchmark.ts; the runner is scripts/run-reviewer-benchmark.mjs. Run it on every release.",
-          "body": "Reviewer benchmark Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json ; the scoring is in src/reviewer-benchmark.ts ; the runner is scripts/run-reviewer-benchmark.mjs . Run it on every release. Status Decision on 2026-10-30: BLOCKED, so the entry criterion is not met and the factory's review stage stays on the incumbent (the switch is off; shadow mode does not start). The report is (JSON: quality/benchmark/report.json ). - Code Review ran on all 38 PRs: 27 completed, 11 ended incomplete (exit 2: deadline or provider failure; reruns are needed). On the 27 completed PRs it found 8 of the 16 known bugs and reported 118 findings matching no known bug. - The incumbent was not run : the line reviewer is the review stage of the private factory-line repository, which this repository's automation cannot reach, and no standalone executable of it exists. Its 38 runs are recorded as errors, which is what makes the decision BLOCKED rather than FAIL . Run it with --incumbent-cmd from a machine that has it. - Cost is not measured : the run used claude-cli , which reports no token usage, so every cost shows 0.00. The Anthropic API provider was rejected (HTTP 401) with the credential available to the run. A cost comparison needs an API-provider run ( AGENTSKIT SHADOW PROVIDER=anthropic , AGENTSKIT SHADOW USD PER MTOK ). - \"False positives\" is an upper bound: a finding counts as false when it matches none of the bugs that were later fixed, so real defects nobody fixed are counted against the reviewer. The incumbent is scored the same way, so the comparison stays fair. - Only AgentsKit-io repositories are in the set (code-review, harness, doc-bridge); NoxCodeSolutions repositories were not reachable from this run. Dataset quality/benchmark/prs.json : 38 merged AgentsKit-io PRs, 22 buggy and 16 clean . A buggy PR is one whose merged code was later corrected by a fix PR: each bug lists file , line (in the reviewed PR's version of the file, from git blame of the lines the fix replaced), lineTolerance , a note , and fix (the fix PR number and commit that proves it was real). A clean PR is a feature PR that no later fix PR in the same repository touched (never the origin of any blamed line of a fix: commit). The set was mined from fix: commits in code-review, harness and doc-bridge; PRs are added by annotating real PRs, never by invention. The report is BLOCKED until the set has 30 PRs with both labels. Run An external reviewer command is run as <executable <owner/repo <number (no shell) and prints {\"findings\":[{\"file\",\"line\",\"title\"}],\"costUsd\":0} . Without --candidate-cmd the built-in CLI reviews each PR with --pr (needs GITHUB TOKEN ; provider keys come from the environment, never from arguments). Cost for the built-in reviewer is tokensUsed times --usd-per-mtok . Entry criterion PASS needs: at least as many real bugs found as the incumbent, strictly fewer false positives (any finding matching no known bug, and every finding on a clean PR), and cost at most 1.2x the incumbent. Any errored PR makes the report BLOCKED . The exit code is 2 unless PASS . Running on the line (shadow mode) The incumbent is the review stage of the factory line ( reviewPrompt in packages/factory-line/src/prompts.ts , private repository). The comparison runs it on the line through its shadow mode ( shadow-review.ts , enabled per repository by shadowReview in line.json ), which comments and does not decide. scripts/shadow-review.mjs (also the agentskit-shadow-review bin) is the Code Review side. Shadow mode runs it with the PR's checkout as the working directory and reads the last line of stdout : {\"comment\":\"<review markdown \",\"costUsd\":0,\"findings\":[{\"file\",\"line\",\"title\"}]} ; it reviews the files changed against AGENTSKIT SHADOW BASE (default origin/main ) and exits 0 for a completed review, with or without findings. Given <owner/repo <number it reviews that PR instead, which is how the benchmark runner calls i",
+          "body": "Reviewer benchmark Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json ; the scoring is in src/reviewer-benchmark.ts ; the runner is scripts/run-reviewer-benchmark.mjs . Run it on every release. Status Decision on 2026-10-30: BLOCKED, so the entry criterion is not met and the factory's review stage stays on the incumbent (the switch is off; shadow mode does not start). The report is (JSON: quality/benchmark/report.json ). - Code Review ran on all 38 PRs: 27 completed, 11 ended incomplete (exit 2: deadline or provider failure; reruns are needed). On the 27 completed PRs it found 8 of the 16 known bugs and reported 118 findings matching no known bug. - The incumbent was not run : the line reviewer is the review stage of the private factory-line repository, which this repository's automation cannot reach, and no standalone executable of it exists. Its 38 runs are recorded as errors, which is what makes the decision BLOCKED rather than FAIL . Run it with --incumbent-cmd from a machine that has it. - Cost is not measured : the run used claude-cli , which reports no token usage, so every cost shows 0.00. The Anthropic API provider was rejected (HTTP 401) with the credential available to the run. A cost comparison needs an API-provider run ( AGENTSKIT SHADOW PROVIDER=anthropic , AGENTSKIT SHADOW USD PER MTOK ). - \"False positives\" is an upper bound: a finding counts as false when it matches none of the bugs that were later fixed, so real defects nobody fixed are counted against the reviewer. The incumbent is scored the same way, so the comparison stays fair. - Only AgentsKit-io repositories are in the set (code-review, harness, doc-bridge); NoxCodeSolutions repositories were not reachable from this run. Dataset quality/benchmark/prs.json : 38 merged AgentsKit-io PRs, 22 buggy and 16 clean . A buggy PR is one whose merged code was later corrected by a fix PR: each bug lists file , line (in the reviewed PR's version of the file, from git blame of the lines the fix replaced), lineTolerance , a note , and fix (the fix PR number and commit that proves it was real). A clean PR is a feature PR that no later fix PR in the same repository touched (never the origin of any blamed line of a fix: commit). The set was mined from fix: commits in code-review, harness and doc-bridge; PRs are added by annotating real PRs, never by invention. The report is BLOCKED until the set has 30 PRs with both labels. Run An external reviewer command is run as <executable <owner/repo <number (no shell) and prints {\"findings\":[{\"file\",\"line\",\"title\"}],\"costUsd\":0} . Without --candidate-cmd the built-in CLI reviews each PR with --pr (needs GITHUB TOKEN ; provider keys come from the environment, never from arguments). Cost for the built-in reviewer is tokensUsed times --usd-per-mtok . The incumbent command ( mvp:RF-03 ) scripts/incumbent-review.mjs <owner/repo <number (also the agentskit-incumbent-review bin) is the incumbent as an executable: the line's single-pass review (no lenses). It fetches the PR diff ( GITHUB TOKEN ; GITHUB API URL for another API host), sends it to a headless model CLI on stdin and prints one line, {\"findings\":[{\"file\",\"line\",\"title\"}],\"costUsd\":0} . A failure (diff not fetched or too large, model exit, unparseable answer) exits non-zero, so the benchmark records that PR as an error and never scores it as clean. Environment only: AGENTSKIT INCUMBENT CMD (default claude ), AGENTSKIT INCUMBENT ARGS (JSON array, default [\"-p\",\"--output-format\",\"json\"] ), AGENTSKIT INCUMBENT USD PER MTOK (cost is the tokens of the CLI's usage times this price), AGENTSKIT INCUMBENT MAX DIFF CHARS . Entry criterion PASS needs: at least as many real bugs found as the incumbent, strictly fewer false positives (any finding matching no known bug, and every finding on a clean PR), and cost at most 1.2x the incumbent. Any errored PR makes the report BLOCKED . The exit code is 2 unless PASS . Running on the line",
           "aliases": "document human"
         },
         "graph": {
@@ -6245,7 +6316,7 @@
             }
           ]
         },
-        "contentHash": "da64efee714e26d5fed5466fb8b80e71c8eb8aacafcd241cab1a9b19623bc0b1",
+        "contentHash": "ecd855716f44bedb9e8c1ba8d9fd31187e3919f5686266362a615d14a30251fd",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -8383,6 +8454,43 @@
           "outbound": []
         },
         "contentHash": "9dd507f782491e88e72b6848794893d063cabe41a6057e5bdf042b6dd88d9bc9",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:scripts/incumbent-review.mjs",
+        "kind": "module",
+        "path": "scripts/incumbent-review.mjs",
+        "title": "incumbent-review.mjs",
+        "aliases": [],
+        "symbols": [
+          "extractJson"
+        ],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "incumbent-review.mjs",
+          "headings": "",
+          "path": "scripts/incumbent-review.mjs",
+          "symbols": "extractJson",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:scripts",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "af31147fc033c67cf42430a58bd3fa919bc03349539b60fcd7ae4b5ad0e7ec56",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13885,6 +13993,40 @@
         "confidence": "observed"
       },
       {
+        "id": "module:test/incumbent-review.test.mjs",
+        "kind": "module",
+        "path": "test/incumbent-review.test.mjs",
+        "title": "incumbent-review.test.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "test"
+        ],
+        "fields": {
+          "title": "incumbent-review.test.mjs",
+          "headings": "",
+          "path": "test/incumbent-review.test.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs test"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:test",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "8934d217be5e3c29813305db12dc9ec065af48bb72e54bb05f41d7c210c46f77",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:test/line-review.test.mjs",
         "kind": "module",
         "path": "test/line-review.test.mjs",
@@ -15182,7 +15324,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "7def156d7a92b7302f986d7df4a61494824ca3ac44d319974877af59d5457d69",
+        "contentHash": "1157283c4734ef8c130c80b7fdbf24959916a8e00e468bb28362510ebf9ca9af",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
