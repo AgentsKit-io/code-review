@@ -5,6 +5,7 @@
       "id": "AgentsKit-io/code-review#178",
       "repository": "AgentsKit-io/code-review",
       "number": 178,
+      "commit": "fbe240e9e03b471437d86f6e993287912dac96a0",
       "label": "buggy",
       "bugs": [
         {
@@ -33,6 +34,7 @@
       "id": "AgentsKit-io/code-review#62",
       "repository": "AgentsKit-io/code-review",
       "number": 62,
+      "commit": "380f94707384566bea9900c717621035030ad35f",
       "label": "buggy",
       "bugs": [
         {
@@ -58,9 +60,10 @@
       ]
     },
     {
-      "id": "AgentsKit-io/code-review#40",
+      "id": "AgentsKit-io/code-review#51",
       "repository": "AgentsKit-io/code-review",
-      "number": 40,
+      "number": 51,
+      "commit": "b062b50069424693da9e1191793c69a98890caab",
       "label": "buggy",
       "bugs": [
         {
@@ -99,6 +102,7 @@
       "id": "AgentsKit-io/code-review#67",
       "repository": "AgentsKit-io/code-review",
       "number": 67,
+      "commit": "cbb0e4d056e8b727a94c4db9eb11e5f38c5cb1ad",
       "label": "buggy",
       "bugs": [
         {
@@ -127,6 +131,7 @@
       "id": "AgentsKit-io/code-review#130",
       "repository": "AgentsKit-io/code-review",
       "number": 130,
+      "commit": "1bc8f17bb461cba6ef0d4875776f88118f26daf7",
       "label": "buggy",
       "bugs": [
         {
@@ -145,6 +150,7 @@
       "id": "AgentsKit-io/code-review#80",
       "repository": "AgentsKit-io/code-review",
       "number": 80,
+      "commit": "c84ae8c136018691b3eb889f89eecfdd1942726f",
       "label": "buggy",
       "bugs": [
         {
@@ -163,6 +169,7 @@
       "id": "AgentsKit-io/code-review#180",
       "repository": "AgentsKit-io/code-review",
       "number": 180,
+      "commit": "8777f2b5d79e2443b41f1987644ad191c4797df4",
       "label": "buggy",
       "bugs": [
         {
@@ -191,6 +198,7 @@
       "id": "AgentsKit-io/code-review#204",
       "repository": "AgentsKit-io/code-review",
       "number": 204,
+      "commit": "35f01c0d43e8bfb9596dcfebc481669877b51064",
       "label": "buggy",
       "bugs": [
         {
@@ -209,6 +217,7 @@
       "id": "AgentsKit-io/code-review#186",
       "repository": "AgentsKit-io/code-review",
       "number": 186,
+      "commit": "527325c6a88e2bfaf7b800b29650a0c728d31b4d",
       "label": "buggy",
       "bugs": [
         {
@@ -227,6 +236,7 @@
       "id": "AgentsKit-io/code-review#73",
       "repository": "AgentsKit-io/code-review",
       "number": 73,
+      "commit": "414f24075f9334bd4f454279edf7801e4290530c",
       "label": "buggy",
       "bugs": [
         {
@@ -245,6 +255,7 @@
       "id": "AgentsKit-io/harness#144",
       "repository": "AgentsKit-io/harness",
       "number": 144,
+      "commit": "b871ec60b8b9a8b77bc0d68f088e48883316b88f",
       "label": "buggy",
       "bugs": [
         {
@@ -263,6 +274,7 @@
       "id": "AgentsKit-io/harness#142",
       "repository": "AgentsKit-io/harness",
       "number": 142,
+      "commit": "320d500b3898e29de48536d2110dd383eb255d3d",
       "label": "buggy",
       "bugs": [
         {
@@ -291,6 +303,7 @@
       "id": "AgentsKit-io/harness#133",
       "repository": "AgentsKit-io/harness",
       "number": 133,
+      "commit": "c35caf8cd7de413a2b2b9a01523b8d01e3d2ef8f",
       "label": "buggy",
       "bugs": [
         {
@@ -309,6 +322,7 @@
       "id": "AgentsKit-io/harness#103",
       "repository": "AgentsKit-io/harness",
       "number": 103,
+      "commit": "d76d2de59d7c74323fefd642dffcd9a748ca968a",
       "label": "buggy",
       "bugs": [
         {
@@ -327,6 +341,7 @@
       "id": "AgentsKit-io/harness#101",
       "repository": "AgentsKit-io/harness",
       "number": 101,
+      "commit": "48acd101e3749dcda1ba77b396be6cceee9548d3",
       "label": "buggy",
       "bugs": [
         {
@@ -355,6 +370,7 @@
       "id": "AgentsKit-io/harness#198",
       "repository": "AgentsKit-io/harness",
       "number": 198,
+      "commit": "d547f7714fe16c1e1eaac3065d22d9e40094c5b6",
       "label": "buggy",
       "bugs": [
         {
@@ -383,6 +399,7 @@
       "id": "AgentsKit-io/harness#199",
       "repository": "AgentsKit-io/harness",
       "number": 199,
+      "commit": "5b8a2b38e5d9557aeae1393c55fd411699668f84",
       "label": "buggy",
       "bugs": [
         {
@@ -401,6 +418,7 @@
       "id": "AgentsKit-io/harness#201",
       "repository": "AgentsKit-io/harness",
       "number": 201,
+      "commit": "abee6f9e8588feec3b1c8e0e1a7198e372baeaad",
       "label": "buggy",
       "bugs": [
         {
@@ -429,6 +447,7 @@
       "id": "AgentsKit-io/harness#98",
       "repository": "AgentsKit-io/harness",
       "number": 98,
+      "commit": "cc2ce40eb2e5f7157118e5da107b650a264f5618",
       "label": "buggy",
       "bugs": [
         {
@@ -447,6 +466,7 @@
       "id": "AgentsKit-io/harness#111",
       "repository": "AgentsKit-io/harness",
       "number": 111,
+      "commit": "615bf4a098df96ddd835cbf058915d1e8786e95c",
       "label": "buggy",
       "bugs": [
         {
@@ -465,6 +485,7 @@
       "id": "AgentsKit-io/harness#39",
       "repository": "AgentsKit-io/harness",
       "number": 39,
+      "commit": "41b12845f8d51148ba2037cb18db55281db2a5df",
       "label": "buggy",
       "bugs": [
         {
@@ -483,6 +504,7 @@
       "id": "AgentsKit-io/harness#184",
       "repository": "AgentsKit-io/harness",
       "number": 184,
+      "commit": "496570e1a598972bcb7bb16611d23375c2f2b696",
       "label": "buggy",
       "bugs": [
         {
@@ -501,6 +523,7 @@
       "id": "AgentsKit-io/code-review#27",
       "repository": "AgentsKit-io/code-review",
       "number": 27,
+      "commit": "f9bee0d37afeecfc8b47d2490c5333623f7b01a6",
       "label": "clean",
       "bugs": []
     },
@@ -508,6 +531,7 @@
       "id": "AgentsKit-io/code-review#166",
       "repository": "AgentsKit-io/code-review",
       "number": 166,
+      "commit": "b7429a0dc9c87726cec2ab3a66492e70d1df42a6",
       "label": "clean",
       "bugs": []
     },
@@ -515,6 +539,7 @@
       "id": "AgentsKit-io/code-review#280",
       "repository": "AgentsKit-io/code-review",
       "number": 280,
+      "commit": "cdda0d6eef5797a0414a06a523503626d7441643",
       "label": "clean",
       "bugs": []
     },
@@ -522,6 +547,7 @@
       "id": "AgentsKit-io/code-review#319",
       "repository": "AgentsKit-io/code-review",
       "number": 319,
+      "commit": "1b2b78458bc6e4d1b84ae458e787a8dd6c7c152b",
       "label": "clean",
       "bugs": []
     },
@@ -529,6 +555,7 @@
       "id": "AgentsKit-io/harness#28",
       "repository": "AgentsKit-io/harness",
       "number": 28,
+      "commit": "2214c34845d53d6305ca0744f8df07a6a39c57af",
       "label": "clean",
       "bugs": []
     },
@@ -536,6 +563,7 @@
       "id": "AgentsKit-io/harness#29",
       "repository": "AgentsKit-io/harness",
       "number": 29,
+      "commit": "dad0818e5ef36be7427bdbf8f8e1522c1b2e1ec5",
       "label": "clean",
       "bugs": []
     },
@@ -543,6 +571,7 @@
       "id": "AgentsKit-io/harness#42",
       "repository": "AgentsKit-io/harness",
       "number": 42,
+      "commit": "541cb89d5e6625f07c28c6d247238d79654fc0dd",
       "label": "clean",
       "bugs": []
     },
@@ -550,6 +579,7 @@
       "id": "AgentsKit-io/harness#44",
       "repository": "AgentsKit-io/harness",
       "number": 44,
+      "commit": "777b6c5fcbf4f6d34a518affbe9ec55bb9584692",
       "label": "clean",
       "bugs": []
     },
@@ -557,6 +587,7 @@
       "id": "AgentsKit-io/harness#97",
       "repository": "AgentsKit-io/harness",
       "number": 97,
+      "commit": "9d293fa9fec6f0a9f8d682148d7d0fbb314d3ca0",
       "label": "clean",
       "bugs": []
     },
@@ -564,6 +595,7 @@
       "id": "AgentsKit-io/harness#107",
       "repository": "AgentsKit-io/harness",
       "number": 107,
+      "commit": "5905653b215b63e0f57f0c102d752d6c1d7bc42c",
       "label": "clean",
       "bugs": []
     },
@@ -571,6 +603,7 @@
       "id": "AgentsKit-io/doc-bridge#76",
       "repository": "AgentsKit-io/doc-bridge",
       "number": 76,
+      "commit": "c93053c4418680d6a30a8f8d930b08d63b8b7a70",
       "label": "clean",
       "bugs": []
     },
@@ -578,6 +611,7 @@
       "id": "AgentsKit-io/doc-bridge#197",
       "repository": "AgentsKit-io/doc-bridge",
       "number": 197,
+      "commit": "7de3f4c99654d9e13bd202b5b5c2938e233b2faf",
       "label": "clean",
       "bugs": []
     },
@@ -585,6 +619,7 @@
       "id": "AgentsKit-io/doc-bridge#207",
       "repository": "AgentsKit-io/doc-bridge",
       "number": 207,
+      "commit": "cd54d5acef2b6cacb8999d9db946123a37b35035",
       "label": "clean",
       "bugs": []
     },
@@ -592,6 +627,7 @@
       "id": "AgentsKit-io/doc-bridge#317",
       "repository": "AgentsKit-io/doc-bridge",
       "number": 317,
+      "commit": "e3d310bc1a1b5bdb5af61a6abcd46e7f0033a8c3",
       "label": "clean",
       "bugs": []
     },
@@ -599,6 +635,7 @@
       "id": "AgentsKit-io/doc-bridge#369",
       "repository": "AgentsKit-io/doc-bridge",
       "number": 369,
+      "commit": "4105af5e283e6c35e1f23f71e2afffe2f88a1230",
       "label": "clean",
       "bugs": []
     },
@@ -606,6 +643,7 @@
       "id": "AgentsKit-io/doc-bridge#393",
       "repository": "AgentsKit-io/doc-bridge",
       "number": 393,
+      "commit": "bfd70eefb2b5d77049ed866e0cbf09be67411602",
       "label": "clean",
       "bugs": []
     }
