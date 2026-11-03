@@ -32,6 +32,15 @@ The runner gives the incumbent and code-review exactly the PRs of the set, one a
 
 The committed `report.json` predates this section: it was measured before the commits were pinned and lists a PR that has since been corrected in the set (`code-review#40` is an issue; the PR is `#51`). The next run replaces it.
 
+### The incumbent command (`mvp:RF-03`)
+
+`scripts/incumbent-review.mjs <owner/repo> <number> [<commit>]` (also the `agentskit-incumbent-review` bin) is the incumbent as an executable: the line's single-pass review (no lenses). Given the pinned `<commit>` (40-hex, which the runner always passes) it reads the PR head first and exits non-zero when the head is another commit, so it never reviews a commit the benchmark does not score. It fetches the PR diff (`GITHUB_TOKEN`; `GITHUB_API_URL` for another API host), sends it to a headless model CLI on stdin and prints one line, `{"findings":[{"file","line","title"}],"costUsd":0}`. A failure (diff not fetched or too large, model exit, unparseable answer) exits non-zero, so the benchmark records that PR as an error and never scores it as clean. Environment only: `AGENTSKIT_INCUMBENT_CMD` (default `claude`), `AGENTSKIT_INCUMBENT_ARGS` (JSON array, default `["-p","--output-format","json"]`), `AGENTSKIT_INCUMBENT_USD_PER_MTOK` (cost is the tokens of the CLI's `usage` times this price), `AGENTSKIT_INCUMBENT_MAX_DIFF_CHARS`.
+
+```bash
+export GITHUB_TOKEN=... AGENTSKIT_INCUMBENT_USD_PER_MTOK=5
+node scripts/run-reviewer-benchmark.mjs --incumbent-cmd ./scripts/incumbent-review.mjs --candidate-cmd ./scripts/shadow-review.mjs
+```
+
 ## Entry criterion
 
 `PASS` needs: at least as many real bugs found as the incumbent, strictly fewer false positives (any finding matching no known bug, and every finding on a clean PR), and cost at most 1.2x the incumbent. Any errored PR makes the report `BLOCKED`. The exit code is 2 unless `PASS`.

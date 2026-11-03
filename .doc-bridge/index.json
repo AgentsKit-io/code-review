@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "ac388902e4fe12b27da03ce8ca3dfc4c66592a473da0601fc1d955e43acdd4d6",
+  "contentHash": "f8e1e6bf73955afaefc4cb12f5d4ff52285016de7477657702ca7aee272c831d",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-03T06:54:21.105Z",
+  "generatedAt": "2026-11-03T21:19:05.768Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -57,6 +57,18 @@
         "unclassified"
       ],
       "contentHash": "bfb037b4f0d8d7f6b96742583c5962cab9f3819a4ca4922cfe5dcb1eaaa5196b"
+    },
+    {
+      "id": "document:.changeset/rf-03-incumbent-command.md",
+      "type": "document",
+      "title": "rf-03-incumbent-command.md",
+      "path": ".changeset/rf-03-incumbent-command.md",
+      "description": "New agentskit-incumbent-review <owner/repo> <number> command (mvp:RF-03): the incumbent line reviewer as an executable for run-reviewer-benchmark --incumbent-cmd. It prints {\"findings\":[{file,line,title}],\"costUsd\"} and exits non-zero on any failure, so an errored PR is never scored as clean.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "18853803a8bf24f9bc49b7fa7ea907593f5fcd98b156afb0725ecffcae02e8ab"
     },
     {
       "id": "document:.changeset/rf-10-line-reviewer.md",
@@ -141,6 +153,18 @@
         "project"
       ],
       "contentHash": "eeb5b47e953f989c5d7504018a015a075aa94d1076976f69cb4c76aaf3307efe"
+    },
+    {
+      "id": "document:changelog.d/366.md",
+      "type": "document",
+      "title": "366.md",
+      "path": "changelog.d/366.md",
+      "description": "feat: incumbent reviewer command for the benchmark (mvp:RF-03)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "770118cf693f735fe1b67d7cc7c15bdb62fe41fb15664ee7e0e4394f39ec6109"
     },
     {
       "id": "document:changelog.d/370.md",
@@ -464,7 +488,7 @@
         "document",
         "human"
       ],
-      "contentHash": "ee7837506ed229f3a5384faab18cd9d54b8f73148b94a2fece9a24fc9ee676bd"
+      "contentHash": "42266f729b4b3012a63a80033b4dfe50d4bed8bfe1b37040daaf41b08b92aecc"
     },
     {
       "id": "document:docs/shadow-week-protocol.md",
@@ -1082,6 +1106,21 @@
         "scripts"
       ],
       "contentHash": "9dd507f782491e88e72b6848794893d063cabe41a6057e5bdf042b6dd88d9bc9"
+    },
+    {
+      "id": "module:scripts/incumbent-review.mjs",
+      "type": "module",
+      "title": "incumbent-review.mjs",
+      "path": "scripts/incumbent-review.mjs",
+      "symbols": [
+        "extractJson"
+      ],
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "dfde8c2076f24cc121aabb4f59e0a0c8bf54fcbaf5f48d0d4660f1da8b94dd28"
     },
     {
       "id": "module:scripts/lib/readme-standard.mjs",
@@ -2852,6 +2891,18 @@
       "contentHash": "b3b97c6e311776ed769eb96fcfdc30b9243120f4fa4fd51fbfc9d1f81608ecdc"
     },
     {
+      "id": "module:test/incumbent-review.test.mjs",
+      "type": "module",
+      "title": "incumbent-review.test.mjs",
+      "path": "test/incumbent-review.test.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "test"
+      ],
+      "contentHash": "5e6136ecc199fa710fc3d551aee0252a9f33af7b69b6d98f1a653e24f28afac6"
+    },
+    {
       "id": "module:test/line-review.test.mjs",
       "type": "module",
       "title": "line-review.test.mjs",
@@ -3343,8 +3394,8 @@
     }
   },
   "inputs": {
-    "hash": "0c9b8b6c9f9cfabf14436ba30e9733ac3118eeef47263dc1b5687b9fcd3b876d",
-    "fileCount": 226,
+    "hash": "7312560bab8532a929b9f7312dfcb5aec05050bd34be4c561ba1674fb4f39302",
+    "fileCount": 230,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3366,9 +3417,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "bdf196c94589a2b95b89c6619e91327ad8940556487709f55a37d95b99aec112",
+    "contentHash": "a28b1f48a02b763219b5f0e73cfff3f11f4f8518342ccef76124cac96f541a1e",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "eed53b78994b250621e74a0ee08054a49ba968507d485d65107aefeef95db438",
+    "snapshotHash": "a01390d4372bd6249ce56033599b95cacf7a98cd1cab8998f13fb23b09f8196e",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3388,7 +3439,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 207,
+      "documentCount": 211,
       "fieldNames": [
         "aliases",
         "body",
@@ -3399,13 +3450,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8792270531400965,
-        "body": 53.35265700483092,
-        "headings": 3.6473429951690823,
-        "path": 5.603864734299517,
-        "summary": 3.5072463768115942,
-        "symbols": 13.434782608695652,
-        "title": 4.260869565217392
+        "aliases": 2.8720379146919433,
+        "body": 52.69668246445497,
+        "headings": 3.6066350710900474,
+        "path": 5.601895734597156,
+        "summary": 3.6872037914691944,
+        "symbols": 13.19431279620853,
+        "title": 4.260663507109005
       }
     },
     "entries": [
@@ -3573,7 +3624,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "3b22a90e7b535b02f461052903b87d85aa52dc00fe39dc7aa56fa2f4dfa5f4cb",
+        "contentHash": "79c4922903dc027b2bdd3668e1e55c5c55db5cd4816a58f31cceb0c69e7e6254",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3612,7 +3663,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "2461a2c7579ac2d8d989375cfca1e7357e15df1bd89a8bce3af025e51421954a",
+        "contentHash": "f748814d54b927541700d023abf97a3d7f2762b3055a3a7fcb8876cc97472c6b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3748,6 +3799,38 @@
           "outbound": []
         },
         "contentHash": "bfb037b4f0d8d7f6b96742583c5962cab9f3819a4ca4922cfe5dcb1eaaa5196b",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:.changeset/rf-03-incumbent-command.md",
+        "kind": "document",
+        "path": ".changeset/rf-03-incumbent-command.md",
+        "title": "rf-03-incumbent-command.md",
+        "summary": "New agentskit-incumbent-review <owner/repo> <number> command (mvp:RF-03): the incumbent line reviewer as an executable for run-reviewer-benchmark --incumbent-cmd. It prints {\"findings\":[{file,line,title}],\"costUsd\"} and exits non-zero on any failure, so an errored PR is never scored as clean.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "rf-03-incumbent-command.md",
+          "headings": "",
+          "path": ".changeset/rf-03-incumbent-command.md",
+          "symbols": "",
+          "summary": "New agentskit-incumbent-review <owner/repo> <number> command (mvp:RF-03): the incumbent line reviewer as an executable for run-reviewer-benchmark --incumbent-cmd. It prints {\"findings\":[{file,line,title}],\"costUsd\"} and exits non-zero on any failure, so an errored PR is never scored as clean.",
+          "body": "New agentskit-incumbent-review <owner/repo <number command ( mvp:RF-03 ): the incumbent line reviewer as an executable for run-reviewer-benchmark --incumbent-cmd . It prints {\"findings\":[{file,line,title}],\"costUsd\"} and exits non-zero on any failure, so an errored PR is never scored as clean.",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "18853803a8bf24f9bc49b7fa7ea907593f5fcd98b156afb0725ecffcae02e8ab",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -4013,6 +4096,39 @@
           "outbound": []
         },
         "contentHash": "eeb5b47e953f989c5d7504018a015a075aa94d1076976f69cb4c76aaf3307efe",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:changelog.d/366.md",
+        "kind": "document",
+        "path": "changelog.d/366.md",
+        "title": "366.md",
+        "summary": "feat: incumbent reviewer command for the benchmark (mvp:RF-03)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "366.md",
+          "headings": "",
+          "path": "changelog.d/366.md",
+          "symbols": "",
+          "summary": "feat: incumbent reviewer command for the benchmark (mvp:RF-03)",
+          "body": "feat: incumbent reviewer command for the benchmark (mvp:RF-03) scripts/incumbent-review.mjs <owner/repo <number [<commit ] prints {findings,costUsd} ; given the runner's pinned commit it fails when the PR head differs.",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "770118cf693f735fe1b67d7cc7c15bdb62fe41fb15664ee7e0e4394f39ec6109",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6229,7 +6345,7 @@
         ],
         "fields": {
           "title": "Reviewer benchmark",
-          "headings": "Reviewer benchmark Status Dataset Run Same PRs, same commit, which set and version (mvp:RF-01) Entry criterion Running on the line (shadow mode) After a pass Deciding on the line (mvp:RF-10)",
+          "headings": "Reviewer benchmark Status Dataset Run Same PRs, same commit, which set and version (mvp:RF-01) The incumbent command (mvp:RF-03) Entry criterion Running on the line (shadow mode) After a pass Deciding on the line (mvp:RF-10)",
           "path": "docs/reviewer-benchmark.md",
           "symbols": "",
           "summary": "Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json; the scoring is in src/reviewer-benchmark.ts; the runner is scripts/run-reviewer-benchmark.mjs. Run it on every release.",
@@ -6294,7 +6410,7 @@
             }
           ]
         },
-        "contentHash": "ee7837506ed229f3a5384faab18cd9d54b8f73148b94a2fece9a24fc9ee676bd",
+        "contentHash": "42266f729b4b3012a63a80033b4dfe50d4bed8bfe1b37040daaf41b08b92aecc",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -8432,6 +8548,43 @@
           "outbound": []
         },
         "contentHash": "9dd507f782491e88e72b6848794893d063cabe41a6057e5bdf042b6dd88d9bc9",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:scripts/incumbent-review.mjs",
+        "kind": "module",
+        "path": "scripts/incumbent-review.mjs",
+        "title": "incumbent-review.mjs",
+        "aliases": [],
+        "symbols": [
+          "extractJson"
+        ],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "incumbent-review.mjs",
+          "headings": "",
+          "path": "scripts/incumbent-review.mjs",
+          "symbols": "extractJson",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:scripts",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "dfde8c2076f24cc121aabb4f59e0a0c8bf54fcbaf5f48d0d4660f1da8b94dd28",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13938,6 +14091,40 @@
         "confidence": "observed"
       },
       {
+        "id": "module:test/incumbent-review.test.mjs",
+        "kind": "module",
+        "path": "test/incumbent-review.test.mjs",
+        "title": "incumbent-review.test.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "test"
+        ],
+        "fields": {
+          "title": "incumbent-review.test.mjs",
+          "headings": "",
+          "path": "test/incumbent-review.test.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs test"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:test",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "5e6136ecc199fa710fc3d551aee0252a9f33af7b69b6d98f1a653e24f28afac6",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:test/line-review.test.mjs",
         "kind": "module",
         "path": "test/line-review.test.mjs",
@@ -15235,7 +15422,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "7def156d7a92b7302f986d7df4a61494824ca3ac44d319974877af59d5457d69",
+        "contentHash": "1157283c4734ef8c130c80b7fdbf24959916a8e00e468bb28362510ebf9ca9af",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
