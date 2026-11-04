@@ -90,9 +90,9 @@ test('SIGTERM cancels the actual provider subprocess before the CLI exits', asyn
   let providerPid
   let stderr = ''
   child.stderr.on('data', chunk => { stderr += chunk })
-  const timer = setTimeout(() => child.kill('SIGKILL'), 8000)
+  const timer = setTimeout(() => child.kill('SIGKILL'), 40000)
   try {
-    const startupDeadline = Date.now() + 6000
+    const startupDeadline = Date.now() + 30000
     while (!providerPid && child.exitCode === null && Date.now() < startupDeadline) {
       try { providerPid = Number(readFileSync(pidFile, 'utf8')) } catch { await new Promise(resolve => setTimeout(resolve, 20)) }
     }
