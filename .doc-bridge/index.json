@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "6b147eb589f85bdd1f379581c06868ebfb7fa40ac9307afc823af711d2d0f193",
+  "contentHash": "4e391f964cbba18d8edd0e131156627d284a58780d4a80c7e25b0e0169494aea",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-04T10:58:17.867Z",
+  "generatedAt": "2026-11-04T23:41:52.655Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -119,6 +119,18 @@
       "contentHash": "eb326e8e60cc087b411cbb3e490dc96783c6cb40d371d43688b3832644d61168"
     },
     {
+      "id": "document:.github/factory-playbook.md",
+      "type": "document",
+      "title": "Factory playbook — AgentsKit-io/code-review",
+      "path": ".github/factory-playbook.md",
+      "description": "Public repo: only synthetic data, never anything from private repos (see AGENTS.md). Read AGENTS.md and docs/for-agents/code-review.md before editing.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "acc589943cb72c090fa83fc50d12a568f89e0fb8f0df5c6e7cf5ff3184f9a461"
+    },
+    {
       "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
       "type": "document",
       "title": "PULL_REQUEST_TEMPLATE.md",
@@ -225,6 +237,18 @@
         "project"
       ],
       "contentHash": "1c08331ef05dba881923ac941fd320be21405d6cdabbee35325dda8dc9c2a9dd"
+    },
+    {
+      "id": "document:changelog.d/392.md",
+      "type": "document",
+      "title": "392.md",
+      "path": "changelog.d/392.md",
+      "description": "docs: add the factory playbook and factory.json (install/verify) for agents (#392)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "eafbd24efe84368e07e279a668a3fbd3dca3df9eceec44b651b2c7a61f25d675"
     },
     {
       "id": "document:CHANGELOG.md",
@@ -2748,7 +2772,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "5b235999cdbeb75dbb3d5411e6f407415f0b06724f21a532d5f9164153cbb2aa"
+      "contentHash": "7aef59859008726fa69613da5c28d9c27b15c3bfe392968fbae0002ed03c787e"
     },
     {
       "id": "module:test/codex-adapter.test.mjs",
@@ -2961,7 +2985,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "b3b97c6e311776ed769eb96fcfdc30b9243120f4fa4fd51fbfc9d1f81608ecdc"
+      "contentHash": "1291e6011f133f4def22cf6a277f513bd5322f3ac7968a0890e900c95dfdd516"
     },
     {
       "id": "module:test/incumbent-review.test.mjs",
@@ -3045,7 +3069,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "1757f08b855fea6fbfe789227df4533fe094718cc3caacdd2d8d41cf7588f685"
+      "contentHash": "4b0c07f770013514b742482d8f04c239694b6b0999b520da839c58f0aaf1c12b"
     },
     {
       "id": "module:test/provider-circuit-breaker.test.mjs",
@@ -3467,8 +3491,8 @@
     }
   },
   "inputs": {
-    "hash": "47e9e2ff3cd18e4913d7ea3b1b76739ee9a4cfa25fb8269ff9901534387d0ce4",
-    "fileCount": 236,
+    "hash": "edc6d9ed2b7cf541e19d8bc76a7ce6dc3be80bebe25ce5fae7fe7bed6c3df150",
+    "fileCount": 239,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3490,9 +3514,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "9d92618e57cb5108dda494a03b4473f4fba5aa8db0ae393c60304f033513837f",
+    "contentHash": "e1a96c668869c265fb4b2f0edefe370a2abf61c0ef60a47985365b283a12da04",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "7507887371dab562370814de536607cefa358f4ba43c2ab8b891e8294ff59f0e",
+    "snapshotHash": "4101662a6ce018e642ea3c374add003622197d1d6d60f50bbe70d0b728799d57",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3512,7 +3536,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 216,
+      "documentCount": 218,
       "fieldNames": [
         "aliases",
         "body",
@@ -3523,13 +3547,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8564814814814814,
-        "body": 52.504629629629626,
-        "headings": 3.550925925925926,
-        "path": 5.611111111111111,
-        "summary": 4.106481481481482,
-        "symbols": 13.078703703703704,
-        "title": 4.273148148148148
+        "aliases": 2.8486238532110093,
+        "body": 54.857798165137616,
+        "headings": 3.688073394495413,
+        "path": 5.60091743119266,
+        "summary": 4.215596330275229,
+        "symbols": 12.958715596330276,
+        "title": 4.279816513761468
       }
     },
     "entries": [
@@ -4042,6 +4066,59 @@
         "confidence": "observed"
       },
       {
+        "id": "document:.github/factory-playbook.md",
+        "kind": "document",
+        "path": ".github/factory-playbook.md",
+        "title": "Factory playbook — AgentsKit-io/code-review",
+        "summary": "Public repo: only synthetic data, never anything from private repos (see AGENTS.md). Read AGENTS.md and docs/for-agents/code-review.md before editing.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "Factory playbook — AgentsKit-io/code-review",
+          "headings": "Factory playbook — AgentsKit-io/code-review 1. Install 2. Run locally 3. Quick verification (small diff) 4. Full verification (CI, .github/workflows/) 5. Rules that most often sink a PR 6. Shared registry files (merge-conflict hotspots) 7. Known pitfalls (real factory failures here)",
+          "path": ".github/factory-playbook.md",
+          "symbols": "",
+          "summary": "Public repo: only synthetic data, never anything from private repos (see AGENTS.md). Read AGENTS.md and docs/for-agents/code-review.md before editing.",
+          "body": "Factory playbook — AgentsKit-io/code-review Public repo: only synthetic data, never anything from private repos (see AGENTS.md). Read AGENTS.md and docs/for-agents/code-review.md before editing. 1. Install - Node 22 (CI uses 22; local 20+ works, test:coverage needs = 22.8). npm only ( package-lock.json ), no pnpm. - npm ci && npm ci --prefix apps/docs (same as CI; the docs app has its own lockfile). - Stale lockfile: npm install (and npm install --prefix apps/docs ), commit the lockfile with the change. Never hand-edit it. - Env vars: none needed; tests are offline. Provider keys (e.g. OPENAI API KEY ) must never appear in files or logs. 2. Run locally - CLI, no server/port/seed: npm run review -- --help (tsx) or npm run build && node dist/src/cli.js --help . - Docs site (optional): npm run docs:web:dev . 3. Quick verification (small diff) - npm run typecheck - npm run build && node --test --test-concurrency=1 test/<file .test.mjs (tests run against dist/ , so build first; one test: add --test-name-pattern \"<name \" ). - Touched docs/ package.json files/benchmark data: also node --test test/documentation.test.mjs . - There is no separate lint/format script; typecheck + check are the gate. 4. Full verification (CI, .github/workflows/ ) - ci.yml job check (the one that matters), in order: touch .doc-bridge/.ci-content-revision ; npm run docs:index ; git diff --exit-code -- doc-bridge.config.json .doc-bridge llms-full.txt ; npm run check:public-api ; npm run check ; npm run test:coverage ; npm pack --dry-run ; then rm -f .doc-bridge/.ci-content-revision . - npm run check = cross-platform check, typecheck, build+tests, docs gate, docs web typecheck, public API, CLI --help , readme standard. Slowest job: check (full test suite is serial, --test-concurrency=1 ). - codeql.yml (reusable workflow, security-and-quality ), dependency-review.yml (review, audit, docs-audit; fails on high severity), scorecard.yml , publish.yml / release.yml (release only). CodeQL often finishes last: a PR can sit with CodeQL pending while check is green, or fail on a new alert; fix the alert, do not rerun blindly. - Before finishing run: npm run docs:index && npm run check && npm run test:coverage && npm pack --dry-run , then git status must show only intended files (docs:index regenerates tracked files; commit them). 5. Rules that most often sink a PR - Conventional commit messages ( feat: , fix: , docs: ...); one concern per PR. - Release notes: add ONE changelog.d/<ticket .md (first line a conventional line, e.g. feat: ... ( N) ). Do not bump package.json version or edit the top of CHANGELOG.md . A .changeset/<slug .md ( \"@agentskit/code-review\": patch + one line) is also used by recent PRs; follow the latest merged PR. - Generated docs: after changing docs, CLI help or .doc-bridge inputs run npm run docs:index (also regenerates llms-full.txt ); CI fails on any diff in doc-bridge.config.json .doc-bridge llms-full.txt . - Public exports changed: npm run check:public-api:update , review the snapshot docs/stability/public-api-v1.json , commit it. - Coverage floors: 93% lines, 79% branches, 92% functions on dist/src ; new src/ code needs tests. - Public CLI/Action contract changes need docs plus offline tests. Keep the Action advisory by default. - package.json files is an allowlist for the npm tarball: every new script, doc, fixture, test or data file that the package/tests use must be added there ( npm pack --dry-run to confirm). - PR body: follow .github/PULL REQUEST TEMPLATE.md ; no secrets or model output. 6. Shared registry files (merge-conflict hotspots) - package.json files array: add your entries at the END of the array (never reorder), one per line, so parallel PRs only conflict at the tail; resolve by keeping both sides. - CHANGELOG.md , package.json version: do not touch (use changelog.d/<ticket .md , a unique filename per ticket). - Generated, never hand-merge: .doc-bridge/ , llms-full.txt , doc-bridge.config.json , docs/stability/public-api-v1.j",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "mentions",
+              "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:AGENTS.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:CHANGELOG.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/for-agents/code-review.md",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "acc589943cb72c090fa83fc50d12a568f89e0fb8f0df5c6e7cf5ff3184f9a461",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
         "kind": "document",
         "path": ".github/PULL_REQUEST_TEMPLATE.md",
@@ -4063,10 +4140,18 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 0,
+          "inboundLinks": 1,
           "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
+          "mentionedBy": [
+            "document:.github/factory-playbook.md"
+          ],
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:.github/factory-playbook.md",
+              "confidence": "observed"
+            }
+          ],
           "outbound": []
         },
         "contentHash": "28edc0d585b4dcff1a8b66e6cd0582e6ecc348af0e69944f8c30a3fb54334f65",
@@ -4095,14 +4180,20 @@
         },
         "graph": {
           "pagerank": 0.020391,
-          "inboundLinks": 3,
+          "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [
+            "document:.github/factory-playbook.md",
             "document:docs/adr/0001-bounded-provider-neutral-cli-agents.md",
             "document:docs/getting-started.md",
             "document:README.md"
           ],
           "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:.github/factory-playbook.md",
+              "confidence": "observed"
+            },
             {
               "kind": "mentions",
               "id": "document:docs/adr/0001-bounded-provider-neutral-cli-agents.md",
@@ -4374,6 +4465,39 @@
         "confidence": "observed"
       },
       {
+        "id": "document:changelog.d/392.md",
+        "kind": "document",
+        "path": "changelog.d/392.md",
+        "title": "392.md",
+        "summary": "docs: add the factory playbook and factory.json (install/verify) for agents (#392)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "392.md",
+          "headings": "",
+          "path": "changelog.d/392.md",
+          "symbols": "",
+          "summary": "docs: add the factory playbook and factory.json (install/verify) for agents (#392)",
+          "body": "docs: add the factory playbook and factory.json (install/verify) for agents ( 392)",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "eafbd24efe84368e07e279a668a3fbd3dca3df9eceec44b651b2c7a61f25d675",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "document:CHANGELOG.md",
         "kind": "document",
         "path": "CHANGELOG.md",
@@ -4396,15 +4520,21 @@
         },
         "graph": {
           "pagerank": 0.023378,
-          "inboundLinks": 1,
+          "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
+            "document:.github/factory-playbook.md",
             "document:docs/OPERATIONS.md"
           ],
           "inbound": [
             {
               "kind": "links-to",
               "id": "document:docs/OPERATIONS.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:.github/factory-playbook.md",
               "confidence": "observed"
             },
             {
@@ -5645,9 +5775,10 @@
         },
         "graph": {
           "pagerank": 0.071892,
-          "inboundLinks": 5,
+          "inboundLinks": 6,
           "coveredBy": [],
           "mentionedBy": [
+            "document:.github/factory-playbook.md",
             "document:AGENTS.md",
             "document:docs/getting-started.md",
             "document:README.md"
@@ -5676,6 +5807,11 @@
             {
               "kind": "links-to",
               "id": "document:README.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:.github/factory-playbook.md",
               "confidence": "observed"
             },
             {
@@ -13748,7 +13884,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "5b235999cdbeb75dbb3d5411e6f407415f0b06724f21a532d5f9164153cbb2aa",
+        "contentHash": "7aef59859008726fa69613da5c28d9c27b15c3bfe392968fbae0002ed03c787e",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -14349,7 +14485,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "b3b97c6e311776ed769eb96fcfdc30b9243120f4fa4fd51fbfc9d1f81608ecdc",
+        "contentHash": "1291e6011f133f4def22cf6a277f513bd5322f3ac7968a0890e900c95dfdd516",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -14587,7 +14723,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "1757f08b855fea6fbfe789227df4533fe094718cc3caacdd2d8d41cf7588f685",
+        "contentHash": "4b0c07f770013514b742482d8f04c239694b6b0999b520da839c58f0aaf1c12b",
         "provenance": "observed",
         "confidence": "observed"
       },
