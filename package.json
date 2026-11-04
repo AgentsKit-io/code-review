@@ -57,6 +57,7 @@
     "scripts/generate-llms-full.mjs",
     "scripts/run-cycle-benchmark.mjs",
     "scripts/run-reviewer-benchmark.mjs",
+    "scripts/check-version-pin.mjs",
     "scripts/shadow-review.mjs",
     "scripts/render-shadow-week-report.mjs",
     "quality/shadow-week/example.json",

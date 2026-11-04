@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "4de7c6c021f83fb94599f7252268aeb3ff8d9298540b375643c137715ce3c1d4",
+  "contentHash": "58691a421093ca39e3d57da91ea786503be044dce34f88510ef72e04b3f7f7a0",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-04T00:10:52.648Z",
+  "generatedAt": "2026-11-04T02:10:15.595Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -33,6 +33,18 @@
         "unclassified"
       ],
       "contentHash": "066cb6c6bf99cf493abbb17c0773cd820606298d34d90473effa16a586e7d3fb"
+    },
+    {
+      "id": "document:.changeset/reviewer-benchmark-version-pin.md",
+      "type": "document",
+      "title": "reviewer-benchmark-version-pin.md",
+      "path": ".changeset/reviewer-benchmark-version-pin.md",
+      "description": "feat: pin the measured version. The reviewer benchmark report now records the measured candidateVersion and the labelled dataset's datasetSha256, and scripts/check-version-pin.mjs (with checkVersionPin()) rejects a pin that is latest, a tag or a range, that differs from the measured version, that comes from a report that is not PASS, or that was measured on another dataset (RF-09).",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "6d408257b0f4a1aacd1f5a7c5e2ca550887877c93a624a7737ae4fea830946e9"
     },
     {
       "id": "document:.changeset/reviewer-benchmark.md",
@@ -500,7 +512,7 @@
         "document",
         "human"
       ],
-      "contentHash": "aa8f6e494901b86d193df9f62438a6894ee828c51149eb57b89e4222543c3805"
+      "contentHash": "cdec451f4e14ee43a4dbfbb558795cfd648d017eaaad439ba2fc76c262e4400a"
     },
     {
       "id": "document:docs/shadow-week-protocol.md",
@@ -1096,6 +1108,18 @@
       "contentHash": "2b0ad3fd4f24c81a3dff5e5f65cf75b148b180d3bb47afea4ab40d31139ac97c"
     },
     {
+      "id": "module:scripts/check-version-pin.mjs",
+      "type": "module",
+      "title": "check-version-pin.mjs",
+      "path": "scripts/check-version-pin.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "a7599659512685e68030dda3742a47bdffe37a9d0507a53e569f7820898eb7d8"
+    },
+    {
       "id": "module:scripts/evaluate-quality.mjs",
       "type": "module",
       "title": "evaluate-quality.mjs",
@@ -1293,7 +1317,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "4cd88abab6359b867736002e9d13576865650ea6e2c3d0d3d4d65d68a4a734af"
+      "contentHash": "abf18cfdb988e32313804cc0912197f3aad99fbb79e3de5ace2d12f693156c04"
     },
     {
       "id": "module:scripts/shadow-review.mjs",
@@ -2423,6 +2447,7 @@
       "symbols": [
         "BenchmarkDataset",
         "BenchmarkDecision",
+        "BenchmarkMeta",
         "BenchmarkOptions",
         "BenchmarkPr",
         "BenchmarkReport",
@@ -2435,7 +2460,9 @@
         "ReviewerFinding",
         "ReviewerRun",
         "ReviewerSummary",
+        "VersionPinCheck",
         "bugMatches",
+        "checkVersionPin",
         "describeBenchmarkSet",
         "evaluateBenchmark",
         "parseBenchmarkDataset",
@@ -2450,7 +2477,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "b1d2dbe1eebf40ef3ceb06bb16be11a72c3f554a4bb156ddeac915e03d01d3f1"
+      "contentHash": "3792ee5d9b865c23406f98a68f18871fe3f2c889b3bd3d622e975070f59eaa87"
     },
     {
       "id": "module:src/scm-contract.ts",
@@ -3214,7 +3241,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "7e3431c138545f6972eb7dde0598cfb08de330ad15a7189c2fe1725af9fba62a"
+      "contentHash": "c6482d0fc96dc782915e8309f453fbd5384269faf814567b12c7d2aabee85f31"
     },
     {
       "id": "module:test/risk-depth.test.mjs",
@@ -3408,8 +3435,8 @@
     }
   },
   "inputs": {
-    "hash": "04f39ff4bebf1eab4fa4b3edfaf0fa2babfd151a9eb0bb5d584468b2ce390b29",
-    "fileCount": 231,
+    "hash": "ec2d945f04c079bd0a4d447899c255344dcba52b87e0526d5b23923cd2704226",
+    "fileCount": 233,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3431,9 +3458,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "d0015cb26ae87712d72002e89c1d20303a30a0be0ed84f999417f1e0b3f1a7fc",
+    "contentHash": "c684e9f5d4ea6439bd5091c8785830d9e81265a35e5d306eaa42676862276c1b",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "c7e351a85ecbfbba129897f5d5ae94d9497b674358f78e8b643516898407db45",
+    "snapshotHash": "a7d3510a6e570dacd2ccbecf41d767d94fd598fbbe198f95d2c85e38e34c8688",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3453,7 +3480,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 212,
+      "documentCount": 214,
       "fieldNames": [
         "aliases",
         "body",
@@ -3464,13 +3491,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8679245283018866,
-        "body": 52.556603773584904,
-        "headings": 3.589622641509434,
-        "path": 5.60377358490566,
-        "summary": 3.7783018867924527,
-        "symbols": 13.150943396226415,
-        "title": 4.264150943396227
+        "aliases": 2.864485981308411,
+        "body": 52.27570093457944,
+        "headings": 3.5700934579439254,
+        "path": 5.61214953271028,
+        "summary": 3.953271028037383,
+        "symbols": 13.07943925233645,
+        "title": 4.275700934579439
       }
     },
     "entries": [
@@ -3638,7 +3665,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "79c4922903dc027b2bdd3668e1e55c5c55db5cd4816a58f31cceb0c69e7e6254",
+        "contentHash": "9f9186c3969f728d636454ae346635ce9aed0aa8e3e27c2a78ac7fc3dc6b0bd4",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3743,6 +3770,44 @@
           "outbound": []
         },
         "contentHash": "066cb6c6bf99cf493abbb17c0773cd820606298d34d90473effa16a586e7d3fb",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:.changeset/reviewer-benchmark-version-pin.md",
+        "kind": "document",
+        "path": ".changeset/reviewer-benchmark-version-pin.md",
+        "title": "reviewer-benchmark-version-pin.md",
+        "summary": "feat: pin the measured version. The reviewer benchmark report now records the measured candidateVersion and the labelled dataset's datasetSha256, and scripts/check-version-pin.mjs (with checkVersionPin()) rejects a pin that is latest, a tag or a range, that differs from the measured version, that comes from a report that is not PASS, or that was measured on another dataset (RF-09).",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "reviewer-benchmark-version-pin.md",
+          "headings": "",
+          "path": ".changeset/reviewer-benchmark-version-pin.md",
+          "symbols": "",
+          "summary": "feat: pin the measured version. The reviewer benchmark report now records the measured candidateVersion and the labelled dataset's datasetSha256, and scripts/check-version-pin.mjs (with checkVersionPin()) rejects a pin that is latest, a tag or a range, that differs from the measured version, that comes from a report that is not PASS, or that was measured on another dataset (RF-09).",
+          "body": "feat: pin the measured version. The reviewer benchmark report now records the measured candidateVersion and the labelled dataset's datasetSha256 , and scripts/check-version-pin.mjs (with checkVersionPin() ) rejects a pin that is latest , a tag or a range, that differs from the measured version, that comes from a report that is not PASS , or that was measured on another dataset (RF-09).",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "mentions",
+              "id": "module:scripts/check-version-pin.mjs",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "6d408257b0f4a1aacd1f5a7c5e2ca550887877c93a624a7737ae4fea830946e9",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6391,7 +6456,7 @@
         ],
         "fields": {
           "title": "Reviewer benchmark",
-          "headings": "Reviewer benchmark Status Dataset Run Same PRs, same commit, which set and version (mvp:RF-01) The incumbent command (mvp:RF-03) Entry criterion Running on the line (shadow mode) After a pass Deciding on the line (mvp:RF-10)",
+          "headings": "Reviewer benchmark Status Dataset Run Same PRs, same commit, which set and version (mvp:RF-01) The incumbent command (mvp:RF-03) Entry criterion Running on the line (shadow mode) Pinning the measured version After a pass Deciding on the line (mvp:RF-10)",
           "path": "docs/reviewer-benchmark.md",
           "symbols": "",
           "summary": "Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json; the scoring is in src/reviewer-benchmark.ts; the runner is scripts/run-reviewer-benchmark.mjs. Run it on every release.",
@@ -6456,7 +6521,7 @@
             }
           ]
         },
-        "contentHash": "aa8f6e494901b86d193df9f62438a6894ee828c51149eb57b89e4222543c3805",
+        "contentHash": "cdec451f4e14ee43a4dbfbb558795cfd648d017eaaad439ba2fc76c262e4400a",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -8530,6 +8595,48 @@
         "confidence": "observed"
       },
       {
+        "id": "module:scripts/check-version-pin.mjs",
+        "kind": "module",
+        "path": "scripts/check-version-pin.mjs",
+        "title": "check-version-pin.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "check-version-pin.mjs",
+          "headings": "",
+          "path": "scripts/check-version-pin.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 1,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:.changeset/reviewer-benchmark-version-pin.md"
+          ],
+          "areaId": "area:scripts",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:.changeset/reviewer-benchmark-version-pin.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "a7599659512685e68030dda3742a47bdffe37a9d0507a53e569f7820898eb7d8",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:scripts/evaluate-quality.mjs",
         "kind": "module",
         "path": "scripts/evaluate-quality.mjs",
@@ -9162,7 +9269,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "4cd88abab6359b867736002e9d13576865650ea6e2c3d0d3d4d65d68a4a734af",
+        "contentHash": "abf18cfdb988e32313804cc0912197f3aad99fbb79e3de5ace2d12f693156c04",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -12731,6 +12838,7 @@
         "symbols": [
           "BenchmarkDataset",
           "BenchmarkDecision",
+          "BenchmarkMeta",
           "BenchmarkOptions",
           "BenchmarkPr",
           "BenchmarkReport",
@@ -12743,7 +12851,9 @@
           "ReviewerFinding",
           "ReviewerRun",
           "ReviewerSummary",
+          "VersionPinCheck",
           "bugMatches",
+          "checkVersionPin",
           "describeBenchmarkSet",
           "evaluateBenchmark",
           "parseBenchmarkDataset",
@@ -12762,7 +12872,7 @@
           "title": "reviewer-benchmark.ts",
           "headings": "",
           "path": "src/reviewer-benchmark.ts",
-          "symbols": "BenchmarkDataset BenchmarkDecision BenchmarkOptions BenchmarkPr BenchmarkReport BenchmarkRunInfo BenchmarkSetInfo KnownBug MAX_COST_RATIO MIN_BENCHMARK_PRS PrScore ReviewerFinding ReviewerRun ReviewerSummary bugMatches describeBenchmarkSet evaluateBenchmark parseBenchmarkDataset percentile pinnedCommitError renderBenchmarkMarkdown scorePr summarizeReviewer",
+          "symbols": "BenchmarkDataset BenchmarkDecision BenchmarkMeta BenchmarkOptions BenchmarkPr BenchmarkReport BenchmarkRunInfo BenchmarkSetInfo KnownBug MAX_COST_RATIO MIN_BENCHMARK_PRS PrScore ReviewerFinding ReviewerRun ReviewerSummary VersionPinCheck bugMatches checkVersionPin describeBenchmarkSet evaluateBenchmark parseBenchmarkDataset percentile pinnedCommitError renderBenchmarkMarkdown scorePr summarizeReviewer",
           "summary": "",
           "body": "",
           "aliases": "module ts src"
@@ -12806,7 +12916,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "b1d2dbe1eebf40ef3ceb06bb16be11a72c3f554a4bb156ddeac915e03d01d3f1",
+        "contentHash": "3792ee5d9b865c23406f98a68f18871fe3f2c889b3bd3d622e975070f59eaa87",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -15040,7 +15150,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "7e3431c138545f6972eb7dde0598cfb08de330ad15a7189c2fe1725af9fba62a",
+        "contentHash": "c6482d0fc96dc782915e8309f453fbd5384269faf814567b12c7d2aabee85f31",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -15470,7 +15580,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "1157283c4734ef8c130c80b7fdbf24959916a8e00e468bb28362510ebf9ca9af",
+        "contentHash": "851e9ac77fb14b8bacd1017c4bf2ee2952727d2a2a3364738d3a34cc93d26db5",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"

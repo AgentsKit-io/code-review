@@ -1,14 +1,18 @@
 #!/usr/bin/env node
 // Runs the incumbent line reviewer and code-review over quality/benchmark/prs.json and applies the entry criterion.
 //   node scripts/run-reviewer-benchmark.mjs --incumbent-cmd <executable> [--provider <p> --model <m> --usd-per-mtok <n>]
-//     [--candidate-cmd <executable>] [--concurrency <n>] [--stage-timeout-ms <n>] [--dataset <file>] [--output <report.json>] [--markdown <report.md>]
+//     [--candidate-cmd <executable>] [--candidate-version <x.y.z>] [--concurrency <n>] [--stage-timeout-ms <n>] [--dataset <file>]
+//     [--output <report.json>] [--markdown <report.md>]
 // A reviewer command is run as `<executable> <owner/repo> <number> <commit>` (no shell; <commit> is the pinned head
 // of the PR in the set, the same for both reviewers) and must print
 // {"findings":[{"file","line","title"}],"costUsd":0} on stdout. Without --candidate-cmd the built-in CLI is used.
 // Before and after reviewing a PR the runner reads its head from GitHub (GITHUB_TOKEN; AGENTSKIT_BENCHMARK_GITHUB_API
 // overrides https://api.github.com) and records an error for both reviewers if it is not the pinned commit.
+// The report records the measured candidate version (this package's version unless --candidate-version) and the
+// dataset's sha256, which scripts/check-version-pin.mjs requires before the line may pin that version.
 // Credentials are inherited from the environment; none are accepted as arguments.
 import { isPathInside, relativePosix, runCommand, splitLines, toPosix } from '@agentskit/cross-platform'
+import { createHash } from 'node:crypto'
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
@@ -72,7 +76,13 @@ if (!incumbentCmd) {
   process.exit(64)
 }
 const datasetFile = resolve(value('dataset') ?? join(root, 'quality/benchmark/prs.json'))
-const dataset = parseBenchmarkDataset(JSON.parse(readFileSync(datasetFile, 'utf8')))
+const datasetText = readFileSync(datasetFile, 'utf8')
+const dataset = parseBenchmarkDataset(JSON.parse(datasetText))
+const packageVersion = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).version
+const meta = {
+  candidateVersion: value('candidate-version') ?? packageVersion,
+  datasetSha256: createHash('sha256').update(datasetText).digest('hex'),
+}
 const setPath = isPathInside(root, datasetFile) ? relativePosix(root, datasetFile) : toPosix(datasetFile)
 const candidateCmd = value('candidate-cmd')
 const workdir = mkdtempSync(join(tmpdir(), 'agentskit-reviewer-benchmark-'))
@@ -101,7 +111,7 @@ try {
   const packageVersion = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).version
   const git = await runCommand('git', ['rev-parse', 'HEAD'], { cwd: root, timeoutMs: 10_000 }).catch(() => undefined)
   const gitCommit = git?.code === 0 ? git.stdout.trim() : undefined
-  const report = evaluateBenchmark(dataset, incumbentRuns, candidateRuns, { ...(value('stage-timeout-ms') ? { stageTimeoutMs: Number(value('stage-timeout-ms')) } : {}), setPath, run: { codeReviewVersion: packageVersion, ...(gitCommit ? { gitCommit } : {}) } })
+  const report = evaluateBenchmark(dataset, incumbentRuns, candidateRuns, { ...meta, ...(value('stage-timeout-ms') ? { stageTimeoutMs: Number(value('stage-timeout-ms')) } : {}), setPath, run: { codeReviewVersion: meta.candidateVersion, ...(gitCommit ? { gitCommit } : {}) } })
   if (value('output')) writeFileSync(resolve(value('output')), `${JSON.stringify(report, null, 2)}\n`, { mode: 0o600 })
   const markdown = renderBenchmarkMarkdown(report)
   if (value('markdown')) writeFileSync(resolve(value('markdown')), markdown)

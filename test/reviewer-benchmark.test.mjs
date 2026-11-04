@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict'
-import { spawn } from 'node:child_process'
+import { spawn, spawnSync } from 'node:child_process'
 import { createServer } from 'node:http'
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { test } from 'node:test'
-import { describeBenchmarkSet, evaluateBenchmark, parseBenchmarkDataset, pinnedCommitError, renderBenchmarkMarkdown } from '../dist/src/reviewer-benchmark.js'
+import { checkVersionPin, describeBenchmarkSet, evaluateBenchmark, parseBenchmarkDataset, pinnedCommitError, renderBenchmarkMarkdown } from '../dist/src/reviewer-benchmark.js'
 
 const commitOf = (i) => String(i % 10).repeat(40)
 const prs = Array.from({ length: 30 }, (_, i) => i % 2
@@ -67,6 +68,34 @@ test('RF-05: reports the candidate p90 latency and fails when it exceeds the rev
   assert.equal(over.decision, 'FAIL')
   assert.match(over.reasons.join('\n'), /p90 latency/)
   assert.equal(evaluateBenchmark(dataset, incumbent, timed(5)).decision, 'PASS')
+})
+
+test('the report records the measured candidate version and dataset digest', () => {
+  const ok = runs(() => run([], 1))
+  const report = evaluateBenchmark(dataset, ok, ok, { candidateVersion: '1.2.3', datasetSha256: 'abc' })
+  assert.equal(report.candidateVersion, '1.2.3')
+  assert.equal(report.datasetSha256, 'abc')
+  assert.match(renderBenchmarkMarkdown(report), /Candidate version: 1\.2\.3; dataset sha256: abc/)
+})
+
+test('a version pin needs an exact version that passed on the current dataset', () => {
+  const pass = { decision: 'PASS', candidateVersion: '1.2.3', datasetSha256: 'abc' }
+  assert.deepEqual(checkVersionPin(pass, '1.2.3', 'abc'), { ok: true, version: '1.2.3', reasons: [] })
+  assert.equal(checkVersionPin(pass, '@agentskit/code-review@1.2.3', 'abc').ok, true)
+  for (const loose of ['latest', '@agentskit/code-review@latest', '^1.2.3', '~1.2.3', '1.x', '>=1.2.3']) assert.equal(checkVersionPin(pass, loose, 'abc').ok, false, loose)
+  assert.match(checkVersionPin(pass, '1.2.4', 'abc').reasons.join(), /was not measured/)
+  assert.match(checkVersionPin({ ...pass, decision: 'BLOCKED' }, '1.2.3', 'abc').reasons.join(), /not PASS/)
+  assert.match(checkVersionPin({ decision: 'PASS' }, '1.2.3').reasons.join(), /does not record/)
+  assert.match(checkVersionPin(pass, '1.2.3', 'changed').reasons.join(), /current labelled dataset/)
+})
+
+test('check-version-pin rejects the shipped report, which is not PASS', () => {
+  const script = fileURLToPath(new URL('../scripts/check-version-pin.mjs', import.meta.url))
+  const version = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version
+  const result = spawnSync(process.execPath, [script, '--pin', version], { encoding: 'utf8' })
+  assert.equal(result.status, 2)
+  assert.match(result.stderr, /not PASS/)
+  assert.equal(spawnSync(process.execPath, [script], { encoding: 'utf8' }).status, 64)
 })
 
 test('the report shows both reviewers per PR and in total with the counting rule and reproduction commands', () => {

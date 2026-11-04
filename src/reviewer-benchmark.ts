@@ -85,11 +85,17 @@ export interface BenchmarkRunInfo { codeReviewVersion: string; gitCommit?: strin
 export interface BenchmarkReport {
   decision: BenchmarkDecision
   reasons: string[]
+  /** Package version of code-review that was measured; the line may only pin this version. */
+  candidateVersion?: string
+  /** sha256 of the labelled dataset file that was run; a changed set needs a new measurement. */
+  datasetSha256?: string
   set: BenchmarkSetInfo
   run?: BenchmarkRunInfo
   incumbent: ReviewerSummary
   candidate: ReviewerSummary
 }
+
+export interface BenchmarkMeta { candidateVersion?: string; datasetSha256?: string }
 
 export function parseBenchmarkDataset(value: unknown): BenchmarkDataset {
   const input = value as { version?: unknown; prs?: unknown }
@@ -175,9 +181,14 @@ export function summarizeReviewer(name: string, dataset: BenchmarkDataset, runs:
 }
 
 /** Entry criterion: at least as many real bugs, strictly fewer false positives, cost at most 20% higher. */
-export function evaluateBenchmark(dataset: BenchmarkDataset, incumbentRuns: Record<string, ReviewerRun>, candidateRuns: Record<string, ReviewerRun>, options: BenchmarkOptions & { setPath?: string; run?: BenchmarkRunInfo } = {}): BenchmarkReport {
+export function evaluateBenchmark(dataset: BenchmarkDataset, incumbentRuns: Record<string, ReviewerRun>, candidateRuns: Record<string, ReviewerRun>, options: BenchmarkOptions & BenchmarkMeta & { setPath?: string; run?: BenchmarkRunInfo } = {}): BenchmarkReport {
   const set = describeBenchmarkSet(dataset, options.setPath)
-  const base = { set, ...(options.run ? { run: options.run } : {}) }
+  const base = {
+    ...(options.candidateVersion ? { candidateVersion: options.candidateVersion } : {}),
+    ...(options.datasetSha256 ? { datasetSha256: options.datasetSha256 } : {}),
+    set,
+    ...(options.run ? { run: options.run } : {}),
+  }
   const incumbent = summarizeReviewer('incumbent', dataset, incumbentRuns)
   const candidate = summarizeReviewer('code-review', dataset, candidateRuns)
   const blocked: string[] = []
@@ -206,6 +217,7 @@ export function renderBenchmarkMarkdown(report: BenchmarkReport): string {
     '',
     ...report.reasons.map((reason) => `- ${reason}`),
     '',
+    ...(report.candidateVersion || report.datasetSha256 ? [`Candidate version: ${report.candidateVersion ?? 'unrecorded'}; dataset sha256: ${report.datasetSha256 ?? 'unrecorded'}`, ''] : []),
     '## Set and version (`mvp:RF-01`)',
     '',
     `Both reviewers were given exactly these PRs, each at the pinned head commit below (the runner stops on a PR whose head moved).`,
@@ -252,4 +264,24 @@ export function renderBenchmarkMarkdown(report: BenchmarkReport): string {
     'The incumbent command is run as `<executable> <owner/repo> <number> <commit>` (the pinned commit of the set) and prints `{"findings":[{"file","line","title"}],"costUsd":0}`; see `docs/reviewer-benchmark.md`.',
   ]
   return `${lines.join('\n')}\n`
+}
+
+const EXACT_VERSION = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/
+
+export interface VersionPinCheck { ok: boolean; version?: string; reasons: string[] }
+
+/**
+ * Gate for the version the line installs: it must be an exact version (no `latest`, tag or range), the
+ * benchmark report must be PASS for that same version and, when given, for the current labelled dataset.
+ * Changing the pinned version or the dataset therefore requires a new measurement against the incumbent.
+ */
+export function checkVersionPin(report: Pick<BenchmarkReport, 'decision' | 'candidateVersion' | 'datasetSha256'>, pin: string, datasetSha256?: string): VersionPinCheck {
+  const spec = pin.trim().replace(/^@agentskit\/code-review@/, '')
+  const reasons: string[] = []
+  if (!EXACT_VERSION.test(spec)) reasons.push(`pin "${pin}" is not an exact version (no latest, tags or ranges)`)
+  if (report.decision !== 'PASS') reasons.push(`benchmark decision is ${report.decision}, not PASS`)
+  if (!report.candidateVersion) reasons.push('benchmark report does not record the measured candidate version')
+  else if (EXACT_VERSION.test(spec) && report.candidateVersion !== spec) reasons.push(`pinned ${spec} was not measured; the report measured ${report.candidateVersion}`)
+  if (datasetSha256 !== undefined && report.datasetSha256 !== datasetSha256) reasons.push('benchmark report was not run on the current labelled dataset')
+  return { ok: reasons.length === 0, ...(EXACT_VERSION.test(spec) ? { version: spec } : {}), reasons }
 }
