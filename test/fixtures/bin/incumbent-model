@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+// Fixture headless model CLI for the incumbent reviewer: reads the prompt on stdin, answers like `claude -p --output-format json`.
+import { readFileSync } from 'node:fs'
+const prompt = readFileSync(0, 'utf8')
+if (process.env.INCUMBENT_FIXTURE_FAIL === '1') { process.stderr.write('model unavailable\n'); process.exit(3) }
+const answer = process.env.INCUMBENT_FIXTURE_ANSWER ?? '```json\n{"findings":[{"file":"a.ts","line":11,"title":"Null dereference"}]}\n```'
+process.stdout.write(JSON.stringify({ result: answer, usage: { input_tokens: 600000, output_tokens: 400000 }, sawDiff: prompt.includes('+const x = null') }))
