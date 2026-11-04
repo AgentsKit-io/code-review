@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { test } from 'node:test'
-import { checkVersionPin, describeBenchmarkSet, describeFailure, falsePositiveCategories, evaluateBenchmark, parseBenchmarkDataset, pinnedCommitError, renderBenchmarkMarkdown } from '../dist/src/reviewer-benchmark.js'
+import { checkVersionPin, describeBenchmarkSet, describeFailure, falsePositiveCategories, evaluateBenchmark, parseBenchmarkDataset, parsePriceTable, pinnedCommitError, priceRun, renderBenchmarkMarkdown } from '../dist/src/reviewer-benchmark.js'
 
 const commitOf = (i) => String(i % 10).repeat(40)
 const prs = Array.from({ length: 30 }, (_, i) => i % 2
@@ -16,29 +16,32 @@ const dataset = parseBenchmarkDataset({ version: 1, prs })
 const hit = { file: 'a.ts', line: 11, title: 'Null dereference' }
 const noise = { file: 'b.ts', line: 1, title: 'style' }
 const runs = (pick) => Object.fromEntries(dataset.prs.map((pr) => [pr.id, pick(pr)]))
-const run = (findings, costUsd) => ({ findings, costUsd, latencyMs: 100 })
+const prices = parsePriceTable(JSON.parse(readFileSync(new URL('../quality/benchmark/prices.json', import.meta.url), 'utf8')))
+// 1 US$ per PR at the claude-sonnet-5-5 rates (3 in / 15 out per Mtok): 200k in + 26_667 out ~ 1.0
+const run = (findings, cost) => ({ findings, model: 'claude-sonnet-5-5', inputTokens: Math.round(cost * 200_000), outputTokens: Math.round(cost * 26_666.67), latencyMs: 100 })
+const evaluate = (d, i, c, options) => evaluateBenchmark(d, i, c, prices, options)
 
 test('passes when bugs >= incumbent, fewer false positives and cost within 20%', () => {
   const incumbent = runs((pr) => run(pr.bugs.length ? [hit, noise] : [noise], 1))
   const candidate = runs((pr) => run(pr.bugs.length ? [hit] : [], 1.2))
-  const report = evaluateBenchmark(dataset, incumbent, candidate)
+  const report = evaluate(dataset, incumbent, candidate)
   assert.equal(report.decision, 'PASS')
   assert.equal(report.candidate.bugsFound, 15)
 })
 
 test('fails on missed bugs, equal false positives or cost over 20%', () => {
   const incumbent = runs((pr) => run(pr.bugs.length ? [hit] : [noise], 1))
-  assert.equal(evaluateBenchmark(dataset, incumbent, runs(() => run([noise], 1))).decision, 'FAIL')
-  assert.equal(evaluateBenchmark(dataset, incumbent, runs((pr) => run(pr.bugs.length ? [hit] : [noise], 1))).decision, 'FAIL')
-  assert.equal(evaluateBenchmark(dataset, incumbent, runs((pr) => run(pr.bugs.length ? [hit] : [], 1.21))).decision, 'FAIL')
+  assert.equal(evaluate(dataset, incumbent, runs(() => run([noise], 1))).decision, 'FAIL')
+  assert.equal(evaluate(dataset, incumbent, runs((pr) => run(pr.bugs.length ? [hit] : [noise], 1))).decision, 'FAIL')
+  assert.equal(evaluate(dataset, incumbent, runs((pr) => run(pr.bugs.length ? [hit] : [], 1.21))).decision, 'FAIL')
 })
 
 test('is blocked for a small dataset or an errored run', () => {
   const small = parseBenchmarkDataset({ version: 1, prs: prs.slice(0, 2) })
-  assert.equal(evaluateBenchmark(small, {}, {}).decision, 'BLOCKED')
+  assert.equal(evaluate(small, {}, {}).decision, 'BLOCKED')
   const ok = runs(() => run([], 1))
   const broken = { ...ok, [dataset.prs[0].id]: { ...ok[dataset.prs[0].id], error: 'exit 1' } }
-  assert.equal(evaluateBenchmark(dataset, ok, broken).decision, 'BLOCKED')
+  assert.equal(evaluate(dataset, ok, broken).decision, 'BLOCKED')
 })
 
 test('the shipped dataset parses, has at least 30 PRs with both labels and cites a fix for every bug', () => {
@@ -60,19 +63,19 @@ test('RF-05: reports the candidate p90 latency and fails when it exceeds the rev
   const incumbent = runs((pr) => run(pr.bugs.length ? [hit, noise] : [noise], 1))
   // 27 PRs at 1s and 3 at 10s: the nearest-rank p90 is the 27th value, still 1s.
   const timed = (slowCount) => runs((pr) => ({ ...run(pr.bugs.length ? [hit] : [], 1), latencyMs: Number(pr.id.split('#')[1]) < slowCount * 2 ? 10_000 : 1_000 }))
-  const within = evaluateBenchmark(dataset, incumbent, timed(0), { stageTimeoutMs: 2_000 })
+  const within = evaluate(dataset, incumbent, timed(0), { stageTimeoutMs: 2_000 })
   assert.equal(within.candidate.p90LatencyMs, 1_000)
   assert.equal(within.decision, 'PASS')
-  const over = evaluateBenchmark(dataset, incumbent, timed(5), { stageTimeoutMs: 2_000 })
+  const over = evaluate(dataset, incumbent, timed(5), { stageTimeoutMs: 2_000 })
   assert.equal(over.candidate.p90LatencyMs, 10_000)
   assert.equal(over.decision, 'FAIL')
   assert.match(over.reasons.join('\n'), /p90 latency/)
-  assert.equal(evaluateBenchmark(dataset, incumbent, timed(5)).decision, 'PASS')
+  assert.equal(evaluate(dataset, incumbent, timed(5)).decision, 'PASS')
 })
 
 test('the report records the measured candidate version and dataset digest', () => {
   const ok = runs(() => run([], 1))
-  const report = evaluateBenchmark(dataset, ok, ok, { candidateVersion: '1.2.3', datasetSha256: 'abc' })
+  const report = evaluate(dataset, ok, ok, { candidateVersion: '1.2.3', datasetSha256: 'abc' })
   assert.equal(report.candidateVersion, '1.2.3')
   assert.equal(report.datasetSha256, 'abc')
   assert.match(renderBenchmarkMarkdown(report), /Candidate version: 1\.2\.3; dataset sha256: abc/)
@@ -101,12 +104,34 @@ test('check-version-pin rejects the shipped report, which is not PASS', () => {
 test('the report shows both reviewers per PR and in total with the counting rule and reproduction commands', () => {
   const incumbent = runs((pr) => run(pr.bugs.length ? [hit, noise] : [noise], 1))
   const candidate = runs((pr) => run(pr.bugs.length ? [hit] : [], 1))
-  const markdown = renderBenchmarkMarkdown(evaluateBenchmark(dataset, incumbent, candidate))
+  const markdown = renderBenchmarkMarkdown(evaluate(dataset, incumbent, candidate))
   assert.match(markdown, /mvp:RF-02/)
   assert.match(markdown, /\| r#0 \| 1\/1 \| 1 \| 1\/1 \| 0 \|/)
   assert.match(markdown, /\| \*\*Total\*\* \| \*\*15\/15\*\* \| \*\*30\*\* \| \*\*15\/15\*\* \| \*\*0\*\* \|/)
   assert.match(markdown, /## Counting rule/)
   assert.match(markdown, /run-reviewer-benchmark\.mjs/)
+})
+
+test('cost comes from tokens and the shared price table, never zero for a completed PR', () => {
+  assert.equal(priceRun(prices, { model: 'claude-sonnet-5-5', inputTokens: 1_000_000, outputTokens: 1_000_000 }), 18)
+  assert.equal(priceRun(prices, { model: 'claude-sonnet-5-5' }), undefined)
+  assert.equal(priceRun(prices, { model: 'unknown', inputTokens: 1, outputTokens: 1 }), undefined)
+  assert.equal(priceRun(prices, { model: 'claude-sonnet-5-5', inputTokens: 0, outputTokens: 0 }), undefined)
+  const incumbent = runs((pr) => run(pr.bugs.length ? [hit, noise] : [noise], 1))
+  const noTokens = runs((pr) => ({ findings: pr.bugs.length ? [hit] : [], latencyMs: 1 }))
+  const report = evaluate(dataset, incumbent, noTokens)
+  assert.equal(report.decision, 'BLOCKED')
+  assert.match(report.reasons.join('\n'), /without measured cost/)
+  const ok = evaluate(dataset, incumbent, runs((pr) => run(pr.bugs.length ? [hit] : [], 1)))
+  assert.ok(ok.incumbent.perPr.every((p) => p.costUsd > 0 && p.inputTokens > 0 && p.outputTokens > 0))
+  assert.ok(ok.candidate.perPr.every((p) => p.costUsd > 0))
+  assert.match(renderBenchmarkMarkdown(ok), /mvp:RF-04/)
+  assert.doesNotMatch(renderBenchmarkMarkdown(ok), /\| 0\.0000 \|/)
+})
+
+test('the shipped price table parses', () => {
+  assert.ok(Object.keys(prices.models).length > 0)
+  assert.throws(() => parsePriceTable({ version: 1, effectiveDate: 'x', models: { m: { inputUsdPerMtok: 0, outputUsdPerMtok: 1 } } }))
 })
 
 test('a PR without a pinned 40-hex commit is rejected', () => {
@@ -139,7 +164,7 @@ test('pinnedCommitError accepts only the pinned head', () => {
 
 test('the report says which set and which version were used, with the commit given to both reviewers', () => {
   const ok = runs(() => run([], 1))
-  const report = evaluateBenchmark(dataset, ok, ok, { setPath: 'quality/benchmark/prs.json', run: { codeReviewVersion: '9.9.9', gitCommit: 'a'.repeat(40) } })
+  const report = evaluate(dataset, ok, ok, { setPath: 'quality/benchmark/prs.json', run: { codeReviewVersion: '9.9.9', gitCommit: 'a'.repeat(40) } })
   assert.equal(report.set.digest, describeBenchmarkSet(dataset).digest)
   const markdown = renderBenchmarkMarkdown(report)
   assert.match(markdown, /mvp:RF-01/)
@@ -161,7 +186,7 @@ async function runBenchmark(headOf) {
   try {
     const log = join(dir, 'calls.log')
     const reviewer = join(dir, 'reviewer.mjs')
-    writeFileSync(reviewer, `import { appendFileSync } from 'node:fs'\nappendFileSync(${JSON.stringify(log)}, process.argv.slice(2).join(' ') + '\\n')\nprocess.stdout.write('{"findings":[],"costUsd":1}\\n')\n`, { mode: 0o755 })
+    writeFileSync(reviewer, `import { appendFileSync } from 'node:fs'\nappendFileSync(${JSON.stringify(log)}, process.argv.slice(2).join(' ') + '\\n')\nprocess.stdout.write('{"findings":[],"model":"claude-sonnet-5-5","inputTokens":1000,"outputTokens":1000}\\n')\n`, { mode: 0o755 })
     const wrapper = join(dir, 'reviewer.sh')
     writeFileSync(wrapper, `#!/bin/sh\nexec ${JSON.stringify(process.execPath)} ${JSON.stringify(reviewer)} "$@"\n`, { mode: 0o755 })
     const small = { version: 1, prs: dataset.prs.slice(0, 2) }
@@ -206,16 +231,16 @@ const small0 = new Map(dataset.prs.slice(0, 2).map((pr) => [String(pr.number), p
 test('#379: records each finding with its verdict and matched bug, a readable failure cause, and groups false positives by title', () => {
   // Recorded outputs of a fake reviewer: one right finding, one wrong, one crash.
   const recorded = {
-    right: { findings: [{ file: 'a.ts', line: 11, title: 'Null dereference' }], costUsd: 0, latencyMs: 5 },
-    wrong: { findings: [{ file: 'b.ts', line: 1, title: 'Unused variable' }, { file: 'c.ts', line: 2, title: 'unused  variable' }], costUsd: 0, latencyMs: 5 },
-    crash: { findings: [], costUsd: 0, latencyMs: 5, error: 'exit 2: shadow-review: review failed', errorDetail: describeFailure('review', 2, ['loading', 'ANTHROPIC_API_KEY=sk-ant-abcdef123456', 'Authorization: Bearer abcdefghij123456', 'shadow-review: review failed'].join('\n')) },
+    right: { findings: [{ file: 'a.ts', line: 11, title: 'Null dereference' }], latencyMs: 5 },
+    wrong: { findings: [{ file: 'b.ts', line: 1, title: 'Unused variable' }, { file: 'c.ts', line: 2, title: 'unused  variable' }], latencyMs: 5 },
+    crash: { findings: [], latencyMs: 5, error: 'exit 2: shadow-review: review failed', errorDetail: describeFailure('review', 2, ['loading', 'ANTHROPIC_API_KEY=sk-ant-abcdef123456', 'Authorization: Bearer abcdefghij123456', 'shadow-review: review failed'].join('\n')) },
   }
   const set = parseBenchmarkDataset({ version: 1, prs: [
     { id: 'o/r#1', repository: 'o/r', number: 1, commit: commitOf(1), label: 'buggy', bugs: [{ file: 'a.ts', line: 10, titleIncludes: ['null'], note: 'null deref' }] },
     { id: 'o/r#2', repository: 'o/r', number: 2, commit: commitOf(2), label: 'clean', bugs: [] },
     { id: 'o/r#3', repository: 'o/r', number: 3, commit: commitOf(3), label: 'clean', bugs: [] },
   ] })
-  const report = evaluateBenchmark(set, { 'o/r#1': recorded.right, 'o/r#2': recorded.wrong, 'o/r#3': recorded.crash }, { 'o/r#1': recorded.right, 'o/r#2': recorded.right, 'o/r#3': recorded.right })
+  const report = evaluate(set, { 'o/r#1': recorded.right, 'o/r#2': recorded.wrong, 'o/r#3': recorded.crash }, { 'o/r#1': recorded.right, 'o/r#2': recorded.right, 'o/r#3': recorded.right })
   const [one, two, three] = report.incumbent.perPr
   assert.deepEqual(one.findings, [{ file: 'a.ts', line: 11, title: 'Null dereference', verdict: 'real-bug', matchedBug: { file: 'a.ts', line: 10, note: 'null deref' } }])
   assert.deepEqual(two.findings.map((f) => f.verdict), ['false-positive', 'false-positive'])

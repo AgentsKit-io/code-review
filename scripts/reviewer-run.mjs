@@ -14,7 +14,7 @@ export const isPrReference = (repository, number) => /^[\w.-]+\/[\w.-]+$/.test(r
 
 /**
  * Returns { files: 0 } when the checkout changed nothing reviewable, { failure } when the review could not run,
- * otherwise { code, review, costUsd, failure? } (failure set on a non-zero exit; review is the --result when written).
+ * otherwise { code, review, costUsd, model, inputTokens, outputTokens, failure? } (failure set on a non-zero exit; review is the --result when written).
  */
 export async function runReview({ repository, number, prefix, env = process.env, cwd = process.cwd() }) {
   const setting = (name) => env[`${prefix}_${name}`]
@@ -39,7 +39,8 @@ export async function runReview({ repository, number, prefix, env = process.env,
     const review = existsSync(result) ? JSON.parse(readFileSync(result, 'utf8')) : undefined
     const costUsd = ((review?.evidence?.tokensUsed ?? 0) / 1e6) * Number(setting('USD_PER_MTOK') ?? 0)
     const failure = run.code === 0 ? undefined : `review failed (exit ${run.code ?? run.signal}): ${splitLines(run.stderr.trim()).at(-1) ?? ''}`.slice(0, 280)
-    return { code: run.code, review, costUsd, ...(failure ? { failure } : {}) }
+    const usage = review?.evidence?.usage
+    return { code: run.code, review, costUsd, model: setting('MODEL'), inputTokens: usage?.inputTokens, outputTokens: usage?.outputTokens, ...(failure ? { failure } : {}) }
   } finally {
     rmSync(workdir, { recursive: true, force: true })
   }

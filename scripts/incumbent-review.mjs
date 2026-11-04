@@ -2,12 +2,12 @@
 // Requirement RF-03 (`mvp:RF-03`): the incumbent reviewer (the factory line's single-pass `review` stage) as an
 // executable the benchmark can run:  incumbent-review.mjs <owner/repo> <number> [<commit>]
 // With <commit> (40-hex, the benchmark's pinned head) it fails non-zero when the PR head is another commit.
-// It prints ONE JSON line on stdout: {"findings":[{"file","line","title"}],"costUsd":0}. Any failure exits non-zero
+// It prints ONE JSON line on stdout: {"findings":[...],"model","inputTokens","outputTokens"}. Any failure exits non-zero
 // with the reason on stderr (the benchmark records that PR as an error), so a PR is never silently scored as clean.
 // Single pass, no lenses: the PR diff (GITHUB_TOKEN; GITHUB_API_URL overrides https://api.github.com) goes to a
 // headless model CLI that reads the prompt on stdin. Configuration comes from the environment only:
 // AGENTSKIT_INCUMBENT_CMD (default claude), AGENTSKIT_INCUMBENT_ARGS (JSON array, default ["-p","--output-format","json"]),
-// AGENTSKIT_INCUMBENT_USD_PER_MTOK (cost = tokens x price; the CLI's usage is read from its JSON output),
+// AGENTSKIT_INCUMBENT_MODEL (the model id in quality/benchmark/prices.json; the runner prices the CLI's usage tokens, read from its JSON output),
 // AGENTSKIT_INCUMBENT_MAX_DIFF_CHARS (default 400000; a larger diff is an error, never a truncated review).
 import { runCommand, splitLines } from '@agentskit/cross-platform'
 
@@ -84,6 +84,7 @@ const findings = answer.findings.map((f) => ({ file: f?.file, line: Number(f?.li
 if (findings.some((f) => typeof f.file !== 'string' || !Number.isFinite(f.line) || typeof f.title !== 'string')) fail('a finding lacks file, numeric line or title')
 
 const usage = envelope?.usage ?? {}
-const tokens = ['input_tokens', 'output_tokens', 'cache_creation_input_tokens', 'cache_read_input_tokens'].reduce((total, key) => total + (Number(usage[key]) || 0), 0)
-const costUsd = (tokens / 1e6) * Number(env.AGENTSKIT_INCUMBENT_USD_PER_MTOK ?? 0)
-process.stdout.write(`${JSON.stringify({ findings, costUsd })}\n`)
+const count = (...keys) => keys.reduce((total, key) => total + (Number(usage[key]) || 0), 0)
+const inputTokens = count('input_tokens', 'cache_creation_input_tokens', 'cache_read_input_tokens')
+const outputTokens = count('output_tokens')
+process.stdout.write(`${JSON.stringify({ findings, model: env.AGENTSKIT_INCUMBENT_MODEL, inputTokens, outputTokens })}\n`)

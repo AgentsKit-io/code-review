@@ -31,13 +31,13 @@ const run = (command, args, env) => new Promise((done) => {
   child.on('close', (status) => done({ status, stdout, stderr }))
 })
 const incumbent = (api, args, extra = {}) => run(process.execPath, [join(root, 'scripts/incumbent-review.mjs'), ...args], {
-  GITHUB_API_URL: api, AGENTSKIT_INCUMBENT_CMD: model, AGENTSKIT_INCUMBENT_ARGS: '[]', AGENTSKIT_INCUMBENT_USD_PER_MTOK: '5', ...extra,
+  GITHUB_API_URL: api, AGENTSKIT_INCUMBENT_CMD: model, AGENTSKIT_INCUMBENT_ARGS: '[]', AGENTSKIT_INCUMBENT_MODEL: 'claude-sonnet-5-5', ...extra,
 })
 
-test('RF-03: prints {"findings":[{file,line,title}],"costUsd"} with the cost taken from the tokens', () => withGithub(async (api) => {
+test('RF-03: prints {"findings":[{file,line,title}],"model","inputTokens","outputTokens"} (the runner prices them)', () => withGithub(async (api) => {
   const out = await incumbent(api, ['o/r', '7'])
   assert.equal(out.status, 0, out.stderr)
-  assert.deepEqual(JSON.parse(out.stdout), { findings: [{ file: 'a.ts', line: 11, title: 'Null dereference' }], costUsd: 5 })
+  assert.deepEqual(JSON.parse(out.stdout), { findings: [{ file: 'a.ts', line: 11, title: 'Null dereference' }], model: 'claude-sonnet-5-5', inputTokens: 600000, outputTokens: 400000 })
 }))
 
 test('RF-03: a reviewer without findings is a clean answer; failures exit non-zero instead of scoring as clean', () => withGithub(async (api) => {
@@ -67,7 +67,7 @@ test('RF-03: run-reviewer-benchmark --incumbent-cmd finishes with no incumbent P
     writeFileSync(dataset, JSON.stringify({ version: 1, prs }))
     const bench = await run(process.execPath, [join(root, 'scripts/run-reviewer-benchmark.mjs'), '--incumbent-cmd', join(root, 'scripts/incumbent-review.mjs'),
       '--candidate-cmd', join(root, 'scripts/incumbent-review.mjs'), '--dataset', dataset, '--output', output, '--concurrency', '4'], {
-      GITHUB_API_URL: api, AGENTSKIT_BENCHMARK_GITHUB_API: api, AGENTSKIT_INCUMBENT_CMD: model, AGENTSKIT_INCUMBENT_ARGS: '[]', AGENTSKIT_INCUMBENT_USD_PER_MTOK: '5',
+      GITHUB_API_URL: api, AGENTSKIT_BENCHMARK_GITHUB_API: api, AGENTSKIT_INCUMBENT_CMD: model, AGENTSKIT_INCUMBENT_ARGS: '[]', AGENTSKIT_INCUMBENT_MODEL: 'claude-sonnet-5-5',
     })
     assert.ok([0, 2].includes(bench.status), bench.stderr)
     const report = JSON.parse(readFileSync(output, 'utf8'))
