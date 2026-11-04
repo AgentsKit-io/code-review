@@ -3,6 +3,8 @@
  * reviewers (the incumbent line reviewer and this one) and compared on real bugs found, false
  * positives, cost in US$ and latency. `scripts/run-reviewer-benchmark.mjs` does the execution.
  */
+import { createHash } from 'node:crypto'
+
 export const MIN_BENCHMARK_PRS = 30
 export const MAX_COST_RATIO = 1.2
 
@@ -21,6 +23,8 @@ export interface BenchmarkPr {
   id: string
   repository: string
   number: number
+  /** Head commit of the PR that both reviewers are given (40 hex); the runner refuses to run if the PR head is anywhere else. */
+  commit: string
   /** `buggy`: review findings became fixes (see `bugs`). `clean`: merged with no real defect. */
   label: 'buggy' | 'clean'
   bugs: KnownBug[]
@@ -60,9 +64,29 @@ export interface BenchmarkOptions {
 
 export type BenchmarkDecision = 'PASS' | 'FAIL' | 'BLOCKED'
 
+/** Which labelled set a report was measured on. */
+export interface BenchmarkSetInfo {
+  path: string
+  /** Dataset format version. */
+  version: 1
+  /** sha256 of the parsed set (ids, commits, labels, bugs): two reports with the same digest used the same set. */
+  digest: string
+  prs: number
+  buggy: number
+  clean: number
+  repositories: string[]
+  /** The commit each reviewer was given, per PR. */
+  commits: { id: string; label: BenchmarkPr['label']; commit: string }[]
+}
+
+/** Which version of code-review produced the candidate side of a report. */
+export interface BenchmarkRunInfo { codeReviewVersion: string; gitCommit?: string }
+
 export interface BenchmarkReport {
   decision: BenchmarkDecision
   reasons: string[]
+  set: BenchmarkSetInfo
+  run?: BenchmarkRunInfo
   incumbent: ReviewerSummary
   candidate: ReviewerSummary
 }
@@ -72,11 +96,12 @@ export function parseBenchmarkDataset(value: unknown): BenchmarkDataset {
   if (!input || input.version !== 1 || !Array.isArray(input.prs)) throw new Error('benchmark dataset must be { version: 1, prs: [] }')
   const seen = new Set<string>()
   const prs = input.prs.map((raw: any): BenchmarkPr => {
-    const { id, repository, number, label, bugs } = raw ?? {}
+    const { id, repository, number, commit, label, bugs } = raw ?? {}
     if (typeof id !== 'string' || !id || seen.has(id)) throw new Error(`benchmark PR id is missing or duplicated: ${String(id)}`)
     seen.add(id)
     if (typeof repository !== 'string' || !/^[\w.-]+\/[\w.-]+$/.test(repository)) throw new Error(`${id}: repository must be owner/repo`)
     if (!Number.isInteger(number) || number < 1) throw new Error(`${id}: number must be a positive integer`)
+    if (typeof commit !== 'string' || !/^[0-9a-f]{40}$/.test(commit)) throw new Error(`${id}: commit must be the 40-hex head commit the reviewers are given`)
     if (label !== 'buggy' && label !== 'clean') throw new Error(`${id}: label must be buggy or clean`)
     if (!Array.isArray(bugs)) throw new Error(`${id}: bugs must be an array`)
     if (label === 'clean' && bugs.length) throw new Error(`${id}: a clean PR cannot list known bugs`)
@@ -85,9 +110,28 @@ export function parseBenchmarkDataset(value: unknown): BenchmarkDataset {
       if (typeof bug?.file !== 'string' || !Number.isInteger(bug.line) || typeof bug.note !== 'string' || !bug.note) throw new Error(`${id}: each bug needs file, integer line and note`)
       if (bug.fix !== undefined && (!Number.isInteger(bug.fix.pr) || !/^[0-9a-f]{40}$/.test(bug.fix.commit ?? ''))) throw new Error(`${id}: bug.fix needs an integer pr and a 40-hex commit`)
     }
-    return { id, repository, number, label, bugs }
+    return { id, repository, number, commit, label, bugs }
   })
   return { version: 1, prs }
+}
+
+export function describeBenchmarkSet(dataset: BenchmarkDataset, path = 'quality/benchmark/prs.json'): BenchmarkSetInfo {
+  return {
+    path,
+    version: dataset.version,
+    digest: createHash('sha256').update(JSON.stringify(dataset)).digest('hex'),
+    prs: dataset.prs.length,
+    buggy: dataset.prs.filter((pr) => pr.label === 'buggy').length,
+    clean: dataset.prs.filter((pr) => pr.label === 'clean').length,
+    repositories: [...new Set(dataset.prs.map((pr) => pr.repository))].sort(),
+    commits: dataset.prs.map(({ id, label, commit }) => ({ id, label, commit })),
+  }
+}
+
+/** Both reviewers must see the PR at its pinned commit: returns why a PR whose head is `head` cannot be reviewed, or undefined. */
+export function pinnedCommitError(pr: BenchmarkPr, head: string | undefined): string | undefined {
+  if (!head) return `could not read the head commit of ${pr.id}`
+  return head === pr.commit ? undefined : `${pr.id} head is ${head}, not the pinned ${pr.commit}`
 }
 
 export function bugMatches(bug: KnownBug, finding: ReviewerFinding): boolean {
@@ -131,7 +175,9 @@ export function summarizeReviewer(name: string, dataset: BenchmarkDataset, runs:
 }
 
 /** Entry criterion: at least as many real bugs, strictly fewer false positives, cost at most 20% higher. */
-export function evaluateBenchmark(dataset: BenchmarkDataset, incumbentRuns: Record<string, ReviewerRun>, candidateRuns: Record<string, ReviewerRun>, options: BenchmarkOptions = {}): BenchmarkReport {
+export function evaluateBenchmark(dataset: BenchmarkDataset, incumbentRuns: Record<string, ReviewerRun>, candidateRuns: Record<string, ReviewerRun>, options: BenchmarkOptions & { setPath?: string; run?: BenchmarkRunInfo } = {}): BenchmarkReport {
+  const set = describeBenchmarkSet(dataset, options.setPath)
+  const base = { set, ...(options.run ? { run: options.run } : {}) }
   const incumbent = summarizeReviewer('incumbent', dataset, incumbentRuns)
   const candidate = summarizeReviewer('code-review', dataset, candidateRuns)
   const blocked: string[] = []
@@ -139,31 +185,71 @@ export function evaluateBenchmark(dataset: BenchmarkDataset, incumbentRuns: Reco
   if (!dataset.prs.some((pr) => pr.label === 'buggy')) blocked.push('dataset has no buggy PRs')
   if (!dataset.prs.some((pr) => pr.label === 'clean')) blocked.push('dataset has no clean PRs')
   for (const side of [incumbent, candidate]) if (side.erroredPrs) blocked.push(`${side.name} errored on ${side.erroredPrs} PR(s); rerun before comparing`)
-  if (blocked.length) return { decision: 'BLOCKED', reasons: blocked, incumbent, candidate }
+  if (blocked.length) return { decision: 'BLOCKED', reasons: blocked, ...base, incumbent, candidate }
   const failures: string[] = []
   if (candidate.bugsFound < incumbent.bugsFound) failures.push(`bugs found ${candidate.bugsFound} < incumbent ${incumbent.bugsFound}`)
   if (candidate.falsePositives >= incumbent.falsePositives) failures.push(`false positives ${candidate.falsePositives} are not fewer than incumbent ${incumbent.falsePositives}`)
   if (candidate.costUsd > incumbent.costUsd * MAX_COST_RATIO) failures.push(`cost $${candidate.costUsd.toFixed(2)} exceeds ${MAX_COST_RATIO}x incumbent $${incumbent.costUsd.toFixed(2)}`)
   if (options.stageTimeoutMs !== undefined && candidate.p90LatencyMs > options.stageTimeoutMs) failures.push(`p90 latency ${candidate.p90LatencyMs}ms exceeds the review-stage time ${options.stageTimeoutMs}ms`)
-  return { decision: failures.length ? 'FAIL' : 'PASS', reasons: failures, incumbent, candidate }
+  return { decision: failures.length ? 'FAIL' : 'PASS', reasons: failures, ...base, incumbent, candidate }
 }
 
+const cell = (p: PrScore | undefined) => (p ? `${p.error ? 'error' : `${p.bugsFound}/${p.bugsKnown}`} | ${p.error ? '-' : p.falsePositives}` : '- | -')
+
+/** Requirement RF-02 (`mvp:RF-02`): real bugs and false positives per PR and in total, both reviewers, one counting rule. */
 export function renderBenchmarkMarkdown(report: BenchmarkReport): string {
-  const { incumbent, candidate } = report
+  const { incumbent, candidate, set, run } = report
   const lines = [
     `# Reviewer benchmark: ${report.decision}`,
     '',
+    'Requirement `mvp:RF-02`: real bugs found and false positives of both reviewers, per PR and in total.',
+    '',
     ...report.reasons.map((reason) => `- ${reason}`),
     '',
+    '## Set and version (`mvp:RF-01`)',
+    '',
+    `Both reviewers were given exactly these PRs, each at the pinned head commit below (the runner stops on a PR whose head moved).`,
+    '',
+    `- Set: \`${set.path}\`, format version ${set.version}, sha256 \`${set.digest}\``,
+    `- ${set.prs} merged PRs: ${set.buggy} \`buggy\` (each bug cites the fix that proves it) and ${set.clean} \`clean\`, from ${set.repositories.join(', ')}`,
+    ...(run ? [`- code-review: \`${run.codeReviewVersion}\`${run.gitCommit ? ` at commit \`${run.gitCommit}\`` : ''}`] : []),
+    '',
+    '| PR | Label | Commit given to both reviewers |',
+    '| --- | --- | --- |',
+    ...set.commits.map((c) => `| ${c.id} | ${c.label} | \`${c.commit}\` |`),
+    '',
+    '## Counting rule',
+    '',
+    'Both reviewers run over the same labelled PRs (`quality/benchmark/prs.json`) and are scored by the same function (`scorePr` in `src/reviewer-benchmark.ts`):',
+    '',
+    '- A **real bug** is a known bug (a defect later fixed by a fix PR) matched by at least one finding on the same file within the line tolerance (default 3 lines); each known bug counts once.',
+    '- A **false positive** is any finding that matches no known bug, including every finding on a clean PR.',
+    '- A PR where the reviewer errored shows `error` and is not counted; any error makes the decision `BLOCKED`.',
+    '',
+    '## Totals',
+    '',
     '| Reviewer | Bugs found | False positives | Cost (US$) | Mean latency (ms) | p90 latency (ms) | Errored PRs |',
-    '| --- | --- | --- | --- | --- | --- | --- |',
+    '| --- | --- | --- | --- | --- | --- |',
     ...[incumbent, candidate].map((s) => `| ${s.name} | ${s.bugsFound}/${s.bugsKnown} | ${s.falsePositives} | ${s.costUsd.toFixed(2)} | ${s.meanLatencyMs} | ${s.p90LatencyMs} | ${s.erroredPrs} |`),
     '',
     '## Per PR',
     '',
-    '| PR | Reviewer | Bugs | False positives | Cost (US$) | Latency (ms) |',
-    '| --- | --- | --- | --- | --- | --- |',
-    ...[incumbent, candidate].flatMap((s) => s.perPr.map((p) => `| ${p.id} | ${s.name} | ${p.bugsFound}/${p.bugsKnown} | ${p.falsePositives} | ${p.costUsd.toFixed(2)} | ${p.latencyMs}${p.error ? ' (error)' : ''} |`)),
+    '| PR | incumbent bugs | incumbent false positives | code-review bugs | code-review false positives |',
+    '| --- | --- | --- | --- | --- |',
+    ...incumbent.perPr.map((p) => `| ${p.id} | ${cell(p)} | ${cell(candidate.perPr.find((c) => c.id === p.id))} |`),
+    `| **Total** | **${incumbent.bugsFound}/${incumbent.bugsKnown}** | **${incumbent.falsePositives}** | **${candidate.bugsFound}/${candidate.bugsKnown}** | **${candidate.falsePositives}** |`,
+    '',
+    '## Reproduce',
+    '',
+    '```bash',
+    'npm ci && npm run build',
+    'export GITHUB_TOKEN=... AGENTSKIT_SHADOW_PROVIDER=anthropic AGENTSKIT_SHADOW_USD_PER_MTOK=<price>',
+    'node scripts/run-reviewer-benchmark.mjs --incumbent-cmd <line reviewer executable> \\',
+    '  --candidate-cmd ./scripts/shadow-review.mjs --concurrency 6 \\',
+    '  --output quality/benchmark/report.json --markdown docs/reviewer-benchmark-report.md',
+    '```',
+    '',
+    'The incumbent command is run as `<executable> <owner/repo> <number> <commit>` (the pinned commit of the set) and prints `{"findings":[{"file","line","title"}],"costUsd":0}`; see `docs/reviewer-benchmark.md`.',
   ]
   return `${lines.join('\n')}\n`
 }

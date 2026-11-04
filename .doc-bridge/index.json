@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "f0d936a23ca9ebbb2f5d10f66fdb2cc8f2f6e5f9141c4af19896d3cb173c257a",
+  "contentHash": "4de7c6c021f83fb94599f7252268aeb3ff8d9298540b375643c137715ce3c1d4",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-01T07:17:06.853Z",
+  "generatedAt": "2026-11-04T00:10:52.648Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -45,6 +45,42 @@
         "unclassified"
       ],
       "contentHash": "f433196b09dee4a628f0dfb123d8884bd04ee04b21263bf69a31739873c66bcf"
+    },
+    {
+      "id": "document:.changeset/rf-02-benchmark-report.md",
+      "type": "document",
+      "title": "rf-02-benchmark-report.md",
+      "path": ".changeset/rf-02-benchmark-report.md",
+      "description": "Reviewer benchmark report now shows bugs and false positives of both reviewers per PR and in total, with the counting rule and reproduction commands (mvp:RF-02).",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "bfb037b4f0d8d7f6b96742583c5962cab9f3819a4ca4922cfe5dcb1eaaa5196b"
+    },
+    {
+      "id": "document:.changeset/rf-03-incumbent-command.md",
+      "type": "document",
+      "title": "rf-03-incumbent-command.md",
+      "path": ".changeset/rf-03-incumbent-command.md",
+      "description": "New agentskit-incumbent-review <owner/repo> <number> command (mvp:RF-03): the incumbent line reviewer as an executable for run-reviewer-benchmark --incumbent-cmd. It prints {\"findings\":[{file,line,title}],\"costUsd\"} and exits non-zero on any failure, so an errored PR is never scored as clean.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "18853803a8bf24f9bc49b7fa7ea907593f5fcd98b156afb0725ecffcae02e8ab"
+    },
+    {
+      "id": "document:.changeset/rf-10-line-reviewer.md",
+      "type": "document",
+      "title": "rf-10-line-reviewer.md",
+      "path": ".changeset/rf-10-line-reviewer.md",
+      "description": "New agentskit-line-review command (mvp:RF-10) decides the factory line's review stage with Code Review and fails closed. It decides only when the shipped benchmark report is PASS. A failed or incomplete review never approves: it falls back to the incumbent, or blocks with AGENTSKIT_LINE_ON_FAILURE=block. With AGENTSKIT_LINE_RECORD every decision is appended to a log.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "115a4320a4c9f1805c63518fa232e6dc1bc0fb80f6d915cfca5c797c80729c21"
     },
     {
       "id": "document:.changeset/rf05-p90-latency.md",
@@ -117,6 +153,42 @@
         "human"
       ],
       "contentHash": "4aec718b2e2371cda20dc868a638cc903907b5000e164a0a63abd0244ce6b6d4"
+    },
+    {
+      "id": "document:changelog.d/364.md",
+      "type": "document",
+      "title": "364.md",
+      "path": "changelog.d/364.md",
+      "description": "feat: benchmark runner pins one commit per PR and the report names the set and version (mvp:RF-01)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "eeb5b47e953f989c5d7504018a015a075aa94d1076976f69cb4c76aaf3307efe"
+    },
+    {
+      "id": "document:changelog.d/366.md",
+      "type": "document",
+      "title": "366.md",
+      "path": "changelog.d/366.md",
+      "description": "feat: incumbent reviewer command for the benchmark (mvp:RF-03)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "770118cf693f735fe1b67d7cc7c15bdb62fe41fb15664ee7e0e4394f39ec6109"
+    },
+    {
+      "id": "document:changelog.d/370.md",
+      "type": "document",
+      "title": "370.md",
+      "path": "changelog.d/370.md",
+      "description": "feat: shadow week protocol and offline report generator (mvp:RF-08)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "c0ec9c327958c24d5a6aea18b91e0805fef6bcff479b3f31b6276e742ea50d50"
     },
     {
       "id": "document:CHANGELOG.md",
@@ -411,12 +483,12 @@
       "type": "document",
       "title": "Reviewer benchmark: BLOCKED",
       "path": "docs/reviewer-benchmark-report.md",
-      "description": "incumbent errored on 38 PR(s); rerun before comparing",
+      "description": "Requirement mvp:RF-02: real bugs found and false positives of both reviewers, per PR and in total.",
       "tags": [
         "document",
         "human"
       ],
-      "contentHash": "ca23bbd49e71a593e611279f616a908f1fa908657dc5e38de9b7afec1e1e8feb"
+      "contentHash": "12f81807dcc1ee86fb95bf31f304d7a03aa12df67f25f6399262979d1257aa05"
     },
     {
       "id": "document:docs/reviewer-benchmark.md",
@@ -428,7 +500,19 @@
         "document",
         "human"
       ],
-      "contentHash": "407221bc1bc54655f87bd08011861c5002e3512cc5db15614bb0573a381afaef"
+      "contentHash": "aa8f6e494901b86d193df9f62438a6894ee828c51149eb57b89e4222543c3805"
+    },
+    {
+      "id": "document:docs/shadow-week-protocol.md",
+      "type": "document",
+      "title": "Shadow week protocol",
+      "path": "docs/shadow-week-protocol.md",
+      "description": "After the reviewer benchmark returns PASS, Code Review runs in shadow mode (it comments, it does not decide) next to the incumbent line reviewer for 7 consecutive days on the 2 or 3 repositories of the line with the most PRs. This page is the protocol and the offline report generator.",
+      "tags": [
+        "document",
+        "human"
+      ],
+      "contentHash": "c4cae949541bae1e8e8f6908fcc88f78e17dd752eaf404c4bdde7857c6bff2e8"
     },
     {
       "id": "document:GOVERNANCE.md",
@@ -1036,6 +1120,21 @@
       "contentHash": "9dd507f782491e88e72b6848794893d063cabe41a6057e5bdf042b6dd88d9bc9"
     },
     {
+      "id": "module:scripts/incumbent-review.mjs",
+      "type": "module",
+      "title": "incumbent-review.mjs",
+      "path": "scripts/incumbent-review.mjs",
+      "symbols": [
+        "extractJson"
+      ],
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "dfde8c2076f24cc121aabb4f59e0a0c8bf54fcbaf5f48d0d4660f1da8b94dd28"
+    },
+    {
       "id": "module:scripts/lib/readme-standard.mjs",
       "type": "module",
       "title": "readme-standard.mjs",
@@ -1050,6 +1149,18 @@
         "lib"
       ],
       "contentHash": "4420f7e52b2072201e6363cd9724df1f3ee3ccc0ccf48943dd3a0c853eef52fe"
+    },
+    {
+      "id": "module:scripts/line-review.mjs",
+      "type": "module",
+      "title": "line-review.mjs",
+      "path": "scripts/line-review.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "15032bb93e8f1de4f8c6b3e57e9fe177d514b307d274c3b98a9dbe2a1de9d190"
     },
     {
       "id": "module:scripts/readme-standard.test.mjs",
@@ -1075,6 +1186,18 @@
         "scripts"
       ],
       "contentHash": "6492825828a01eb5ed0671a003a633f90a724b444ebdf3568d5444a60d336818"
+    },
+    {
+      "id": "module:scripts/render-shadow-week-report.mjs",
+      "type": "module",
+      "title": "render-shadow-week-report.mjs",
+      "path": "scripts/render-shadow-week-report.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "dd1476ccc92ba4ddfbc216c14b5d47078aae35b38cd560a5848d361d3d508324"
     },
     {
       "id": "module:scripts/review-campaign.mjs",
@@ -1120,6 +1243,23 @@
       "contentHash": "3ba50e607f8ab877d19ee86e3e33d5fae3f3988fc177142bc5f1c1b76e0409d9"
     },
     {
+      "id": "module:scripts/reviewer-run.mjs",
+      "type": "module",
+      "title": "reviewer-run.mjs",
+      "path": "scripts/reviewer-run.mjs",
+      "symbols": [
+        "isPrReference",
+        "packageRoot",
+        "runReview"
+      ],
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "3b9923f7a012fd70eeb115b876040cd5a19ba0dd4a61a84afa9ec8d65213a0d5"
+    },
+    {
       "id": "module:scripts/run-cycle-benchmark.mjs",
       "type": "module",
       "title": "run-cycle-benchmark.mjs",
@@ -1153,7 +1293,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "b308877ce2755a4cd5ff67dd97ef8f444a9acd2824e877e8a1a039e68a307bc3"
+      "contentHash": "4cd88abab6359b867736002e9d13576865650ea6e2c3d0d3d4d65d68a4a734af"
     },
     {
       "id": "module:scripts/shadow-review.mjs",
@@ -1165,7 +1305,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "4f7872fbe89bf862fe22bdb5cb9f068e94d81e3fc3b061607435cc51ba4c8d74"
+      "contentHash": "17317bb0f01eb10446c7e9504bc4ed91ad4f2ab180376928afdd9d18685f2998"
     },
     {
       "id": "module:scripts/verify-ecosystem-public-outputs.mjs",
@@ -1870,6 +2010,29 @@
       "contentHash": "ea6b7c3d82dd6f3d18528e37844347f0819e6a9bb9cc31218aa5edab9d013322"
     },
     {
+      "id": "module:src/line-reviewer.ts",
+      "type": "module",
+      "title": "line-reviewer.ts",
+      "path": "src/line-reviewer.ts",
+      "symbols": [
+        "LINE_DECISION_EXIT",
+        "LineDecision",
+        "LineFailurePolicy",
+        "LineReviewDecision",
+        "LineReviewInput",
+        "LineReviewResult",
+        "decideLineReview",
+        "incompleteReason",
+        "parseLineFailurePolicy"
+      ],
+      "tags": [
+        "module",
+        "ts",
+        "src"
+      ],
+      "contentHash": "816acdbbf543f32cba9b3653f14bf48064dcecf7bf707e2fd9ebfa4b27052603"
+    },
+    {
       "id": "module:src/local-cli-process.ts",
       "type": "module",
       "title": "local-cli-process.ts",
@@ -2263,6 +2426,8 @@
         "BenchmarkOptions",
         "BenchmarkPr",
         "BenchmarkReport",
+        "BenchmarkRunInfo",
+        "BenchmarkSetInfo",
         "KnownBug",
         "MAX_COST_RATIO",
         "MIN_BENCHMARK_PRS",
@@ -2271,9 +2436,11 @@
         "ReviewerRun",
         "ReviewerSummary",
         "bugMatches",
+        "describeBenchmarkSet",
         "evaluateBenchmark",
         "parseBenchmarkDataset",
         "percentile",
+        "pinnedCommitError",
         "renderBenchmarkMarkdown",
         "scorePr",
         "summarizeReviewer"
@@ -2283,7 +2450,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "98225e069f6da5252ae492ec17fe29e24085888abb7efb5336fa803b1d089378"
+      "contentHash": "b1d2dbe1eebf40ef3ceb06bb16be11a72c3f554a4bb156ddeac915e03d01d3f1"
     },
     {
       "id": "module:src/scm-contract.ts",
@@ -2329,6 +2496,37 @@
         "src"
       ],
       "contentHash": "b13b2860d25036f9c862843727c17624007b8b7f807fdcfd5fec62f8dd19838c"
+    },
+    {
+      "id": "module:src/shadow-week.ts",
+      "type": "module",
+      "title": "shadow-week.ts",
+      "path": "src/shadow-week.ts",
+      "symbols": [
+        "MAX_SHADOW_REPOSITORIES",
+        "MIN_SHADOW_DAYS",
+        "MIN_SHADOW_REPOSITORIES",
+        "SHADOW_REVIEWERS",
+        "ShadowDecision",
+        "ShadowFinding",
+        "ShadowPr",
+        "ShadowPrScore",
+        "ShadowReviewerName",
+        "ShadowReviewerRun",
+        "ShadowReviewerTotals",
+        "ShadowVerdict",
+        "ShadowWeekData",
+        "ShadowWeekReport",
+        "evaluateShadowWeek",
+        "parseShadowWeekData",
+        "renderShadowWeekMarkdown"
+      ],
+      "tags": [
+        "module",
+        "ts",
+        "src"
+      ],
+      "contentHash": "9f2380c1dfbff3427ab69761597a14a6c55bb7e695984b407f83e2bcfb49c7b6"
     },
     {
       "id": "module:src/stable-fingerprint.ts",
@@ -2707,6 +2905,30 @@
       "contentHash": "b3b97c6e311776ed769eb96fcfdc30b9243120f4fa4fd51fbfc9d1f81608ecdc"
     },
     {
+      "id": "module:test/incumbent-review.test.mjs",
+      "type": "module",
+      "title": "incumbent-review.test.mjs",
+      "path": "test/incumbent-review.test.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "test"
+      ],
+      "contentHash": "5e6136ecc199fa710fc3d551aee0252a9f33af7b69b6d98f1a653e24f28afac6"
+    },
+    {
+      "id": "module:test/line-review.test.mjs",
+      "type": "module",
+      "title": "line-review.test.mjs",
+      "path": "test/line-review.test.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "test"
+      ],
+      "contentHash": "62402692b086126f0b167743e0d156b8825d9e5453a93f832dcdf289a8e0371f"
+    },
+    {
       "id": "module:test/local-cli-process.test.mjs",
       "type": "module",
       "title": "local-cli-process.test.mjs",
@@ -2992,7 +3214,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "cad77b856fed3cf8b79fd2294e13100acda8c9b9d5f11baab1f684730ec7dcb8"
+      "contentHash": "7e3431c138545f6972eb7dde0598cfb08de330ad15a7189c2fe1725af9fba62a"
     },
     {
       "id": "module:test/risk-depth.test.mjs",
@@ -3053,6 +3275,18 @@
         "test"
       ],
       "contentHash": "fa0336a7230a466c6d0e8f641d1cc870cd29888dda66da37131a0163f134b3c5"
+    },
+    {
+      "id": "module:test/shadow-week.test.mjs",
+      "type": "module",
+      "title": "shadow-week.test.mjs",
+      "path": "test/shadow-week.test.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "test"
+      ],
+      "contentHash": "4578d9881ee7abd69a4c549ce18d5dbad0afcc53ef71ee8684d09afc71a880e2"
     },
     {
       "id": "module:test/sources-context.test.mjs",
@@ -3174,8 +3408,8 @@
     }
   },
   "inputs": {
-    "hash": "2e34b181e339cfaf3d0f574a645ab75b9b75f44f2ac6e1c4f97c83a2bc6148c1",
-    "fileCount": 214,
+    "hash": "04f39ff4bebf1eab4fa4b3edfaf0fa2babfd151a9eb0bb5d584468b2ce390b29",
+    "fileCount": 231,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3197,9 +3431,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "cce1d34d35b80bc8179a17c726e6f78ddd404bc29c9f9f803589f742775e0fb0",
+    "contentHash": "d0015cb26ae87712d72002e89c1d20303a30a0be0ed84f999417f1e0b3f1a7fc",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "1fab7e09dcac08597c5348d9d4e0eb3d08072f8695561de97788194d47781d12",
+    "snapshotHash": "c7e351a85ecbfbba129897f5d5ae94d9497b674358f78e8b643516898407db45",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3219,7 +3453,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 196,
+      "documentCount": 212,
       "fieldNames": [
         "aliases",
         "body",
@@ -3230,13 +3464,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.892857142857143,
-        "body": 56.265306122448976,
-        "headings": 3.7244897959183674,
-        "path": 5.607142857142857,
-        "summary": 3.188775510204082,
-        "symbols": 13.571428571428571,
-        "title": 4.26530612244898
+        "aliases": 2.8679245283018866,
+        "body": 52.556603773584904,
+        "headings": 3.589622641509434,
+        "path": 5.60377358490566,
+        "summary": 3.7783018867924527,
+        "symbols": 13.150943396226415,
+        "title": 4.264150943396227
       }
     },
     "entries": [
@@ -3404,7 +3638,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "dc1a63778fd5738005884e94c8039e9aa8640e4dd1dcc21fb4373d21956b0f56",
+        "contentHash": "79c4922903dc027b2bdd3668e1e55c5c55db5cd4816a58f31cceb0c69e7e6254",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3443,7 +3677,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "c87d016429f150be7349fafbf7ab5fca36e29378299712089296a0efe3765165",
+        "contentHash": "f748814d54b927541700d023abf97a3d7f2762b3055a3a7fcb8876cc97472c6b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3551,6 +3785,102 @@
         "confidence": "observed"
       },
       {
+        "id": "document:.changeset/rf-02-benchmark-report.md",
+        "kind": "document",
+        "path": ".changeset/rf-02-benchmark-report.md",
+        "title": "rf-02-benchmark-report.md",
+        "summary": "Reviewer benchmark report now shows bugs and false positives of both reviewers per PR and in total, with the counting rule and reproduction commands (mvp:RF-02).",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "rf-02-benchmark-report.md",
+          "headings": "",
+          "path": ".changeset/rf-02-benchmark-report.md",
+          "symbols": "",
+          "summary": "Reviewer benchmark report now shows bugs and false positives of both reviewers per PR and in total, with the counting rule and reproduction commands (mvp:RF-02).",
+          "body": "Reviewer benchmark report now shows bugs and false positives of both reviewers per PR and in total, with the counting rule and reproduction commands ( mvp:RF-02 ).",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "bfb037b4f0d8d7f6b96742583c5962cab9f3819a4ca4922cfe5dcb1eaaa5196b",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:.changeset/rf-03-incumbent-command.md",
+        "kind": "document",
+        "path": ".changeset/rf-03-incumbent-command.md",
+        "title": "rf-03-incumbent-command.md",
+        "summary": "New agentskit-incumbent-review <owner/repo> <number> command (mvp:RF-03): the incumbent line reviewer as an executable for run-reviewer-benchmark --incumbent-cmd. It prints {\"findings\":[{file,line,title}],\"costUsd\"} and exits non-zero on any failure, so an errored PR is never scored as clean.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "rf-03-incumbent-command.md",
+          "headings": "",
+          "path": ".changeset/rf-03-incumbent-command.md",
+          "symbols": "",
+          "summary": "New agentskit-incumbent-review <owner/repo> <number> command (mvp:RF-03): the incumbent line reviewer as an executable for run-reviewer-benchmark --incumbent-cmd. It prints {\"findings\":[{file,line,title}],\"costUsd\"} and exits non-zero on any failure, so an errored PR is never scored as clean.",
+          "body": "New agentskit-incumbent-review <owner/repo <number command ( mvp:RF-03 ): the incumbent line reviewer as an executable for run-reviewer-benchmark --incumbent-cmd . It prints {\"findings\":[{file,line,title}],\"costUsd\"} and exits non-zero on any failure, so an errored PR is never scored as clean.",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "18853803a8bf24f9bc49b7fa7ea907593f5fcd98b156afb0725ecffcae02e8ab",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:.changeset/rf-10-line-reviewer.md",
+        "kind": "document",
+        "path": ".changeset/rf-10-line-reviewer.md",
+        "title": "rf-10-line-reviewer.md",
+        "summary": "New agentskit-line-review command (mvp:RF-10) decides the factory line's review stage with Code Review and fails closed. It decides only when the shipped benchmark report is PASS. A failed or incomplete review never approves: it falls back to the incumbent, or blocks with AGENTSKIT_LINE_ON_FAILURE=block. With AGENTSKIT_LINE_RECORD every decision is appended to a log.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "rf-10-line-reviewer.md",
+          "headings": "",
+          "path": ".changeset/rf-10-line-reviewer.md",
+          "symbols": "",
+          "summary": "New agentskit-line-review command (mvp:RF-10) decides the factory line's review stage with Code Review and fails closed. It decides only when the shipped benchmark report is PASS. A failed or incomplete review never approves: it falls back to the incumbent, or blocks with AGENTSKIT_LINE_ON_FAILURE=block. With AGENTSKIT_LINE_RECORD every decision is appended to a log.",
+          "body": "New agentskit-line-review command ( mvp:RF-10 ) decides the factory line's review stage with Code Review and fails closed. It decides only when the shipped benchmark report is PASS . A failed or incomplete review never approves: it falls back to the incumbent, or blocks with AGENTSKIT LINE ON FAILURE=block . With AGENTSKIT LINE RECORD every decision is appended to a log.",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "115a4320a4c9f1805c63518fa232e6dc1bc0fb80f6d915cfca5c797c80729c21",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "document:.changeset/rf05-p90-latency.md",
         "kind": "document",
         "path": ".changeset/rf05-p90-latency.md",
@@ -3635,7 +3965,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.021519,
+          "pagerank": 0.020391,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -3783,6 +4113,105 @@
         "confidence": "observed"
       },
       {
+        "id": "document:changelog.d/364.md",
+        "kind": "document",
+        "path": "changelog.d/364.md",
+        "title": "364.md",
+        "summary": "feat: benchmark runner pins one commit per PR and the report names the set and version (mvp:RF-01)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "364.md",
+          "headings": "",
+          "path": "changelog.d/364.md",
+          "symbols": "",
+          "summary": "feat: benchmark runner pins one commit per PR and the report names the set and version (mvp:RF-01)",
+          "body": "feat: benchmark runner pins one commit per PR and the report names the set and version (mvp:RF-01) Every PR in quality/benchmark/prs.json now pins its head commit; the runner passes the same PR and commit to both reviewers and records an error for both if the head moved. The report states the set digest, PR counts, commits and the code-review version. Fixes the entry code-review 40 (an issue) to the real PR 51.",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "eeb5b47e953f989c5d7504018a015a075aa94d1076976f69cb4c76aaf3307efe",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:changelog.d/366.md",
+        "kind": "document",
+        "path": "changelog.d/366.md",
+        "title": "366.md",
+        "summary": "feat: incumbent reviewer command for the benchmark (mvp:RF-03)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "366.md",
+          "headings": "",
+          "path": "changelog.d/366.md",
+          "symbols": "",
+          "summary": "feat: incumbent reviewer command for the benchmark (mvp:RF-03)",
+          "body": "feat: incumbent reviewer command for the benchmark (mvp:RF-03) scripts/incumbent-review.mjs <owner/repo <number [<commit ] prints {findings,costUsd} ; given the runner's pinned commit it fails when the PR head differs.",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "770118cf693f735fe1b67d7cc7c15bdb62fe41fb15664ee7e0e4394f39ec6109",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:changelog.d/370.md",
+        "kind": "document",
+        "path": "changelog.d/370.md",
+        "title": "370.md",
+        "summary": "feat: shadow week protocol and offline report generator (mvp:RF-08)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "370.md",
+          "headings": "",
+          "path": "changelog.d/370.md",
+          "symbols": "",
+          "summary": "feat: shadow week protocol and offline report generator (mvp:RF-08)",
+          "body": "feat: shadow week protocol and offline report generator (mvp:RF-08) Adds docs/shadow-week-protocol.md and scripts/render-shadow-week-report.mjs, which apply the benchmark criteria (fixes, false alarms, cost <= 1.2x by tokens) to a week of shadow-mode data. Synthetic example only.",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "c0ec9c327958c24d5a6aea18b91e0805fef6bcff479b3f31b6276e742ea50d50",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "document:CHANGELOG.md",
         "kind": "document",
         "path": "CHANGELOG.md",
@@ -3804,7 +4233,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.024672,
+          "pagerank": 0.023378,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [
@@ -4005,7 +4434,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.05132,
+          "pagerank": 0.048629,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -4056,7 +4485,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.030216,
+          "pagerank": 0.028631,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -4182,7 +4611,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.023349,
+          "pagerank": 0.022124,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4252,7 +4681,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.023349,
+          "pagerank": 0.022124,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4312,7 +4741,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.023349,
+          "pagerank": 0.022124,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4372,7 +4801,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.023349,
+          "pagerank": 0.022124,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4442,7 +4871,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.023349,
+          "pagerank": 0.022124,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4512,7 +4941,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.026502,
+          "pagerank": 0.025111,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4582,7 +5011,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.023349,
+          "pagerank": 0.022124,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4637,7 +5066,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.023349,
+          "pagerank": 0.022124,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -4704,7 +5133,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.023349,
+          "pagerank": 0.022124,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4774,7 +5203,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.023349,
+          "pagerank": 0.022124,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4829,7 +5258,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.021519,
+          "pagerank": 0.020391,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -4913,7 +5342,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.067838,
+          "pagerank": 0.064279,
           "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [
@@ -4985,7 +5414,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.027286,
+          "pagerank": 0.025854,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5049,11 +5478,11 @@
           "path": "docs/for-agents/code-review.md",
           "symbols": "",
           "summary": "Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and GitHub pull requests. Bounded diff-first context packs run one multidimensional analysis; adversarial votes remove weak findings; reporters emit Markdown, GitHub reviews, and SARIF.",
-          "body": "Code Review CLI handoff Purpose Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and GitHub pull requests. Bounded diff-first context packs run one multidimensional analysis; adversarial votes remove weak findings; reporters emit Markdown, GitHub reviews, and SARIF. Ownership map - src/cli.ts : public flags, source selection, provider selection, exit policy. - src/campaign-reducer.ts and src/campaign-store.ts : deterministic lifecycle, atomic checkpoints, leases, replay, and resume. - src/campaign-preflight.ts : provider-free campaign discovery, eligibility, source planning, budget checks, and worktree gating. - src/batch-mode.ts : shared measured batching, including single-file context-pack partitioning (ADR-0006); preserve pack identity in artifacts, cache keys, and consolidation. - src/budget.ts : provider-free hierarchical budget compilation, reservations, and dimension-aware usage accounting. - src/review-stores.ts : separate self-hosted feedback and approved-knowledge stores with bounded schemas, atomic writes, retention, concurrent-write serialization, and the scoped AgentsKit Retriever . - src/review-feedback.ts : deterministic feedback reconciliation, resumable checkpoints, metrics, and inactive candidate-rule evidence. - src/campaign-runner.ts and scripts/review-campaign.mjs : bounded multi-PR execution, leased atomic checkpoints, resume, per-PR isolation, and deterministic terminal reporting. - src/quality-matrix.ts : run and campaign quality scoring, evidence separation, cost/time accounting, and baseline regression gates. evaluateCampaignQuality() must be used when aggregating campaign outcomes. - src/<provider -adapter.ts : logged-in local CLI adapters. - src/provider-registry.ts : validated provider capabilities and conservative execution policy around AgentsKit adapters. - src/provider-execution.ts : typed provider failures, bounded retry delay, adaptive concurrency, and cancellation-aware queueing. - src/scm-contract.ts : provider-neutral change-request, publication, readiness, and merge contracts plus explicit capability checks. - src/github-scm-adapter.ts : GitHub REST/CLI binding for the common SCM contract; the only migrated path allowed to contain GitHub payloads or merge commands. - agents/ : the vendored review agent in agents/code-review/ : review pipeline, lenses, input normalization, reporters. - agents/code-review/risk.ts : provider-free context-pack risk signals and specialized-depth selection. - action.yml : composite GitHub Action contract. - .github/workflows/release.yml : Changesets version-pull-request workflow. - .github/workflows/publish.yml : version-PR-gated npm Trusted Publishing and GitHub Release workflow. - examples/ : copy-ready Action workflows. - README.md and docs/OPERATIONS.md : public adoption and operations guidance. - ecosystem.json , llms.txt , and llms-full.txt : canonical product graph and machine-readable discovery/full-corpus surfaces. - src/reviewer-benchmark.ts , scripts/run-reviewer-benchmark.mjs , quality/benchmark/prs.json : labelled-PR benchmark and entry criterion against the incumbent line reviewer ( docs/reviewer-benchmark.md ). - test/ : credential-free CLI, Action, and documentation contract proofs. - scripts/ : Node entry points for the package scripts (review cycle, campaign, harness, quality matrix and baseline, fault injection, cycle benchmark, public-API snapshot, README Standard, llms-full.txt generation) and the standalone ecosystem public-output check. Boundaries - Depend on AgentsKit adapter/runtime/tool contracts; do not create a second model abstraction. - Preserve provider neutrality and advisory-by-default Action behavior. - Never expose provider keys in arguments, docs fixtures, logs, or PR output. - The Fumadocs site provides curated documentation only; the product runtime remains the CLI and GitHub Action. Do not add an embedded AgentsKit Chat runtime here. - The vendored review agent tracks the AgentsKit Registry sour",
+          "body": "Code Review CLI handoff Purpose Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and GitHub pull requests. Bounded diff-first context packs run one multidimensional analysis; adversarial votes remove weak findings; reporters emit Markdown, GitHub reviews, and SARIF. Ownership map - src/cli.ts : public flags, source selection, provider selection, exit policy. - src/campaign-reducer.ts and src/campaign-store.ts : deterministic lifecycle, atomic checkpoints, leases, replay, and resume. - src/campaign-preflight.ts : provider-free campaign discovery, eligibility, source planning, budget checks, and worktree gating. - src/batch-mode.ts : shared measured batching, including single-file context-pack partitioning (ADR-0006); preserve pack identity in artifacts, cache keys, and consolidation. - src/budget.ts : provider-free hierarchical budget compilation, reservations, and dimension-aware usage accounting. - src/review-stores.ts : separate self-hosted feedback and approved-knowledge stores with bounded schemas, atomic writes, retention, concurrent-write serialization, and the scoped AgentsKit Retriever . - src/review-feedback.ts : deterministic feedback reconciliation, resumable checkpoints, metrics, and inactive candidate-rule evidence. - src/campaign-runner.ts and scripts/review-campaign.mjs : bounded multi-PR execution, leased atomic checkpoints, resume, per-PR isolation, and deterministic terminal reporting. - src/quality-matrix.ts : run and campaign quality scoring, evidence separation, cost/time accounting, and baseline regression gates. evaluateCampaignQuality() must be used when aggregating campaign outcomes. - src/<provider -adapter.ts : logged-in local CLI adapters. - src/provider-registry.ts : validated provider capabilities and conservative execution policy around AgentsKit adapters. - src/provider-execution.ts : typed provider failures, bounded retry delay, adaptive concurrency, and cancellation-aware queueing. - src/scm-contract.ts : provider-neutral change-request, publication, readiness, and merge contracts plus explicit capability checks. - src/github-scm-adapter.ts : GitHub REST/CLI binding for the common SCM contract; the only migrated path allowed to contain GitHub payloads or merge commands. - agents/ : the vendored review agent in agents/code-review/ : review pipeline, lenses, input normalization, reporters. - agents/code-review/risk.ts : provider-free context-pack risk signals and specialized-depth selection. - action.yml : composite GitHub Action contract. - .github/workflows/release.yml : Changesets version-pull-request workflow. - .github/workflows/publish.yml : version-PR-gated npm Trusted Publishing and GitHub Release workflow. - examples/ : copy-ready Action workflows. - README.md and docs/OPERATIONS.md : public adoption and operations guidance. - ecosystem.json , llms.txt , and llms-full.txt : canonical product graph and machine-readable discovery/full-corpus surfaces. - src/reviewer-benchmark.ts , scripts/run-reviewer-benchmark.mjs , quality/benchmark/prs.json : labelled-PR benchmark and entry criterion against the incumbent line reviewer ( docs/reviewer-benchmark.md ). - src/line-reviewer.ts , scripts/line-review.mjs (bin agentskit-line-review ), scripts/reviewer-run.mjs : fail-closed decision of the factory line's review stage (RF-10); it decides only after a benchmark PASS , and a failed or incomplete review falls back to the incumbent or blocks, never approves ( docs/reviewer-benchmark.md ). - test/ : credential-free CLI, Action, and documentation contract proofs. - scripts/ : Node entry points for the package scripts (review cycle, campaign, harness, quality matrix and baseline, fault injection, cycle benchmark, public-API snapshot, README Standard, llms-full.txt generation) and the standalone ecosystem public-output check. Boundaries - Depend on AgentsKit adapter/runtime/tool contracts; do not create a second model abstraction. - Preserve provider neutrality and advisory-",
           "aliases": "code-review document agent package"
         },
         "graph": {
-          "pagerank": 0.075873,
+          "pagerank": 0.071892,
           "inboundLinks": 5,
           "coveredBy": [],
           "mentionedBy": [
@@ -5166,7 +5595,17 @@
             },
             {
               "kind": "mentions",
+              "id": "module:scripts/line-review.mjs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
               "id": "module:scripts/review-campaign.mjs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:scripts/reviewer-run.mjs",
               "confidence": "observed"
             },
             {
@@ -5216,6 +5655,11 @@
             },
             {
               "kind": "mentions",
+              "id": "module:src/line-reviewer.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
               "id": "module:src/provider-execution.ts",
               "confidence": "observed"
             },
@@ -5251,7 +5695,7 @@
             }
           ]
         },
-        "contentHash": "3eb6a0a70719d90d8aecdcb3578e15ef29ee693ec6a70a0b7540e3b37e60a717",
+        "contentHash": "f680ca62335918484cca011c2d11687155839a8760fc74947b84cf5b2d769870",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -5279,7 +5723,7 @@
           "aliases": "index document agent"
         },
         "graph": {
-          "pagerank": 0.024672,
+          "pagerank": 0.023378,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -5331,7 +5775,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.024133,
+          "pagerank": 0.022867,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5456,7 +5900,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.021519,
+          "pagerank": 0.020391,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5525,7 +5969,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.029676,
+          "pagerank": 0.028119,
           "inboundLinks": 6,
           "coveredBy": [],
           "mentionedBy": [
@@ -5763,7 +6207,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.032829,
+          "pagerank": 0.031107,
           "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5833,7 +6277,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.024133,
+          "pagerank": 0.022867,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -5883,7 +6327,7 @@
         "kind": "document",
         "path": "docs/reviewer-benchmark-report.md",
         "title": "Reviewer benchmark: BLOCKED",
-        "summary": "incumbent errored on 38 PR(s); rerun before comparing",
+        "summary": "Requirement mvp:RF-02: real bugs found and false positives of both reviewers, per PR and in total.",
         "audience": "human",
         "aliases": [],
         "tags": [
@@ -5892,15 +6336,15 @@
         ],
         "fields": {
           "title": "Reviewer benchmark: BLOCKED",
-          "headings": "Reviewer benchmark: BLOCKED Per PR",
+          "headings": "Reviewer benchmark: BLOCKED Counting rule Totals Per PR Reproduce",
           "path": "docs/reviewer-benchmark-report.md",
           "symbols": "",
-          "summary": "incumbent errored on 38 PR(s); rerun before comparing",
-          "body": "Reviewer benchmark: BLOCKED - incumbent errored on 38 PR(s); rerun before comparing - code-review errored on 11 PR(s); rerun before comparing Reviewer Bugs found False positives Cost (US$) Mean latency (ms) Errored PRs --- --- --- --- --- --- incumbent 0/32 0 0.00 4 38 code-review 8/32 118 0.00 235158 11 Per PR PR Reviewer Bugs False positives Cost (US$) Latency (ms) --- --- --- --- --- --- AgentsKit-io/code-review 178 incumbent 0/2 0 0.00 25 (error) AgentsKit-io/code-review 62 incumbent 0/2 0 0.00 18 (error) AgentsKit-io/code-review 40 incumbent 0/3 0 0.00 14 (error) AgentsKit-io/code-review 67 incumbent 0/2 0 0.00 11 (error) AgentsKit-io/code-review 130 incumbent 0/1 0 0.00 8 (error) AgentsKit-io/code-review 80 incumbent 0/1 0 0.00 4 (error) AgentsKit-io/code-review 180 incumbent 0/2 0 0.00 3 (error) AgentsKit-io/code-review 204 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/code-review 186 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/code-review 73 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/harness 144 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/harness 142 incumbent 0/2 0 0.00 2 (error) AgentsKit-io/harness 133 incumbent 0/1 0 0.00 3 (error) AgentsKit-io/harness 103 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/harness 101 incumbent 0/2 0 0.00 3 (error) AgentsKit-io/harness 198 incumbent 0/2 0 0.00 1 (error) AgentsKit-io/harness 199 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/harness 201 incumbent 0/2 0 0.00 2 (error) AgentsKit-io/harness 98 incumbent 0/1 0 0.00 2 (error) AgentsKit-io/harness 111 incumbent 0/1 0 0.00 3 (error) AgentsKit-io/harness 39 incumbent 0/1 0 0.00 1 (error) AgentsKit-io/harness 184 incumbent 0/1 0 0.00 3 (error) AgentsKit-io/code-review 27 incumbent 0/0 0 0.00 1 (error) AgentsKit-io/code-review 166 incumbent 0/0 0 0.00 1 (error) AgentsKit-io/code-review 280 incumbent 0/0 0 0.00 3 (error) AgentsKit-io/code-review 319 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 28 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 29 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 42 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 44 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 97 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/harness 107 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/doc-bridge 76 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/doc-bridge 197 incumbent 0/0 0 0.00 3 (error) AgentsKit-io/doc-bridge 207 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/doc-bridge 317 incumbent 0/0 0 0.00 3 (error) AgentsKit-io/doc-bridge 369 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/doc-bridge 393 incumbent 0/0 0 0.00 2 (error) AgentsKit-io/code-review 178 code-review 2/2 9 0.00 525178 AgentsKit-io/code-review 62 code-review 0/2 0 0.00 145590 (error) AgentsKit-io/code-review 40 code-review 0/3 0 0.00 1205 (error) AgentsKit-io/code-review 67 code-review 0/2 0 0.00 399777 (error) AgentsKit-io/code-review 130 code-review 0/1 0 0.00 95669 (error) AgentsKit-io/code-review 80 code-review 1/1 1 0.00 67498 AgentsKit-io/code-review 180 code-review 0/2 0 0.00 298819 (error) AgentsKit-io/code-review 204 code-review 0/1 14 0.00 367626 AgentsKit-io/code-review 186 code-review 0/1 0 0.00 403065 (error) AgentsKit-io/code-review 73 code-review 0/1 0 0.00 412254 (error) AgentsKit-io/harness 144 code-review 1/1 2 0.00 160572 AgentsKit-io/harness 142 code-review 1/2 0 0.00 84698 AgentsKit-io/harness 133 code-review 0/1 3 0.00 109184 AgentsKit-io/harness 103 code-review 0/1 8 0.00 297720 AgentsKit-io/harness 101 code-review 0/2 0 0.00 796336 (error) AgentsKit-io/harness 198 code-review 1/2 9 0.00 396732 AgentsKit-io/harness 199 code-review 0/1 2 0.00 180482 AgentsKit-io/harness 201 code-review 1/2 2 0.00 229988 AgentsKit-io/harness 98 code-review 1/1 12 0.00 398171 AgentsKit-io/harness 111 code-review 0/1 0 0.00 821808 (error) AgentsKit-io/harness 39 code-review 0/1 0 0.00 565215 (error) AgentsKit-io/harness 184 code-review 0/1 3 0.00 248508 AgentsKit-io/code-review 27 code-review 0/0 5 0.00 161240 AgentsKit-io/code-review 166 code-re",
+          "summary": "Requirement mvp:RF-02: real bugs found and false positives of both reviewers, per PR and in total.",
+          "body": "Reviewer benchmark: BLOCKED Requirement mvp:RF-02 : real bugs found and false positives of both reviewers, per PR and in total. - incumbent errored on 38 PR(s); rerun before comparing - code-review errored on 11 PR(s); rerun before comparing Counting rule Both reviewers run over the same labelled PRs ( quality/benchmark/prs.json ) and are scored by the same function ( scorePr in src/reviewer-benchmark.ts ): - A real bug is a known bug (a defect later fixed by a fix PR) matched by at least one finding on the same file within the line tolerance (default 3 lines); each known bug counts once. - A false positive is any finding that matches no known bug, including every finding on a clean PR. - A PR where the reviewer errored shows error and is not counted; any error makes the decision BLOCKED . Totals Reviewer Bugs found False positives Cost (US$) Mean latency (ms) Errored PRs --- --- --- --- --- --- incumbent 0/32 0 0.00 4 38 code-review 8/32 118 0.00 235158 11 Per PR PR incumbent bugs incumbent false positives code-review bugs code-review false positives --- --- --- --- --- AgentsKit-io/code-review 178 error - 2/2 9 AgentsKit-io/code-review 62 error - error - AgentsKit-io/code-review 40 error - error - AgentsKit-io/code-review 67 error - error - AgentsKit-io/code-review 130 error - error - AgentsKit-io/code-review 80 error - 1/1 1 AgentsKit-io/code-review 180 error - error - AgentsKit-io/code-review 204 error - 0/1 14 AgentsKit-io/code-review 186 error - error - AgentsKit-io/code-review 73 error - error - AgentsKit-io/harness 144 error - 1/1 2 AgentsKit-io/harness 142 error - 1/2 0 AgentsKit-io/harness 133 error - 0/1 3 AgentsKit-io/harness 103 error - 0/1 8 AgentsKit-io/harness 101 error - error - AgentsKit-io/harness 198 error - 1/2 9 AgentsKit-io/harness 199 error - 0/1 2 AgentsKit-io/harness 201 error - 1/2 2 AgentsKit-io/harness 98 error - 1/1 12 AgentsKit-io/harness 111 error - error - AgentsKit-io/harness 39 error - error - AgentsKit-io/harness 184 error - 0/1 3 AgentsKit-io/code-review 27 error - 0/0 5 AgentsKit-io/code-review 166 error - 0/0 3 AgentsKit-io/code-review 280 error - 0/0 3 AgentsKit-io/code-review 319 error - 0/0 0 AgentsKit-io/harness 28 error - 0/0 6 AgentsKit-io/harness 29 error - 0/0 7 AgentsKit-io/harness 42 error - 0/0 3 AgentsKit-io/harness 44 error - 0/0 3 AgentsKit-io/harness 97 error - 0/0 4 AgentsKit-io/harness 107 error - error - AgentsKit-io/doc-bridge 76 error - 0/0 2 AgentsKit-io/doc-bridge 197 error - 0/0 2 AgentsKit-io/doc-bridge 207 error - 0/0 5 AgentsKit-io/doc-bridge 317 error - 0/0 2 AgentsKit-io/doc-bridge 369 error - 0/0 6 AgentsKit-io/doc-bridge 393 error - 0/0 2 Total 0/32 0 8/32 118 Reproduce The incumbent command is run as <executable <owner/repo <number and prints {\"findings\":[{\"file\",\"line\",\"title\"}],\"costUsd\":0} ; see docs/reviewer-benchmark.md .",
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.039811,
+          "pagerank": 0.052455,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5911,9 +6355,25 @@
               "confidence": "observed"
             }
           ],
-          "outbound": []
+          "outbound": [
+            {
+              "kind": "mentions",
+              "id": "document:docs/reviewer-benchmark.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:src/reviewer-benchmark.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "module:src/reviewer-benchmark.ts",
+              "confidence": "observed"
+            }
+          ]
         },
-        "contentHash": "ca23bbd49e71a593e611279f616a908f1fa908657dc5e38de9b7afec1e1e8feb",
+        "contentHash": "12f81807dcc1ee86fb95bf31f304d7a03aa12df67f25f6399262979d1257aa05",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -5931,24 +6391,35 @@
         ],
         "fields": {
           "title": "Reviewer benchmark",
-          "headings": "Reviewer benchmark Status Dataset Run Entry criterion Running on the line (shadow mode) After a pass",
+          "headings": "Reviewer benchmark Status Dataset Run Same PRs, same commit, which set and version (mvp:RF-01) The incumbent command (mvp:RF-03) Entry criterion Running on the line (shadow mode) After a pass Deciding on the line (mvp:RF-10)",
           "path": "docs/reviewer-benchmark.md",
           "symbols": "",
           "summary": "Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json; the scoring is in src/reviewer-benchmark.ts; the runner is scripts/run-reviewer-benchmark.mjs. Run it on every release.",
-          "body": "Reviewer benchmark Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json ; the scoring is in src/reviewer-benchmark.ts ; the runner is scripts/run-reviewer-benchmark.mjs . Run it on every release. Status Decision on 2026-10-30: BLOCKED, so the entry criterion is not met and the factory's review stage stays on the incumbent (the switch is off; shadow mode does not start). The report is (JSON: quality/benchmark/report.json ). - Code Review ran on all 38 PRs: 27 completed, 11 ended incomplete (exit 2: deadline or provider failure; reruns are needed). On the 27 completed PRs it found 8 of the 16 known bugs and reported 118 findings matching no known bug. - The incumbent was not run : the line reviewer is the review stage of the private factory-line repository, which this repository's automation cannot reach, and no standalone executable of it exists. Its 38 runs are recorded as errors, which is what makes the decision BLOCKED rather than FAIL . Run it with --incumbent-cmd from a machine that has it. - Cost is not measured : the run used claude-cli , which reports no token usage, so every cost shows 0.00. The Anthropic API provider was rejected (HTTP 401) with the credential available to the run. A cost comparison needs an API-provider run ( AGENTSKIT SHADOW PROVIDER=anthropic , AGENTSKIT SHADOW USD PER MTOK ). - \"False positives\" is an upper bound: a finding counts as false when it matches none of the bugs that were later fixed, so real defects nobody fixed are counted against the reviewer. The incumbent is scored the same way, so the comparison stays fair. - Only AgentsKit-io repositories are in the set (code-review, harness, doc-bridge); NoxCodeSolutions repositories were not reachable from this run. Dataset quality/benchmark/prs.json : 38 merged AgentsKit-io PRs, 22 buggy and 16 clean . A buggy PR is one whose merged code was later corrected by a fix PR: each bug lists file , line (in the reviewed PR's version of the file, from git blame of the lines the fix replaced), lineTolerance , a note , and fix (the fix PR number and commit that proves it was real). A clean PR is a feature PR that no later fix PR in the same repository touched (never the origin of any blamed line of a fix: commit). The set was mined from fix: commits in code-review, harness and doc-bridge; PRs are added by annotating real PRs, never by invention. The report is BLOCKED until the set has 30 PRs with both labels. Run An external reviewer command is run as <executable <owner/repo <number (no shell) and prints {\"findings\":[{\"file\",\"line\",\"title\"}],\"costUsd\":0} . Without --candidate-cmd the built-in CLI reviews each PR with --pr (needs GITHUB TOKEN ; provider keys come from the environment, never from arguments). Cost for the built-in reviewer is tokensUsed times --usd-per-mtok . Entry criterion PASS needs: at least as many real bugs found as the incumbent, strictly fewer false positives (any finding matching no known bug, and every finding on a clean PR), and cost at most 1.2x the incumbent. Any errored PR (exit 2 for a deadline or provider failure) makes the report BLOCKED . With --stage-timeout-ms <n (the time the line gives its review stage) the candidate's p90 latency, shown in the report, must also fit in it or the report is FAIL (RF-05: every PR completes, with the configuration that goes to the line, within the stage time). The exit code is 2 unless PASS . Running on the line (shadow mode) The incumbent is the review stage of the factory line ( reviewPrompt in packages/factory-line/src/prompts.ts , private repository). The comparison runs it on the line through its shadow mode ( shadow-review.ts , enabled per repository by shadowReview in line.json ), which comments and does not decide. scripts/shadow-review.mjs (also the agentskit-shadow-review bin) is the Code Review side. Shadow mode runs it with the PR's checkout as the working directory and reads the last line of stdout : {\"comment\":\"<revie",
+          "body": "Reviewer benchmark Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json ; the scoring is in src/reviewer-benchmark.ts ; the runner is scripts/run-reviewer-benchmark.mjs . Run it on every release. Status Decision on 2026-10-30: BLOCKED, so the entry criterion is not met and the factory's review stage stays on the incumbent (the switch is off; shadow mode does not start). The report is (JSON: quality/benchmark/report.json ). - Code Review ran on all 38 PRs: 27 completed, 11 ended incomplete (exit 2: deadline or provider failure; reruns are needed). On the 27 completed PRs it found 8 of the 16 known bugs and reported 118 findings matching no known bug. - The incumbent was not run : the line reviewer is the review stage of the private factory-line repository, which this repository's automation cannot reach, and no standalone executable of it exists. Its 38 runs are recorded as errors, which is what makes the decision BLOCKED rather than FAIL . Run it with --incumbent-cmd from a machine that has it. - Cost is not measured : the run used claude-cli , which reports no token usage, so every cost shows 0.00. The Anthropic API provider was rejected (HTTP 401) with the credential available to the run. A cost comparison needs an API-provider run ( AGENTSKIT SHADOW PROVIDER=anthropic , AGENTSKIT SHADOW USD PER MTOK ). - \"False positives\" is an upper bound: a finding counts as false when it matches none of the bugs that were later fixed, so real defects nobody fixed are counted against the reviewer. The incumbent is scored the same way, so the comparison stays fair. - Only AgentsKit-io repositories are in the set (code-review, harness, doc-bridge); NoxCodeSolutions repositories were not reachable from this run. Dataset quality/benchmark/prs.json : 38 merged AgentsKit-io PRs, 22 buggy and 16 clean , from the repositories where both reviewers run (code-review, harness, doc-bridge). Every PR pins commit , the 40-hex head commit that both reviewers are given. A buggy PR is one whose merged code was later corrected by a fix PR: each bug lists file , line (in the reviewed PR's version of the file, from git blame of the lines the fix replaced), lineTolerance , a note , and fix (the fix PR number and commit that proves it was real). A clean PR is a feature PR that no later fix PR in the same repository touched (never the origin of any blamed line of a fix: commit). The set was mined from fix: commits in code-review, harness and doc-bridge; PRs are added by annotating real PRs, never by invention. The report is BLOCKED until the set has 30 PRs with both labels. Run An external reviewer command is run as <executable <owner/repo <number <commit (no shell; <commit is the pinned head of the set) and prints {\"findings\":[{\"file\",\"line\",\"title\"}],\"costUsd\":0} . Without --candidate-cmd the built-in CLI reviews each PR with --pr (needs GITHUB TOKEN ; provider keys come from the environment, never from arguments). Cost for the built-in reviewer is tokensUsed times --usd-per-mtok . Same PRs, same commit, which set and version ( mvp:RF-01 ) The runner gives the incumbent and code-review exactly the PRs of the set, one after the other, and reads each PR's head from GitHub ( GITHUB TOKEN ; AGENTSKIT BENCHMARK GITHUB API overrides the API address) before and after the two runs. A head that is not the pinned commit records an error for both reviewers on that PR (the PR is not reviewed, or its result is discarded), which makes the decision BLOCKED , so neither reviewer is ever scored on a different commit than the other. The report ( set and run in the JSON, section \"Set and version\" in the Markdown) states the set path, its format version, its sha256 digest, the PR counts and repositories, the commit given for every PR, and the code-review package version and git commit that ran. The digest changes whenever a PR, label, bug or pinned commit of the set changes. The committed report.json predates this section",
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.021519,
-          "inboundLinks": 1,
+          "pagerank": 0.037722,
+          "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
-            "document:docs/for-agents/code-review.md"
+            "document:docs/for-agents/code-review.md",
+            "document:docs/reviewer-benchmark-report.md"
           ],
           "inbound": [
             {
+              "kind": "links-to",
+              "id": "document:docs/shadow-week-protocol.md",
+              "confidence": "observed"
+            },
+            {
               "kind": "mentions",
               "id": "document:docs/for-agents/code-review.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/reviewer-benchmark-report.md",
               "confidence": "observed"
             }
           ],
@@ -5956,6 +6427,11 @@
             {
               "kind": "links-to",
               "id": "document:docs/reviewer-benchmark-report.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:scripts/line-review.mjs",
               "confidence": "observed"
             },
             {
@@ -5972,10 +6448,59 @@
               "kind": "mentions",
               "id": "module:src/reviewer-benchmark.ts",
               "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "package:@agentskit/code-review",
+              "confidence": "observed"
             }
           ]
         },
-        "contentHash": "407221bc1bc54655f87bd08011861c5002e3512cc5db15614bb0573a381afaef",
+        "contentHash": "aa8f6e494901b86d193df9f62438a6894ee828c51149eb57b89e4222543c3805",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:docs/shadow-week-protocol.md",
+        "kind": "document",
+        "path": "docs/shadow-week-protocol.md",
+        "title": "Shadow week protocol",
+        "summary": "After the reviewer benchmark returns PASS, Code Review runs in shadow mode (it comments, it does not decide) next to the incumbent line reviewer for 7 consecutive days on the 2 or 3 repositories of the line with the most PRs. This page is the protocol and the offline report generator.",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "human"
+        ],
+        "fields": {
+          "title": "Shadow week protocol",
+          "headings": "Shadow week protocol Run Input Criteria",
+          "path": "docs/shadow-week-protocol.md",
+          "symbols": "",
+          "summary": "After the reviewer benchmark returns PASS, Code Review runs in shadow mode (it comments, it does not decide) next to the incumbent line reviewer for 7 consecutive days on the 2 or 3 repositories of the line with the most PRs. This page is the protocol and the offline report generator.",
+          "body": "Shadow week protocol After the returns PASS , Code Review runs in shadow mode (it comments, it does not decide) next to the incumbent line reviewer for 7 consecutive days on the 2 or 3 repositories of the line with the most PRs. This page is the protocol and the offline report generator. The real week's data and report live in the line's private repository, not here; the example in quality/shadow-week/example.json is synthetic. Run 1. Enable shadow mode ( scripts/shadow-review.mjs , see the benchmark page) on the chosen repositories. Both reviewers see every PR; neither blocks. 2. At the end of the week, for each reviewed PR classify each finding of each reviewer: fix (it became a correction in the PR or a later fix) or false-alarm . Record the tokens each reviewer used. 3. Write one JSON file and render the report: Input One usdPerMtok applies to both reviewers: cost is counted from tokens with the same price table. Every finding must be classified. Criteria Same three as the benchmark, on the week's totals: fixes at least the incumbent's, strictly fewer false alarms, cost at most 1.2x. The report is BLOCKED when the data spans fewer than 7 days or does not cover 2 or 3 repositories. The exit code is 2 unless PASS . The report lists, per PR, each reviewer's fixes, false alarms, tokens and cost. Requirement: mvp:RF-08 .",
+          "aliases": "document human"
+        },
+        "graph": {
+          "pagerank": 0.020391,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "links-to",
+              "id": "document:docs/reviewer-benchmark.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:scripts/shadow-review.mjs",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "c4cae949541bae1e8e8f6908fcc88f78e17dd752eaf404c4bdde7857c6bff2e8",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6000,7 +6525,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.039905,
+          "pagerank": 0.037811,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -6089,7 +6614,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.021519,
+          "pagerank": 0.020391,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -6221,7 +6746,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.030216,
+          "pagerank": 0.028631,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -6295,7 +6820,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.047175,
+          "pagerank": 0.044701,
           "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [
@@ -8073,6 +8598,43 @@
         "confidence": "observed"
       },
       {
+        "id": "module:scripts/incumbent-review.mjs",
+        "kind": "module",
+        "path": "scripts/incumbent-review.mjs",
+        "title": "incumbent-review.mjs",
+        "aliases": [],
+        "symbols": [
+          "extractJson"
+        ],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "incumbent-review.mjs",
+          "headings": "",
+          "path": "scripts/incumbent-review.mjs",
+          "symbols": "extractJson",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:scripts",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "dfde8c2076f24cc121aabb4f59e0a0c8bf54fcbaf5f48d0d4660f1da8b94dd28",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:scripts/lib/readme-standard.mjs",
         "kind": "module",
         "path": "scripts/lib/readme-standard.mjs",
@@ -8123,6 +8685,60 @@
           "outbound": []
         },
         "contentHash": "4420f7e52b2072201e6363cd9724df1f3ee3ccc0ccf48943dd3a0c853eef52fe",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:scripts/line-review.mjs",
+        "kind": "module",
+        "path": "scripts/line-review.mjs",
+        "title": "line-review.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "line-review.mjs",
+          "headings": "",
+          "path": "scripts/line-review.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 2,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:docs/for-agents/code-review.md",
+            "document:docs/reviewer-benchmark.md"
+          ],
+          "areaId": "area:scripts",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:docs/for-agents/code-review.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/reviewer-benchmark.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:scripts/reviewer-run.mjs",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "15032bb93e8f1de4f8c6b3e57e9fe177d514b307d274c3b98a9dbe2a1de9d190",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -8204,6 +8820,40 @@
           ]
         },
         "contentHash": "6492825828a01eb5ed0671a003a633f90a724b444ebdf3568d5444a60d336818",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:scripts/render-shadow-week-report.mjs",
+        "kind": "module",
+        "path": "scripts/render-shadow-week-report.mjs",
+        "title": "render-shadow-week-report.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "render-shadow-week-report.mjs",
+          "headings": "",
+          "path": "scripts/render-shadow-week-report.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:scripts",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "dd1476ccc92ba4ddfbc216c14b5d47078aae35b38cd560a5848d361d3d508324",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -8338,6 +8988,63 @@
         "confidence": "observed"
       },
       {
+        "id": "module:scripts/reviewer-run.mjs",
+        "kind": "module",
+        "path": "scripts/reviewer-run.mjs",
+        "title": "reviewer-run.mjs",
+        "aliases": [],
+        "symbols": [
+          "isPrReference",
+          "packageRoot",
+          "runReview"
+        ],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "reviewer-run.mjs",
+          "headings": "",
+          "path": "scripts/reviewer-run.mjs",
+          "symbols": "isPrReference packageRoot runReview",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 1,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:docs/for-agents/code-review.md"
+          ],
+          "areaId": "area:scripts",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "imports",
+              "id": "module:scripts/line-review.mjs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
+              "id": "module:scripts/shadow-review.mjs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/for-agents/code-review.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "3b9923f7a012fd70eeb115b876040cd5a19ba0dd4a61a84afa9ec8d65213a0d5",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:scripts/run-cycle-benchmark.mjs",
         "kind": "module",
         "path": "scripts/run-cycle-benchmark.mjs",
@@ -8455,7 +9162,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "b308877ce2755a4cd5ff67dd97ef8f444a9acd2824e877e8a1a039e68a307bc3",
+        "contentHash": "4cd88abab6359b867736002e9d13576865650ea6e2c3d0d3d4d65d68a4a734af",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -8481,10 +9188,11 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 1,
+          "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
-            "document:docs/reviewer-benchmark.md"
+            "document:docs/reviewer-benchmark.md",
+            "document:docs/shadow-week-protocol.md"
           ],
           "areaId": "area:scripts",
           "packageId": "package:@agentskit/code-review",
@@ -8493,11 +9201,22 @@
               "kind": "mentions",
               "id": "document:docs/reviewer-benchmark.md",
               "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/shadow-week-protocol.md",
+              "confidence": "observed"
             }
           ],
-          "outbound": []
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:scripts/reviewer-run.mjs",
+              "confidence": "observed"
+            }
+          ]
         },
-        "contentHash": "4f7872fbe89bf862fe22bdb5cb9f068e94d81e3fc3b061607435cc51ba4c8d74",
+        "contentHash": "17317bb0f01eb10446c7e9504bc4ed91ad4f2ab180376928afdd9d18685f2998",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -10656,6 +11375,58 @@
         "confidence": "observed"
       },
       {
+        "id": "module:src/line-reviewer.ts",
+        "kind": "module",
+        "path": "src/line-reviewer.ts",
+        "title": "line-reviewer.ts",
+        "aliases": [],
+        "symbols": [
+          "LINE_DECISION_EXIT",
+          "LineDecision",
+          "LineFailurePolicy",
+          "LineReviewDecision",
+          "LineReviewInput",
+          "LineReviewResult",
+          "decideLineReview",
+          "incompleteReason",
+          "parseLineFailurePolicy"
+        ],
+        "tags": [
+          "module",
+          "ts",
+          "src"
+        ],
+        "fields": {
+          "title": "line-reviewer.ts",
+          "headings": "",
+          "path": "src/line-reviewer.ts",
+          "symbols": "LINE_DECISION_EXIT LineDecision LineFailurePolicy LineReviewDecision LineReviewInput LineReviewResult decideLineReview incompleteReason parseLineFailurePolicy",
+          "summary": "",
+          "body": "",
+          "aliases": "module ts src"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 1,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:docs/for-agents/code-review.md"
+          ],
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:docs/for-agents/code-review.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "816acdbbf543f32cba9b3653f14bf48064dcecf7bf707e2fd9ebfa4b27052603",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:src/local-cli-process.ts",
         "kind": "module",
         "path": "src/local-cli-process.ts",
@@ -11963,6 +12734,8 @@
           "BenchmarkOptions",
           "BenchmarkPr",
           "BenchmarkReport",
+          "BenchmarkRunInfo",
+          "BenchmarkSetInfo",
           "KnownBug",
           "MAX_COST_RATIO",
           "MIN_BENCHMARK_PRS",
@@ -11971,9 +12744,11 @@
           "ReviewerRun",
           "ReviewerSummary",
           "bugMatches",
+          "describeBenchmarkSet",
           "evaluateBenchmark",
           "parseBenchmarkDataset",
           "percentile",
+          "pinnedCommitError",
           "renderBenchmarkMarkdown",
           "scorePr",
           "summarizeReviewer"
@@ -11987,21 +12762,27 @@
           "title": "reviewer-benchmark.ts",
           "headings": "",
           "path": "src/reviewer-benchmark.ts",
-          "symbols": "BenchmarkDataset BenchmarkDecision BenchmarkOptions BenchmarkPr BenchmarkReport KnownBug MAX_COST_RATIO MIN_BENCHMARK_PRS PrScore ReviewerFinding ReviewerRun ReviewerSummary bugMatches evaluateBenchmark parseBenchmarkDataset percentile renderBenchmarkMarkdown scorePr summarizeReviewer",
+          "symbols": "BenchmarkDataset BenchmarkDecision BenchmarkOptions BenchmarkPr BenchmarkReport BenchmarkRunInfo BenchmarkSetInfo KnownBug MAX_COST_RATIO MIN_BENCHMARK_PRS PrScore ReviewerFinding ReviewerRun ReviewerSummary bugMatches describeBenchmarkSet evaluateBenchmark parseBenchmarkDataset percentile pinnedCommitError renderBenchmarkMarkdown scorePr summarizeReviewer",
           "summary": "",
           "body": "",
           "aliases": "module ts src"
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 2,
+          "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
             "document:docs/for-agents/code-review.md",
+            "document:docs/reviewer-benchmark-report.md",
             "document:docs/reviewer-benchmark.md"
           ],
           "packageId": "package:@agentskit/code-review",
           "inbound": [
+            {
+              "kind": "imports",
+              "id": "module:src/shadow-week.ts",
+              "confidence": "observed"
+            },
             {
               "kind": "mentions",
               "id": "document:docs/for-agents/code-review.md",
@@ -12009,13 +12790,23 @@
             },
             {
               "kind": "mentions",
+              "id": "document:docs/reviewer-benchmark-report.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
               "id": "document:docs/reviewer-benchmark.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "document:docs/reviewer-benchmark-report.md",
               "confidence": "observed"
             }
           ],
           "outbound": []
         },
-        "contentHash": "98225e069f6da5252ae492ec17fe29e24085888abb7efb5336fa803b1d089378",
+        "contentHash": "b1d2dbe1eebf40ef3ceb06bb16be11a72c3f554a4bb156ddeac915e03d01d3f1",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -12142,6 +12933,64 @@
           "outbound": []
         },
         "contentHash": "b13b2860d25036f9c862843727c17624007b8b7f807fdcfd5fec62f8dd19838c",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:src/shadow-week.ts",
+        "kind": "module",
+        "path": "src/shadow-week.ts",
+        "title": "shadow-week.ts",
+        "aliases": [],
+        "symbols": [
+          "MAX_SHADOW_REPOSITORIES",
+          "MIN_SHADOW_DAYS",
+          "MIN_SHADOW_REPOSITORIES",
+          "SHADOW_REVIEWERS",
+          "ShadowDecision",
+          "ShadowFinding",
+          "ShadowPr",
+          "ShadowPrScore",
+          "ShadowReviewerName",
+          "ShadowReviewerRun",
+          "ShadowReviewerTotals",
+          "ShadowVerdict",
+          "ShadowWeekData",
+          "ShadowWeekReport",
+          "evaluateShadowWeek",
+          "parseShadowWeekData",
+          "renderShadowWeekMarkdown"
+        ],
+        "tags": [
+          "module",
+          "ts",
+          "src"
+        ],
+        "fields": {
+          "title": "shadow-week.ts",
+          "headings": "",
+          "path": "src/shadow-week.ts",
+          "symbols": "MAX_SHADOW_REPOSITORIES MIN_SHADOW_DAYS MIN_SHADOW_REPOSITORIES SHADOW_REVIEWERS ShadowDecision ShadowFinding ShadowPr ShadowPrScore ShadowReviewerName ShadowReviewerRun ShadowReviewerTotals ShadowVerdict ShadowWeekData ShadowWeekReport evaluateShadowWeek parseShadowWeekData renderShadowWeekMarkdown",
+          "summary": "",
+          "body": "",
+          "aliases": "module ts src"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:src/reviewer-benchmark.ts",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "9f2380c1dfbff3427ab69761597a14a6c55bb7e695984b407f83e2bcfb49c7b6",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13290,6 +14139,74 @@
         "confidence": "observed"
       },
       {
+        "id": "module:test/incumbent-review.test.mjs",
+        "kind": "module",
+        "path": "test/incumbent-review.test.mjs",
+        "title": "incumbent-review.test.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "test"
+        ],
+        "fields": {
+          "title": "incumbent-review.test.mjs",
+          "headings": "",
+          "path": "test/incumbent-review.test.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs test"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:test",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "5e6136ecc199fa710fc3d551aee0252a9f33af7b69b6d98f1a653e24f28afac6",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:test/line-review.test.mjs",
+        "kind": "module",
+        "path": "test/line-review.test.mjs",
+        "title": "line-review.test.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "test"
+        ],
+        "fields": {
+          "title": "line-review.test.mjs",
+          "headings": "",
+          "path": "test/line-review.test.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs test"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:test",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "62402692b086126f0b167743e0d156b8825d9e5453a93f832dcdf289a8e0371f",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:test/local-cli-process.test.mjs",
         "kind": "module",
         "path": "test/local-cli-process.test.mjs",
@@ -14123,7 +15040,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "cad77b856fed3cf8b79fd2294e13100acda8c9b9d5f11baab1f684730ec7dcb8",
+        "contentHash": "7e3431c138545f6972eb7dde0598cfb08de330ad15a7189c2fe1725af9fba62a",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -14298,6 +15215,40 @@
         "confidence": "observed"
       },
       {
+        "id": "module:test/shadow-week.test.mjs",
+        "kind": "module",
+        "path": "test/shadow-week.test.mjs",
+        "title": "shadow-week.test.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "test"
+        ],
+        "fields": {
+          "title": "shadow-week.test.mjs",
+          "headings": "",
+          "path": "test/shadow-week.test.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs test"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:test",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "4578d9881ee7abd69a4c549ce18d5dbad0afcc53ef71ee8684d09afc71a880e2",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:test/sources-context.test.mjs",
         "kind": "module",
         "path": "test/sources-context.test.mjs",
@@ -14462,12 +15413,12 @@
           "path": ".",
           "symbols": "",
           "summary": "Provider-neutral local and GitHub code review CLI, Action, reporters, Fumadocs site, and repository documentation.",
-          "body": "Code Review CLI handoff Purpose Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and GitHub pull requests. Bounded diff-first context packs run one multidimensional analysis; adversarial votes remove weak findings; reporters emit Markdown, GitHub reviews, and SARIF. Ownership map - src/cli.ts : public flags, source selection, provider selection, exit policy. - src/campaign-reducer.ts and src/campaign-store.ts : deterministic lifecycle, atomic checkpoints, leases, replay, and resume. - src/campaign-preflight.ts : provider-free campaign discovery, eligibility, source planning, budget checks, and worktree gating. - src/batch-mode.ts : shared measured batching, including single-file context-pack partitioning (ADR-0006); preserve pack identity in artifacts, cache keys, and consolidation. - src/budget.ts : provider-free hierarchical budget compilation, reservations, and dimension-aware usage accounting. - src/review-stores.ts : separate self-hosted feedback and approved-knowledge stores with bounded schemas, atomic writes, retention, concurrent-write serialization, and the scoped AgentsKit Retriever . - src/review-feedback.ts : deterministic feedback reconciliation, resumable checkpoints, metrics, and inactive candidate-rule evidence. - src/campaign-runner.ts and scripts/review-campaign.mjs : bounded multi-PR execution, leased atomic checkpoints, resume, per-PR isolation, and deterministic terminal reporting. - src/quality-matrix.ts : run and campaign quality scoring, evidence separation, cost/time accounting, and baseline regression gates. evaluateCampaignQuality() must be used when aggregating campaign outcomes. - src/<provider -adapter.ts : logged-in local CLI adapters. - src/provider-registry.ts : validated provider capabilities and conservative execution policy around AgentsKit adapters. - src/provider-execution.ts : typed provider failures, bounded retry delay, adaptive concurrency, and cancellation-aware queueing. - src/scm-contract.ts : provider-neutral change-request, publication, readiness, and merge contracts plus explicit capability checks. - src/github-scm-adapter.ts : GitHub REST/CLI binding for the common SCM contract; the only migrated path allowed to contain GitHub payloads or merge commands. - agents/ : the vendored review agent in agents/code-review/ : review pipeline, lenses, input normalization, reporters. - agents/code-review/risk.ts : provider-free context-pack risk signals and specialized-depth selection. - action.yml : composite GitHub Action contract. - .github/workflows/release.yml : Changesets version-pull-request workflow. - .github/workflows/publish.yml : version-PR-gated npm Trusted Publishing and GitHub Release workflow. - examples/ : copy-ready Action workflows. - README.md and docs/OPERATIONS.md : public adoption and operations guidance. - ecosystem.json , llms.txt , and llms-full.txt : canonical product graph and machine-readable discovery/full-corpus surfaces. - src/reviewer-benchmark.ts , scripts/run-reviewer-benchmark.mjs , quality/benchmark/prs.json : labelled-PR benchmark and entry criterion against the incumbent line reviewer ( docs/reviewer-benchmark.md ). - test/ : credential-free CLI, Action, and documentation contract proofs. - scripts/ : Node entry points for the package scripts (review cycle, campaign, harness, quality matrix and baseline, fault injection, cycle benchmark, public-API snapshot, README Standard, llms-full.txt generation) and the standalone ecosystem public-output check. Boundaries - Depend on AgentsKit adapter/runtime/tool contracts; do not create a second model abstraction. - Preserve provider neutrality and advisory-by-default Action behavior. - Never expose provider keys in arguments, docs fixtures, logs, or PR output. - The Fumadocs site provides curated documentation only; the product runtime remains the CLI and GitHub Action. Do not add an embedded AgentsKit Chat runtime here. - The vendored review agent tracks the AgentsKit Registry sour",
+          "body": "Code Review CLI handoff Purpose Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and GitHub pull requests. Bounded diff-first context packs run one multidimensional analysis; adversarial votes remove weak findings; reporters emit Markdown, GitHub reviews, and SARIF. Ownership map - src/cli.ts : public flags, source selection, provider selection, exit policy. - src/campaign-reducer.ts and src/campaign-store.ts : deterministic lifecycle, atomic checkpoints, leases, replay, and resume. - src/campaign-preflight.ts : provider-free campaign discovery, eligibility, source planning, budget checks, and worktree gating. - src/batch-mode.ts : shared measured batching, including single-file context-pack partitioning (ADR-0006); preserve pack identity in artifacts, cache keys, and consolidation. - src/budget.ts : provider-free hierarchical budget compilation, reservations, and dimension-aware usage accounting. - src/review-stores.ts : separate self-hosted feedback and approved-knowledge stores with bounded schemas, atomic writes, retention, concurrent-write serialization, and the scoped AgentsKit Retriever . - src/review-feedback.ts : deterministic feedback reconciliation, resumable checkpoints, metrics, and inactive candidate-rule evidence. - src/campaign-runner.ts and scripts/review-campaign.mjs : bounded multi-PR execution, leased atomic checkpoints, resume, per-PR isolation, and deterministic terminal reporting. - src/quality-matrix.ts : run and campaign quality scoring, evidence separation, cost/time accounting, and baseline regression gates. evaluateCampaignQuality() must be used when aggregating campaign outcomes. - src/<provider -adapter.ts : logged-in local CLI adapters. - src/provider-registry.ts : validated provider capabilities and conservative execution policy around AgentsKit adapters. - src/provider-execution.ts : typed provider failures, bounded retry delay, adaptive concurrency, and cancellation-aware queueing. - src/scm-contract.ts : provider-neutral change-request, publication, readiness, and merge contracts plus explicit capability checks. - src/github-scm-adapter.ts : GitHub REST/CLI binding for the common SCM contract; the only migrated path allowed to contain GitHub payloads or merge commands. - agents/ : the vendored review agent in agents/code-review/ : review pipeline, lenses, input normalization, reporters. - agents/code-review/risk.ts : provider-free context-pack risk signals and specialized-depth selection. - action.yml : composite GitHub Action contract. - .github/workflows/release.yml : Changesets version-pull-request workflow. - .github/workflows/publish.yml : version-PR-gated npm Trusted Publishing and GitHub Release workflow. - examples/ : copy-ready Action workflows. - README.md and docs/OPERATIONS.md : public adoption and operations guidance. - ecosystem.json , llms.txt , and llms-full.txt : canonical product graph and machine-readable discovery/full-corpus surfaces. - src/reviewer-benchmark.ts , scripts/run-reviewer-benchmark.mjs , quality/benchmark/prs.json : labelled-PR benchmark and entry criterion against the incumbent line reviewer ( docs/reviewer-benchmark.md ). - src/line-reviewer.ts , scripts/line-review.mjs (bin agentskit-line-review ), scripts/reviewer-run.mjs : fail-closed decision of the factory line's review stage (RF-10); it decides only after a benchmark PASS , and a failed or incomplete review falls back to the incumbent or blocks, never approves ( docs/reviewer-benchmark.md ). - test/ : credential-free CLI, Action, and documentation contract proofs. - scripts/ : Node entry points for the package scripts (review cycle, campaign, harness, quality matrix and baseline, fault injection, cycle benchmark, public-API snapshot, README Standard, llms-full.txt generation) and the standalone ecosystem public-output check. Boundaries - Depend on AgentsKit adapter/runtime/tool contracts; do not create a second model abstraction. - Preserve provider neutrality and advisory-",
           "aliases": "code-review @agentskit/code-review package ownership"
         },
         "graph": {
-          "pagerank": 0.086008,
-          "inboundLinks": 6,
+          "pagerank": 0.081501,
+          "inboundLinks": 7,
           "coveredBy": [
             "document:docs/for-agents/code-review.md"
           ],
@@ -14475,6 +15426,7 @@
             "document:CHANGELOG.md",
             "document:docs/getting-started.md",
             "document:docs/OPERATIONS.md",
+            "document:docs/reviewer-benchmark.md",
             "document:README.md",
             "document:ROADMAP.md"
           ],
@@ -14502,6 +15454,11 @@
             },
             {
               "kind": "mentions",
+              "id": "document:docs/reviewer-benchmark.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
               "id": "document:README.md",
               "confidence": "observed"
             },
@@ -14513,7 +15470,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "27659fca82a4b51853483b3fb7d392e077080e3a43330129659ddf13007ebf51",
+        "contentHash": "1157283c4734ef8c130c80b7fdbf24959916a8e00e468bb28362510ebf9ca9af",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
