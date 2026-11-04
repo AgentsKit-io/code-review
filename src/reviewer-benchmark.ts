@@ -51,8 +51,15 @@ export interface ReviewerSummary {
   falsePositives: number
   costUsd: number
   meanLatencyMs: number
+  /** Nearest-rank 90th percentile of the per-PR latency. */
+  p90LatencyMs: number
   erroredPrs: number
   perPr: PrScore[]
+}
+
+export interface BenchmarkOptions {
+  /** Time the line gives its review stage; when set, the candidate p90 latency must fit in it (RF-05). */
+  stageTimeoutMs?: number
 }
 
 export type BenchmarkDecision = 'PASS' | 'FAIL' | 'BLOCKED'
@@ -145,6 +152,12 @@ export function scorePr(pr: BenchmarkPr, run: ReviewerRun): PrScore {
   return { id: pr.id, bugsFound: found.size, bugsKnown: pr.bugs.length, falsePositives, costUsd: run.costUsd, latencyMs: run.latencyMs, ...(run.error ? { error: run.error } : {}) }
 }
 
+export function percentile(values: number[], p: number): number {
+  if (!values.length) return 0
+  const sorted = [...values].sort((a, b) => a - b)
+  return sorted[Math.max(0, Math.ceil((p / 100) * sorted.length) - 1)]
+}
+
 export function summarizeReviewer(name: string, dataset: BenchmarkDataset, runs: Record<string, ReviewerRun>): ReviewerSummary {
   const perPr = dataset.prs.map((pr) => scorePr(pr, runs[pr.id] ?? { findings: [], costUsd: 0, latencyMs: 0, error: 'no run recorded' }))
   const sum = (pick: (score: PrScore) => number) => perPr.reduce((total, score) => total + pick(score), 0)
@@ -155,15 +168,16 @@ export function summarizeReviewer(name: string, dataset: BenchmarkDataset, runs:
     falsePositives: sum((s) => s.falsePositives),
     costUsd: sum((s) => s.costUsd),
     meanLatencyMs: perPr.length ? Math.round(sum((s) => s.latencyMs) / perPr.length) : 0,
+    p90LatencyMs: percentile(perPr.map((s) => s.latencyMs), 90),
     erroredPrs: perPr.filter((s) => s.error).length,
     perPr,
   }
 }
 
 /** Entry criterion: at least as many real bugs, strictly fewer false positives, cost at most 20% higher. */
-export function evaluateBenchmark(dataset: BenchmarkDataset, incumbentRuns: Record<string, ReviewerRun>, candidateRuns: Record<string, ReviewerRun>, provenance: { setPath?: string; run?: BenchmarkRunInfo } = {}): BenchmarkReport {
-  const set = describeBenchmarkSet(dataset, provenance.setPath)
-  const base = { set, ...(provenance.run ? { run: provenance.run } : {}) }
+export function evaluateBenchmark(dataset: BenchmarkDataset, incumbentRuns: Record<string, ReviewerRun>, candidateRuns: Record<string, ReviewerRun>, options: BenchmarkOptions & { setPath?: string; run?: BenchmarkRunInfo } = {}): BenchmarkReport {
+  const set = describeBenchmarkSet(dataset, options.setPath)
+  const base = { set, ...(options.run ? { run: options.run } : {}) }
   const incumbent = summarizeReviewer('incumbent', dataset, incumbentRuns)
   const candidate = summarizeReviewer('code-review', dataset, candidateRuns)
   const blocked: string[] = []
@@ -176,6 +190,7 @@ export function evaluateBenchmark(dataset: BenchmarkDataset, incumbentRuns: Reco
   if (candidate.bugsFound < incumbent.bugsFound) failures.push(`bugs found ${candidate.bugsFound} < incumbent ${incumbent.bugsFound}`)
   if (candidate.falsePositives >= incumbent.falsePositives) failures.push(`false positives ${candidate.falsePositives} are not fewer than incumbent ${incumbent.falsePositives}`)
   if (candidate.costUsd > incumbent.costUsd * MAX_COST_RATIO) failures.push(`cost $${candidate.costUsd.toFixed(2)} exceeds ${MAX_COST_RATIO}x incumbent $${incumbent.costUsd.toFixed(2)}`)
+  if (options.stageTimeoutMs !== undefined && candidate.p90LatencyMs > options.stageTimeoutMs) failures.push(`p90 latency ${candidate.p90LatencyMs}ms exceeds the review-stage time ${options.stageTimeoutMs}ms`)
   return { decision: failures.length ? 'FAIL' : 'PASS', reasons: failures, ...base, incumbent, candidate }
 }
 
@@ -213,9 +228,9 @@ export function renderBenchmarkMarkdown(report: BenchmarkReport): string {
     '',
     '## Totals',
     '',
-    '| Reviewer | Bugs found | False positives | Cost (US$) | Mean latency (ms) | Errored PRs |',
+    '| Reviewer | Bugs found | False positives | Cost (US$) | Mean latency (ms) | p90 latency (ms) | Errored PRs |',
     '| --- | --- | --- | --- | --- | --- |',
-    ...[incumbent, candidate].map((s) => `| ${s.name} | ${s.bugsFound}/${s.bugsKnown} | ${s.falsePositives} | ${s.costUsd.toFixed(2)} | ${s.meanLatencyMs} | ${s.erroredPrs} |`),
+    ...[incumbent, candidate].map((s) => `| ${s.name} | ${s.bugsFound}/${s.bugsKnown} | ${s.falsePositives} | ${s.costUsd.toFixed(2)} | ${s.meanLatencyMs} | ${s.p90LatencyMs} | ${s.erroredPrs} |`),
     '',
     '## Per PR',
     '',

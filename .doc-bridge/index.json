@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "f8e1e6bf73955afaefc4cb12f5d4ff52285016de7477657702ca7aee272c831d",
+  "contentHash": "4de7c6c021f83fb94599f7252268aeb3ff8d9298540b375643c137715ce3c1d4",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-03T21:19:05.768Z",
+  "generatedAt": "2026-11-04T00:10:52.648Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -81,6 +81,18 @@
         "unclassified"
       ],
       "contentHash": "115a4320a4c9f1805c63518fa232e6dc1bc0fb80f6d915cfca5c797c80729c21"
+    },
+    {
+      "id": "document:.changeset/rf05-p90-latency.md",
+      "type": "document",
+      "title": "rf05-p90-latency.md",
+      "path": ".changeset/rf05-p90-latency.md",
+      "description": "Reviewer benchmark: report p90 latency and accept --stage-timeout-ms so the candidate must finish every PR within the line's review-stage time (RF-05).",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "eb326e8e60cc087b411cbb3e490dc96783c6cb40d371d43688b3832644d61168"
     },
     {
       "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
@@ -488,7 +500,7 @@
         "document",
         "human"
       ],
-      "contentHash": "42266f729b4b3012a63a80033b4dfe50d4bed8bfe1b37040daaf41b08b92aecc"
+      "contentHash": "aa8f6e494901b86d193df9f62438a6894ee828c51149eb57b89e4222543c3805"
     },
     {
       "id": "document:docs/shadow-week-protocol.md",
@@ -1281,7 +1293,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "30220ea30c6411aac79b0361c301d4f80cbfa0393be9e81ff9a536c8bf5ea6d0"
+      "contentHash": "4cd88abab6359b867736002e9d13576865650ea6e2c3d0d3d4d65d68a4a734af"
     },
     {
       "id": "module:scripts/shadow-review.mjs",
@@ -2411,6 +2423,7 @@
       "symbols": [
         "BenchmarkDataset",
         "BenchmarkDecision",
+        "BenchmarkOptions",
         "BenchmarkPr",
         "BenchmarkReport",
         "BenchmarkRunInfo",
@@ -2426,6 +2439,7 @@
         "describeBenchmarkSet",
         "evaluateBenchmark",
         "parseBenchmarkDataset",
+        "percentile",
         "pinnedCommitError",
         "renderBenchmarkMarkdown",
         "scorePr",
@@ -2436,7 +2450,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "98416258f2abf07d42eccf2a8c1c05ebe3b7a34d46ad96fd51488708f33ed09d"
+      "contentHash": "b1d2dbe1eebf40ef3ceb06bb16be11a72c3f554a4bb156ddeac915e03d01d3f1"
     },
     {
       "id": "module:src/scm-contract.ts",
@@ -3200,7 +3214,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "1a8dfa21a7b37e1c38a646afcad40be14c2d52681831b2c572af8f0f73c8bded"
+      "contentHash": "7e3431c138545f6972eb7dde0598cfb08de330ad15a7189c2fe1725af9fba62a"
     },
     {
       "id": "module:test/risk-depth.test.mjs",
@@ -3394,8 +3408,8 @@
     }
   },
   "inputs": {
-    "hash": "7312560bab8532a929b9f7312dfcb5aec05050bd34be4c561ba1674fb4f39302",
-    "fileCount": 230,
+    "hash": "04f39ff4bebf1eab4fa4b3edfaf0fa2babfd151a9eb0bb5d584468b2ce390b29",
+    "fileCount": 231,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3417,9 +3431,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "a28b1f48a02b763219b5f0e73cfff3f11f4f8518342ccef76124cac96f541a1e",
+    "contentHash": "d0015cb26ae87712d72002e89c1d20303a30a0be0ed84f999417f1e0b3f1a7fc",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "a01390d4372bd6249ce56033599b95cacf7a98cd1cab8998f13fb23b09f8196e",
+    "snapshotHash": "c7e351a85ecbfbba129897f5d5ae94d9497b674358f78e8b643516898407db45",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3439,7 +3453,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 211,
+      "documentCount": 212,
       "fieldNames": [
         "aliases",
         "body",
@@ -3450,13 +3464,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8720379146919433,
-        "body": 52.69668246445497,
-        "headings": 3.6066350710900474,
-        "path": 5.601895734597156,
-        "summary": 3.6872037914691944,
-        "symbols": 13.19431279620853,
-        "title": 4.260663507109005
+        "aliases": 2.8679245283018866,
+        "body": 52.556603773584904,
+        "headings": 3.589622641509434,
+        "path": 5.60377358490566,
+        "summary": 3.7783018867924527,
+        "symbols": 13.150943396226415,
+        "title": 4.264150943396227
       }
     },
     "entries": [
@@ -3863,6 +3877,38 @@
           "outbound": []
         },
         "contentHash": "115a4320a4c9f1805c63518fa232e6dc1bc0fb80f6d915cfca5c797c80729c21",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:.changeset/rf05-p90-latency.md",
+        "kind": "document",
+        "path": ".changeset/rf05-p90-latency.md",
+        "title": "rf05-p90-latency.md",
+        "summary": "Reviewer benchmark: report p90 latency and accept --stage-timeout-ms so the candidate must finish every PR within the line's review-stage time (RF-05).",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "rf05-p90-latency.md",
+          "headings": "",
+          "path": ".changeset/rf05-p90-latency.md",
+          "symbols": "",
+          "summary": "Reviewer benchmark: report p90 latency and accept --stage-timeout-ms so the candidate must finish every PR within the line's review-stage time (RF-05).",
+          "body": "Reviewer benchmark: report p90 latency and accept --stage-timeout-ms so the candidate must finish every PR within the line's review-stage time (RF-05).",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "eb326e8e60cc087b411cbb3e490dc96783c6cb40d371d43688b3832644d61168",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6410,7 +6456,7 @@
             }
           ]
         },
-        "contentHash": "42266f729b4b3012a63a80033b4dfe50d4bed8bfe1b37040daaf41b08b92aecc",
+        "contentHash": "aa8f6e494901b86d193df9f62438a6894ee828c51149eb57b89e4222543c3805",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -9116,7 +9162,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "30220ea30c6411aac79b0361c301d4f80cbfa0393be9e81ff9a536c8bf5ea6d0",
+        "contentHash": "4cd88abab6359b867736002e9d13576865650ea6e2c3d0d3d4d65d68a4a734af",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -12685,6 +12731,7 @@
         "symbols": [
           "BenchmarkDataset",
           "BenchmarkDecision",
+          "BenchmarkOptions",
           "BenchmarkPr",
           "BenchmarkReport",
           "BenchmarkRunInfo",
@@ -12700,6 +12747,7 @@
           "describeBenchmarkSet",
           "evaluateBenchmark",
           "parseBenchmarkDataset",
+          "percentile",
           "pinnedCommitError",
           "renderBenchmarkMarkdown",
           "scorePr",
@@ -12714,7 +12762,7 @@
           "title": "reviewer-benchmark.ts",
           "headings": "",
           "path": "src/reviewer-benchmark.ts",
-          "symbols": "BenchmarkDataset BenchmarkDecision BenchmarkPr BenchmarkReport BenchmarkRunInfo BenchmarkSetInfo KnownBug MAX_COST_RATIO MIN_BENCHMARK_PRS PrScore ReviewerFinding ReviewerRun ReviewerSummary bugMatches describeBenchmarkSet evaluateBenchmark parseBenchmarkDataset pinnedCommitError renderBenchmarkMarkdown scorePr summarizeReviewer",
+          "symbols": "BenchmarkDataset BenchmarkDecision BenchmarkOptions BenchmarkPr BenchmarkReport BenchmarkRunInfo BenchmarkSetInfo KnownBug MAX_COST_RATIO MIN_BENCHMARK_PRS PrScore ReviewerFinding ReviewerRun ReviewerSummary bugMatches describeBenchmarkSet evaluateBenchmark parseBenchmarkDataset percentile pinnedCommitError renderBenchmarkMarkdown scorePr summarizeReviewer",
           "summary": "",
           "body": "",
           "aliases": "module ts src"
@@ -12758,7 +12806,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "98416258f2abf07d42eccf2a8c1c05ebe3b7a34d46ad96fd51488708f33ed09d",
+        "contentHash": "b1d2dbe1eebf40ef3ceb06bb16be11a72c3f554a4bb156ddeac915e03d01d3f1",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -14992,7 +15040,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "1a8dfa21a7b37e1c38a646afcad40be14c2d52681831b2c572af8f0f73c8bded",
+        "contentHash": "7e3431c138545f6972eb7dde0598cfb08de330ad15a7189c2fe1725af9fba62a",
         "provenance": "observed",
         "confidence": "observed"
       },

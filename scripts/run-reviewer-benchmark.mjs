@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Runs the incumbent line reviewer and code-review over quality/benchmark/prs.json and applies the entry criterion.
 //   node scripts/run-reviewer-benchmark.mjs --incumbent-cmd <executable> [--provider <p> --model <m> --usd-per-mtok <n>]
-//     [--candidate-cmd <executable>] [--concurrency <n>] [--dataset <file>] [--output <report.json>] [--markdown <report.md>]
+//     [--candidate-cmd <executable>] [--concurrency <n>] [--stage-timeout-ms <n>] [--dataset <file>] [--output <report.json>] [--markdown <report.md>]
 // A reviewer command is run as `<executable> <owner/repo> <number> <commit>` (no shell; <commit> is the pinned head
 // of the PR in the set, the same for both reviewers) and must print
 // {"findings":[{"file","line","title"}],"costUsd":0} on stdout. Without --candidate-cmd the built-in CLI is used.
@@ -101,7 +101,7 @@ try {
   const packageVersion = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).version
   const git = await runCommand('git', ['rev-parse', 'HEAD'], { cwd: root, timeoutMs: 10_000 }).catch(() => undefined)
   const gitCommit = git?.code === 0 ? git.stdout.trim() : undefined
-  const report = evaluateBenchmark(dataset, incumbentRuns, candidateRuns, { setPath, run: { codeReviewVersion: packageVersion, ...(gitCommit ? { gitCommit } : {}) } })
+  const report = evaluateBenchmark(dataset, incumbentRuns, candidateRuns, { ...(value('stage-timeout-ms') ? { stageTimeoutMs: Number(value('stage-timeout-ms')) } : {}), setPath, run: { codeReviewVersion: packageVersion, ...(gitCommit ? { gitCommit } : {}) } })
   if (value('output')) writeFileSync(resolve(value('output')), `${JSON.stringify(report, null, 2)}\n`, { mode: 0o600 })
   const markdown = renderBenchmarkMarkdown(report)
   if (value('markdown')) writeFileSync(resolve(value('markdown')), markdown)
