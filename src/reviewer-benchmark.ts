@@ -81,6 +81,10 @@ const SECRET_PATTERNS: RegExp[] = [
 ]
 const SECRET_ASSIGNMENT = /\b([A-Za-z0-9_.-]*(?:key|token|secret|password|passwd|authorization)[A-Za-z0-9_.-]*)(\s*[=:]\s*)("[^"]*"|'[^']*'|\S+)/gi
 
+function mdCell(text: string): string {
+  return text.replace(/\\/g, '\\\\').replace(/\|/g, '\\|')
+}
+
 /** Removes API keys, tokens and `NAME=value` secrets from text that is about to be stored in a report. */
 export function redactSecrets(text: string): string {
   let out = text
@@ -335,7 +339,7 @@ export function renderBenchmarkMarkdown(report: BenchmarkReport): string {
         `### ${side.name}`,
         '',
         ...(categories.length
-          ? ['| Category (title) | False positives | Examples |', '| --- | --- | --- |', ...categories.map((c) => `| ${c.category.replace(/\|/g, '\\|')} | ${c.count} | ${c.examples.join(', ')} |`)]
+          ? ['| Category (title) | False positives | Examples |', '| --- | --- | --- |', ...categories.map((c) => `| ${mdCell(c.category)} | ${c.count} | ${c.examples.join(', ')} |`)]
           : ['No false positives.']),
         '',
       ]
@@ -345,7 +349,7 @@ export function renderBenchmarkMarkdown(report: BenchmarkReport): string {
     ...(() => {
       const failed = [incumbent, candidate].flatMap((side) => side.perPr.filter((p) => p.error).map((p) => ({ side: side.name, p })))
       if (!failed.length) return ['No PR errored.', '']
-      return ['| Reviewer | PR | Stage | Exit | Cause |', '| --- | --- | --- | --- | --- |', ...failed.map(({ side, p }) => `| ${side} | ${p.id} | ${p.errorDetail?.stage ?? '-'} | ${p.errorDetail?.exitCode ?? '-'} | ${(p.errorDetail?.stderrTail.at(-1) ?? p.error ?? '').replace(/\|/g, '\\|')} |`), '']
+      return ['| Reviewer | PR | Stage | Exit | Cause |', '| --- | --- | --- | --- | --- |', ...failed.map(({ side, p }) => `| ${side} | ${p.id} | ${p.errorDetail?.stage ?? '-'} | ${p.errorDetail?.exitCode ?? '-'} | ${mdCell(p.errorDetail?.stderrTail.at(-1) ?? p.error ?? '')} |`), '']
     })(),
     '## Reproduce',
     '',
