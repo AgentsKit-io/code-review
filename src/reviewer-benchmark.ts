@@ -34,6 +34,14 @@ export interface BenchmarkDataset { version: 1; prs: BenchmarkPr[] }
 
 export interface ReviewerFinding { file: string; line: number; title: string }
 
+/** Why a reviewer failed on a PR, readable without rerunning: exit code, stage and the last stderr lines (secrets removed). */
+export interface ErrorDetail {
+  exitCode?: number | string
+  /** `pin-check` (PR head not the pinned commit), `review` (reviewer exited non-zero) or `parse-output` (output unusable). */
+  stage: 'pin-check' | 'review' | 'parse-output'
+  stderrTail: string[]
+}
+
 /** One price table, versioned in `quality/benchmark/prices.json`, applied to BOTH reviewers. */
 export interface PriceTable {
   version: 1
@@ -73,9 +81,58 @@ export interface ReviewerRun {
   latencyMs: number
   /** Set when the reviewer crashed or produced unusable output for this PR. */
   error?: string
+  errorDetail?: ErrorDetail
 }
 
-export interface PrScore { id: string; bugsFound: number; bugsKnown: number; falsePositives: number; inputTokens: number; outputTokens: number; costUsd: number; unpriced?: boolean; latencyMs: number; error?: string }
+/** A finding classified against the known bugs of its PR. */
+export interface ScoredFinding extends ReviewerFinding {
+  verdict: 'real-bug' | 'false-positive'
+  /** The known bug this finding matched (real bugs only). */
+  matchedBug?: { file: string; line: number; note: string }
+}
+
+export interface PrScore {
+  id: string
+  bugsFound: number
+  bugsKnown: number
+  falsePositives: number
+  inputTokens: number
+  outputTokens: number
+  costUsd: number
+  unpriced?: boolean
+  latencyMs: number
+  findings: ScoredFinding[]
+  error?: string
+  errorDetail?: ErrorDetail
+}
+
+const SECRET_PATTERNS: RegExp[] = [
+  /\b(?:sk|pk|rk)-[A-Za-z0-9_-]{8,}/g,
+  /\bgh[pousr]_[A-Za-z0-9]{16,}/g,
+  /\bgithub_pat_[A-Za-z0-9_]{16,}/g,
+  /\bxox[abprs]-[A-Za-z0-9-]{8,}/g,
+  /\bAKIA[0-9A-Z]{12,}/g,
+  /\bBearer\s+[A-Za-z0-9._~+/=-]{8,}/gi,
+  /\beyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{4,}/g,
+]
+const SECRET_ASSIGNMENT = /\b([A-Za-z0-9_.-]*(?:key|token|secret|password|passwd|authorization)[A-Za-z0-9_.-]*)(\s*[=:]\s*)("[^"]*"|'[^']*'|\S+)/gi
+
+function mdCell(text: string): string {
+  return text.replace(/\\/g, '\\\\').replace(/\|/g, '\\|')
+}
+
+/** Removes API keys, tokens and `NAME=value` secrets from text that is about to be stored in a report. */
+export function redactSecrets(text: string): string {
+  let out = text
+  for (const pattern of SECRET_PATTERNS) out = out.replace(pattern, '[redacted]')
+  return out.replace(SECRET_ASSIGNMENT, '$1$2[redacted]')
+}
+
+/** Builds the stored failure cause: the last `maxLines` non-empty stderr lines, redacted and length-capped. */
+export function describeFailure(stage: ErrorDetail['stage'], exitCode: number | string | null | undefined, stderr: string, maxLines = 5): ErrorDetail {
+  const stderrTail = stderr.split(/\r?\n/).map((l) => l.trim()).filter(Boolean).slice(-maxLines).map((l) => redactSecrets(l).slice(0, 300))
+  return { ...(exitCode === undefined || exitCode === null ? {} : { exitCode }), stage, stderrTail }
+}
 
 export interface ReviewerSummary {
   name: string
@@ -186,16 +243,24 @@ export function bugMatches(bug: KnownBug, finding: ReviewerFinding): boolean {
 export function scorePr(pr: BenchmarkPr, run: ReviewerRun, prices: PriceTable): PrScore {
   const found = new Set<number>()
   let falsePositives = 0
-  for (const finding of run.findings) {
+  const findings: ScoredFinding[] = []
+  for (const { file, line, title } of run.findings) {
+    const finding = { file, line, title }
     const index = pr.bugs.findIndex((bug) => bugMatches(bug, finding))
-    if (index === -1) falsePositives++
-    else found.add(index)
+    if (index === -1) {
+      falsePositives++
+      findings.push({ ...finding, verdict: 'false-positive' })
+    } else {
+      found.add(index)
+      const { file: bugFile, line: bugLine, note } = pr.bugs[index]
+      findings.push({ ...finding, verdict: 'real-bug', matchedBug: { file: bugFile, line: bugLine, note } })
+    }
   }
   const costUsd = priceRun(prices, run)
   return {
     id: pr.id, bugsFound: found.size, bugsKnown: pr.bugs.length, falsePositives,
     inputTokens: run.inputTokens ?? 0, outputTokens: run.outputTokens ?? 0, costUsd: costUsd ?? 0, ...(costUsd === undefined ? { unpriced: true } : {}),
-    latencyMs: run.latencyMs, ...(run.error ? { error: run.error } : {}),
+    latencyMs: run.latencyMs, findings, ...(run.error ? { error: run.error } : {}), ...(run.errorDetail ? { errorDetail: run.errorDetail } : {}),
   }
 }
 
@@ -252,6 +317,22 @@ export function evaluateBenchmark(dataset: BenchmarkDataset, incumbentRuns: Reco
   return { decision: failures.length ? 'FAIL' : 'PASS', reasons: failures, ...base, incumbent, candidate }
 }
 
+/** Groups the false positives of one reviewer by finding title (the rule that produced them), most frequent first. */
+export function falsePositiveCategories(summary: ReviewerSummary): { category: string; count: number; examples: string[] }[] {
+  const groups = new Map<string, { count: number; examples: string[] }>()
+  for (const pr of summary.perPr) {
+    for (const f of pr.findings ?? []) {
+      if (f.verdict !== 'false-positive') continue
+      const category = f.title.trim().toLowerCase().replace(/\s+/g, ' ') || '(untitled)'
+      const group = groups.get(category) ?? { count: 0, examples: [] }
+      group.count++
+      if (group.examples.length < 3) group.examples.push(`${pr.id} ${f.file}:${f.line}`)
+      groups.set(category, group)
+    }
+  }
+  return [...groups].map(([category, g]) => ({ category, ...g })).sort((a, b) => b.count - a.count || a.category.localeCompare(b.category))
+}
+
 const cell = (p: PrScore | undefined) => (p ? `${p.error ? 'error' : `${p.bugsFound}/${p.bugsKnown}`} | ${p.error ? '-' : p.falsePositives}` : '- | -')
 
 const costCells = (p: PrScore | undefined) => (!p || p.error ? '- | -' : p.unpriced ? 'not measured | not measured' : `${p.inputTokens}/${p.outputTokens} | ${p.costUsd.toFixed(4)}`)
@@ -300,6 +381,28 @@ export function renderBenchmarkMarkdown(report: BenchmarkReport): string {
     ...incumbent.perPr.map((p) => `| ${p.id} | ${cell(p)} | ${cell(candidate.perPr.find((c) => c.id === p.id))} |`),
     `| **Total** | **${incumbent.bugsFound}/${incumbent.bugsKnown}** | **${incumbent.falsePositives}** | **${candidate.bugsFound}/${candidate.bugsKnown}** | **${candidate.falsePositives}** |`,
     '',
+    '## Falsos positivos por categoria',
+    '',
+    'Findings that matched no known bug, grouped by title (the rule that produced them). The finding list of every PR, with its verdict and the known bug it matched, is in `quality/benchmark/report.json` (`perPr[].findings`); a failed PR keeps its cause in `perPr[].errorDetail`.',
+    '',
+    ...[incumbent, candidate].flatMap((side) => {
+      const categories = falsePositiveCategories(side)
+      return [
+        `### ${side.name}`,
+        '',
+        ...(categories.length
+          ? ['| Category (title) | False positives | Examples |', '| --- | --- | --- |', ...categories.map((c) => `| ${mdCell(c.category)} | ${c.count} | ${c.examples.join(', ')} |`)]
+          : ['No false positives.']),
+        '',
+      ]
+    }),
+    '## Failed PRs',
+    '',
+    ...(() => {
+      const failed = [incumbent, candidate].flatMap((side) => side.perPr.filter((p) => p.error).map((p) => ({ side: side.name, p })))
+      if (!failed.length) return ['No PR errored.', '']
+      return ['| Reviewer | PR | Stage | Exit | Cause |', '| --- | --- | --- | --- | --- |', ...failed.map(({ side, p }) => `| ${side} | ${p.id} | ${p.errorDetail?.stage ?? '-'} | ${p.errorDetail?.exitCode ?? '-'} | ${mdCell(p.errorDetail?.stderrTail.at(-1) ?? p.error ?? '')} |`), '']
+    })(),
     '## Cost per PR (`mvp:RF-04`)',
     '',
     `Cost is computed from the input and output tokens each reviewer reported, with the same per-model price table for both (\`quality/benchmark/prices.json\`${report.priceTableDate ? `, rates of ${report.priceTableDate}` : ''}). A completed PR without tokens or without a priced model makes the report \`BLOCKED\`; it is never shown as zero.`,

@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { test } from 'node:test'
-import { checkVersionPin, describeBenchmarkSet, evaluateBenchmark, parseBenchmarkDataset, parsePriceTable, pinnedCommitError, priceRun, renderBenchmarkMarkdown } from '../dist/src/reviewer-benchmark.js'
+import { checkVersionPin, describeBenchmarkSet, describeFailure, falsePositiveCategories, evaluateBenchmark, parseBenchmarkDataset, parsePriceTable, pinnedCommitError, priceRun, renderBenchmarkMarkdown } from '../dist/src/reviewer-benchmark.js'
 
 const commitOf = (i) => String(i % 10).repeat(40)
 const prs = Array.from({ length: 30 }, (_, i) => i % 2
@@ -227,3 +227,31 @@ test('the runner does not review a PR whose head is not the pinned commit and er
 })
 
 const small0 = new Map(dataset.prs.slice(0, 2).map((pr) => [String(pr.number), pr.commit]))
+
+test('#379: records each finding with its verdict and matched bug, a readable failure cause, and groups false positives by title', () => {
+  // Recorded outputs of a fake reviewer: one right finding, one wrong, one crash.
+  const recorded = {
+    right: { findings: [{ file: 'a.ts', line: 11, title: 'Null dereference' }], latencyMs: 5 },
+    wrong: { findings: [{ file: 'b.ts', line: 1, title: 'Unused variable' }, { file: 'c.ts', line: 2, title: 'unused  variable' }], latencyMs: 5 },
+    crash: { findings: [], latencyMs: 5, error: 'exit 2: shadow-review: review failed', errorDetail: describeFailure('review', 2, ['loading', 'ANTHROPIC_API_KEY=sk-ant-abcdef123456', 'Authorization: Bearer abcdefghij123456', 'shadow-review: review failed'].join('\n')) },
+  }
+  const set = parseBenchmarkDataset({ version: 1, prs: [
+    { id: 'o/r#1', repository: 'o/r', number: 1, commit: commitOf(1), label: 'buggy', bugs: [{ file: 'a.ts', line: 10, titleIncludes: ['null'], note: 'null deref' }] },
+    { id: 'o/r#2', repository: 'o/r', number: 2, commit: commitOf(2), label: 'clean', bugs: [] },
+    { id: 'o/r#3', repository: 'o/r', number: 3, commit: commitOf(3), label: 'clean', bugs: [] },
+  ] })
+  const report = evaluate(set, { 'o/r#1': recorded.right, 'o/r#2': recorded.wrong, 'o/r#3': recorded.crash }, { 'o/r#1': recorded.right, 'o/r#2': recorded.right, 'o/r#3': recorded.right })
+  const [one, two, three] = report.incumbent.perPr
+  assert.deepEqual(one.findings, [{ file: 'a.ts', line: 11, title: 'Null dereference', verdict: 'real-bug', matchedBug: { file: 'a.ts', line: 10, note: 'null deref' } }])
+  assert.deepEqual(two.findings.map((f) => f.verdict), ['false-positive', 'false-positive'])
+  assert.equal(three.errorDetail.exitCode, 2)
+  assert.equal(three.errorDetail.stage, 'review')
+  const tail = three.errorDetail.stderrTail.join('\n')
+  assert.match(tail, /review failed/)
+  assert.doesNotMatch(tail, /sk-ant|abcdefghij123456/)
+  assert.deepEqual(falsePositiveCategories(report.incumbent), [{ category: 'unused variable', count: 2, examples: ['o/r#2 b.ts:1', 'o/r#2 c.ts:2'] }])
+  const markdown = renderBenchmarkMarkdown(report)
+  assert.match(markdown, /## Falsos positivos por categoria/)
+  assert.match(markdown, /\| unused variable \| 2 \|/)
+  assert.match(markdown, /\| incumbent \| o\/r#3 \| review \| 2 \|/)
+})

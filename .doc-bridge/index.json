@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "b23ae0d4038b6f4b63159e0eb28f758f2d45a237565e925d382cd6842d42d5c4",
+  "contentHash": "6b147eb589f85bdd1f379581c06868ebfb7fa40ac9307afc823af711d2d0f193",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-04T09:24:44.282Z",
+  "generatedAt": "2026-11-04T10:58:17.867Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -213,6 +213,18 @@
         "project"
       ],
       "contentHash": "c0ec9c327958c24d5a6aea18b91e0805fef6bcff479b3f31b6276e742ea50d50"
+    },
+    {
+      "id": "document:changelog.d/379.md",
+      "type": "document",
+      "title": "379.md",
+      "path": "changelog.d/379.md",
+      "description": "feat: benchmark report records each reviewer's findings per PR and the cause of each error (#379)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "1c08331ef05dba881923ac941fd320be21405d6cdabbee35325dda8dc9c2a9dd"
     },
     {
       "id": "document:CHANGELOG.md",
@@ -512,7 +524,7 @@
         "document",
         "human"
       ],
-      "contentHash": "12f81807dcc1ee86fb95bf31f304d7a03aa12df67f25f6399262979d1257aa05"
+      "contentHash": "4dcd79bcc8500d8a1152dbacae149bbc426e7642ba94b3d89a9497dc9a54c91a"
     },
     {
       "id": "document:docs/reviewer-benchmark.md",
@@ -1329,7 +1341,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "aac50eaeea71a1aa6e16ba2a0c30b6c33617eb56e7f05d0f2055b7537de48de9"
+      "contentHash": "ac635050be5d69dafa0c8aee8ba2a71254eb216a7b5fb102fc6f20fd6ab23bc8"
     },
     {
       "id": "module:scripts/shadow-review.mjs",
@@ -2465,6 +2477,7 @@
         "BenchmarkReport",
         "BenchmarkRunInfo",
         "BenchmarkSetInfo",
+        "ErrorDetail",
         "KnownBug",
         "MAX_COST_RATIO",
         "MIN_BENCHMARK_PRS",
@@ -2473,16 +2486,20 @@
         "ReviewerFinding",
         "ReviewerRun",
         "ReviewerSummary",
+        "ScoredFinding",
         "VersionPinCheck",
         "bugMatches",
         "checkVersionPin",
         "describeBenchmarkSet",
+        "describeFailure",
         "evaluateBenchmark",
+        "falsePositiveCategories",
         "parseBenchmarkDataset",
         "parsePriceTable",
         "percentile",
         "pinnedCommitError",
         "priceRun",
+        "redactSecrets",
         "renderBenchmarkMarkdown",
         "scorePr",
         "summarizeReviewer"
@@ -2492,7 +2509,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "56411c024dcb1bba8f74ee77df479563d20001a918ed997739d64cd3867bf6d2"
+      "contentHash": "7688092ad7ee08d3c8dbc56795b2356cd9d608e6e8637265dd352f96e83059b2"
     },
     {
       "id": "module:src/scm-contract.ts",
@@ -3256,7 +3273,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "0686d7519e7a599e4e79dbedf2785b921a518af108ade9836c9263dd1f493dc2"
+      "contentHash": "a7ec125976de34bc2e9b4e1191b2a50a0226089d16c4819cc6b51f8f91fd3953"
     },
     {
       "id": "module:test/risk-depth.test.mjs",
@@ -3450,8 +3467,8 @@
     }
   },
   "inputs": {
-    "hash": "921a8c9ac10c8f18a7605337d2703197346edb2b4514c6fccd9a241f078eca84",
-    "fileCount": 235,
+    "hash": "47e9e2ff3cd18e4913d7ea3b1b76739ee9a4cfa25fb8269ff9901534387d0ce4",
+    "fileCount": 236,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3473,9 +3490,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "cf6a5810a641084beef787bbae69fc6248693e3b64377f74035d6e45cb3ad220",
+    "contentHash": "9d92618e57cb5108dda494a03b4473f4fba5aa8db0ae393c60304f033513837f",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "b8e40c6855aba56b0809d758994093b23d24405b85558876facba4e4874831df",
+    "snapshotHash": "7507887371dab562370814de536607cefa358f4ba43c2ab8b891e8294ff59f0e",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3495,7 +3512,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 215,
+      "documentCount": 216,
       "fieldNames": [
         "aliases",
         "body",
@@ -3506,13 +3523,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.86046511627907,
-        "body": 52.2046511627907,
-        "headings": 3.5534883720930233,
-        "path": 5.618604651162791,
-        "summary": 4.079069767441861,
-        "symbols": 13.065116279069768,
-        "title": 4.283720930232558
+        "aliases": 2.8564814814814814,
+        "body": 52.504629629629626,
+        "headings": 3.550925925925926,
+        "path": 5.611111111111111,
+        "summary": 4.106481481481482,
+        "symbols": 13.078703703703704,
+        "title": 4.273148148148148
       }
     },
     "entries": [
@@ -4320,6 +4337,39 @@
           "outbound": []
         },
         "contentHash": "c0ec9c327958c24d5a6aea18b91e0805fef6bcff479b3f31b6276e742ea50d50",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:changelog.d/379.md",
+        "kind": "document",
+        "path": "changelog.d/379.md",
+        "title": "379.md",
+        "summary": "feat: benchmark report records each reviewer's findings per PR and the cause of each error (#379)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "379.md",
+          "headings": "",
+          "path": "changelog.d/379.md",
+          "symbols": "",
+          "summary": "feat: benchmark report records each reviewer's findings per PR and the cause of each error (#379)",
+          "body": "feat: benchmark report records each reviewer's findings per PR and the cause of each error ( 379) report.json now lists, per PR and reviewer, every finding ( file , line , title ) as real bug or false positive with the known bug it matched; an errored PR keeps its exit code, stage and the last stderr lines with keys and tokens redacted. The markdown report gains \"Falsos positivos por categoria\" and a failed-PR table.",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "1c08331ef05dba881923ac941fd320be21405d6cdabbee35325dda8dc9c2a9dd",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6448,11 +6498,11 @@
         ],
         "fields": {
           "title": "Reviewer benchmark: BLOCKED",
-          "headings": "Reviewer benchmark: BLOCKED Counting rule Totals Per PR Reproduce",
+          "headings": "Reviewer benchmark: BLOCKED Counting rule Totals Per PR Falsos positivos por categoria Reproduce",
           "path": "docs/reviewer-benchmark-report.md",
           "symbols": "",
           "summary": "Requirement mvp:RF-02: real bugs found and false positives of both reviewers, per PR and in total.",
-          "body": "Reviewer benchmark: BLOCKED Requirement mvp:RF-02 : real bugs found and false positives of both reviewers, per PR and in total. - incumbent errored on 38 PR(s); rerun before comparing - code-review errored on 11 PR(s); rerun before comparing Counting rule Both reviewers run over the same labelled PRs ( quality/benchmark/prs.json ) and are scored by the same function ( scorePr in src/reviewer-benchmark.ts ): - A real bug is a known bug (a defect later fixed by a fix PR) matched by at least one finding on the same file within the line tolerance (default 3 lines); each known bug counts once. - A false positive is any finding that matches no known bug, including every finding on a clean PR. - A PR where the reviewer errored shows error and is not counted; any error makes the decision BLOCKED . Totals Reviewer Bugs found False positives Cost (US$) Mean latency (ms) Errored PRs --- --- --- --- --- --- incumbent 0/32 0 0.00 4 38 code-review 8/32 118 0.00 235158 11 Per PR PR incumbent bugs incumbent false positives code-review bugs code-review false positives --- --- --- --- --- AgentsKit-io/code-review 178 error - 2/2 9 AgentsKit-io/code-review 62 error - error - AgentsKit-io/code-review 40 error - error - AgentsKit-io/code-review 67 error - error - AgentsKit-io/code-review 130 error - error - AgentsKit-io/code-review 80 error - 1/1 1 AgentsKit-io/code-review 180 error - error - AgentsKit-io/code-review 204 error - 0/1 14 AgentsKit-io/code-review 186 error - error - AgentsKit-io/code-review 73 error - error - AgentsKit-io/harness 144 error - 1/1 2 AgentsKit-io/harness 142 error - 1/2 0 AgentsKit-io/harness 133 error - 0/1 3 AgentsKit-io/harness 103 error - 0/1 8 AgentsKit-io/harness 101 error - error - AgentsKit-io/harness 198 error - 1/2 9 AgentsKit-io/harness 199 error - 0/1 2 AgentsKit-io/harness 201 error - 1/2 2 AgentsKit-io/harness 98 error - 1/1 12 AgentsKit-io/harness 111 error - error - AgentsKit-io/harness 39 error - error - AgentsKit-io/harness 184 error - 0/1 3 AgentsKit-io/code-review 27 error - 0/0 5 AgentsKit-io/code-review 166 error - 0/0 3 AgentsKit-io/code-review 280 error - 0/0 3 AgentsKit-io/code-review 319 error - 0/0 0 AgentsKit-io/harness 28 error - 0/0 6 AgentsKit-io/harness 29 error - 0/0 7 AgentsKit-io/harness 42 error - 0/0 3 AgentsKit-io/harness 44 error - 0/0 3 AgentsKit-io/harness 97 error - 0/0 4 AgentsKit-io/harness 107 error - error - AgentsKit-io/doc-bridge 76 error - 0/0 2 AgentsKit-io/doc-bridge 197 error - 0/0 2 AgentsKit-io/doc-bridge 207 error - 0/0 5 AgentsKit-io/doc-bridge 317 error - 0/0 2 AgentsKit-io/doc-bridge 369 error - 0/0 6 AgentsKit-io/doc-bridge 393 error - 0/0 2 Total 0/32 0 8/32 118 Reproduce The incumbent command is run as <executable <owner/repo <number and prints {\"findings\":[{\"file\",\"line\",\"title\"}],\"costUsd\":0} ; see docs/reviewer-benchmark.md .",
+          "body": "Reviewer benchmark: BLOCKED Requirement mvp:RF-02 : real bugs found and false positives of both reviewers, per PR and in total. - incumbent errored on 38 PR(s); rerun before comparing - code-review errored on 11 PR(s); rerun before comparing Counting rule Both reviewers run over the same labelled PRs ( quality/benchmark/prs.json ) and are scored by the same function ( scorePr in src/reviewer-benchmark.ts ): - A real bug is a known bug (a defect later fixed by a fix PR) matched by at least one finding on the same file within the line tolerance (default 3 lines); each known bug counts once. - A false positive is any finding that matches no known bug, including every finding on a clean PR. - A PR where the reviewer errored shows error and is not counted; any error makes the decision BLOCKED . Totals Reviewer Bugs found False positives Cost (US$) Mean latency (ms) Errored PRs --- --- --- --- --- --- incumbent 0/32 0 0.00 4 38 code-review 8/32 118 0.00 235158 11 Per PR PR incumbent bugs incumbent false positives code-review bugs code-review false positives --- --- --- --- --- AgentsKit-io/code-review 178 error - 2/2 9 AgentsKit-io/code-review 62 error - error - AgentsKit-io/code-review 40 error - error - AgentsKit-io/code-review 67 error - error - AgentsKit-io/code-review 130 error - error - AgentsKit-io/code-review 80 error - 1/1 1 AgentsKit-io/code-review 180 error - error - AgentsKit-io/code-review 204 error - 0/1 14 AgentsKit-io/code-review 186 error - error - AgentsKit-io/code-review 73 error - error - AgentsKit-io/harness 144 error - 1/1 2 AgentsKit-io/harness 142 error - 1/2 0 AgentsKit-io/harness 133 error - 0/1 3 AgentsKit-io/harness 103 error - 0/1 8 AgentsKit-io/harness 101 error - error - AgentsKit-io/harness 198 error - 1/2 9 AgentsKit-io/harness 199 error - 0/1 2 AgentsKit-io/harness 201 error - 1/2 2 AgentsKit-io/harness 98 error - 1/1 12 AgentsKit-io/harness 111 error - error - AgentsKit-io/harness 39 error - error - AgentsKit-io/harness 184 error - 0/1 3 AgentsKit-io/code-review 27 error - 0/0 5 AgentsKit-io/code-review 166 error - 0/0 3 AgentsKit-io/code-review 280 error - 0/0 3 AgentsKit-io/code-review 319 error - 0/0 0 AgentsKit-io/harness 28 error - 0/0 6 AgentsKit-io/harness 29 error - 0/0 7 AgentsKit-io/harness 42 error - 0/0 3 AgentsKit-io/harness 44 error - 0/0 3 AgentsKit-io/harness 97 error - 0/0 4 AgentsKit-io/harness 107 error - error - AgentsKit-io/doc-bridge 76 error - 0/0 2 AgentsKit-io/doc-bridge 197 error - 0/0 2 AgentsKit-io/doc-bridge 207 error - 0/0 5 AgentsKit-io/doc-bridge 317 error - 0/0 2 AgentsKit-io/doc-bridge 369 error - 0/0 6 AgentsKit-io/doc-bridge 393 error - 0/0 2 Total 0/32 0 8/32 118 Falsos positivos por categoria Findings that matched no known bug, grouped by title (the rule that produced them). The finding list of every PR, with its verdict and the known bug it matched, is in quality/benchmark/report.json ( perPr[].findings ); a failed PR keeps its cause in perPr[].errorDetail (exit code, stage, last stderr lines, secrets redacted). The measurement committed here predates this recording, so it has no per-finding data: rerun the benchmark (see Reproduce) to fill this section; the generator renders one table per reviewer plus a \"Failed PRs\" table. Reproduce The incumbent command is run as <executable <owner/repo <number and prints {\"findings\":[{\"file\",\"line\",\"title\"}],\"costUsd\":0} ; see docs/reviewer-benchmark.md .",
           "aliases": "document human"
         },
         "graph": {
@@ -6485,7 +6535,7 @@
             }
           ]
         },
-        "contentHash": "12f81807dcc1ee86fb95bf31f304d7a03aa12df67f25f6399262979d1257aa05",
+        "contentHash": "4dcd79bcc8500d8a1152dbacae149bbc426e7642ba94b3d89a9497dc9a54c91a",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -9316,7 +9366,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "aac50eaeea71a1aa6e16ba2a0c30b6c33617eb56e7f05d0f2055b7537de48de9",
+        "contentHash": "ac635050be5d69dafa0c8aee8ba2a71254eb216a7b5fb102fc6f20fd6ab23bc8",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -12891,6 +12941,7 @@
           "BenchmarkReport",
           "BenchmarkRunInfo",
           "BenchmarkSetInfo",
+          "ErrorDetail",
           "KnownBug",
           "MAX_COST_RATIO",
           "MIN_BENCHMARK_PRS",
@@ -12899,16 +12950,20 @@
           "ReviewerFinding",
           "ReviewerRun",
           "ReviewerSummary",
+          "ScoredFinding",
           "VersionPinCheck",
           "bugMatches",
           "checkVersionPin",
           "describeBenchmarkSet",
+          "describeFailure",
           "evaluateBenchmark",
+          "falsePositiveCategories",
           "parseBenchmarkDataset",
           "parsePriceTable",
           "percentile",
           "pinnedCommitError",
           "priceRun",
+          "redactSecrets",
           "renderBenchmarkMarkdown",
           "scorePr",
           "summarizeReviewer"
@@ -12922,7 +12977,7 @@
           "title": "reviewer-benchmark.ts",
           "headings": "",
           "path": "src/reviewer-benchmark.ts",
-          "symbols": "BenchmarkDataset BenchmarkDecision BenchmarkMeta BenchmarkOptions BenchmarkPr BenchmarkReport BenchmarkRunInfo BenchmarkSetInfo KnownBug MAX_COST_RATIO MIN_BENCHMARK_PRS PrScore PriceTable ReviewerFinding ReviewerRun ReviewerSummary VersionPinCheck bugMatches checkVersionPin describeBenchmarkSet evaluateBenchmark parseBenchmarkDataset parsePriceTable percentile pinnedCommitError priceRun renderBenchmarkMarkdown scorePr summarizeReviewer",
+          "symbols": "BenchmarkDataset BenchmarkDecision BenchmarkMeta BenchmarkOptions BenchmarkPr BenchmarkReport BenchmarkRunInfo BenchmarkSetInfo ErrorDetail KnownBug MAX_COST_RATIO MIN_BENCHMARK_PRS PrScore PriceTable ReviewerFinding ReviewerRun ReviewerSummary ScoredFinding VersionPinCheck bugMatches checkVersionPin describeBenchmarkSet describeFailure evaluateBenchmark falsePositiveCategories parseBenchmarkDataset parsePriceTable percentile pinnedCommitError priceRun redactSecrets renderBenchmarkMarkdown scorePr summarizeReviewer",
           "summary": "",
           "body": "",
           "aliases": "module ts src"
@@ -12966,7 +13021,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "56411c024dcb1bba8f74ee77df479563d20001a918ed997739d64cd3867bf6d2",
+        "contentHash": "7688092ad7ee08d3c8dbc56795b2356cd9d608e6e8637265dd352f96e83059b2",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -15200,7 +15255,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "0686d7519e7a599e4e79dbedf2785b921a518af108ade9836c9263dd1f493dc2",
+        "contentHash": "a7ec125976de34bc2e9b4e1191b2a50a0226089d16c4819cc6b51f8f91fd3953",
         "provenance": "observed",
         "confidence": "observed"
       },
