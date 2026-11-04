@@ -11,13 +11,13 @@
 // The report records the measured candidate version (this package's version unless --candidate-version) and the
 // dataset's sha256, which scripts/check-version-pin.mjs requires before the line may pin that version.
 // Credentials are inherited from the environment; none are accepted as arguments.
-import { isPathInside, relativePosix, runCommand, splitLines, toPosix } from '@agentskit/cross-platform'
+import { isPathInside, relativePosix, runCommand, toPosix } from '@agentskit/cross-platform'
 import { createHash } from 'node:crypto'
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { evaluateBenchmark, parseBenchmarkDataset, pinnedCommitError, renderBenchmarkMarkdown } from '../dist/src/reviewer-benchmark.js'
+import { describeFailure, evaluateBenchmark, parseBenchmarkDataset, pinnedCommitError, renderBenchmarkMarkdown } from '../dist/src/reviewer-benchmark.js'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const value = (name) => {
@@ -36,18 +36,22 @@ async function headOf(pr) {
   }
 }
 
-const unpinned = (message) => ({ findings: [], costUsd: 0, latencyMs: 0, error: message.slice(0, 300) })
+const unpinned = (message) => ({ findings: [], costUsd: 0, latencyMs: 0, error: message.slice(0, 300), errorDetail: describeFailure('pin-check', undefined, message) })
 
 async function runExternal(command, pr) {
   const startedAt = Date.now()
   const run = await runCommand(command, [pr.repository, String(pr.number), pr.commit], { timeoutMs: 1_800_000 })
   const latencyMs = Date.now() - startedAt
+  if (run.code !== 0) {
+    const detail = describeFailure('review', run.code ?? run.signal, run.stderr)
+    return { findings: [], costUsd: 0, latencyMs, error: `exit ${detail.exitCode}: ${detail.stderrTail.at(-1) ?? ''}`.slice(0, 300), errorDetail: detail }
+  }
   try {
-    if (run.code !== 0) throw new Error(`exit ${run.code ?? run.signal}: ${splitLines(run.stderr.trim()).at(-1) ?? ''}`.slice(0, 300))
     const out = JSON.parse(run.stdout)
     return { findings: out.findings ?? [], costUsd: Number(out.costUsd ?? 0), latencyMs }
   } catch (error) {
-    return { findings: [], costUsd: 0, latencyMs, error: error instanceof Error ? error.message : String(error) }
+    const message = error instanceof Error ? error.message : String(error)
+    return { findings: [], costUsd: 0, latencyMs, error: message, errorDetail: describeFailure('parse-output', run.code, `${message}\n${run.stderr}`) }
   }
 }
 
@@ -61,12 +65,16 @@ async function runBuiltIn(pr, workdir) {
   const startedAt = Date.now()
   const run = await runCommand(process.execPath, args, { cwd: root, timeoutMs: 1_800_000 })
   const latencyMs = Date.now() - startedAt
+  if (run.code !== 0) {
+    const detail = describeFailure('review', run.code ?? run.signal, run.stderr)
+    return { findings: [], costUsd: 0, latencyMs, error: `exit ${detail.exitCode}: ${detail.stderrTail.at(-1) ?? ''}`.slice(0, 300), errorDetail: detail }
+  }
   try {
-    if (run.code !== 0) throw new Error(`exit ${run.code ?? run.signal}`)
     const review = JSON.parse(readFileSync(result, 'utf8'))
     return { findings: review.findings.map((f) => ({ file: f.file, line: f.line, title: f.title })), costUsd: ((review.evidence?.tokensUsed ?? 0) / 1e6) * usdPerMtok, latencyMs }
   } catch (error) {
-    return { findings: [], costUsd: 0, latencyMs, error: error instanceof Error ? error.message : String(error) }
+    const message = error instanceof Error ? error.message : String(error)
+    return { findings: [], costUsd: 0, latencyMs, error: message, errorDetail: describeFailure('parse-output', run.code, `${message}\n${run.stderr}`) }
   }
 }
 

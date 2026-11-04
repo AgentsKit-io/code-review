@@ -64,6 +64,12 @@ Both reviewers run over the same labelled PRs (`quality/benchmark/prs.json`) and
 | AgentsKit-io/doc-bridge#393 | error | - | 0/0 | 2 |
 | **Total** | **0/32** | **0** | **8/32** | **118** |
 
+## Falsos positivos por categoria
+
+Findings that matched no known bug, grouped by title (the rule that produced them). The finding list of every PR, with its verdict and the known bug it matched, is in `quality/benchmark/report.json` (`perPr[].findings`); a failed PR keeps its cause in `perPr[].errorDetail` (exit code, stage, last stderr lines, secrets redacted).
+
+The measurement committed here predates this recording, so it has no per-finding data: rerun the benchmark (see Reproduce) to fill this section; the generator renders one table per reviewer plus a "Failed PRs" table.
+
 ## Reproduce
 
 ```bash
