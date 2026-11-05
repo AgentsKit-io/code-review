@@ -6,3 +6,4 @@ apps/docs/.source/
 *.sarif
 .claude/
 .codex/verification/
+.doc-bridge/.ci-content-revision

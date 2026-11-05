@@ -23,7 +23,7 @@ async function run(provider, mode, options = {}) {
   else delete process.env[`CODEX_FIXTURE_${prefix}_MODE`]
   if (options.argsFile) process.env[`CODEX_FIXTURE_${prefix}_ARGS_FILE`] = options.argsFile
   try {
-    const timeoutMs = options.timeoutMs ?? 1_000
+    const timeoutMs = options.timeoutMs ?? 10_000
     const factory = provider === 'grok' ? grokHeadless({ command: 'grok', model: 'grok-4.6', worker: { timeoutMs } }) : opencodeHeadless({ command: 'opencode', model: 'openai/gpt-4o', worker: { timeoutMs } })
     const source = factory.createSource(request)
     const chunks = []

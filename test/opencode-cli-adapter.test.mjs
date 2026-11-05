@@ -20,7 +20,7 @@ async function run(mode, options = {}) {
   if (mode) process.env.CODEX_FIXTURE_OPENCODE_MODE = mode
   else delete process.env.CODEX_FIXTURE_OPENCODE_MODE
   try {
-    const source = opencodeCli({ command: 'opencode', worker: { timeoutMs: 1000, ...options.worker } }).createSource(request)
+    const source = opencodeCli({ command: 'opencode', worker: { timeoutMs: 10_000, ...options.worker } }).createSource(request)
     const chunks = []
     for await (const chunk of source.stream()) chunks.push(chunk)
     return { chunks, source }

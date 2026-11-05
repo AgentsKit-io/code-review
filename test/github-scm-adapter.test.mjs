@@ -428,7 +428,7 @@ test('NET timeout cancels a native mutation response body without retry, then a 
     try {
       const scm = createGithubScmAdapter({ token: 'fixture-token', fetch: localGithubFetch(`http://127.0.0.1:${address.port}`) })
       const request = { expectedHeadRevision: pull.head.sha, method: 'squash', admin: false }
-      await assert.rejects(scm.merge({ repository: 'org/repo', id: '7' }, request), error => error instanceof Error && /abort|timeout|terminated/i.test(`${error.name} ${error.message}`))
+      await assert.rejects(scm.merge({ repository: 'org/repo', id: '7' }, request), error => error instanceof Error && /abort|time(?:out|d out)|terminated/i.test(`${error.name} ${error.message}`))
       assert.equal(await waitFor(() => canceled), true, 'the mutation response transport should close after its deadline')
       assert.equal(writes.length, 1, 'a failed PUT response body must not cause an automatic mutation retry')
       const merged = await scm.merge({ repository: 'org/repo', id: '7' }, request)

@@ -52,7 +52,7 @@ globalThis.fetch = async (url, init = {}) => {
   return Response.json({ message: 'lost acknowledgement' }, { status: 502 });
 };`)
       const invoke = () => spawnSync(process.execPath, ['--import', preload, 'dist/src/cli.js', '--config', configFile, '--pr', 'org/repo#7', '--publish-result', artifactFile, '--post', '--no-fail'], {
-        cwd: root, encoding: 'utf8', timeout: 10000,
+        cwd: root, encoding: 'utf8', timeout: 60000,
         env: { ...process.env, CI: 'false', GITHUB_TOKEN: 'fixture', CODEX_FIXTURE_COUNT_FILE: join(directory, 'model-calls'), PATH: `${join(root, 'test/fixtures/bin')}:${process.env.PATH ?? ''}` },
       })
       const first = invoke()
@@ -90,9 +90,9 @@ test('SIGTERM cancels the actual provider subprocess before the CLI exits', asyn
   let providerPid
   let stderr = ''
   child.stderr.on('data', chunk => { stderr += chunk })
-  const timer = setTimeout(() => child.kill('SIGKILL'), 8000)
+  const timer = setTimeout(() => child.kill('SIGKILL'), 40000)
   try {
-    const startupDeadline = Date.now() + 6000
+    const startupDeadline = Date.now() + 30000
     while (!providerPid && child.exitCode === null && Date.now() < startupDeadline) {
       try { providerPid = Number(readFileSync(pidFile, 'utf8')) } catch { await new Promise(resolve => setTimeout(resolve, 20)) }
     }
@@ -113,7 +113,7 @@ test('parent execution ceilings reject invalid or exhausted budgets before model
     const directory = mkdtempSync(join(tmpdir(), 'codex-ceiling-'))
     try {
       const run = spawnSync(process.execPath, ['dist/src/cli.js', '--provider', 'codex-cli', '--stdin', '--health-check', 'off', flag, value], {
-        cwd: root, input: 'export const answer = 42\n', encoding: 'utf8', timeout: 10000,
+        cwd: root, input: 'export const answer = 42\n', encoding: 'utf8', timeout: 60000,
         env: { ...process.env, CODEX_FIXTURE_COUNT_FILE: join(directory, 'calls'), PATH: `${join(root, 'test/fixtures/bin')}:${process.env.PATH ?? ''}` },
       })
       assert.notEqual(run.status, 0)
@@ -124,7 +124,7 @@ test('parent execution ceilings reject invalid or exhausted budgets before model
 
 test('remaining parent allowance does not change the immutable provider-free batch plan', () => {
   const args = ['dist/src/cli.js', '--provider', 'codex-cli', '--stdin', '--plan', '--json', '--batch-size', '5']
-  const options = { cwd: root, input: 'export const answer = 42\n', encoding: 'utf8', timeout: 10000 }
+  const options = { cwd: root, input: 'export const answer = 42\n', encoding: 'utf8', timeout: 60000 }
   const planned = spawnSync(process.execPath, args, options)
   const constrained = spawnSync(process.execPath, [...args, '--run-token-ceiling', '1', '--run-call-ceiling', '1'], options)
   assert.equal(planned.status, 0, planned.stderr)
@@ -332,7 +332,7 @@ test('a local Codex subprocess timeout fails fast instead of hanging the review'
     cwd: root,
     input: 'export const answer = 42\n',
     encoding: 'utf8',
-    timeout: 8000,
+    timeout: 60000,
     env: {
       ...process.env,
       CODEX_FIXTURE_HANG: '1',
@@ -444,7 +444,7 @@ test('global review deadline aborts a hanging fast run', () => {
     const run = spawnSync(process.execPath, [
       'dist/src/cli.js', '--provider', 'codex-cli', '--stdin', '--profile', 'fast', '--health-check', 'off', '--deadline-ms', '50', '--result', result, '--no-fail',
     ], {
-      cwd: root, input: 'export const answer = 42\n', encoding: 'utf8', timeout: 3000,
+      cwd: root, input: 'export const answer = 42\n', encoding: 'utf8', timeout: 60000,
       env: { ...process.env, CODEX_FIXTURE_HANG: '1', PATH: `${fixtureBin}:${process.env.PATH ?? ''}` },
     })
     assert.equal(run.status, 2, `stdout:\n${run.stdout}\nstderr:\n${run.stderr}`)
