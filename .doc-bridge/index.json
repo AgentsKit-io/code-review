@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "63d79542cda98e417d15efeeee6c5987f82ad7f91f2be36a45d497d71873d508",
+  "contentHash": "ff60a49660d22fa833bb1ff85e065a7c8249dbb68f7cbbbafc239adcfebf41f4",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-05T01:22:39.925Z",
+  "generatedAt": "2026-11-05T18:10:59.233Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -249,6 +249,18 @@
         "project"
       ],
       "contentHash": "eafbd24efe84368e07e279a668a3fbd3dca3df9eceec44b651b2c7a61f25d675"
+    },
+    {
+      "id": "document:changelog.d/394.md",
+      "type": "document",
+      "title": "394.md",
+      "path": "changelog.d/394.md",
+      "description": "ci: run gitleaks (pinned version and SHA-256) on every PR and push to main (#394)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "eeb57788f452b71186165522c013e904a93c785136e29b30259052b5ed6d0bbe"
     },
     {
       "id": "document:CHANGELOG.md",
@@ -3491,8 +3503,8 @@
     }
   },
   "inputs": {
-    "hash": "7a773dd00920dbb002bbc6107a22175ef749a67eb6ea446a9a02ac5eac5494b5",
-    "fileCount": 239,
+    "hash": "bd655d562e954bd926237875807f6f2ebd1e5751cb3e5c2f4f64eb47412e3dcf",
+    "fileCount": 240,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3514,9 +3526,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "3e8556a0fbfb4b5c3b1a61baaabe4c1f3f3abd04e0146042d5535124c73522db",
+    "contentHash": "7245625c3fd7518701269437c59ceb3f1e885d7ed1e222447ce44f164b4e5a2d",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "f8f686896f9ddc14db034eaf2ac36906255c4a900e7337855e5323ee634084fa",
+    "snapshotHash": "d80a446bb67d5f064e3b7c3b9a6f15c27fec026d8e92d9ec06572a320e1f3ee0",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3536,7 +3548,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 218,
+      "documentCount": 219,
       "fieldNames": [
         "aliases",
         "body",
@@ -3547,13 +3559,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8486238532110093,
-        "body": 54.92201834862385,
-        "headings": 3.688073394495413,
-        "path": 5.60091743119266,
-        "summary": 4.215596330275229,
-        "symbols": 12.958715596330276,
-        "title": 4.279816513761468
+        "aliases": 2.8447488584474887,
+        "body": 54.730593607305934,
+        "headings": 3.671232876712329,
+        "path": 5.593607305936073,
+        "summary": 4.255707762557078,
+        "symbols": 12.899543378995434,
+        "title": 4.269406392694064
       }
     },
     "entries": [
@@ -4494,6 +4506,39 @@
           "outbound": []
         },
         "contentHash": "eafbd24efe84368e07e279a668a3fbd3dca3df9eceec44b651b2c7a61f25d675",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:changelog.d/394.md",
+        "kind": "document",
+        "path": "changelog.d/394.md",
+        "title": "394.md",
+        "summary": "ci: run gitleaks (pinned version and SHA-256) on every PR and push to main (#394)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "394.md",
+          "headings": "",
+          "path": "changelog.d/394.md",
+          "symbols": "",
+          "summary": "ci: run gitleaks (pinned version and SHA-256) on every PR and push to main (#394)",
+          "body": "ci: run gitleaks (pinned version and SHA-256) on every PR and push to main ( 394)",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "eeb57788f452b71186165522c013e904a93c785136e29b30259052b5ed6d0bbe",
         "provenance": "observed",
         "confidence": "observed"
       },
