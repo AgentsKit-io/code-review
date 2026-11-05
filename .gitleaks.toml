@@ -19,4 +19,6 @@ regexes = ['''sk-1234567890123456''']
 
 [[allowlists]]
 description = "Fake credentials and fake PEM markers used to test diagnostic redaction"
+condition = "AND"
 paths = ['''^test/local-cli-process\.test\.mjs$''']
+regexes = ['''(ghp_|gho_|ghs_|ghr_|github_pat_|xox[bp]-|AKIA|sk-proj-|sk-ant-|xai-|AIza)[A-Za-z0-9_-]*''', '''BEGIN [A-Z ]*PRIVATE KEY''']
