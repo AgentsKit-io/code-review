@@ -1,0 +1,22 @@
+title = "code-review gitleaks config"
+
+[extend]
+useDefault = true
+
+# Allowlist only test fixtures; every entry needs a reason.
+
+[[allowlists]]
+description = "Synthetic eval case: a deliberately hardcoded fake webhook secret the reviewer must flag"
+condition = "AND"
+paths = ['''^quality/evals/default\.json$''']
+regexes = ['''WEBHOOK_SECRET''']
+
+[[allowlists]]
+description = "Synthetic fixture source with a fake apiKey for context-pack tests"
+condition = "AND"
+paths = ['''^test/sources-context\.test\.mjs$''']
+regexes = ['''sk-1234567890123456''']
+
+[[allowlists]]
+description = "Fake credentials and fake PEM markers used to test diagnostic redaction"
+paths = ['''^test/local-cli-process\.test\.mjs$''']
