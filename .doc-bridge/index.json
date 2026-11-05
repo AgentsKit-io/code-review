@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "4e391f964cbba18d8edd0e131156627d284a58780d4a80c7e25b0e0169494aea",
+  "contentHash": "45fa617a95c57e12e1d0041cc354f094197e3d453fe6c179e9dc2be63228914d",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-04T23:41:52.655Z",
+  "generatedAt": "2026-11-05T00:31:25.362Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -2772,7 +2772,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "7aef59859008726fa69613da5c28d9c27b15c3bfe392968fbae0002ed03c787e"
+      "contentHash": "ce1c5f4996271f01e755e784e3e88bd9d02362ba37e8bd15c2e5d17566d4d697"
     },
     {
       "id": "module:test/codex-adapter.test.mjs",
@@ -2937,7 +2937,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "d69366c503ed73e9feb37e8361333704966166af1d94d2ae70230c17aa79650e"
+      "contentHash": "b426686cacbe28cedc88144021d0fb58c7472ff7096a73697d2cb1e2b9f0df7b"
     },
     {
       "id": "module:test/grok-cli-adapter.test.mjs",
@@ -3491,7 +3491,7 @@
     }
   },
   "inputs": {
-    "hash": "edc6d9ed2b7cf541e19d8bc76a7ce6dc3be80bebe25ce5fae7fe7bed6c3df150",
+    "hash": "bdcd4a20e11857c7d51951c761c6e18c0697a5ed1ec5c52ae5582d4b037a1b43",
     "fileCount": 239,
     "projectionVersion": 2
   },
@@ -3514,9 +3514,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "e1a96c668869c265fb4b2f0edefe370a2abf61c0ef60a47985365b283a12da04",
+    "contentHash": "a52b41fe043404f423d524548db000a7712bd98e8e014d63588ad5ea886537ed",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "4101662a6ce018e642ea3c374add003622197d1d6d60f50bbe70d0b728799d57",
+    "snapshotHash": "6caa8800ebd649493b2681ee5988c35158b72c1ab48c26bc0087f2baeca15654",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -13884,7 +13884,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "7aef59859008726fa69613da5c28d9c27b15c3bfe392968fbae0002ed03c787e",
+        "contentHash": "ce1c5f4996271f01e755e784e3e88bd9d02362ba37e8bd15c2e5d17566d4d697",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -14349,7 +14349,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "d69366c503ed73e9feb37e8361333704966166af1d94d2ae70230c17aa79650e",
+        "contentHash": "b426686cacbe28cedc88144021d0fb58c7472ff7096a73697d2cb1e2b9f0df7b",
         "provenance": "observed",
         "confidence": "observed"
       },
