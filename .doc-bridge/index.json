@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "9a178c622316a0e78a9b1b7e90c301b307661aa54f87313cf975399d3084c06c",
+  "contentHash": "63d79542cda98e417d15efeeee6c5987f82ad7f91f2be36a45d497d71873d508",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-05T01:04:33.464Z",
+  "generatedAt": "2026-11-05T01:22:39.925Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -128,7 +128,7 @@
         "document",
         "unclassified"
       ],
-      "contentHash": "d5e9db96bb7e74858e7fa177505ce74cb40d56e46e8cc85607a169ef841da4e5"
+      "contentHash": "4bacf22c58380142ea435c7493f5a83c941db461b2eab49b084c492c2f840f42"
     },
     {
       "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
@@ -3491,7 +3491,7 @@
     }
   },
   "inputs": {
-    "hash": "21a4fe3aa19d7b8d40426ea80aa0e245d1f3c1a828359cbb90501b1fd8d47369",
+    "hash": "7a773dd00920dbb002bbc6107a22175ef749a67eb6ea446a9a02ac5eac5494b5",
     "fileCount": 239,
     "projectionVersion": 2
   },
@@ -3514,9 +3514,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "cde68887104be604a598e17ca3a801a06eed71e57d065b98c1b6a4fb8f2627e1",
+    "contentHash": "3e8556a0fbfb4b5c3b1a61baaabe4c1f3f3abd04e0146042d5535124c73522db",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "1d52bc65c0dfe0e7d19e1124b791892030729223c12827560cc74655ce82eb54",
+    "snapshotHash": "f8f686896f9ddc14db034eaf2ac36906255c4a900e7337855e5323ee634084fa",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3548,7 +3548,7 @@
       ],
       "averageFieldLength": {
         "aliases": 2.8486238532110093,
-        "body": 54.857798165137616,
+        "body": 54.92201834862385,
         "headings": 3.688073394495413,
         "path": 5.60091743119266,
         "summary": 4.215596330275229,
@@ -4082,7 +4082,7 @@
           "path": ".github/factory-playbook.md",
           "symbols": "",
           "summary": "Public repo: only synthetic data, never anything from private repos (see AGENTS.md). Read AGENTS.md and docs/for-agents/code-review.md before editing.",
-          "body": "Factory playbook — AgentsKit-io/code-review Public repo: only synthetic data, never anything from private repos (see AGENTS.md). Read AGENTS.md and docs/for-agents/code-review.md before editing. 1. Install - Node 22 (CI uses 22; local 20+ works, test:coverage needs = 22.8). npm only ( package-lock.json ), no pnpm. - npm ci && npm ci --prefix apps/docs (same as CI; the docs app has its own lockfile). - Stale lockfile: npm install (and npm install --prefix apps/docs ), commit the lockfile with the change. Never hand-edit it. - Env vars: none needed; tests are offline. Provider keys (e.g. OPENAI API KEY ) must never appear in files or logs. 2. Run locally - CLI, no server/port/seed: npm run review -- --help (tsx) or npm run build && node dist/src/cli.js --help . - Docs site (optional): npm run docs:web:dev . 3. Quick verification (small diff) - npm run typecheck - npm run build && node --test --test-concurrency=1 test/<file .test.mjs (tests run against dist/ , so build first; one test: add --test-name-pattern \"<name \" ). - Touched docs/ package.json files/benchmark data: also node --test test/documentation.test.mjs . - There is no separate lint/format script; typecheck + check are the gate. 4. Full verification (CI, .github/workflows/ ) - ci.yml job check (the one that matters), in order: touch .doc-bridge/.ci-content-revision ; npm run docs:index ; git diff --exit-code -- doc-bridge.config.json .doc-bridge llms-full.txt ; npm run check:public-api ; npm run check ; npm run test:coverage ; npm pack --dry-run ; then rm -f .doc-bridge/.ci-content-revision . - npm run check = cross-platform check, typecheck, build+tests, docs gate, docs web typecheck, public API, CLI --help , readme standard. Slowest job: check (full test suite is serial, --test-concurrency=1 ). - codeql.yml (reusable workflow, security-and-quality ), dependency-review.yml (review, audit, docs-audit; fails on high severity), scorecard.yml , publish.yml / release.yml (release only). CodeQL often finishes last: a PR can sit with CodeQL pending while check is green, or fail on a new alert; fix the alert, do not rerun blindly. - Before finishing run (wrap like CI so the index is CI-mode; the sentinel is never committed): touch .doc-bridge/.ci-content-revision && npm run docs:index && npm run check && npm run test:coverage && npm pack --dry-run; rm -f .doc-bridge/.ci-content-revision , then git status must show only intended files (docs:index regenerates tracked files; commit them). 5. Rules that most often sink a PR - Conventional commit messages ( feat: , fix: , docs: ...); one concern per PR. - Release notes: add ONE changelog.d/<ticket .md (first line a conventional line, e.g. feat: ... ( N) ). Do not bump package.json version or edit the top of CHANGELOG.md . A .changeset/<slug .md ( \"@agentskit/code-review\": patch + one line) is also used by recent PRs; follow the latest merged PR. - Generated docs: after changing docs, CLI help or .doc-bridge inputs run npm run docs:index (also regenerates llms-full.txt ); CI fails on any diff in doc-bridge.config.json .doc-bridge llms-full.txt . - Public exports changed: npm run check:public-api:update , review the snapshot docs/stability/public-api-v1.json , commit it. - Coverage floors: 93% lines, 79% branches, 92% functions on dist/src ; new src/ code needs tests. - Public CLI/Action contract changes need docs plus offline tests. Keep the Action advisory by default. - package.json files is an allowlist for the npm tarball: every new script, doc, fixture, test or data file that the package/tests use must be added there ( npm pack --dry-run to confirm). - PR body: follow .github/PULL REQUEST TEMPLATE.md ; no secrets or model output. 6. Shared registry files (merge-conflict hotspots) - package.json files array: add your entries at the END of the array (never reorder), one per line, so parallel PRs only conflict at the tail; resolve by keeping both sides. - CHANGELOG.md , package.json version: do not touch (use changelog.d/<ticket ",
+          "body": "Factory playbook — AgentsKit-io/code-review Public repo: only synthetic data, never anything from private repos (see AGENTS.md). Read AGENTS.md and docs/for-agents/code-review.md before editing. 1. Install - Node 22 (CI uses 22; local 20+ works, test:coverage needs = 22.8). npm only ( package-lock.json ), no pnpm. - npm ci && npm ci --prefix apps/docs (same as CI; the docs app has its own lockfile). - Stale lockfile: npm install (and npm install --prefix apps/docs ), commit the lockfile with the change. Never hand-edit it. - Env vars: none needed; tests are offline. Provider keys (e.g. OPENAI API KEY ) must never appear in files or logs. 2. Run locally - CLI, no server/port/seed: npm run review -- --help (tsx) or npm run build && node dist/src/cli.js --help . - Docs site (optional): npm run docs:web:dev . 3. Quick verification (small diff) - npm run typecheck - npm run build && node --test --test-concurrency=1 test/<file .test.mjs (tests run against dist/ , so build first; one test: add --test-name-pattern \"<name \" ). - Touched docs/ package.json files/benchmark data: also node --test test/documentation.test.mjs . - There is no separate lint/format script; typecheck + check are the gate. 4. Full verification (CI, .github/workflows/ ) - ci.yml job check (the one that matters), in order: touch .doc-bridge/.ci-content-revision ; npm run docs:index ; git diff --exit-code -- doc-bridge.config.json .doc-bridge llms-full.txt ; npm run check:public-api ; npm run check ; npm run test:coverage ; npm pack --dry-run ; then rm -f .doc-bridge/.ci-content-revision . - npm run check = cross-platform check, typecheck, build+tests, docs gate, docs web typecheck, public API, CLI --help , readme standard. Slowest job: check (full test suite is serial, --test-concurrency=1 ). - codeql.yml (reusable workflow, security-and-quality ), dependency-review.yml (review, audit, docs-audit; fails on high severity), scorecard.yml , publish.yml / release.yml (release only). CodeQL often finishes last: a PR can sit with CodeQL pending while check is green, or fail on a new alert; fix the alert, do not rerun blindly. - Before finishing run (wrap like CI so the index is CI-mode; the sentinel is never committed): touch .doc-bridge/.ci-content-revision; npm run docs:index && git diff --exit-code -- doc-bridge.config.json .doc-bridge llms-full.txt && npm run check:public-api && npm run check && npm run test:coverage && npm pack --dry-run; s=$?; rm -f .doc-bridge/.ci-content-revision; exit $s (keeps the failure exit code; git diff --exit-code needs the regenerated files staged or committed first), then git status must show only intended files (docs:index regenerates tracked files; commit them). 5. Rules that most often sink a PR - Conventional commit messages ( feat: , fix: , docs: ...); one concern per PR. - Release notes: add ONE changelog.d/<ticket .md (first line a conventional line, e.g. feat: ... ( N) ). Do not bump package.json version or edit the top of CHANGELOG.md . A .changeset/<slug .md ( \"@agentskit/code-review\": patch + one line) is also used by recent PRs; follow the latest merged PR. - Generated docs: after changing docs, CLI help or .doc-bridge inputs run npm run docs:index (also regenerates llms-full.txt ); CI fails on any diff in doc-bridge.config.json .doc-bridge llms-full.txt . - Public exports changed: npm run check:public-api:update , review the snapshot docs/stability/public-api-v1.json , commit it. - Coverage floors: 93% lines, 79% branches, 92% functions on dist/src ; new src/ code needs tests. - Public CLI/Action contract changes need docs plus offline tests. Keep the Action advisory by default. - package.json files is an allowlist for the npm tarball: every new script, doc, fixture, test or data file that the package/tests use must be added there ( npm pack --dry-run to confirm). - PR body: follow .github/PULL REQUEST TEMPLATE.md ; no secrets or model output. 6. Shared registry files (merge-conflict hotspots) - package.json files array: a",
           "aliases": "document unclassified"
         },
         "graph": {
@@ -4114,7 +4114,7 @@
             }
           ]
         },
-        "contentHash": "d5e9db96bb7e74858e7fa177505ce74cb40d56e46e8cc85607a169ef841da4e5",
+        "contentHash": "4bacf22c58380142ea435c7493f5a83c941db461b2eab49b084c492c2f840f42",
         "provenance": "observed",
         "confidence": "observed"
       },
