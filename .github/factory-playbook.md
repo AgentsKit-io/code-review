@@ -23,7 +23,7 @@ Read `AGENTS.md` and `docs/for-agents/code-review.md` before editing.
 - `ci.yml` job `check` (the one that matters), in order: `touch .doc-bridge/.ci-content-revision`; `npm run docs:index`; `git diff --exit-code -- doc-bridge.config.json .doc-bridge llms-full.txt`; `npm run check:public-api`; `npm run check`; `npm run test:coverage`; `npm pack --dry-run`; then `rm -f .doc-bridge/.ci-content-revision`.
 - `npm run check` = cross-platform check, typecheck, build+tests, docs gate, docs web typecheck, public API, CLI `--help`, readme standard. Slowest job: `check` (full test suite is serial, `--test-concurrency=1`).
 - `codeql.yml` (reusable workflow, `security-and-quality`), `dependency-review.yml` (review, audit, docs-audit; fails on high severity), `scorecard.yml`, `publish.yml`/`release.yml` (release only). CodeQL often finishes last: a PR can sit with `CodeQL` pending while `check` is green, or fail on a new alert; fix the alert, do not rerun blindly.
-- Before finishing run: `npm run docs:index && npm run check && npm run test:coverage && npm pack --dry-run`, then `git status` must show only intended files (docs:index regenerates tracked files; commit them).
+- Before finishing run (wrap like CI so the index is CI-mode; the sentinel is never committed): `touch .doc-bridge/.ci-content-revision && npm run docs:index && npm run check && npm run test:coverage && npm pack --dry-run; rm -f .doc-bridge/.ci-content-revision`, then `git status` must show only intended files (docs:index regenerates tracked files; commit them).
 
 ## 5. Rules that most often sink a PR
 - Conventional commit messages (`feat:`, `fix:`, `docs:`...); one concern per PR.
