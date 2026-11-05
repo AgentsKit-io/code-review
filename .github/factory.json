@@ -1,4 +1,4 @@
 {
   "install": "npm ci && npm ci --prefix apps/docs",
-  "verify": "touch .doc-bridge/.ci-content-revision && npm run docs:index && npm run check && npm run test:coverage && npm pack --dry-run; rm -f .doc-bridge/.ci-content-revision"
+  "verify": "touch .doc-bridge/.ci-content-revision; npm run docs:index && git diff --exit-code -- doc-bridge.config.json .doc-bridge llms-full.txt && npm run check:public-api && npm run check && npm run test:coverage && npm pack --dry-run; s=$?; rm -f .doc-bridge/.ci-content-revision; exit $s"
 }
