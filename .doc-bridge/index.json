@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "ff60a49660d22fa833bb1ff85e065a7c8249dbb68f7cbbbafc239adcfebf41f4",
+  "contentHash": "8ce72e5464926da1d851aca8291114a146e792c7e6a4fe441f20d3f59f179cc9",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-05T18:10:59.233Z",
+  "generatedAt": "2026-11-05T18:29:11.510Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -21,102 +21,6 @@
       "title": "Code Review agent docs",
       "path": "docs/for-agents/index.md",
       "description": "- Code Review CLI handoff — ownership, change routes, security boundaries, and verification: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review.md - Concise machine map — discovery, raw sources, and all six ecosystem products: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms.txt - Full machine corpus — public, operational, governance,"
-    },
-    {
-      "id": "document:.changeset/doc-bridge-2-5.md",
-      "type": "document",
-      "title": "doc-bridge-2-5.md",
-      "path": ".changeset/doc-bridge-2-5.md",
-      "description": "Update the optional @agentskit/doc-bridge dependency to ^2.5.0.",
-      "tags": [
-        "document",
-        "unclassified"
-      ],
-      "contentHash": "066cb6c6bf99cf493abbb17c0773cd820606298d34d90473effa16a586e7d3fb"
-    },
-    {
-      "id": "document:.changeset/reviewer-benchmark-version-pin.md",
-      "type": "document",
-      "title": "reviewer-benchmark-version-pin.md",
-      "path": ".changeset/reviewer-benchmark-version-pin.md",
-      "description": "feat: pin the measured version. The reviewer benchmark report now records the measured candidateVersion and the labelled dataset's datasetSha256, and scripts/check-version-pin.mjs (with checkVersionPin()) rejects a pin that is latest, a tag or a range, that differs from the measured version, that comes from a report that is not PASS, or that was measured on another dataset (RF-09).",
-      "tags": [
-        "document",
-        "unclassified"
-      ],
-      "contentHash": "6d408257b0f4a1aacd1f5a7c5e2ca550887877c93a624a7737ae4fea830946e9"
-    },
-    {
-      "id": "document:.changeset/reviewer-benchmark.md",
-      "type": "document",
-      "title": "reviewer-benchmark.md",
-      "path": ".changeset/reviewer-benchmark.md",
-      "description": "Add the reviewer benchmark: a 38-PR labelled dataset of real AgentsKit-io PRs, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, scripts/run-reviewer-benchmark.mjs to run it each release, and the agentskit-shadow-review wrapper for the line's shadow mode. The first run is BLOCKED (incumbent not reachable), so the switch stays off.",
-      "tags": [
-        "document",
-        "unclassified"
-      ],
-      "contentHash": "f433196b09dee4a628f0dfb123d8884bd04ee04b21263bf69a31739873c66bcf"
-    },
-    {
-      "id": "document:.changeset/rf-02-benchmark-report.md",
-      "type": "document",
-      "title": "rf-02-benchmark-report.md",
-      "path": ".changeset/rf-02-benchmark-report.md",
-      "description": "Reviewer benchmark report now shows bugs and false positives of both reviewers per PR and in total, with the counting rule and reproduction commands (mvp:RF-02).",
-      "tags": [
-        "document",
-        "unclassified"
-      ],
-      "contentHash": "bfb037b4f0d8d7f6b96742583c5962cab9f3819a4ca4922cfe5dcb1eaaa5196b"
-    },
-    {
-      "id": "document:.changeset/rf-03-incumbent-command.md",
-      "type": "document",
-      "title": "rf-03-incumbent-command.md",
-      "path": ".changeset/rf-03-incumbent-command.md",
-      "description": "New agentskit-incumbent-review <owner/repo> <number> command (mvp:RF-03): the incumbent line reviewer as an executable for run-reviewer-benchmark --incumbent-cmd. It prints {\"findings\":[{file,line,title}],\"costUsd\"} and exits non-zero on any failure, so an errored PR is never scored as clean.",
-      "tags": [
-        "document",
-        "unclassified"
-      ],
-      "contentHash": "18853803a8bf24f9bc49b7fa7ea907593f5fcd98b156afb0725ecffcae02e8ab"
-    },
-    {
-      "id": "document:.changeset/rf-04-token-cost.md",
-      "type": "document",
-      "title": "rf-04-token-cost.md",
-      "path": ".changeset/rf-04-token-cost.md",
-      "description": "Reviewer benchmark records input and output tokens of both reviewers and prices them with one versioned per-model table (quality/benchmark/prices.json); a completed PR with no measured cost blocks the report instead of showing zero (mvp:RF-04).",
-      "tags": [
-        "document",
-        "unclassified"
-      ],
-      "contentHash": "212f34f36634cace910714fe523da86b89c5744157496b46b8ad3a621335174f"
-    },
-    {
-      "id": "document:.changeset/rf-10-line-reviewer.md",
-      "type": "document",
-      "title": "rf-10-line-reviewer.md",
-      "path": ".changeset/rf-10-line-reviewer.md",
-      "description": "New agentskit-line-review command (mvp:RF-10) decides the factory line's review stage with Code Review and fails closed. It decides only when the shipped benchmark report is PASS. A failed or incomplete review never approves: it falls back to the incumbent, or blocks with AGENTSKIT_LINE_ON_FAILURE=block. With AGENTSKIT_LINE_RECORD every decision is appended to a log.",
-      "tags": [
-        "document",
-        "unclassified"
-      ],
-      "contentHash": "115a4320a4c9f1805c63518fa232e6dc1bc0fb80f6d915cfca5c797c80729c21"
-    },
-    {
-      "id": "document:.changeset/rf05-p90-latency.md",
-      "type": "document",
-      "title": "rf05-p90-latency.md",
-      "path": ".changeset/rf05-p90-latency.md",
-      "description": "Reviewer benchmark: report p90 latency and accept --stage-timeout-ms so the candidate must finish every PR within the line's review-stage time (RF-05).",
-      "tags": [
-        "document",
-        "unclassified"
-      ],
-      "contentHash": "eb326e8e60cc087b411cbb3e490dc96783c6cb40d371d43688b3832644d61168"
     },
     {
       "id": "document:.github/factory-playbook.md",
@@ -267,12 +171,12 @@
       "type": "document",
       "title": "Changelog",
       "path": "CHANGELOG.md",
-      "description": "#349 397778e Thanks @EmersonBraun! - Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7.",
+      "description": "#374 b946ee8 Thanks @noxcode-factory! - feat: pin the measured version. The reviewer benchmark report now records the measured candidateVersion and the labelled dataset's datasetSha256, and scripts/check-version-pin.mjs (with checkVersionPin()) rejects a pin that is latest, a tag or a range, that differs from the measured version, that comes from a report that is not PASS, or that was measured on",
       "tags": [
         "document",
         "project"
       ],
-      "contentHash": "cd40f8b0d3b4bc8592a96c82f9b10a271becc3feeaadb5833b486d2c677fb467"
+      "contentHash": "c1924eaecfb25dc3fdbe741617d74abdf8d42d6c52e72f10ce9c0289583cc189"
     },
     {
       "id": "document:CLAUDE.md",
@@ -3503,8 +3407,8 @@
     }
   },
   "inputs": {
-    "hash": "bd655d562e954bd926237875807f6f2ebd1e5751cb3e5c2f4f64eb47412e3dcf",
-    "fileCount": 240,
+    "hash": "757deb41b0cefd82ae7117b74307230d68413aa97b6f2d37b9c344ce8d2f8d1d",
+    "fileCount": 232,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3526,9 +3430,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "7245625c3fd7518701269437c59ceb3f1e885d7ed1e222447ce44f164b4e5a2d",
+    "contentHash": "1038d62fff24d275fc7397bb96d76d15ce23d6146c38b3f98b774be66b6fef41",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "d80a446bb67d5f064e3b7c3b9a6f15c27fec026d8e92d9ec06572a320e1f3ee0",
+    "snapshotHash": "ce86f81fca970c95432f8c812bbea9f835a7aa37661d15754f08d28987db88ac",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3548,7 +3452,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 219,
+      "documentCount": 211,
       "fieldNames": [
         "aliases",
         "body",
@@ -3559,13 +3463,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8447488584474887,
-        "body": 54.730593607305934,
-        "headings": 3.671232876712329,
-        "path": 5.593607305936073,
-        "summary": 4.255707762557078,
-        "symbols": 12.899543378995434,
-        "title": 4.269406392694064
+        "aliases": 2.876777251184834,
+        "body": 55.507109004739334,
+        "headings": 3.81042654028436,
+        "path": 5.563981042654029,
+        "summary": 3.3033175355450237,
+        "symbols": 13.388625592417062,
+        "title": 4.2274881516587675
       }
     },
     "entries": [
@@ -3808,274 +3712,6 @@
         "contentHash": "715edae67cdb05fb982dca41177f0c420f83422cf5af868a51e74d9e4fb42b41",
         "provenance": "declared",
         "confidence": "declared"
-      },
-      {
-        "id": "document:.changeset/doc-bridge-2-5.md",
-        "kind": "document",
-        "path": ".changeset/doc-bridge-2-5.md",
-        "title": "doc-bridge-2-5.md",
-        "summary": "Update the optional @agentskit/doc-bridge dependency to ^2.5.0.",
-        "aliases": [],
-        "tags": [
-          "document",
-          "unclassified"
-        ],
-        "fields": {
-          "title": "doc-bridge-2-5.md",
-          "headings": "",
-          "path": ".changeset/doc-bridge-2-5.md",
-          "symbols": "",
-          "summary": "Update the optional @agentskit/doc-bridge dependency to ^2.5.0.",
-          "body": "Update the optional @agentskit/doc-bridge dependency to ^2.5.0.",
-          "aliases": "document unclassified"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "066cb6c6bf99cf493abbb17c0773cd820606298d34d90473effa16a586e7d3fb",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
-        "id": "document:.changeset/reviewer-benchmark-version-pin.md",
-        "kind": "document",
-        "path": ".changeset/reviewer-benchmark-version-pin.md",
-        "title": "reviewer-benchmark-version-pin.md",
-        "summary": "feat: pin the measured version. The reviewer benchmark report now records the measured candidateVersion and the labelled dataset's datasetSha256, and scripts/check-version-pin.mjs (with checkVersionPin()) rejects a pin that is latest, a tag or a range, that differs from the measured version, that comes from a report that is not PASS, or that was measured on another dataset (RF-09).",
-        "aliases": [],
-        "tags": [
-          "document",
-          "unclassified"
-        ],
-        "fields": {
-          "title": "reviewer-benchmark-version-pin.md",
-          "headings": "",
-          "path": ".changeset/reviewer-benchmark-version-pin.md",
-          "symbols": "",
-          "summary": "feat: pin the measured version. The reviewer benchmark report now records the measured candidateVersion and the labelled dataset's datasetSha256, and scripts/check-version-pin.mjs (with checkVersionPin()) rejects a pin that is latest, a tag or a range, that differs from the measured version, that comes from a report that is not PASS, or that was measured on another dataset (RF-09).",
-          "body": "feat: pin the measured version. The reviewer benchmark report now records the measured candidateVersion and the labelled dataset's datasetSha256 , and scripts/check-version-pin.mjs (with checkVersionPin() ) rejects a pin that is latest , a tag or a range, that differs from the measured version, that comes from a report that is not PASS , or that was measured on another dataset (RF-09).",
-          "aliases": "document unclassified"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
-          "outbound": [
-            {
-              "kind": "mentions",
-              "id": "module:scripts/check-version-pin.mjs",
-              "confidence": "observed"
-            }
-          ]
-        },
-        "contentHash": "6d408257b0f4a1aacd1f5a7c5e2ca550887877c93a624a7737ae4fea830946e9",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
-        "id": "document:.changeset/reviewer-benchmark.md",
-        "kind": "document",
-        "path": ".changeset/reviewer-benchmark.md",
-        "title": "reviewer-benchmark.md",
-        "summary": "Add the reviewer benchmark: a 38-PR labelled dataset of real AgentsKit-io PRs, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, scripts/run-reviewer-benchmark.mjs to run it each release, and the agentskit-shadow-review wrapper for the line's shadow mode. The first run is BLOCKED (incumbent not reachable), so the switch stays off.",
-        "aliases": [],
-        "tags": [
-          "document",
-          "unclassified"
-        ],
-        "fields": {
-          "title": "reviewer-benchmark.md",
-          "headings": "",
-          "path": ".changeset/reviewer-benchmark.md",
-          "symbols": "",
-          "summary": "Add the reviewer benchmark: a 38-PR labelled dataset of real AgentsKit-io PRs, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, scripts/run-reviewer-benchmark.mjs to run it each release, and the agentskit-shadow-review wrapper for the line's shadow mode. The first run is BLOCKED (incumbent not reachable), so the switch stays off.",
-          "body": "Add the reviewer benchmark: a 38-PR labelled dataset of real AgentsKit-io PRs, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, scripts/run-reviewer-benchmark.mjs to run it each release, and the agentskit-shadow-review wrapper for the line's shadow mode. The first run is BLOCKED (incumbent not reachable), so the switch stays off.",
-          "aliases": "document unclassified"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
-          "outbound": [
-            {
-              "kind": "mentions",
-              "id": "module:scripts/run-reviewer-benchmark.mjs",
-              "confidence": "observed"
-            }
-          ]
-        },
-        "contentHash": "f433196b09dee4a628f0dfb123d8884bd04ee04b21263bf69a31739873c66bcf",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
-        "id": "document:.changeset/rf-02-benchmark-report.md",
-        "kind": "document",
-        "path": ".changeset/rf-02-benchmark-report.md",
-        "title": "rf-02-benchmark-report.md",
-        "summary": "Reviewer benchmark report now shows bugs and false positives of both reviewers per PR and in total, with the counting rule and reproduction commands (mvp:RF-02).",
-        "aliases": [],
-        "tags": [
-          "document",
-          "unclassified"
-        ],
-        "fields": {
-          "title": "rf-02-benchmark-report.md",
-          "headings": "",
-          "path": ".changeset/rf-02-benchmark-report.md",
-          "symbols": "",
-          "summary": "Reviewer benchmark report now shows bugs and false positives of both reviewers per PR and in total, with the counting rule and reproduction commands (mvp:RF-02).",
-          "body": "Reviewer benchmark report now shows bugs and false positives of both reviewers per PR and in total, with the counting rule and reproduction commands ( mvp:RF-02 ).",
-          "aliases": "document unclassified"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "bfb037b4f0d8d7f6b96742583c5962cab9f3819a4ca4922cfe5dcb1eaaa5196b",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
-        "id": "document:.changeset/rf-03-incumbent-command.md",
-        "kind": "document",
-        "path": ".changeset/rf-03-incumbent-command.md",
-        "title": "rf-03-incumbent-command.md",
-        "summary": "New agentskit-incumbent-review <owner/repo> <number> command (mvp:RF-03): the incumbent line reviewer as an executable for run-reviewer-benchmark --incumbent-cmd. It prints {\"findings\":[{file,line,title}],\"costUsd\"} and exits non-zero on any failure, so an errored PR is never scored as clean.",
-        "aliases": [],
-        "tags": [
-          "document",
-          "unclassified"
-        ],
-        "fields": {
-          "title": "rf-03-incumbent-command.md",
-          "headings": "",
-          "path": ".changeset/rf-03-incumbent-command.md",
-          "symbols": "",
-          "summary": "New agentskit-incumbent-review <owner/repo> <number> command (mvp:RF-03): the incumbent line reviewer as an executable for run-reviewer-benchmark --incumbent-cmd. It prints {\"findings\":[{file,line,title}],\"costUsd\"} and exits non-zero on any failure, so an errored PR is never scored as clean.",
-          "body": "New agentskit-incumbent-review <owner/repo <number command ( mvp:RF-03 ): the incumbent line reviewer as an executable for run-reviewer-benchmark --incumbent-cmd . It prints {\"findings\":[{file,line,title}],\"costUsd\"} and exits non-zero on any failure, so an errored PR is never scored as clean.",
-          "aliases": "document unclassified"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "18853803a8bf24f9bc49b7fa7ea907593f5fcd98b156afb0725ecffcae02e8ab",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
-        "id": "document:.changeset/rf-04-token-cost.md",
-        "kind": "document",
-        "path": ".changeset/rf-04-token-cost.md",
-        "title": "rf-04-token-cost.md",
-        "summary": "Reviewer benchmark records input and output tokens of both reviewers and prices them with one versioned per-model table (quality/benchmark/prices.json); a completed PR with no measured cost blocks the report instead of showing zero (mvp:RF-04).",
-        "aliases": [],
-        "tags": [
-          "document",
-          "unclassified"
-        ],
-        "fields": {
-          "title": "rf-04-token-cost.md",
-          "headings": "",
-          "path": ".changeset/rf-04-token-cost.md",
-          "symbols": "",
-          "summary": "Reviewer benchmark records input and output tokens of both reviewers and prices them with one versioned per-model table (quality/benchmark/prices.json); a completed PR with no measured cost blocks the report instead of showing zero (mvp:RF-04).",
-          "body": "Reviewer benchmark records input and output tokens of both reviewers and prices them with one versioned per-model table ( quality/benchmark/prices.json ); a completed PR with no measured cost blocks the report instead of showing zero ( mvp:RF-04 ).",
-          "aliases": "document unclassified"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "212f34f36634cace910714fe523da86b89c5744157496b46b8ad3a621335174f",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
-        "id": "document:.changeset/rf-10-line-reviewer.md",
-        "kind": "document",
-        "path": ".changeset/rf-10-line-reviewer.md",
-        "title": "rf-10-line-reviewer.md",
-        "summary": "New agentskit-line-review command (mvp:RF-10) decides the factory line's review stage with Code Review and fails closed. It decides only when the shipped benchmark report is PASS. A failed or incomplete review never approves: it falls back to the incumbent, or blocks with AGENTSKIT_LINE_ON_FAILURE=block. With AGENTSKIT_LINE_RECORD every decision is appended to a log.",
-        "aliases": [],
-        "tags": [
-          "document",
-          "unclassified"
-        ],
-        "fields": {
-          "title": "rf-10-line-reviewer.md",
-          "headings": "",
-          "path": ".changeset/rf-10-line-reviewer.md",
-          "symbols": "",
-          "summary": "New agentskit-line-review command (mvp:RF-10) decides the factory line's review stage with Code Review and fails closed. It decides only when the shipped benchmark report is PASS. A failed or incomplete review never approves: it falls back to the incumbent, or blocks with AGENTSKIT_LINE_ON_FAILURE=block. With AGENTSKIT_LINE_RECORD every decision is appended to a log.",
-          "body": "New agentskit-line-review command ( mvp:RF-10 ) decides the factory line's review stage with Code Review and fails closed. It decides only when the shipped benchmark report is PASS . A failed or incomplete review never approves: it falls back to the incumbent, or blocks with AGENTSKIT LINE ON FAILURE=block . With AGENTSKIT LINE RECORD every decision is appended to a log.",
-          "aliases": "document unclassified"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "115a4320a4c9f1805c63518fa232e6dc1bc0fb80f6d915cfca5c797c80729c21",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
-        "id": "document:.changeset/rf05-p90-latency.md",
-        "kind": "document",
-        "path": ".changeset/rf05-p90-latency.md",
-        "title": "rf05-p90-latency.md",
-        "summary": "Reviewer benchmark: report p90 latency and accept --stage-timeout-ms so the candidate must finish every PR within the line's review-stage time (RF-05).",
-        "aliases": [],
-        "tags": [
-          "document",
-          "unclassified"
-        ],
-        "fields": {
-          "title": "rf05-p90-latency.md",
-          "headings": "",
-          "path": ".changeset/rf05-p90-latency.md",
-          "symbols": "",
-          "summary": "Reviewer benchmark: report p90 latency and accept --stage-timeout-ms so the candidate must finish every PR within the line's review-stage time (RF-05).",
-          "body": "Reviewer benchmark: report p90 latency and accept --stage-timeout-ms so the candidate must finish every PR within the line's review-stage time (RF-05).",
-          "aliases": "document unclassified"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "eb326e8e60cc087b411cbb3e490dc96783c6cb40d371d43688b3832644d61168",
-        "provenance": "observed",
-        "confidence": "observed"
       },
       {
         "id": "document:.github/factory-playbook.md",
@@ -4547,7 +4183,7 @@
         "kind": "document",
         "path": "CHANGELOG.md",
         "title": "Changelog",
-        "summary": "#349 397778e Thanks @EmersonBraun! - Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7.",
+        "summary": "#374 b946ee8 Thanks @noxcode-factory! - feat: pin the measured version. The reviewer benchmark report now records the measured candidateVersion and the labelled dataset's datasetSha256, and scripts/check-version-pin.mjs (with checkVersionPin()) rejects a pin that is latest, a tag or a range, that differs from the measured version, that comes from a report that is not PASS, or that was measured on",
         "audience": "human",
         "aliases": [],
         "tags": [
@@ -4556,11 +4192,11 @@
         ],
         "fields": {
           "title": "Changelog",
-          "headings": "Changelog 0.32.5 Patch Changes 0.32.4 Patch Changes 0.32.3 Patch Changes 0.32.2 Patch Changes 0.32.1 Patch Changes 0.32.0 Minor Changes 0.31.0 Minor Changes Patch Changes 0.30.19 Patch Changes 0.30.18 Patch Changes 0.30.17 Patch Changes 0.30.16 Patch Changes 0.30.15 Patch Changes 0.30.14 Patch Changes 0.30.13 Patch Changes 0.30.12 Patch Changes 0.30.11 Patch Changes 0.30.10 Patch Changes 0.30.9 Patch Changes 0.30.8 Patch Changes 0.30.7 Patch Changes 0.30.6 Patch Changes 0.30.5 Patch Changes 0.30.4 Patch Changes 0.30.3 Patch Changes 0.30.2 Patch Changes 0.30.1 Patch Changes 0.30.0 Minor Changes 0.29.0 Minor Changes 0.28.0 Minor Changes 0.27.0 Minor Changes 0.26.0 Minor Changes",
+          "headings": "Changelog 0.33.0 Minor Changes Patch Changes 0.32.5 Patch Changes 0.32.4 Patch Changes 0.32.3 Patch Changes 0.32.2 Patch Changes 0.32.1 Patch Changes 0.32.0 Minor Changes 0.31.0 Minor Changes Patch Changes 0.30.19 Patch Changes 0.30.18 Patch Changes 0.30.17 Patch Changes 0.30.16 Patch Changes 0.30.15 Patch Changes 0.30.14 Patch Changes 0.30.13 Patch Changes 0.30.12 Patch Changes 0.30.11 Patch Changes 0.30.10 Patch Changes 0.30.9 Patch Changes 0.30.8 Patch Changes 0.30.7 Patch Changes 0.30.6 Patch Changes 0.30.5 Patch Changes 0.30.4 Patch Changes 0.30.3 Patch Changes 0.30.2 Patch Changes 0.30.1 Patch Changes 0.30.0 Minor Changes 0.29.0 Minor Changes 0.28.0 Minor Changes 0.27.0",
           "path": "CHANGELOG.md",
           "symbols": "",
-          "summary": "#349 397778e Thanks @EmersonBraun! - Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7.",
-          "body": "Changelog 0.32.5 Patch Changes - Thanks ! - Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7. 0.32.4 Patch Changes - Thanks ! - Run the publish job in the npm GitHub environment that the package's npm Trusted Publisher requires. The 0.32.3 publish was refused by npm because the job ran without it; this release ships those changes. 0.32.3 Patch Changes - Thanks ! - Align @agentskit/ dependencies with the latest releases: adapters ^0.19.0, core ^1.15.0, cross-platform ^0.3.0, ink 0.10.16, net ^0.2.3, runtime ^0.11.2, tools ^0.13.15. - Thanks ! - Codex lenses send the review prompt over stdin instead of as a command-line argument, so reviewing a large file no longer fails on Windows with spawn ENAMETOOLONG . - Thanks ! - Reuse AgentsKit Core's shared secret redactor for review source content and local CLI diagnostics. - Thanks ! - Route local CLI spawning, process-tree termination, and Windows-sensitive path/line handling through @agentskit/cross-platform instead of hand-rolled cross-spawn , negative-pid group kills, and shell: true probes. cross-spawn is no longer a direct dependency. npm run check now runs agentskit-cross-platform check against a committed baseline so new portability hazards fail. - Thanks ! - An incomplete review is published without the idempotency marker, so a later run at the same head reviews it again instead of printing SKIPPED: already reviewed without the requested --result . - Thanks ! - Recognise --provider minimax (MiniMax, MINIMAX API KEY ) as a stable API provider once @agentskit/adapters exports the minimax adapter. - Thanks ! - Use @agentskit/net for GitHub retry, per-attempt timeout, and bounded response-body handling. GETs now honor bounded Retry-After and jittered backoff; write reconciliation and the single-attempt mutation policy remain intact. - Thanks ! - Route GitHub REST traffic through one internal client with bounded JSON reads, API version and auth headers, same-origin redirect and pagination handling, and rate-limit-aware retries for GET requests. Keep all review and merge writes single-attempt. 0.32.2 Patch Changes - Thanks ! - Publish the Windows local-CLI spawn fix from 0.32.1, which never reached npm: the publish workflow ran the release checks without installing the documentation app's dependencies ( fumadocs-mdx: not found ). The workflow now installs apps/docs dependencies before npm run check , matching CI. 0.32.1 Patch Changes - Thanks ! - Fix local CLI providers ( claude-cli , codex-cli , ...) failing to spawn on Windows. npm's global install of any Node CLI produces a .cmd shim there, and Windows' CreateProcess cannot execute one without a shell, so the previous plain child process.spawn failed with ENOENT / EINVAL for every local provider regardless of the configured path — reproduced live via doctor --provider claude-cli , which reported executable: not found even though the CLI ran fine directly in the same shell. Switched to cross-spawn , which detects this case and re-execs through cmd.exe with the same argument escaping Node's own shell: true uses. 0.32.0 Minor Changes - Thanks ! - Migrate from zod v3 to zod v4, and drop zod-to-json-schema in favor of zod v4's native z.toJSONSchema() . zod-to-json-schema@3.25.2 declares zod v4 support in its peer dependencies, but its published types still import zod/v3 internally — passing it a native v4 schema fails to typecheck, so bumping the library alone doesn't work; the dependency has to go. This surfaced a real, pre-existing fragility during the migration: every structured tool-call schema in agents/code-review/agent.ts ( submit batched findings , submit verdicts , etc.) relied on zod-to-json-schema 's implicit default of additionalProperties: false for every z.object() , strict or not. z.toJSONSchema() only sets that when a schema is explicitly .strict() . Every one of those schemas is now .strict() by name, and a new test ( test/tool-schema-order.test.mjs ) locks additionalProperties: f",
+          "summary": "#374 b946ee8 Thanks @noxcode-factory! - feat: pin the measured version. The reviewer benchmark report now records the measured candidateVersion and the labelled dataset's datasetSha256, and scripts/check-version-pin.mjs (with checkVersionPin()) rejects a pin that is latest, a tag or a range, that differs from the measured version, that comes from a report that is not PASS, or that was measured on",
+          "body": "Changelog 0.33.0 Minor Changes - Thanks ! - feat: pin the measured version. The reviewer benchmark report now records the measured candidateVersion and the labelled dataset's datasetSha256 , and scripts/check-version-pin.mjs (with checkVersionPin() ) rejects a pin that is latest , a tag or a range, that differs from the measured version, that comes from a report that is not PASS , or that was measured on another dataset (RF-09). - Thanks ! - Add the reviewer benchmark: a 38-PR labelled dataset of real AgentsKit-io PRs, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, scripts/run-reviewer-benchmark.mjs to run it each release, and the agentskit-shadow-review wrapper for the line's shadow mode. The first run is BLOCKED (incumbent not reachable), so the switch stays off. - Thanks ! - New agentskit-incumbent-review <owner/repo <number command ( mvp:RF-03 ): the incumbent line reviewer as an executable for run-reviewer-benchmark --incumbent-cmd . It prints {\"findings\":[{file,line,title}],\"costUsd\"} and exits non-zero on any failure, so an errored PR is never scored as clean. - Thanks ! - New agentskit-line-review command ( mvp:RF-10 ) decides the factory line's review stage with Code Review and fails closed. It decides only when the shipped benchmark report is PASS . A failed or incomplete review never approves: it falls back to the incumbent, or blocks with AGENTSKIT LINE ON FAILURE=block . With AGENTSKIT LINE RECORD every decision is appended to a log. - Thanks ! - Reviewer benchmark: report p90 latency and accept --stage-timeout-ms so the candidate must finish every PR within the line's review-stage time (RF-05). Patch Changes - Thanks ! - Update the optional @agentskit/doc-bridge dependency to ^2.5.0. - Thanks ! - Reviewer benchmark report now shows bugs and false positives of both reviewers per PR and in total, with the counting rule and reproduction commands ( mvp:RF-02 ). - Thanks ! - Reviewer benchmark records input and output tokens of both reviewers and prices them with one versioned per-model table ( quality/benchmark/prices.json ); a completed PR with no measured cost blocks the report instead of showing zero ( mvp:RF-04 ). 0.32.5 Patch Changes - Thanks ! - Update runtime dependencies to their latest patch versions: tsx 4.23.15 and zod 4.6.7. 0.32.4 Patch Changes - Thanks ! - Run the publish job in the npm GitHub environment that the package's npm Trusted Publisher requires. The 0.32.3 publish was refused by npm because the job ran without it; this release ships those changes. 0.32.3 Patch Changes - Thanks ! - Align @agentskit/ dependencies with the latest releases: adapters ^0.19.0, core ^1.15.0, cross-platform ^0.3.0, ink 0.10.16, net ^0.2.3, runtime ^0.11.2, tools ^0.13.15. - Thanks ! - Codex lenses send the review prompt over stdin instead of as a command-line argument, so reviewing a large file no longer fails on Windows with spawn ENAMETOOLONG . - Thanks ! - Reuse AgentsKit Core's shared secret redactor for review source content and local CLI diagnostics. - Thanks ! - Route local CLI spawning, process-tree termination, and Windows-sensitive path/line handling through @agentskit/cross-platform instead of hand-rolled cross-spawn , negative-pid group kills, and shell: true probes. cross-spawn is no longer a direct dependency. npm run check now runs agentskit-cross-platform check against a committed baseline so new portability hazards fail. - Thanks ! - An incomplete review is published without the idempotency marker, so a later run at the same head reviews it again instead of printing SKIPPED: already reviewed without the requested --result . - Thanks ! - Recognise --provider minimax (MiniMax, MINIMAX API KEY ) as a stable API provider once @agentskit/adapters exports the minimax adapter. - Thanks ! - Use @agentskit/net for GitHub retry, per-attempt timeout, and bounded response-body handling. GETs now honor bounded Retry-After and jittered backoff; write ",
           "aliases": "document project"
         },
         "graph": {
@@ -4607,6 +4243,16 @@
             {
               "kind": "mentions",
               "id": "module:agents/code-review/rules.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:scripts/check-version-pin.mjs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:scripts/run-reviewer-benchmark.mjs",
               "confidence": "observed"
             },
             {
@@ -4706,7 +4352,7 @@
             }
           ]
         },
-        "contentHash": "cd40f8b0d3b4bc8592a96c82f9b10a271becc3feeaadb5833b486d2c677fb467",
+        "contentHash": "c1924eaecfb25dc3fdbe741617d74abdf8d42d6c52e72f10ce9c0289583cc189",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -8897,14 +8543,14 @@
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [
-            "document:.changeset/reviewer-benchmark-version-pin.md"
+            "document:CHANGELOG.md"
           ],
           "areaId": "area:scripts",
           "packageId": "package:@agentskit/code-review",
           "inbound": [
             {
               "kind": "mentions",
-              "id": "document:.changeset/reviewer-benchmark-version-pin.md",
+              "id": "document:CHANGELOG.md",
               "confidence": "observed"
             }
           ],
@@ -9522,7 +9168,7 @@
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
-            "document:.changeset/reviewer-benchmark.md",
+            "document:CHANGELOG.md",
             "document:docs/for-agents/code-review.md",
             "document:docs/reviewer-benchmark.md"
           ],
@@ -9531,7 +9177,7 @@
           "inbound": [
             {
               "kind": "mentions",
-              "id": "document:.changeset/reviewer-benchmark.md",
+              "id": "document:CHANGELOG.md",
               "confidence": "observed"
             },
             {
@@ -15866,7 +15512,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "851e9ac77fb14b8bacd1017c4bf2ee2952727d2a2a3364738d3a34cc93d26db5",
+        "contentHash": "8dd46800392283c3e9326fde1cad76a87ff67b4bc9f64bd8079f8b9beda3ed3e",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
