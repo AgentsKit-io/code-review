@@ -11,10 +11,10 @@
     "cf:deploy": "npm run cf:build && npx -y wrangler@4 deploy"
   },
   "dependencies": {
-    "fumadocs-core": "16.17.7",
-    "fumadocs-mdx": "15.4.9",
-    "fumadocs-ui": "16.17.7",
-    "next": "16.4.2",
+    "fumadocs-core": "16.17.10",
+    "fumadocs-mdx": "15.4.10",
+    "fumadocs-ui": "16.17.10",
+    "next": "16.4.4",
     "react": "19.3.1",
     "react-dom": "19.3.1"
   },
