@@ -24,10 +24,14 @@ console.error(`agent: exit=${run.status} duration_ms=${Date.now() - started}`)
 if (run.status !== 0) process.exit(1)
 
 const review = JSON.parse(readFileSync(resultFile, 'utf8'))
-const findings = (review.findings ?? []).map((f) => ({
+// Contract needs a file and a positive integer line: drop findings without them instead of writing undefined.
+const valid = (f) => typeof f.file === 'string' && f.file !== '' && Number.isInteger(f.line) && f.line > 0
+const usable = (review.findings ?? []).filter(valid)
+if (usable.length !== (review.findings ?? []).length) console.error(`agent: dropped ${(review.findings ?? []).length - usable.length} finding(s) without file/line`)
+const findings = usable.map((f) => ({
   file: f.file,
   start_line: f.line,
-  end_line: Math.max(f.line, f.endLine ?? f.line),
+  end_line: Math.max(f.line, Number.isInteger(f.endLine) ? f.endLine : f.line),
   message: `${f.title}: ${f.rationale}${f.suggestion ? ` Suggestion: ${f.suggestion}` : ''}`,
   producer: agent,
 }))
@@ -37,5 +41,5 @@ writeFileSync(env.RB_OUT, JSON.stringify({
   findings,
 }, null, 2))
 // Run metadata for RESULTS.md (not part of the contract).
-writeFileSync(`${env.RB_OUT}.meta.json`, JSON.stringify({ model, votes, profile, durationMs: Date.now() - started, evidence: review.evidence, incomplete: review.incomplete, verdict: review.verdict, findings: findings.length }, null, 2))
+writeFileSync(`${env.RB_OUT}.meta.json`, JSON.stringify({ datasetVersion: env.RB_DATASET_VERSION ?? null, model, votes, profile, durationMs: Date.now() - started, evidence: review.evidence, incomplete: review.incomplete, verdict: review.verdict, findings: findings.length }, null, 2))
 console.error(`agent: ${findings.length} finding(s)`)
