@@ -4,7 +4,7 @@ import { spawnSync } from 'node:child_process'
 import { readFileSync, writeFileSync } from 'node:fs'
 
 const env = process.env
-for (const n of ['RB_NWO', 'RB_PR_NUMBER', 'RB_BASE', 'RB_HEAD', 'RB_OUT']) {
+for (const n of ['RB_NWO', 'RB_PR_NUMBER', 'RB_BASE', 'RB_HEAD', 'RB_OUT', 'RB_DATASET_VERSION']) {
   if (!env[n]) { console.error(`agent: missing ${n}`); process.exit(2) }
 }
 const repo = env.RB_REPO ?? '/work/repo'

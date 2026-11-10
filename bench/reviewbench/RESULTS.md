@@ -29,7 +29,7 @@ docker build -f bench/reviewbench/Dockerfile -t code-review-rb:dev .
 # Stop the batch near the judge's cap (see judge cost column).
 ```
 
-`agent.mjs` records `RB_DATASET_VERSION` in `<out>.meta.json`, and drops findings without file/line
+`agent.mjs` refuses to run without `RB_DATASET_VERSION` (the dataset pin), records it in `<out>.meta.json`, and drops findings without file/line
 (the contract needs both).
 
 ## Results (fill in after the run — all pending, nothing invented)
