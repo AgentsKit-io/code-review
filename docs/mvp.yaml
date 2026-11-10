@@ -65,8 +65,8 @@ requirements:
   acceptance:
     - test: test/incumbent-review.test.mjs
   homolog: []
-  issues: [359]
-  prs: []
+  issues: [359, 366]
+  prs: [389]
 - id: RF-04
   title: Custo dos dois revisores pelos tokens, com a mesma tabela de preço
   done_when: >-
