@@ -134,10 +134,11 @@ requirements:
     A versão do pacote que passou no RF-06 e no RF-08 está publicada no npm e a linha usa exatamente essa versão
     (sem @latest); trocar de versão exige remedir o conjunto rotulado contra o incumbente
   weight: 1
-  acceptance: []
+  acceptance:
+    - test: test/reviewer-benchmark.test.mjs
   homolog: []
-  issues: []
-  prs: []
+  issues: [371]
+  prs: [374]
 - id: RF-10
   title: Ligado como revisor da fábrica
   done_when: >-
