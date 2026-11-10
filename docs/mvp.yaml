@@ -120,7 +120,8 @@ requirements:
     correção, os falsos alarmes e o custo pelos tokens, e os três critérios (bugs ≥, falsos positivos <, custo ≤
     +20%) continuam valendo
   weight: 2
-  acceptance: []
+  acceptance:
+  - test: test/shadow-week.test.mjs
   homolog: []
   issues: []
   prs: []
