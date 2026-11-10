@@ -38,10 +38,11 @@ requirements:
     bug, clean), vindos dos repositórios onde os dois revisores rodam; o runner dá aos dois revisores exatamente os
     mesmos PRs, no mesmo commit, e o relatório diz qual conjunto e qual versão foram usados
   weight: 2
-  acceptance: []
+  acceptance:
+    - test: test/reviewer-benchmark.test.mjs
   homolog: []
   issues: [359]
-  prs: []
+  prs: [388]
 - id: RF-02
   title: Bugs reais e falsos positivos medidos nos dois revisores
   done_when: >-
