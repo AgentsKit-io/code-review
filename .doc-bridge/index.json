@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "bc3e8d4ca166394c01a660ff1587e5af2ef85c77a580a7a5256821c482b64073",
+  "contentHash": "09120462dfbd7732cb29ac34db589d6a1146db2788d8f3a061cb713140a27923",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-10T01:16:20.385Z",
+  "generatedAt": "2026-11-10T07:01:37.516Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -189,6 +189,30 @@
         "human"
       ],
       "contentHash": "4aec718b2e2371cda20dc868a638cc903907b5000e164a0a63abd0244ce6b6d4"
+    },
+    {
+      "id": "document:bench/reviewbench/RESULTS.md",
+      "type": "document",
+      "title": "ReviewBench — code-review (25-PR private showcase subset)",
+      "path": "bench/reviewbench/RESULTS.md",
+      "description": "Status: NOT MEASURED YET. No score is reported on purpose: the private 25-PR evaluation needs the ReviewBench private subset, its Harbor runner and the factory's subscription model pool, none of which are available in the agent sandbox that produced this change. No number below is invented. Nothing was submitted to the public leaderboard and the full 219-PR set was not run.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "fb029844870e0dc1b833620d3c89119d7c35f1289689de65da94c23e09b01aae"
+    },
+    {
+      "id": "document:changelog.d/361.md",
+      "type": "document",
+      "title": "361.md",
+      "path": "changelog.d/361.md",
+      "description": "feat: ReviewBench adapter image (bench/reviewbench) that runs agentskit-review on one PR and writes the findings file",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "26d0c66cfcb799547c3c6255e2f472e7c1f1a2bc138aabb8a40f750ca47be171"
     },
     {
       "id": "document:changelog.d/364.md",
@@ -1130,6 +1154,18 @@
         "types"
       ],
       "contentHash": "8ed05388b236b1b7c8434f635720d685773a7071bc3cf90eee26c647b8c474f2"
+    },
+    {
+      "id": "module:bench/reviewbench/agent.mjs",
+      "type": "module",
+      "title": "agent.mjs",
+      "path": "bench/reviewbench/agent.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "reviewbench"
+      ],
+      "contentHash": "848767c173555ff5d732099658d1fa0ae045b5de8a6f7e7efb8ea09e6451bc15"
     },
     {
       "id": "module:examples/verify-readme.mjs",
@@ -3515,8 +3551,8 @@
     }
   },
   "inputs": {
-    "hash": "a3f2edcfbbd578ca5a1e1b7d3a280fddbfb8d891f5a7e3d6ce0824bdbffdc70c",
-    "fileCount": 241,
+    "hash": "6477dbf31db0e591a09ad5116bbe202f00011f26c7ee55928c2c0af2b07d150e",
+    "fileCount": 244,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3538,9 +3574,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "94ba40680a6c811d11bbd0f727e230446c428018f12897d716c7e71b05586738",
+    "contentHash": "3a92ee36806d8f68d3bffcb61cf519e3dfec61e3ec68afdfe55483a52042e358",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "7b63895a0f2b6607f8b9088a23889e180a9bef84e9c4c0d33dbac8fa2f5c57ea",
+    "snapshotHash": "ce77bc84295fa2d7346065c2a0bda443e000edeb653f599e153103d1aaa589b7",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3560,7 +3596,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 220,
+      "documentCount": 224,
       "fieldNames": [
         "aliases",
         "body",
@@ -3571,13 +3607,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.840909090909091,
-        "body": 54.6,
-        "headings": 3.6545454545454548,
-        "path": 5.586363636363636,
-        "summary": 4.281818181818182,
-        "symbols": 12.840909090909092,
-        "title": 4.259090909090909
+        "aliases": 2.825892857142857,
+        "body": 54.535714285714285,
+        "headings": 3.6830357142857144,
+        "path": 5.553571428571429,
+        "summary": 4.473214285714286,
+        "symbols": 12.611607142857142,
+        "title": 4.258928571428571
       }
     },
     "entries": [
@@ -3601,13 +3637,19 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 1,
+          "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
+            "document:bench/reviewbench/RESULTS.md",
             "document:docs/for-agents/code-review.md"
           ],
           "packageId": "package:@agentskit/code-review",
           "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:bench/reviewbench/RESULTS.md",
+              "confidence": "fuzzy"
+            },
             {
               "kind": "mentions",
               "id": "document:docs/for-agents/code-review.md",
@@ -3662,6 +3704,37 @@
           "outbound": []
         },
         "contentHash": "753432dc6f4a3a1dcfbae07761b77f25fa56931e02cce58bbef0022689e9a759",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "area:bench",
+        "kind": "area",
+        "path": "bench",
+        "title": "bench",
+        "aliases": [],
+        "tags": [
+          "area"
+        ],
+        "fields": {
+          "title": "bench",
+          "headings": "",
+          "path": "bench",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "area"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "448b2898e393ce7b22684c51b828710502399fe23a82c28b76084b12bd815257",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -4353,6 +4426,77 @@
           ]
         },
         "contentHash": "4aec718b2e2371cda20dc868a638cc903907b5000e164a0a63abd0244ce6b6d4",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:bench/reviewbench/RESULTS.md",
+        "kind": "document",
+        "path": "bench/reviewbench/RESULTS.md",
+        "title": "ReviewBench — code-review (25-PR private showcase subset)",
+        "summary": "Status: NOT MEASURED YET. No score is reported on purpose: the private 25-PR evaluation needs the ReviewBench private subset, its Harbor runner and the factory's subscription model pool, none of which are available in the agent sandbox that produced this change. No number below is invented. Nothing was submitted to the public leaderboard and the full 219-PR set was not run.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "ReviewBench — code-review (25-PR private showcase subset)",
+          "headings": "ReviewBench — code-review (25-PR private showcase subset) What exists Reproduce (to be run by the operator with the factory pool) Results (fill in after the run)",
+          "path": "bench/reviewbench/RESULTS.md",
+          "symbols": "",
+          "summary": "Status: NOT MEASURED YET. No score is reported on purpose: the private 25-PR evaluation needs the ReviewBench private subset, its Harbor runner and the factory's subscription model pool, none of which are available in the agent sandbox that produced this change. No number below is invented. Nothing was submitted to the public leaderboard and the full 219-PR set was not run.",
+          "body": "ReviewBench — code-review (25-PR private showcase subset) Status: NOT MEASURED YET. No score is reported on purpose: the private 25-PR evaluation needs the ReviewBench private subset, its Harbor runner and the factory's subscription model pool, none of which are available in the agent sandbox that produced this change. No number below is invented. Nothing was submitted to the public leaderboard and the full 219-PR set was not run. What exists - Dockerfile — reviewer image (agentskit-review + claude CLI, subscription auth, no paid API key). - agent.mjs — adapter: runs agentskit-review --provider claude-cli on one PR and writes the findings file of the ReviewBench agent contract, plus <out .meta.json (model, votes, profile, duration, findings). Configuration via RB CONFIG MODEL (default claude-sonnet-5-5 ), RB CONFIG VOTES (3), RB CONFIG PROFILE (full), RB CONFIG DEADLINE MS (1500000). Reproduce (to be run by the operator with the factory pool) Results (fill in after the run) Field Value --- --- Dataset version (pinned) pending — record the runner's version here Model / config pending F1 / precision / recall (grounded) pending Leaderboard on 2026-10-30 for comparison: 1 OhMyBug 83.0, Copilot Max 75.7, Laude RevEngine (Opus 5.5) 73.3, Codex 70.2. Per-PR table (model, configuration, duration, comments), false-negative categories, false-positive analysis and the 3–5 recommended changes: pending the run .",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "mentions",
+              "id": "area:agents",
+              "confidence": "fuzzy"
+            }
+          ]
+        },
+        "contentHash": "fb029844870e0dc1b833620d3c89119d7c35f1289689de65da94c23e09b01aae",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:changelog.d/361.md",
+        "kind": "document",
+        "path": "changelog.d/361.md",
+        "title": "361.md",
+        "summary": "feat: ReviewBench adapter image (bench/reviewbench) that runs agentskit-review on one PR and writes the findings file",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "361.md",
+          "headings": "",
+          "path": "changelog.d/361.md",
+          "symbols": "",
+          "summary": "feat: ReviewBench adapter image (bench/reviewbench) that runs agentskit-review on one PR and writes the findings file",
+          "body": "feat: ReviewBench adapter image (bench/reviewbench) that runs agentskit-review on one PR and writes the findings file",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "26d0c66cfcb799547c3c6255e2f472e7c1f1a2bc138aabb8a40f750ca47be171",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -8772,6 +8916,40 @@
           "outbound": []
         },
         "contentHash": "8ed05388b236b1b7c8434f635720d685773a7071bc3cf90eee26c647b8c474f2",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:bench/reviewbench/agent.mjs",
+        "kind": "module",
+        "path": "bench/reviewbench/agent.mjs",
+        "title": "agent.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "reviewbench"
+        ],
+        "fields": {
+          "title": "agent.mjs",
+          "headings": "",
+          "path": "bench/reviewbench/agent.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs reviewbench"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:bench",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "848767c173555ff5d732099658d1fa0ae045b5de8a6f7e7efb8ea09e6451bc15",
         "provenance": "observed",
         "confidence": "observed"
       },
