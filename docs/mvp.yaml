@@ -38,10 +38,11 @@ requirements:
     bug, clean), vindos dos repositórios onde os dois revisores rodam; o runner dá aos dois revisores exatamente os
     mesmos PRs, no mesmo commit, e o relatório diz qual conjunto e qual versão foram usados
   weight: 2
-  acceptance: []
+  acceptance:
+    - test: test/reviewer-benchmark.test.mjs
   homolog: []
   issues: [359]
-  prs: []
+  prs: [388]
 - id: RF-02
   title: Bugs reais e falsos positivos medidos nos dois revisores
   done_when: >-
@@ -61,10 +62,11 @@ requirements:
     {"findings":[{file,line,title}],"costUsd"}; o run-reviewer-benchmark com --incumbent-cmd termina sem nenhum PR
     do incumbente em erro
   weight: 2
-  acceptance: []
+  acceptance:
+    - test: test/incumbent-review.test.mjs
   homolog: []
-  issues: [359]
-  prs: []
+  issues: [359, 366]
+  prs: [389]
 - id: RF-04
   title: Custo dos dois revisores pelos tokens, com a mesma tabela de preço
   done_when: >-
@@ -72,7 +74,9 @@ requirements:
     calculado pela mesma tabela de preço por modelo, versionada no repositório; o relatório não mostra custo zero em
     nenhum PR completo
   weight: 1
-  acceptance: []
+  acceptance:
+    - test: test/reviewer-benchmark.test.mjs
+    - test: test/incumbent-review.test.mjs
   homolog: []
   issues: []
   prs: []
@@ -119,7 +123,8 @@ requirements:
     correção, os falsos alarmes e o custo pelos tokens, e os três critérios (bugs ≥, falsos positivos <, custo ≤
     +20%) continuam valendo
   weight: 2
-  acceptance: []
+  acceptance:
+  - test: test/shadow-week.test.mjs
   homolog: []
   issues: []
   prs: []

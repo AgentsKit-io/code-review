@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "effectiveDate": "2026-11-02",
+  "_note": "Shared by both reviewers in the benchmark. USD per million tokens. Rates are list prices copied by hand from the provider price page: confirm them there before a decisive run and bump effectiveDate when they change. Add a model here before a reviewer uses it.",
+  "models": {
+    "claude-opus-5-5": { "inputUsdPerMtok": 5, "outputUsdPerMtok": 25 },
+    "claude-sonnet-5-5": { "inputUsdPerMtok": 3, "outputUsdPerMtok": 15 },
+    "claude-haiku-5-5": { "inputUsdPerMtok": 1, "outputUsdPerMtok": 5 }
+  }
+}

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "a69416433d25b291e0fedd43ff46336bea6d06aa29fa0e3d47d87bd8509e7446",
+  "contentHash": "bc3e8d4ca166394c01a660ff1587e5af2ef85c77a580a7a5256821c482b64073",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-03T01:23:07.138Z",
+  "generatedAt": "2026-11-10T01:16:20.385Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -35,6 +35,18 @@
       "contentHash": "066cb6c6bf99cf493abbb17c0773cd820606298d34d90473effa16a586e7d3fb"
     },
     {
+      "id": "document:.changeset/reviewer-benchmark-version-pin.md",
+      "type": "document",
+      "title": "reviewer-benchmark-version-pin.md",
+      "path": ".changeset/reviewer-benchmark-version-pin.md",
+      "description": "feat: pin the measured version. The reviewer benchmark report now records the measured candidateVersion and the labelled dataset's datasetSha256, and scripts/check-version-pin.mjs (with checkVersionPin()) rejects a pin that is latest, a tag or a range, that differs from the measured version, that comes from a report that is not PASS, or that was measured on another dataset (RF-09).",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "6d408257b0f4a1aacd1f5a7c5e2ca550887877c93a624a7737ae4fea830946e9"
+    },
+    {
       "id": "document:.changeset/reviewer-benchmark.md",
       "type": "document",
       "title": "reviewer-benchmark.md",
@@ -59,6 +71,30 @@
       "contentHash": "bfb037b4f0d8d7f6b96742583c5962cab9f3819a4ca4922cfe5dcb1eaaa5196b"
     },
     {
+      "id": "document:.changeset/rf-03-incumbent-command.md",
+      "type": "document",
+      "title": "rf-03-incumbent-command.md",
+      "path": ".changeset/rf-03-incumbent-command.md",
+      "description": "New agentskit-incumbent-review <owner/repo> <number> command (mvp:RF-03): the incumbent line reviewer as an executable for run-reviewer-benchmark --incumbent-cmd. It prints {\"findings\":[{file,line,title}],\"costUsd\"} and exits non-zero on any failure, so an errored PR is never scored as clean.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "18853803a8bf24f9bc49b7fa7ea907593f5fcd98b156afb0725ecffcae02e8ab"
+    },
+    {
+      "id": "document:.changeset/rf-04-token-cost.md",
+      "type": "document",
+      "title": "rf-04-token-cost.md",
+      "path": ".changeset/rf-04-token-cost.md",
+      "description": "Reviewer benchmark records input and output tokens of both reviewers and prices them with one versioned per-model table (quality/benchmark/prices.json); a completed PR with no measured cost blocks the report instead of showing zero (mvp:RF-04).",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "212f34f36634cace910714fe523da86b89c5744157496b46b8ad3a621335174f"
+    },
+    {
       "id": "document:.changeset/rf-10-line-reviewer.md",
       "type": "document",
       "title": "rf-10-line-reviewer.md",
@@ -69,6 +105,30 @@
         "unclassified"
       ],
       "contentHash": "115a4320a4c9f1805c63518fa232e6dc1bc0fb80f6d915cfca5c797c80729c21"
+    },
+    {
+      "id": "document:.changeset/rf05-p90-latency.md",
+      "type": "document",
+      "title": "rf05-p90-latency.md",
+      "path": ".changeset/rf05-p90-latency.md",
+      "description": "Reviewer benchmark: report p90 latency and accept --stage-timeout-ms so the candidate must finish every PR within the line's review-stage time (RF-05).",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "eb326e8e60cc087b411cbb3e490dc96783c6cb40d371d43688b3832644d61168"
+    },
+    {
+      "id": "document:.github/factory-playbook.md",
+      "type": "document",
+      "title": "Factory playbook — AgentsKit-io/code-review",
+      "path": ".github/factory-playbook.md",
+      "description": "Public repo: only synthetic data, never anything from private repos (see AGENTS.md). Read AGENTS.md and docs/for-agents/code-review.md before editing.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "4bacf22c58380142ea435c7493f5a83c941db461b2eab49b084c492c2f840f42"
     },
     {
       "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
@@ -131,6 +191,30 @@
       "contentHash": "4aec718b2e2371cda20dc868a638cc903907b5000e164a0a63abd0244ce6b6d4"
     },
     {
+      "id": "document:changelog.d/364.md",
+      "type": "document",
+      "title": "364.md",
+      "path": "changelog.d/364.md",
+      "description": "feat: benchmark runner pins one commit per PR and the report names the set and version (mvp:RF-01)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "eeb5b47e953f989c5d7504018a015a075aa94d1076976f69cb4c76aaf3307efe"
+    },
+    {
+      "id": "document:changelog.d/366.md",
+      "type": "document",
+      "title": "366.md",
+      "path": "changelog.d/366.md",
+      "description": "feat: incumbent reviewer command for the benchmark (mvp:RF-03)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "770118cf693f735fe1b67d7cc7c15bdb62fe41fb15664ee7e0e4394f39ec6109"
+    },
+    {
       "id": "document:changelog.d/370.md",
       "type": "document",
       "title": "370.md",
@@ -141,6 +225,54 @@
         "project"
       ],
       "contentHash": "c0ec9c327958c24d5a6aea18b91e0805fef6bcff479b3f31b6276e742ea50d50"
+    },
+    {
+      "id": "document:changelog.d/379.md",
+      "type": "document",
+      "title": "379.md",
+      "path": "changelog.d/379.md",
+      "description": "feat: benchmark report records each reviewer's findings per PR and the cause of each error (#379)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "1c08331ef05dba881923ac941fd320be21405d6cdabbee35325dda8dc9c2a9dd"
+    },
+    {
+      "id": "document:changelog.d/392.md",
+      "type": "document",
+      "title": "392.md",
+      "path": "changelog.d/392.md",
+      "description": "docs: add the factory playbook and factory.json (install/verify) for agents (#392)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "eafbd24efe84368e07e279a668a3fbd3dca3df9eceec44b651b2c7a61f25d675"
+    },
+    {
+      "id": "document:changelog.d/394.md",
+      "type": "document",
+      "title": "394.md",
+      "path": "changelog.d/394.md",
+      "description": "ci: run gitleaks (pinned version and SHA-256) on every PR and push to main (#394)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "eeb57788f452b71186165522c013e904a93c785136e29b30259052b5ed6d0bbe"
+    },
+    {
+      "id": "document:changelog.d/400.md",
+      "type": "document",
+      "title": "400.md",
+      "path": "changelog.d/400.md",
+      "description": "ci: add standard CI workflow (ci-standard.yml) (#400)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "80f1a26dd09f3c5653b2586cfa6e4e9d83a31b9f7f021ae136c0155011704d41"
     },
     {
       "id": "document:CHANGELOG.md",
@@ -440,7 +572,7 @@
         "document",
         "human"
       ],
-      "contentHash": "12f81807dcc1ee86fb95bf31f304d7a03aa12df67f25f6399262979d1257aa05"
+      "contentHash": "4dcd79bcc8500d8a1152dbacae149bbc426e7642ba94b3d89a9497dc9a54c91a"
     },
     {
       "id": "document:docs/reviewer-benchmark.md",
@@ -452,7 +584,7 @@
         "document",
         "human"
       ],
-      "contentHash": "da64efee714e26d5fed5466fb8b80e71c8eb8aacafcd241cab1a9b19623bc0b1"
+      "contentHash": "43b57f446dd52195b2b28a1af0ce608d8cf91e1cc92e7d2ecd6967be8335f805"
     },
     {
       "id": "document:docs/shadow-week-protocol.md",
@@ -1048,6 +1180,18 @@
       "contentHash": "2b0ad3fd4f24c81a3dff5e5f65cf75b148b180d3bb47afea4ab40d31139ac97c"
     },
     {
+      "id": "module:scripts/check-version-pin.mjs",
+      "type": "module",
+      "title": "check-version-pin.mjs",
+      "path": "scripts/check-version-pin.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "a7599659512685e68030dda3742a47bdffe37a9d0507a53e569f7820898eb7d8"
+    },
+    {
       "id": "module:scripts/evaluate-quality.mjs",
       "type": "module",
       "title": "evaluate-quality.mjs",
@@ -1070,6 +1214,21 @@
         "scripts"
       ],
       "contentHash": "9dd507f782491e88e72b6848794893d063cabe41a6057e5bdf042b6dd88d9bc9"
+    },
+    {
+      "id": "module:scripts/incumbent-review.mjs",
+      "type": "module",
+      "title": "incumbent-review.mjs",
+      "path": "scripts/incumbent-review.mjs",
+      "symbols": [
+        "extractJson"
+      ],
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "e20e5c35217127943152b744198098590aea49d566e53da68beba75aecd28824"
     },
     {
       "id": "module:scripts/lib/readme-standard.mjs",
@@ -1194,7 +1353,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "3b9923f7a012fd70eeb115b876040cd5a19ba0dd4a61a84afa9ec8d65213a0d5"
+      "contentHash": "a8ca9ca0de424b423e02292afa172c0c3ff82eda5f79302b70c5c79740c1b28b"
     },
     {
       "id": "module:scripts/run-cycle-benchmark.mjs",
@@ -1230,7 +1389,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "6198f03132de3a659ef9d5a2334e5d0d560306dcbc010e6581a6142bf05b87fd"
+      "contentHash": "ac635050be5d69dafa0c8aee8ba2a71254eb216a7b5fb102fc6f20fd6ab23bc8"
     },
     {
       "id": "module:scripts/shadow-review.mjs",
@@ -1242,7 +1401,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "d9f28ec3df0eab69b5b011e5243456ff934792afa9cd9e3a55d5dab6793e03fb"
+      "contentHash": "3965b1cf58e32d713e5baf2d7df6c232c832b6985a95dcbe0f7c9d003f2827b0"
     },
     {
       "id": "module:scripts/verify-ecosystem-public-outputs.mjs",
@@ -2360,18 +2519,35 @@
       "symbols": [
         "BenchmarkDataset",
         "BenchmarkDecision",
+        "BenchmarkMeta",
+        "BenchmarkOptions",
         "BenchmarkPr",
         "BenchmarkReport",
+        "BenchmarkRunInfo",
+        "BenchmarkSetInfo",
+        "ErrorDetail",
         "KnownBug",
         "MAX_COST_RATIO",
         "MIN_BENCHMARK_PRS",
         "PrScore",
+        "PriceTable",
         "ReviewerFinding",
         "ReviewerRun",
         "ReviewerSummary",
+        "ScoredFinding",
+        "VersionPinCheck",
         "bugMatches",
+        "checkVersionPin",
+        "describeBenchmarkSet",
+        "describeFailure",
         "evaluateBenchmark",
+        "falsePositiveCategories",
         "parseBenchmarkDataset",
+        "parsePriceTable",
+        "percentile",
+        "pinnedCommitError",
+        "priceRun",
+        "redactSecrets",
         "renderBenchmarkMarkdown",
         "scorePr",
         "summarizeReviewer"
@@ -2381,7 +2557,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "7c799148c3a1b1197f988a00fdcacbd5a7313421215b66b8adbe571007da286e"
+      "contentHash": "7688092ad7ee08d3c8dbc56795b2356cd9d608e6e8637265dd352f96e83059b2"
     },
     {
       "id": "module:src/scm-contract.ts",
@@ -2620,7 +2796,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "5b235999cdbeb75dbb3d5411e6f407415f0b06724f21a532d5f9164153cbb2aa"
+      "contentHash": "ce1c5f4996271f01e755e784e3e88bd9d02362ba37e8bd15c2e5d17566d4d697"
     },
     {
       "id": "module:test/codex-adapter.test.mjs",
@@ -2785,7 +2961,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "d69366c503ed73e9feb37e8361333704966166af1d94d2ae70230c17aa79650e"
+      "contentHash": "b426686cacbe28cedc88144021d0fb58c7472ff7096a73697d2cb1e2b9f0df7b"
     },
     {
       "id": "module:test/grok-cli-adapter.test.mjs",
@@ -2833,7 +3009,19 @@
         "mjs",
         "test"
       ],
-      "contentHash": "b3b97c6e311776ed769eb96fcfdc30b9243120f4fa4fd51fbfc9d1f81608ecdc"
+      "contentHash": "1291e6011f133f4def22cf6a277f513bd5322f3ac7968a0890e900c95dfdd516"
+    },
+    {
+      "id": "module:test/incumbent-review.test.mjs",
+      "type": "module",
+      "title": "incumbent-review.test.mjs",
+      "path": "test/incumbent-review.test.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "test"
+      ],
+      "contentHash": "d72f99f849c3ef3dfd4afb0d67d988d601ac44ea8dfbd6d4447e72ae1154c806"
     },
     {
       "id": "module:test/line-review.test.mjs",
@@ -2905,7 +3093,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "1757f08b855fea6fbfe789227df4533fe094718cc3caacdd2d8d41cf7588f685"
+      "contentHash": "4b0c07f770013514b742482d8f04c239694b6b0999b520da839c58f0aaf1c12b"
     },
     {
       "id": "module:test/provider-circuit-breaker.test.mjs",
@@ -3133,7 +3321,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "e741c92baea9dce07cb1fd0807194914351649c5a2fee2c0c73cfe3317700602"
+      "contentHash": "a7ec125976de34bc2e9b4e1191b2a50a0226089d16c4819cc6b51f8f91fd3953"
     },
     {
       "id": "module:test/risk-depth.test.mjs",
@@ -3193,7 +3381,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "fa0336a7230a466c6d0e8f641d1cc870cd29888dda66da37131a0163f134b3c5"
+      "contentHash": "a1ca9dae6a716a4fce0cb0f41101153af8b47d8d895ac3e431ca982305466554"
     },
     {
       "id": "module:test/shadow-week.test.mjs",
@@ -3327,8 +3515,8 @@
     }
   },
   "inputs": {
-    "hash": "2c9f0c526729cf3a818737fcda629e5ea15b329182ef578237111a8d92d9b88c",
-    "fileCount": 225,
+    "hash": "a3f2edcfbbd578ca5a1e1b7d3a280fddbfb8d891f5a7e3d6ce0824bdbffdc70c",
+    "fileCount": 241,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3350,9 +3538,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "a57b40e5a32bd2a7349c08528bf70b8d3148d5b19b1b2ed26e018a23730bea75",
+    "contentHash": "94ba40680a6c811d11bbd0f727e230446c428018f12897d716c7e71b05586738",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "8064b8d937a4f2794f9f081356b21301fe3fe0b76b35ffb7cc9e1fdaeddef549",
+    "snapshotHash": "7b63895a0f2b6607f8b9088a23889e180a9bef84e9c4c0d33dbac8fa2f5c57ea",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3372,7 +3560,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 206,
+      "documentCount": 220,
       "fieldNames": [
         "aliases",
         "body",
@@ -3383,13 +3571,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.883495145631068,
-        "body": 53.36893203883495,
-        "headings": 3.621359223300971,
-        "path": 5.611650485436893,
-        "summary": 3.4514563106796117,
-        "symbols": 13.422330097087379,
-        "title": 4.271844660194175
+        "aliases": 2.840909090909091,
+        "body": 54.6,
+        "headings": 3.6545454545454548,
+        "path": 5.586363636363636,
+        "summary": 4.281818181818182,
+        "symbols": 12.840909090909092,
+        "title": 4.259090909090909
       }
     },
     "entries": [
@@ -3557,7 +3745,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "3b22a90e7b535b02f461052903b87d85aa52dc00fe39dc7aa56fa2f4dfa5f4cb",
+        "contentHash": "9f9186c3969f728d636454ae346635ce9aed0aa8e3e27c2a78ac7fc3dc6b0bd4",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3596,7 +3784,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "2461a2c7579ac2d8d989375cfca1e7357e15df1bd89a8bce3af025e51421954a",
+        "contentHash": "f748814d54b927541700d023abf97a3d7f2762b3055a3a7fcb8876cc97472c6b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3662,6 +3850,44 @@
           "outbound": []
         },
         "contentHash": "066cb6c6bf99cf493abbb17c0773cd820606298d34d90473effa16a586e7d3fb",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:.changeset/reviewer-benchmark-version-pin.md",
+        "kind": "document",
+        "path": ".changeset/reviewer-benchmark-version-pin.md",
+        "title": "reviewer-benchmark-version-pin.md",
+        "summary": "feat: pin the measured version. The reviewer benchmark report now records the measured candidateVersion and the labelled dataset's datasetSha256, and scripts/check-version-pin.mjs (with checkVersionPin()) rejects a pin that is latest, a tag or a range, that differs from the measured version, that comes from a report that is not PASS, or that was measured on another dataset (RF-09).",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "reviewer-benchmark-version-pin.md",
+          "headings": "",
+          "path": ".changeset/reviewer-benchmark-version-pin.md",
+          "symbols": "",
+          "summary": "feat: pin the measured version. The reviewer benchmark report now records the measured candidateVersion and the labelled dataset's datasetSha256, and scripts/check-version-pin.mjs (with checkVersionPin()) rejects a pin that is latest, a tag or a range, that differs from the measured version, that comes from a report that is not PASS, or that was measured on another dataset (RF-09).",
+          "body": "feat: pin the measured version. The reviewer benchmark report now records the measured candidateVersion and the labelled dataset's datasetSha256 , and scripts/check-version-pin.mjs (with checkVersionPin() ) rejects a pin that is latest , a tag or a range, that differs from the measured version, that comes from a report that is not PASS , or that was measured on another dataset (RF-09).",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "mentions",
+              "id": "module:scripts/check-version-pin.mjs",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "6d408257b0f4a1aacd1f5a7c5e2ca550887877c93a624a7737ae4fea830946e9",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -3736,6 +3962,70 @@
         "confidence": "observed"
       },
       {
+        "id": "document:.changeset/rf-03-incumbent-command.md",
+        "kind": "document",
+        "path": ".changeset/rf-03-incumbent-command.md",
+        "title": "rf-03-incumbent-command.md",
+        "summary": "New agentskit-incumbent-review <owner/repo> <number> command (mvp:RF-03): the incumbent line reviewer as an executable for run-reviewer-benchmark --incumbent-cmd. It prints {\"findings\":[{file,line,title}],\"costUsd\"} and exits non-zero on any failure, so an errored PR is never scored as clean.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "rf-03-incumbent-command.md",
+          "headings": "",
+          "path": ".changeset/rf-03-incumbent-command.md",
+          "symbols": "",
+          "summary": "New agentskit-incumbent-review <owner/repo> <number> command (mvp:RF-03): the incumbent line reviewer as an executable for run-reviewer-benchmark --incumbent-cmd. It prints {\"findings\":[{file,line,title}],\"costUsd\"} and exits non-zero on any failure, so an errored PR is never scored as clean.",
+          "body": "New agentskit-incumbent-review <owner/repo <number command ( mvp:RF-03 ): the incumbent line reviewer as an executable for run-reviewer-benchmark --incumbent-cmd . It prints {\"findings\":[{file,line,title}],\"costUsd\"} and exits non-zero on any failure, so an errored PR is never scored as clean.",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "18853803a8bf24f9bc49b7fa7ea907593f5fcd98b156afb0725ecffcae02e8ab",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:.changeset/rf-04-token-cost.md",
+        "kind": "document",
+        "path": ".changeset/rf-04-token-cost.md",
+        "title": "rf-04-token-cost.md",
+        "summary": "Reviewer benchmark records input and output tokens of both reviewers and prices them with one versioned per-model table (quality/benchmark/prices.json); a completed PR with no measured cost blocks the report instead of showing zero (mvp:RF-04).",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "rf-04-token-cost.md",
+          "headings": "",
+          "path": ".changeset/rf-04-token-cost.md",
+          "symbols": "",
+          "summary": "Reviewer benchmark records input and output tokens of both reviewers and prices them with one versioned per-model table (quality/benchmark/prices.json); a completed PR with no measured cost blocks the report instead of showing zero (mvp:RF-04).",
+          "body": "Reviewer benchmark records input and output tokens of both reviewers and prices them with one versioned per-model table ( quality/benchmark/prices.json ); a completed PR with no measured cost blocks the report instead of showing zero ( mvp:RF-04 ).",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "212f34f36634cace910714fe523da86b89c5744157496b46b8ad3a621335174f",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "document:.changeset/rf-10-line-reviewer.md",
         "kind": "document",
         "path": ".changeset/rf-10-line-reviewer.md",
@@ -3768,6 +4058,91 @@
         "confidence": "observed"
       },
       {
+        "id": "document:.changeset/rf05-p90-latency.md",
+        "kind": "document",
+        "path": ".changeset/rf05-p90-latency.md",
+        "title": "rf05-p90-latency.md",
+        "summary": "Reviewer benchmark: report p90 latency and accept --stage-timeout-ms so the candidate must finish every PR within the line's review-stage time (RF-05).",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "rf05-p90-latency.md",
+          "headings": "",
+          "path": ".changeset/rf05-p90-latency.md",
+          "symbols": "",
+          "summary": "Reviewer benchmark: report p90 latency and accept --stage-timeout-ms so the candidate must finish every PR within the line's review-stage time (RF-05).",
+          "body": "Reviewer benchmark: report p90 latency and accept --stage-timeout-ms so the candidate must finish every PR within the line's review-stage time (RF-05).",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "eb326e8e60cc087b411cbb3e490dc96783c6cb40d371d43688b3832644d61168",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:.github/factory-playbook.md",
+        "kind": "document",
+        "path": ".github/factory-playbook.md",
+        "title": "Factory playbook — AgentsKit-io/code-review",
+        "summary": "Public repo: only synthetic data, never anything from private repos (see AGENTS.md). Read AGENTS.md and docs/for-agents/code-review.md before editing.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "Factory playbook — AgentsKit-io/code-review",
+          "headings": "Factory playbook — AgentsKit-io/code-review 1. Install 2. Run locally 3. Quick verification (small diff) 4. Full verification (CI, .github/workflows/) 5. Rules that most often sink a PR 6. Shared registry files (merge-conflict hotspots) 7. Known pitfalls (real factory failures here)",
+          "path": ".github/factory-playbook.md",
+          "symbols": "",
+          "summary": "Public repo: only synthetic data, never anything from private repos (see AGENTS.md). Read AGENTS.md and docs/for-agents/code-review.md before editing.",
+          "body": "Factory playbook — AgentsKit-io/code-review Public repo: only synthetic data, never anything from private repos (see AGENTS.md). Read AGENTS.md and docs/for-agents/code-review.md before editing. 1. Install - Node 22 (CI uses 22; local 20+ works, test:coverage needs = 22.8). npm only ( package-lock.json ), no pnpm. - npm ci && npm ci --prefix apps/docs (same as CI; the docs app has its own lockfile). - Stale lockfile: npm install (and npm install --prefix apps/docs ), commit the lockfile with the change. Never hand-edit it. - Env vars: none needed; tests are offline. Provider keys (e.g. OPENAI API KEY ) must never appear in files or logs. 2. Run locally - CLI, no server/port/seed: npm run review -- --help (tsx) or npm run build && node dist/src/cli.js --help . - Docs site (optional): npm run docs:web:dev . 3. Quick verification (small diff) - npm run typecheck - npm run build && node --test --test-concurrency=1 test/<file .test.mjs (tests run against dist/ , so build first; one test: add --test-name-pattern \"<name \" ). - Touched docs/ package.json files/benchmark data: also node --test test/documentation.test.mjs . - There is no separate lint/format script; typecheck + check are the gate. 4. Full verification (CI, .github/workflows/ ) - ci.yml job check (the one that matters), in order: touch .doc-bridge/.ci-content-revision ; npm run docs:index ; git diff --exit-code -- doc-bridge.config.json .doc-bridge llms-full.txt ; npm run check:public-api ; npm run check ; npm run test:coverage ; npm pack --dry-run ; then rm -f .doc-bridge/.ci-content-revision . - npm run check = cross-platform check, typecheck, build+tests, docs gate, docs web typecheck, public API, CLI --help , readme standard. Slowest job: check (full test suite is serial, --test-concurrency=1 ). - codeql.yml (reusable workflow, security-and-quality ), dependency-review.yml (review, audit, docs-audit; fails on high severity), scorecard.yml , publish.yml / release.yml (release only). CodeQL often finishes last: a PR can sit with CodeQL pending while check is green, or fail on a new alert; fix the alert, do not rerun blindly. - Before finishing run (wrap like CI so the index is CI-mode; the sentinel is never committed): touch .doc-bridge/.ci-content-revision; npm run docs:index && git diff --exit-code -- doc-bridge.config.json .doc-bridge llms-full.txt && npm run check:public-api && npm run check && npm run test:coverage && npm pack --dry-run; s=$?; rm -f .doc-bridge/.ci-content-revision; exit $s (keeps the failure exit code; git diff --exit-code needs the regenerated files staged or committed first), then git status must show only intended files (docs:index regenerates tracked files; commit them). 5. Rules that most often sink a PR - Conventional commit messages ( feat: , fix: , docs: ...); one concern per PR. - Release notes: add ONE changelog.d/<ticket .md (first line a conventional line, e.g. feat: ... ( N) ). Do not bump package.json version or edit the top of CHANGELOG.md . A .changeset/<slug .md ( \"@agentskit/code-review\": patch + one line) is also used by recent PRs; follow the latest merged PR. - Generated docs: after changing docs, CLI help or .doc-bridge inputs run npm run docs:index (also regenerates llms-full.txt ); CI fails on any diff in doc-bridge.config.json .doc-bridge llms-full.txt . - Public exports changed: npm run check:public-api:update , review the snapshot docs/stability/public-api-v1.json , commit it. - Coverage floors: 93% lines, 79% branches, 92% functions on dist/src ; new src/ code needs tests. - Public CLI/Action contract changes need docs plus offline tests. Keep the Action advisory by default. - package.json files is an allowlist for the npm tarball: every new script, doc, fixture, test or data file that the package/tests use must be added there ( npm pack --dry-run to confirm). - PR body: follow .github/PULL REQUEST TEMPLATE.md ; no secrets or model output. 6. Shared registry files (merge-conflict hotspots) - package.json files array: a",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "mentions",
+              "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:AGENTS.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:CHANGELOG.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/for-agents/code-review.md",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "4bacf22c58380142ea435c7493f5a83c941db461b2eab49b084c492c2f840f42",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
         "kind": "document",
         "path": ".github/PULL_REQUEST_TEMPLATE.md",
@@ -3789,10 +4164,18 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 0,
+          "inboundLinks": 1,
           "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
+          "mentionedBy": [
+            "document:.github/factory-playbook.md"
+          ],
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:.github/factory-playbook.md",
+              "confidence": "observed"
+            }
+          ],
           "outbound": []
         },
         "contentHash": "28edc0d585b4dcff1a8b66e6cd0582e6ecc348af0e69944f8c30a3fb54334f65",
@@ -3821,14 +4204,20 @@
         },
         "graph": {
           "pagerank": 0.020391,
-          "inboundLinks": 3,
+          "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [
+            "document:.github/factory-playbook.md",
             "document:docs/adr/0001-bounded-provider-neutral-cli-agents.md",
             "document:docs/getting-started.md",
             "document:README.md"
           ],
           "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:.github/factory-playbook.md",
+              "confidence": "observed"
+            },
             {
               "kind": "mentions",
               "id": "document:docs/adr/0001-bounded-provider-neutral-cli-agents.md",
@@ -3968,6 +4357,72 @@
         "confidence": "observed"
       },
       {
+        "id": "document:changelog.d/364.md",
+        "kind": "document",
+        "path": "changelog.d/364.md",
+        "title": "364.md",
+        "summary": "feat: benchmark runner pins one commit per PR and the report names the set and version (mvp:RF-01)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "364.md",
+          "headings": "",
+          "path": "changelog.d/364.md",
+          "symbols": "",
+          "summary": "feat: benchmark runner pins one commit per PR and the report names the set and version (mvp:RF-01)",
+          "body": "feat: benchmark runner pins one commit per PR and the report names the set and version (mvp:RF-01) Every PR in quality/benchmark/prs.json now pins its head commit; the runner passes the same PR and commit to both reviewers and records an error for both if the head moved. The report states the set digest, PR counts, commits and the code-review version. Fixes the entry code-review 40 (an issue) to the real PR 51.",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "eeb5b47e953f989c5d7504018a015a075aa94d1076976f69cb4c76aaf3307efe",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:changelog.d/366.md",
+        "kind": "document",
+        "path": "changelog.d/366.md",
+        "title": "366.md",
+        "summary": "feat: incumbent reviewer command for the benchmark (mvp:RF-03)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "366.md",
+          "headings": "",
+          "path": "changelog.d/366.md",
+          "symbols": "",
+          "summary": "feat: incumbent reviewer command for the benchmark (mvp:RF-03)",
+          "body": "feat: incumbent reviewer command for the benchmark (mvp:RF-03) scripts/incumbent-review.mjs <owner/repo <number [<commit ] prints {findings,costUsd} ; given the runner's pinned commit it fails when the PR head differs.",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "770118cf693f735fe1b67d7cc7c15bdb62fe41fb15664ee7e0e4394f39ec6109",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "document:changelog.d/370.md",
         "kind": "document",
         "path": "changelog.d/370.md",
@@ -4001,6 +4456,138 @@
         "confidence": "observed"
       },
       {
+        "id": "document:changelog.d/379.md",
+        "kind": "document",
+        "path": "changelog.d/379.md",
+        "title": "379.md",
+        "summary": "feat: benchmark report records each reviewer's findings per PR and the cause of each error (#379)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "379.md",
+          "headings": "",
+          "path": "changelog.d/379.md",
+          "symbols": "",
+          "summary": "feat: benchmark report records each reviewer's findings per PR and the cause of each error (#379)",
+          "body": "feat: benchmark report records each reviewer's findings per PR and the cause of each error ( 379) report.json now lists, per PR and reviewer, every finding ( file , line , title ) as real bug or false positive with the known bug it matched; an errored PR keeps its exit code, stage and the last stderr lines with keys and tokens redacted. The markdown report gains \"Falsos positivos por categoria\" and a failed-PR table.",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "1c08331ef05dba881923ac941fd320be21405d6cdabbee35325dda8dc9c2a9dd",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:changelog.d/392.md",
+        "kind": "document",
+        "path": "changelog.d/392.md",
+        "title": "392.md",
+        "summary": "docs: add the factory playbook and factory.json (install/verify) for agents (#392)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "392.md",
+          "headings": "",
+          "path": "changelog.d/392.md",
+          "symbols": "",
+          "summary": "docs: add the factory playbook and factory.json (install/verify) for agents (#392)",
+          "body": "docs: add the factory playbook and factory.json (install/verify) for agents ( 392)",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "eafbd24efe84368e07e279a668a3fbd3dca3df9eceec44b651b2c7a61f25d675",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:changelog.d/394.md",
+        "kind": "document",
+        "path": "changelog.d/394.md",
+        "title": "394.md",
+        "summary": "ci: run gitleaks (pinned version and SHA-256) on every PR and push to main (#394)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "394.md",
+          "headings": "",
+          "path": "changelog.d/394.md",
+          "symbols": "",
+          "summary": "ci: run gitleaks (pinned version and SHA-256) on every PR and push to main (#394)",
+          "body": "ci: run gitleaks (pinned version and SHA-256) on every PR and push to main ( 394)",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "eeb57788f452b71186165522c013e904a93c785136e29b30259052b5ed6d0bbe",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:changelog.d/400.md",
+        "kind": "document",
+        "path": "changelog.d/400.md",
+        "title": "400.md",
+        "summary": "ci: add standard CI workflow (ci-standard.yml) (#400)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "400.md",
+          "headings": "",
+          "path": "changelog.d/400.md",
+          "symbols": "",
+          "summary": "ci: add standard CI workflow (ci-standard.yml) (#400)",
+          "body": "ci: add standard CI workflow (ci-standard.yml) ( 400) Adds .github/workflows/ci-standard.yml (install + typecheck) so the repo passes the factory repo-standard check.",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "80f1a26dd09f3c5653b2586cfa6e4e9d83a31b9f7f021ae136c0155011704d41",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "document:CHANGELOG.md",
         "kind": "document",
         "path": "CHANGELOG.md",
@@ -4023,15 +4610,21 @@
         },
         "graph": {
           "pagerank": 0.023378,
-          "inboundLinks": 1,
+          "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
+            "document:.github/factory-playbook.md",
             "document:docs/OPERATIONS.md"
           ],
           "inbound": [
             {
               "kind": "links-to",
               "id": "document:docs/OPERATIONS.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:.github/factory-playbook.md",
               "confidence": "observed"
             },
             {
@@ -5272,9 +5865,10 @@
         },
         "graph": {
           "pagerank": 0.071892,
-          "inboundLinks": 5,
+          "inboundLinks": 6,
           "coveredBy": [],
           "mentionedBy": [
+            "document:.github/factory-playbook.md",
             "document:AGENTS.md",
             "document:docs/getting-started.md",
             "document:README.md"
@@ -5303,6 +5897,11 @@
             {
               "kind": "links-to",
               "id": "document:README.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:.github/factory-playbook.md",
               "confidence": "observed"
             },
             {
@@ -6125,11 +6724,11 @@
         ],
         "fields": {
           "title": "Reviewer benchmark: BLOCKED",
-          "headings": "Reviewer benchmark: BLOCKED Counting rule Totals Per PR Reproduce",
+          "headings": "Reviewer benchmark: BLOCKED Counting rule Totals Per PR Falsos positivos por categoria Reproduce",
           "path": "docs/reviewer-benchmark-report.md",
           "symbols": "",
           "summary": "Requirement mvp:RF-02: real bugs found and false positives of both reviewers, per PR and in total.",
-          "body": "Reviewer benchmark: BLOCKED Requirement mvp:RF-02 : real bugs found and false positives of both reviewers, per PR and in total. - incumbent errored on 38 PR(s); rerun before comparing - code-review errored on 11 PR(s); rerun before comparing Counting rule Both reviewers run over the same labelled PRs ( quality/benchmark/prs.json ) and are scored by the same function ( scorePr in src/reviewer-benchmark.ts ): - A real bug is a known bug (a defect later fixed by a fix PR) matched by at least one finding on the same file within the line tolerance (default 3 lines); each known bug counts once. - A false positive is any finding that matches no known bug, including every finding on a clean PR. - A PR where the reviewer errored shows error and is not counted; any error makes the decision BLOCKED . Totals Reviewer Bugs found False positives Cost (US$) Mean latency (ms) Errored PRs --- --- --- --- --- --- incumbent 0/32 0 0.00 4 38 code-review 8/32 118 0.00 235158 11 Per PR PR incumbent bugs incumbent false positives code-review bugs code-review false positives --- --- --- --- --- AgentsKit-io/code-review 178 error - 2/2 9 AgentsKit-io/code-review 62 error - error - AgentsKit-io/code-review 40 error - error - AgentsKit-io/code-review 67 error - error - AgentsKit-io/code-review 130 error - error - AgentsKit-io/code-review 80 error - 1/1 1 AgentsKit-io/code-review 180 error - error - AgentsKit-io/code-review 204 error - 0/1 14 AgentsKit-io/code-review 186 error - error - AgentsKit-io/code-review 73 error - error - AgentsKit-io/harness 144 error - 1/1 2 AgentsKit-io/harness 142 error - 1/2 0 AgentsKit-io/harness 133 error - 0/1 3 AgentsKit-io/harness 103 error - 0/1 8 AgentsKit-io/harness 101 error - error - AgentsKit-io/harness 198 error - 1/2 9 AgentsKit-io/harness 199 error - 0/1 2 AgentsKit-io/harness 201 error - 1/2 2 AgentsKit-io/harness 98 error - 1/1 12 AgentsKit-io/harness 111 error - error - AgentsKit-io/harness 39 error - error - AgentsKit-io/harness 184 error - 0/1 3 AgentsKit-io/code-review 27 error - 0/0 5 AgentsKit-io/code-review 166 error - 0/0 3 AgentsKit-io/code-review 280 error - 0/0 3 AgentsKit-io/code-review 319 error - 0/0 0 AgentsKit-io/harness 28 error - 0/0 6 AgentsKit-io/harness 29 error - 0/0 7 AgentsKit-io/harness 42 error - 0/0 3 AgentsKit-io/harness 44 error - 0/0 3 AgentsKit-io/harness 97 error - 0/0 4 AgentsKit-io/harness 107 error - error - AgentsKit-io/doc-bridge 76 error - 0/0 2 AgentsKit-io/doc-bridge 197 error - 0/0 2 AgentsKit-io/doc-bridge 207 error - 0/0 5 AgentsKit-io/doc-bridge 317 error - 0/0 2 AgentsKit-io/doc-bridge 369 error - 0/0 6 AgentsKit-io/doc-bridge 393 error - 0/0 2 Total 0/32 0 8/32 118 Reproduce The incumbent command is run as <executable <owner/repo <number and prints {\"findings\":[{\"file\",\"line\",\"title\"}],\"costUsd\":0} ; see docs/reviewer-benchmark.md .",
+          "body": "Reviewer benchmark: BLOCKED Requirement mvp:RF-02 : real bugs found and false positives of both reviewers, per PR and in total. - incumbent errored on 38 PR(s); rerun before comparing - code-review errored on 11 PR(s); rerun before comparing Counting rule Both reviewers run over the same labelled PRs ( quality/benchmark/prs.json ) and are scored by the same function ( scorePr in src/reviewer-benchmark.ts ): - A real bug is a known bug (a defect later fixed by a fix PR) matched by at least one finding on the same file within the line tolerance (default 3 lines); each known bug counts once. - A false positive is any finding that matches no known bug, including every finding on a clean PR. - A PR where the reviewer errored shows error and is not counted; any error makes the decision BLOCKED . Totals Reviewer Bugs found False positives Cost (US$) Mean latency (ms) Errored PRs --- --- --- --- --- --- incumbent 0/32 0 0.00 4 38 code-review 8/32 118 0.00 235158 11 Per PR PR incumbent bugs incumbent false positives code-review bugs code-review false positives --- --- --- --- --- AgentsKit-io/code-review 178 error - 2/2 9 AgentsKit-io/code-review 62 error - error - AgentsKit-io/code-review 40 error - error - AgentsKit-io/code-review 67 error - error - AgentsKit-io/code-review 130 error - error - AgentsKit-io/code-review 80 error - 1/1 1 AgentsKit-io/code-review 180 error - error - AgentsKit-io/code-review 204 error - 0/1 14 AgentsKit-io/code-review 186 error - error - AgentsKit-io/code-review 73 error - error - AgentsKit-io/harness 144 error - 1/1 2 AgentsKit-io/harness 142 error - 1/2 0 AgentsKit-io/harness 133 error - 0/1 3 AgentsKit-io/harness 103 error - 0/1 8 AgentsKit-io/harness 101 error - error - AgentsKit-io/harness 198 error - 1/2 9 AgentsKit-io/harness 199 error - 0/1 2 AgentsKit-io/harness 201 error - 1/2 2 AgentsKit-io/harness 98 error - 1/1 12 AgentsKit-io/harness 111 error - error - AgentsKit-io/harness 39 error - error - AgentsKit-io/harness 184 error - 0/1 3 AgentsKit-io/code-review 27 error - 0/0 5 AgentsKit-io/code-review 166 error - 0/0 3 AgentsKit-io/code-review 280 error - 0/0 3 AgentsKit-io/code-review 319 error - 0/0 0 AgentsKit-io/harness 28 error - 0/0 6 AgentsKit-io/harness 29 error - 0/0 7 AgentsKit-io/harness 42 error - 0/0 3 AgentsKit-io/harness 44 error - 0/0 3 AgentsKit-io/harness 97 error - 0/0 4 AgentsKit-io/harness 107 error - error - AgentsKit-io/doc-bridge 76 error - 0/0 2 AgentsKit-io/doc-bridge 197 error - 0/0 2 AgentsKit-io/doc-bridge 207 error - 0/0 5 AgentsKit-io/doc-bridge 317 error - 0/0 2 AgentsKit-io/doc-bridge 369 error - 0/0 6 AgentsKit-io/doc-bridge 393 error - 0/0 2 Total 0/32 0 8/32 118 Falsos positivos por categoria Findings that matched no known bug, grouped by title (the rule that produced them). The finding list of every PR, with its verdict and the known bug it matched, is in quality/benchmark/report.json ( perPr[].findings ); a failed PR keeps its cause in perPr[].errorDetail (exit code, stage, last stderr lines, secrets redacted). The measurement committed here predates this recording, so it has no per-finding data: rerun the benchmark (see Reproduce) to fill this section; the generator renders one table per reviewer plus a \"Failed PRs\" table. Reproduce The incumbent command is run as <executable <owner/repo <number and prints {\"findings\":[{\"file\",\"line\",\"title\"}],\"costUsd\":0} ; see docs/reviewer-benchmark.md .",
           "aliases": "document human"
         },
         "graph": {
@@ -6162,7 +6761,7 @@
             }
           ]
         },
-        "contentHash": "12f81807dcc1ee86fb95bf31f304d7a03aa12df67f25f6399262979d1257aa05",
+        "contentHash": "4dcd79bcc8500d8a1152dbacae149bbc426e7642ba94b3d89a9497dc9a54c91a",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6180,11 +6779,11 @@
         ],
         "fields": {
           "title": "Reviewer benchmark",
-          "headings": "Reviewer benchmark Status Dataset Run Entry criterion Running on the line (shadow mode) After a pass Deciding on the line (mvp:RF-10)",
+          "headings": "Reviewer benchmark Status Dataset Run Same PRs, same commit, which set and version (mvp:RF-01) The incumbent command (mvp:RF-03) Entry criterion Running on the line (shadow mode) Pinning the measured version After a pass Deciding on the line (mvp:RF-10)",
           "path": "docs/reviewer-benchmark.md",
           "symbols": "",
           "summary": "Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json; the scoring is in src/reviewer-benchmark.ts; the runner is scripts/run-reviewer-benchmark.mjs. Run it on every release.",
-          "body": "Reviewer benchmark Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json ; the scoring is in src/reviewer-benchmark.ts ; the runner is scripts/run-reviewer-benchmark.mjs . Run it on every release. Status Decision on 2026-10-30: BLOCKED, so the entry criterion is not met and the factory's review stage stays on the incumbent (the switch is off; shadow mode does not start). The report is (JSON: quality/benchmark/report.json ). - Code Review ran on all 38 PRs: 27 completed, 11 ended incomplete (exit 2: deadline or provider failure; reruns are needed). On the 27 completed PRs it found 8 of the 16 known bugs and reported 118 findings matching no known bug. - The incumbent was not run : the line reviewer is the review stage of the private factory-line repository, which this repository's automation cannot reach, and no standalone executable of it exists. Its 38 runs are recorded as errors, which is what makes the decision BLOCKED rather than FAIL . Run it with --incumbent-cmd from a machine that has it. - Cost is not measured : the run used claude-cli , which reports no token usage, so every cost shows 0.00. The Anthropic API provider was rejected (HTTP 401) with the credential available to the run. A cost comparison needs an API-provider run ( AGENTSKIT SHADOW PROVIDER=anthropic , AGENTSKIT SHADOW USD PER MTOK ). - \"False positives\" is an upper bound: a finding counts as false when it matches none of the bugs that were later fixed, so real defects nobody fixed are counted against the reviewer. The incumbent is scored the same way, so the comparison stays fair. - Only AgentsKit-io repositories are in the set (code-review, harness, doc-bridge); NoxCodeSolutions repositories were not reachable from this run. Dataset quality/benchmark/prs.json : 38 merged AgentsKit-io PRs, 22 buggy and 16 clean . A buggy PR is one whose merged code was later corrected by a fix PR: each bug lists file , line (in the reviewed PR's version of the file, from git blame of the lines the fix replaced), lineTolerance , a note , and fix (the fix PR number and commit that proves it was real). A clean PR is a feature PR that no later fix PR in the same repository touched (never the origin of any blamed line of a fix: commit). The set was mined from fix: commits in code-review, harness and doc-bridge; PRs are added by annotating real PRs, never by invention. The report is BLOCKED until the set has 30 PRs with both labels. Run An external reviewer command is run as <executable <owner/repo <number (no shell) and prints {\"findings\":[{\"file\",\"line\",\"title\"}],\"costUsd\":0} . Without --candidate-cmd the built-in CLI reviews each PR with --pr (needs GITHUB TOKEN ; provider keys come from the environment, never from arguments). Cost for the built-in reviewer is tokensUsed times --usd-per-mtok . Entry criterion PASS needs: at least as many real bugs found as the incumbent, strictly fewer false positives (any finding matching no known bug, and every finding on a clean PR), and cost at most 1.2x the incumbent. Any errored PR makes the report BLOCKED . The exit code is 2 unless PASS . Running on the line (shadow mode) The incumbent is the review stage of the factory line ( reviewPrompt in packages/factory-line/src/prompts.ts , private repository). The comparison runs it on the line through its shadow mode ( shadow-review.ts , enabled per repository by shadowReview in line.json ), which comments and does not decide. scripts/shadow-review.mjs (also the agentskit-shadow-review bin) is the Code Review side. Shadow mode runs it with the PR's checkout as the working directory and reads the last line of stdout : {\"comment\":\"<review markdown \",\"costUsd\":0,\"findings\":[{\"file\",\"line\",\"title\"}]} ; it reviews the files changed against AGENTSKIT SHADOW BASE (default origin/main ) and exits 0 for a completed review, with or without findings. Given <owner/repo <number it reviews that PR instead, which is how the benchmark runner calls i",
+          "body": "Reviewer benchmark Gate for making Code Review the factory's review stage. The labelled PR set lives in quality/benchmark/prs.json ; the scoring is in src/reviewer-benchmark.ts ; the runner is scripts/run-reviewer-benchmark.mjs . Run it on every release. Status Decision on 2026-10-30: BLOCKED, so the entry criterion is not met and the factory's review stage stays on the incumbent (the switch is off; shadow mode does not start). The report is (JSON: quality/benchmark/report.json ). - Code Review ran on all 38 PRs: 27 completed, 11 ended incomplete (exit 2: deadline or provider failure; reruns are needed). On the 27 completed PRs it found 8 of the 16 known bugs and reported 118 findings matching no known bug. - The incumbent was not run : the line reviewer is the review stage of the private factory-line repository, which this repository's automation cannot reach, and no standalone executable of it exists. Its 38 runs are recorded as errors, which is what makes the decision BLOCKED rather than FAIL . Run it with --incumbent-cmd from a machine that has it. - Cost is not measured : the run used claude-cli , which reports no token usage, so every cost shows 0.00. The Anthropic API provider was rejected (HTTP 401) with the credential available to the run. A cost comparison needs an API-provider run ( AGENTSKIT SHADOW PROVIDER=anthropic , AGENTSKIT SHADOW MODEL ). Since mvp:RF-04 the runner no longer lets a completed PR show cost 0: it is BLOCKED until both reviewers report tokens. - \"False positives\" is an upper bound: a finding counts as false when it matches none of the bugs that were later fixed, so real defects nobody fixed are counted against the reviewer. The incumbent is scored the same way, so the comparison stays fair. - Only AgentsKit-io repositories are in the set (code-review, harness, doc-bridge); NoxCodeSolutions repositories were not reachable from this run. Dataset quality/benchmark/prs.json : 38 merged AgentsKit-io PRs, 22 buggy and 16 clean , from the repositories where both reviewers run (code-review, harness, doc-bridge). Every PR pins commit , the 40-hex head commit that both reviewers are given. A buggy PR is one whose merged code was later corrected by a fix PR: each bug lists file , line (in the reviewed PR's version of the file, from git blame of the lines the fix replaced), lineTolerance , a note , and fix (the fix PR number and commit that proves it was real). A clean PR is a feature PR that no later fix PR in the same repository touched (never the origin of any blamed line of a fix: commit). The set was mined from fix: commits in code-review, harness and doc-bridge; PRs are added by annotating real PRs, never by invention. The report is BLOCKED until the set has 30 PRs with both labels. Run An external reviewer command is run as <executable <owner/repo <number <commit (no shell; <commit is the pinned head of the set) and prints {\"findings\":[{\"file\",\"line\",\"title\"}],\"model\":\"<id in prices.json \",\"inputTokens\":0,\"outputTokens\":0} . Without --candidate-cmd the built-in CLI reviews each PR with --pr (needs GITHUB TOKEN ; provider keys come from the environment, never from arguments). Cost ( mvp:RF-04 ) is never reported by a reviewer: both record input and output tokens (the built-in one from evidence.usage , with --model ), and the runner prices them with the same per-model table, quality/benchmark/prices.json (US$ per million tokens, versioned, --prices overrides). A completed PR without tokens or without its model in the table makes the report BLOCKED ; the report lists tokens and cost per PR and in total. Same PRs, same commit, which set and version ( mvp:RF-01 ) The runner gives the incumbent and code-review exactly the PRs of the set, one after the other, and reads each PR's head from GitHub ( GITHUB TOKEN ; AGENTSKIT BENCHMARK GITHUB API overrides the API address) before and after the two runs. A head that is not the pinned commit records an error for both reviewers on that PR (the PR is not reviewed, o",
           "aliases": "document human"
         },
         "graph": {
@@ -6245,7 +6844,7 @@
             }
           ]
         },
-        "contentHash": "da64efee714e26d5fed5466fb8b80e71c8eb8aacafcd241cab1a9b19623bc0b1",
+        "contentHash": "43b57f446dd52195b2b28a1af0ce608d8cf91e1cc92e7d2ecd6967be8335f805",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -8319,6 +8918,48 @@
         "confidence": "observed"
       },
       {
+        "id": "module:scripts/check-version-pin.mjs",
+        "kind": "module",
+        "path": "scripts/check-version-pin.mjs",
+        "title": "check-version-pin.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "check-version-pin.mjs",
+          "headings": "",
+          "path": "scripts/check-version-pin.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 1,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:.changeset/reviewer-benchmark-version-pin.md"
+          ],
+          "areaId": "area:scripts",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:.changeset/reviewer-benchmark-version-pin.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "a7599659512685e68030dda3742a47bdffe37a9d0507a53e569f7820898eb7d8",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:scripts/evaluate-quality.mjs",
         "kind": "module",
         "path": "scripts/evaluate-quality.mjs",
@@ -8383,6 +9024,43 @@
           "outbound": []
         },
         "contentHash": "9dd507f782491e88e72b6848794893d063cabe41a6057e5bdf042b6dd88d9bc9",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:scripts/incumbent-review.mjs",
+        "kind": "module",
+        "path": "scripts/incumbent-review.mjs",
+        "title": "incumbent-review.mjs",
+        "aliases": [],
+        "symbols": [
+          "extractJson"
+        ],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "incumbent-review.mjs",
+          "headings": "",
+          "path": "scripts/incumbent-review.mjs",
+          "symbols": "extractJson",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:scripts",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "e20e5c35217127943152b744198098590aea49d566e53da68beba75aecd28824",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -8792,7 +9470,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "3b9923f7a012fd70eeb115b876040cd5a19ba0dd4a61a84afa9ec8d65213a0d5",
+        "contentHash": "a8ca9ca0de424b423e02292afa172c0c3ff82eda5f79302b70c5c79740c1b28b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -8914,7 +9592,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "6198f03132de3a659ef9d5a2334e5d0d560306dcbc010e6581a6142bf05b87fd",
+        "contentHash": "ac635050be5d69dafa0c8aee8ba2a71254eb216a7b5fb102fc6f20fd6ab23bc8",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -8968,7 +9646,7 @@
             }
           ]
         },
-        "contentHash": "d9f28ec3df0eab69b5b011e5243456ff934792afa9cd9e3a55d5dab6793e03fb",
+        "contentHash": "3965b1cf58e32d713e5baf2d7df6c232c832b6985a95dcbe0f7c9d003f2827b0",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -12483,18 +13161,35 @@
         "symbols": [
           "BenchmarkDataset",
           "BenchmarkDecision",
+          "BenchmarkMeta",
+          "BenchmarkOptions",
           "BenchmarkPr",
           "BenchmarkReport",
+          "BenchmarkRunInfo",
+          "BenchmarkSetInfo",
+          "ErrorDetail",
           "KnownBug",
           "MAX_COST_RATIO",
           "MIN_BENCHMARK_PRS",
           "PrScore",
+          "PriceTable",
           "ReviewerFinding",
           "ReviewerRun",
           "ReviewerSummary",
+          "ScoredFinding",
+          "VersionPinCheck",
           "bugMatches",
+          "checkVersionPin",
+          "describeBenchmarkSet",
+          "describeFailure",
           "evaluateBenchmark",
+          "falsePositiveCategories",
           "parseBenchmarkDataset",
+          "parsePriceTable",
+          "percentile",
+          "pinnedCommitError",
+          "priceRun",
+          "redactSecrets",
           "renderBenchmarkMarkdown",
           "scorePr",
           "summarizeReviewer"
@@ -12508,7 +13203,7 @@
           "title": "reviewer-benchmark.ts",
           "headings": "",
           "path": "src/reviewer-benchmark.ts",
-          "symbols": "BenchmarkDataset BenchmarkDecision BenchmarkPr BenchmarkReport KnownBug MAX_COST_RATIO MIN_BENCHMARK_PRS PrScore ReviewerFinding ReviewerRun ReviewerSummary bugMatches evaluateBenchmark parseBenchmarkDataset renderBenchmarkMarkdown scorePr summarizeReviewer",
+          "symbols": "BenchmarkDataset BenchmarkDecision BenchmarkMeta BenchmarkOptions BenchmarkPr BenchmarkReport BenchmarkRunInfo BenchmarkSetInfo ErrorDetail KnownBug MAX_COST_RATIO MIN_BENCHMARK_PRS PrScore PriceTable ReviewerFinding ReviewerRun ReviewerSummary ScoredFinding VersionPinCheck bugMatches checkVersionPin describeBenchmarkSet describeFailure evaluateBenchmark falsePositiveCategories parseBenchmarkDataset parsePriceTable percentile pinnedCommitError priceRun redactSecrets renderBenchmarkMarkdown scorePr summarizeReviewer",
           "summary": "",
           "body": "",
           "aliases": "module ts src"
@@ -12552,7 +13247,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "7c799148c3a1b1197f988a00fdcacbd5a7313421215b66b8adbe571007da286e",
+        "contentHash": "7688092ad7ee08d3c8dbc56795b2356cd9d608e6e8637265dd352f96e83059b2",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13279,7 +13974,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "5b235999cdbeb75dbb3d5411e6f407415f0b06724f21a532d5f9164153cbb2aa",
+        "contentHash": "ce1c5f4996271f01e755e784e3e88bd9d02362ba37e8bd15c2e5d17566d4d697",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13744,7 +14439,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "d69366c503ed73e9feb37e8361333704966166af1d94d2ae70230c17aa79650e",
+        "contentHash": "b426686cacbe28cedc88144021d0fb58c7472ff7096a73697d2cb1e2b9f0df7b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -13880,7 +14575,41 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "b3b97c6e311776ed769eb96fcfdc30b9243120f4fa4fd51fbfc9d1f81608ecdc",
+        "contentHash": "1291e6011f133f4def22cf6a277f513bd5322f3ac7968a0890e900c95dfdd516",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:test/incumbent-review.test.mjs",
+        "kind": "module",
+        "path": "test/incumbent-review.test.mjs",
+        "title": "incumbent-review.test.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "test"
+        ],
+        "fields": {
+          "title": "incumbent-review.test.mjs",
+          "headings": "",
+          "path": "test/incumbent-review.test.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs test"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:test",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "d72f99f849c3ef3dfd4afb0d67d988d601ac44ea8dfbd6d4447e72ae1154c806",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -14084,7 +14813,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "1757f08b855fea6fbfe789227df4533fe094718cc3caacdd2d8d41cf7588f685",
+        "contentHash": "4b0c07f770013514b742482d8f04c239694b6b0999b520da839c58f0aaf1c12b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -14752,7 +15481,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "e741c92baea9dce07cb1fd0807194914351649c5a2fee2c0c73cfe3317700602",
+        "contentHash": "a7ec125976de34bc2e9b4e1191b2a50a0226089d16c4819cc6b51f8f91fd3953",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -14922,7 +15651,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "fa0336a7230a466c6d0e8f641d1cc870cd29888dda66da37131a0163f134b3c5",
+        "contentHash": "a1ca9dae6a716a4fce0cb0f41101153af8b47d8d895ac3e431ca982305466554",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -15182,7 +15911,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "7def156d7a92b7302f986d7df4a61494824ca3ac44d319974877af59d5457d69",
+        "contentHash": "851e9ac77fb14b8bacd1017c4bf2ee2952727d2a2a3364738d3a34cc93d26db5",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
