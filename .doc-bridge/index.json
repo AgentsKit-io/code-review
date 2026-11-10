@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "ff60a49660d22fa833bb1ff85e065a7c8249dbb68f7cbbbafc239adcfebf41f4",
+  "contentHash": "bc3e8d4ca166394c01a660ff1587e5af2ef85c77a580a7a5256821c482b64073",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-05T18:10:59.233Z",
+  "generatedAt": "2026-11-10T01:16:20.385Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -261,6 +261,18 @@
         "project"
       ],
       "contentHash": "eeb57788f452b71186165522c013e904a93c785136e29b30259052b5ed6d0bbe"
+    },
+    {
+      "id": "document:changelog.d/400.md",
+      "type": "document",
+      "title": "400.md",
+      "path": "changelog.d/400.md",
+      "description": "ci: add standard CI workflow (ci-standard.yml) (#400)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "80f1a26dd09f3c5653b2586cfa6e4e9d83a31b9f7f021ae136c0155011704d41"
     },
     {
       "id": "document:CHANGELOG.md",
@@ -3503,8 +3515,8 @@
     }
   },
   "inputs": {
-    "hash": "bd655d562e954bd926237875807f6f2ebd1e5751cb3e5c2f4f64eb47412e3dcf",
-    "fileCount": 240,
+    "hash": "a3f2edcfbbd578ca5a1e1b7d3a280fddbfb8d891f5a7e3d6ce0824bdbffdc70c",
+    "fileCount": 241,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3526,9 +3538,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "7245625c3fd7518701269437c59ceb3f1e885d7ed1e222447ce44f164b4e5a2d",
+    "contentHash": "94ba40680a6c811d11bbd0f727e230446c428018f12897d716c7e71b05586738",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "d80a446bb67d5f064e3b7c3b9a6f15c27fec026d8e92d9ec06572a320e1f3ee0",
+    "snapshotHash": "7b63895a0f2b6607f8b9088a23889e180a9bef84e9c4c0d33dbac8fa2f5c57ea",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3548,7 +3560,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 219,
+      "documentCount": 220,
       "fieldNames": [
         "aliases",
         "body",
@@ -3559,13 +3571,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8447488584474887,
-        "body": 54.730593607305934,
-        "headings": 3.671232876712329,
-        "path": 5.593607305936073,
-        "summary": 4.255707762557078,
-        "symbols": 12.899543378995434,
-        "title": 4.269406392694064
+        "aliases": 2.840909090909091,
+        "body": 54.6,
+        "headings": 3.6545454545454548,
+        "path": 5.586363636363636,
+        "summary": 4.281818181818182,
+        "symbols": 12.840909090909092,
+        "title": 4.259090909090909
       }
     },
     "entries": [
@@ -4539,6 +4551,39 @@
           "outbound": []
         },
         "contentHash": "eeb57788f452b71186165522c013e904a93c785136e29b30259052b5ed6d0bbe",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:changelog.d/400.md",
+        "kind": "document",
+        "path": "changelog.d/400.md",
+        "title": "400.md",
+        "summary": "ci: add standard CI workflow (ci-standard.yml) (#400)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "400.md",
+          "headings": "",
+          "path": "changelog.d/400.md",
+          "symbols": "",
+          "summary": "ci: add standard CI workflow (ci-standard.yml) (#400)",
+          "body": "ci: add standard CI workflow (ci-standard.yml) ( 400) Adds .github/workflows/ci-standard.yml (install + typecheck) so the repo passes the factory repo-standard check.",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "80f1a26dd09f3c5653b2586cfa6e4e9d83a31b9f7f021ae136c0155011704d41",
         "provenance": "observed",
         "confidence": "observed"
       },
