@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "09120462dfbd7732cb29ac34db589d6a1146db2788d8f3a061cb713140a27923",
+  "contentHash": "17f77711650368686916f2ca2181724494eaf78c3cdbd070029852a66166da15",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-10T07:01:37.516Z",
+  "generatedAt": "2026-11-10T07:30:04.083Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -200,7 +200,7 @@
         "document",
         "unclassified"
       ],
-      "contentHash": "fb029844870e0dc1b833620d3c89119d7c35f1289689de65da94c23e09b01aae"
+      "contentHash": "ac7ecf3d404da5ccdc38302750798f4a31dc99a5859d9cfb9cd11699579e03f5"
     },
     {
       "id": "document:changelog.d/361.md",
@@ -297,6 +297,18 @@
         "project"
       ],
       "contentHash": "80f1a26dd09f3c5653b2586cfa6e4e9d83a31b9f7f021ae136c0155011704d41"
+    },
+    {
+      "id": "document:changelog.d/414.md",
+      "type": "document",
+      "title": "414.md",
+      "path": "changelog.d/414.md",
+      "description": "fix: bench/reviewbench agent.mjs drops findings without file/line and records the dataset version (#414)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "e50731eef4ea77deee711b05582ecf2231f7e097a097677cbd9d70036a9cb8be"
     },
     {
       "id": "document:CHANGELOG.md",
@@ -1165,7 +1177,7 @@
         "mjs",
         "reviewbench"
       ],
-      "contentHash": "848767c173555ff5d732099658d1fa0ae045b5de8a6f7e7efb8ea09e6451bc15"
+      "contentHash": "7bf82e84e8a053e62bfb8b0dd7e63447f6d5f5526b61d403c8f1d33ba35ed501"
     },
     {
       "id": "module:examples/verify-readme.mjs",
@@ -3551,8 +3563,8 @@
     }
   },
   "inputs": {
-    "hash": "6477dbf31db0e591a09ad5116bbe202f00011f26c7ee55928c2c0af2b07d150e",
-    "fileCount": 244,
+    "hash": "ee5e379325d0dcd4cdcc3ddce5053fb7f13db357e5b2d0e53d618f3f1b73ba29",
+    "fileCount": 245,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3574,9 +3586,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "3a92ee36806d8f68d3bffcb61cf519e3dfec61e3ec68afdfe55483a52042e358",
+    "contentHash": "3bf01c355fe5fa1d3f1d825083d717fdc6ce78f674079168a18e30c18a0ff259",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "ce77bc84295fa2d7346065c2a0bda443e000edeb653f599e153103d1aaa589b7",
+    "snapshotHash": "693f8e5e0768660c393fbb0f1cf7f6128d99c4c0b3b95ecb586fe0742bbca6c1",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3596,7 +3608,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 224,
+      "documentCount": 225,
       "fieldNames": [
         "aliases",
         "body",
@@ -3607,13 +3619,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.825892857142857,
-        "body": 54.535714285714285,
-        "headings": 3.6830357142857144,
-        "path": 5.553571428571429,
-        "summary": 4.473214285714286,
-        "symbols": 12.611607142857142,
-        "title": 4.258928571428571
+        "aliases": 2.8222222222222224,
+        "body": 54.67111111111111,
+        "headings": 3.68,
+        "path": 5.546666666666667,
+        "summary": 4.524444444444445,
+        "symbols": 12.555555555555555,
+        "title": 4.248888888888889
       }
     },
     "entries": [
@@ -4442,11 +4454,11 @@
         ],
         "fields": {
           "title": "ReviewBench — code-review (25-PR private showcase subset)",
-          "headings": "ReviewBench — code-review (25-PR private showcase subset) What exists Reproduce (to be run by the operator with the factory pool) Results (fill in after the run)",
+          "headings": "ReviewBench — code-review (25-PR private showcase subset) What exists Reproduce (to be run by the operator with the factory pool) Results (fill in after the run — all pending, nothing invented)",
           "path": "bench/reviewbench/RESULTS.md",
           "symbols": "",
           "summary": "Status: NOT MEASURED YET. No score is reported on purpose: the private 25-PR evaluation needs the ReviewBench private subset, its Harbor runner and the factory's subscription model pool, none of which are available in the agent sandbox that produced this change. No number below is invented. Nothing was submitted to the public leaderboard and the full 219-PR set was not run.",
-          "body": "ReviewBench — code-review (25-PR private showcase subset) Status: NOT MEASURED YET. No score is reported on purpose: the private 25-PR evaluation needs the ReviewBench private subset, its Harbor runner and the factory's subscription model pool, none of which are available in the agent sandbox that produced this change. No number below is invented. Nothing was submitted to the public leaderboard and the full 219-PR set was not run. What exists - Dockerfile — reviewer image (agentskit-review + claude CLI, subscription auth, no paid API key). - agent.mjs — adapter: runs agentskit-review --provider claude-cli on one PR and writes the findings file of the ReviewBench agent contract, plus <out .meta.json (model, votes, profile, duration, findings). Configuration via RB CONFIG MODEL (default claude-sonnet-5-5 ), RB CONFIG VOTES (3), RB CONFIG PROFILE (full), RB CONFIG DEADLINE MS (1500000). Reproduce (to be run by the operator with the factory pool) Results (fill in after the run) Field Value --- --- Dataset version (pinned) pending — record the runner's version here Model / config pending F1 / precision / recall (grounded) pending Leaderboard on 2026-10-30 for comparison: 1 OhMyBug 83.0, Copilot Max 75.7, Laude RevEngine (Opus 5.5) 73.3, Codex 70.2. Per-PR table (model, configuration, duration, comments), false-negative categories, false-positive analysis and the 3–5 recommended changes: pending the run .",
+          "body": "ReviewBench — code-review (25-PR private showcase subset) Status: NOT MEASURED YET. No score is reported on purpose: the private 25-PR evaluation needs the ReviewBench private subset, its Harbor runner and the factory's subscription model pool, none of which are available in the agent sandbox that produced this change. No number below is invented. Nothing was submitted to the public leaderboard and the full 219-PR set was not run. What exists - Dockerfile — reviewer image (agentskit-review + claude CLI, subscription auth, no paid API key). - agent.mjs — adapter: runs agentskit-review --provider claude-cli on one PR and writes the findings file of the ReviewBench agent contract, plus <out .meta.json (model, votes, profile, duration, findings). Configuration via RB CONFIG MODEL (default claude-sonnet-5-5 ), RB CONFIG VOTES (3), RB CONFIG PROFILE (full), RB CONFIG DEADLINE MS (1500000). Reproduce (to be run by the operator with the factory pool) The exact Harbor command line and the dataset version come from the runner's own documentation (https://review-bench.ai/run/) and are NOT known to the agent sandbox; they are not invented here. Fill the placeholders <... from the runner and record them in the table below. agent.mjs refuses to run without RB DATASET VERSION (the dataset pin), records it in <out .meta.json , and drops findings without file/line (the contract needs both). Results (fill in after the run — all pending, nothing invented) Field Value --- --- Dataset version (pinned) pending — pin reviewbench@<version from the runner Model / config pending F1 / precision / recall (grounded) pending Judge cost total / cap pending Leaderboard on 2026-10-30 for comparison: 1 OhMyBug 83.0, Copilot Max 75.7, Laude RevEngine (Opus 5.5) 73.3, Codex 70.2. Per-PR table (to fill): PR Model Configuration Duration Comments Judge cost --- --- --- --- --- --- False-negative categories, false-positive analysis and the 3–5 recommended changes to raise F1: pending the run .",
           "aliases": "document unclassified"
         },
         "graph": {
@@ -4463,7 +4475,7 @@
             }
           ]
         },
-        "contentHash": "fb029844870e0dc1b833620d3c89119d7c35f1289689de65da94c23e09b01aae",
+        "contentHash": "ac7ecf3d404da5ccdc38302750798f4a31dc99a5859d9cfb9cd11699579e03f5",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -4728,6 +4740,39 @@
           "outbound": []
         },
         "contentHash": "80f1a26dd09f3c5653b2586cfa6e4e9d83a31b9f7f021ae136c0155011704d41",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:changelog.d/414.md",
+        "kind": "document",
+        "path": "changelog.d/414.md",
+        "title": "414.md",
+        "summary": "fix: bench/reviewbench agent.mjs drops findings without file/line and records the dataset version (#414)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "414.md",
+          "headings": "",
+          "path": "changelog.d/414.md",
+          "symbols": "",
+          "summary": "fix: bench/reviewbench agent.mjs drops findings without file/line and records the dataset version (#414)",
+          "body": "fix: bench/reviewbench agent.mjs drops findings without file/line and records the dataset version ( 414)",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "e50731eef4ea77deee711b05582ecf2231f7e097a097677cbd9d70036a9cb8be",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -8949,7 +8994,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "848767c173555ff5d732099658d1fa0ae045b5de8a6f7e7efb8ea09e6451bc15",
+        "contentHash": "7bf82e84e8a053e62bfb8b0dd7e63447f6d5f5526b61d403c8f1d33ba35ed501",
         "provenance": "observed",
         "confidence": "observed"
       },
