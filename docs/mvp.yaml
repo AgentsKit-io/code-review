@@ -73,7 +73,9 @@ requirements:
     calculado pela mesma tabela de preço por modelo, versionada no repositório; o relatório não mostra custo zero em
     nenhum PR completo
   weight: 1
-  acceptance: []
+  acceptance:
+    - test: test/reviewer-benchmark.test.mjs
+    - test: test/incumbent-review.test.mjs
   homolog: []
   issues: []
   prs: []
