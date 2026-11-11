@@ -96,7 +96,7 @@
     "test/fault-injection.test.mjs",
     "test/fixtures/bin/codex",
     "test/fixtures/review/good.ts",
-    "test/fixtures/review/unreviewed.ts",
+    "test/fixtures/review/unreviewed.ts"
   ],
   "repository": {
     "type": "git",
