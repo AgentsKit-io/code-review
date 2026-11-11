@@ -271,7 +271,8 @@ test('#379: records each finding with its verdict and matched bug, a readable fa
 const checkReportSchema = (report) => {
   assert.ok(['PASS', 'FAIL', 'BLOCKED'].includes(report.decision))
   assert.ok(Array.isArray(report.reasons) && report.reasons.every((r) => typeof r === 'string'))
-  assert.ok(Array.isArray(report.set.prs))
+  assert.equal(typeof report.set.prs, 'number')
+  assert.ok(Array.isArray(report.set.commits) && report.set.commits.length === report.set.prs)
   assert.match(report.set.digest, /^[0-9a-f]{64}$/)
   assert.equal(typeof report.run.codeReviewVersion, 'string')
   for (const side of [report.incumbent, report.candidate]) {
