@@ -41,7 +41,7 @@ requirements:
   acceptance:
     - test: test/reviewer-benchmark.test.mjs
   homolog: []
-  issues: [359]
+  issues: [359, 364]
   prs: [388]
 - id: RF-02
   title: Bugs reais e falsos positivos medidos nos dois revisores
