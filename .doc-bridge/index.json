@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "90b6339a6b260df0dc88bcd5ecbb8cc1fec801d3469baf0dde69fffcda8fa03f",
+  "contentHash": "2eba2ba259dddbfdf87d6a660112e5ff00bdf5e637901122e91fd2d39ceb15d9",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-11T06:53:44.226Z",
+  "generatedAt": "2026-11-11T07:16:20.015Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -231,12 +231,12 @@
       "type": "document",
       "title": "365.md",
       "path": "changelog.d/365.md",
-      "description": "feat: test the schema of the reviewer benchmark report (#365)",
+      "description": "test: validate the schema of the reviewer benchmark report (#365)",
       "tags": [
         "document",
         "project"
       ],
-      "contentHash": "d3946fbeacfdd6a6eac19e3b93e677490466e5ddf9cf17c06bf9cf1fb81b5272"
+      "contentHash": "e52e91dd7ee939318ca18883f9d20ffb8dcb977fd5db76c0b1ffbe308ccbc6d7"
     },
     {
       "id": "document:changelog.d/366.md",
@@ -3381,7 +3381,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "a3fa96857697537517a7290e4c3377bdeca93fc8bf27e752d7107122bdf39261"
+      "contentHash": "2d20ebc7708f32b0f5a55b0f6526d6537e060f1d40cb89456b7829cb43f8a02a"
     },
     {
       "id": "module:test/risk-depth.test.mjs",
@@ -3575,7 +3575,7 @@
     }
   },
   "inputs": {
-    "hash": "a70cb6fece85c0aa9ed65d2d15fa9ae7a517c7e06a3def8952a99443f2387edf",
+    "hash": "fd7f3c46de43a876ba8e06b47ef9f611b7df14ab9aa8a5a07b7ea093dba95894",
     "fileCount": 246,
     "projectionVersion": 2
   },
@@ -3598,9 +3598,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "452db33f5b272f5d723a8ecd6deb48868b89a81dcc9ad4e1c8eb486308e837cd",
+    "contentHash": "62cbca59eb8a22dbfc1bea992138169a88aceeeb629d7f3a12c4fcb525ad49c9",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "3d6590bcfd98d11cd36eb7af66bf88c5ffa3df35b44e1ff85758fdb12d04e6ce",
+    "snapshotHash": "426956964ae35d70fc03e8dd7e5e92c71eba9f93c278cf75f10e3432645a0f7f",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -4562,7 +4562,7 @@
         "kind": "document",
         "path": "changelog.d/365.md",
         "title": "365.md",
-        "summary": "feat: test the schema of the reviewer benchmark report (#365)",
+        "summary": "test: validate the schema of the reviewer benchmark report (#365)",
         "audience": "human",
         "aliases": [],
         "tags": [
@@ -4574,8 +4574,8 @@
           "headings": "",
           "path": "changelog.d/365.md",
           "symbols": "",
-          "summary": "feat: test the schema of the reviewer benchmark report (#365)",
-          "body": "feat: test the schema of the reviewer benchmark report ( 365)",
+          "summary": "test: validate the schema of the reviewer benchmark report (#365)",
+          "body": "test: validate the schema of the reviewer benchmark report ( 365)",
           "aliases": "document project"
         },
         "graph": {
@@ -4586,7 +4586,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "d3946fbeacfdd6a6eac19e3b93e677490466e5ddf9cf17c06bf9cf1fb81b5272",
+        "contentHash": "e52e91dd7ee939318ca18883f9d20ffb8dcb977fd5db76c0b1ffbe308ccbc6d7",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -15749,7 +15749,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "a3fa96857697537517a7290e4c3377bdeca93fc8bf27e752d7107122bdf39261",
+        "contentHash": "2d20ebc7708f32b0f5a55b0f6526d6537e060f1d40cb89456b7829cb43f8a02a",
         "provenance": "observed",
         "confidence": "observed"
       },
