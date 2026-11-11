@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "17f77711650368686916f2ca2181724494eaf78c3cdbd070029852a66166da15",
+  "contentHash": "7fc235615d8b35e59c6f4d6c824975168494f110ade8d1b69e185bc28e2c41e0",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-10T07:30:04.083Z",
+  "generatedAt": "2026-11-11T04:57:14.470Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -309,6 +309,18 @@
         "project"
       ],
       "contentHash": "e50731eef4ea77deee711b05582ecf2231f7e097a097677cbd9d70036a9cb8be"
+    },
+    {
+      "id": "document:changelog.d/418.md",
+      "type": "document",
+      "title": "418.md",
+      "path": "changelog.d/418.md",
+      "description": "ci: always report the required \"check\" status on pull requests (#418)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "c199827bc3d68bd704c6bbc59e78b7526fa76d5c5604f27a9b5f30834b7e484f"
     },
     {
       "id": "document:CHANGELOG.md",
@@ -2835,6 +2847,18 @@
       "contentHash": "ee0cb2e3413627695e2814b25a8cd9e0835d6bbf42e417b231eac60eaced61b5"
     },
     {
+      "id": "module:test/ci-required-check.test.mjs",
+      "type": "module",
+      "title": "ci-required-check.test.mjs",
+      "path": "test/ci-required-check.test.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "test"
+      ],
+      "contentHash": "0a11d92b164eee753a1ff0ef45f1919ff8b931fc0f668dda47bf3ea297079afe"
+    },
+    {
       "id": "module:test/cli-smoke.test.mjs",
       "type": "module",
       "title": "cli-smoke.test.mjs",
@@ -3563,8 +3587,8 @@
     }
   },
   "inputs": {
-    "hash": "ee5e379325d0dcd4cdcc3ddce5053fb7f13db357e5b2d0e53d618f3f1b73ba29",
-    "fileCount": 245,
+    "hash": "457970a5505eaa8d56755b8af084c9489e46c42d75734d2f69285cb456667d45",
+    "fileCount": 247,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3586,9 +3610,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "3bf01c355fe5fa1d3f1d825083d717fdc6ce78f674079168a18e30c18a0ff259",
+    "contentHash": "86d08b61993d0c06ce6431df405d7056bebaab93684ef1b6039848288c6a07dc",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "693f8e5e0768660c393fbb0f1cf7f6128d99c4c0b3b95ecb586fe0742bbca6c1",
+    "snapshotHash": "be19fbc4f85f15dce102e0c1ea6c54dc5d97c90949c25cd6101271f6c2447e7e",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3608,7 +3632,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 225,
+      "documentCount": 227,
       "fieldNames": [
         "aliases",
         "body",
@@ -3619,13 +3643,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8222222222222224,
-        "body": 54.67111111111111,
-        "headings": 3.68,
-        "path": 5.546666666666667,
-        "summary": 4.524444444444445,
-        "symbols": 12.555555555555555,
-        "title": 4.248888888888889
+        "aliases": 2.8193832599118944,
+        "body": 54.25991189427313,
+        "headings": 3.647577092511013,
+        "path": 5.546255506607929,
+        "summary": 4.524229074889868,
+        "symbols": 12.444933920704846,
+        "title": 4.246696035242291
       }
     },
     "entries": [
@@ -3869,7 +3893,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "f748814d54b927541700d023abf97a3d7f2762b3055a3a7fcb8876cc97472c6b",
+        "contentHash": "a831f2e88f23135ca7f89d15c8a8275360aa567dbb8e01a36bc7285337bb5754",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -4773,6 +4797,39 @@
           "outbound": []
         },
         "contentHash": "e50731eef4ea77deee711b05582ecf2231f7e097a097677cbd9d70036a9cb8be",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:changelog.d/418.md",
+        "kind": "document",
+        "path": "changelog.d/418.md",
+        "title": "418.md",
+        "summary": "ci: always report the required \"check\" status on pull requests (#418)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "418.md",
+          "headings": "",
+          "path": "changelog.d/418.md",
+          "symbols": "",
+          "summary": "ci: always report the required \"check\" status on pull requests (#418)",
+          "body": "ci: always report the required \"check\" status on pull requests ( 418) Make the reported job name explicit and guard it with a test.",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "c199827bc3d68bd704c6bbc59e78b7526fa76d5c5604f27a9b5f30834b7e484f",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -14154,6 +14211,40 @@
         "confidence": "observed"
       },
       {
+        "id": "module:test/ci-required-check.test.mjs",
+        "kind": "module",
+        "path": "test/ci-required-check.test.mjs",
+        "title": "ci-required-check.test.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "test"
+        ],
+        "fields": {
+          "title": "ci-required-check.test.mjs",
+          "headings": "",
+          "path": "test/ci-required-check.test.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs test"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:test",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "0a11d92b164eee753a1ff0ef45f1919ff8b931fc0f668dda47bf3ea297079afe",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:test/cli-smoke.test.mjs",
         "kind": "module",
         "path": "test/cli-smoke.test.mjs",
@@ -16134,7 +16225,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "851e9ac77fb14b8bacd1017c4bf2ee2952727d2a2a3364738d3a34cc93d26db5",
+        "contentHash": "5d9f0c988dfae0200d489d13cbd0cfa0ce14652641b02fc2ee8a540a364477ca",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
