@@ -1,42 +1,40 @@
 name: CI
 
 on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches: [main]
-  pull_request:
+  schedule:
+    - cron: '41 3 * * *'
+  workflow_dispatch:
 
-permissions:
-  contents: read
+permissions: {}
 
 concurrency:
-  # Supersede in-flight runs for the same PR; pushes to main always finish.
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # Supersede in-flight runs for the same PR; pushes to main and scheduled runs always finish.
+  group: ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  pipeline:
+    uses: ./.github/workflows/ci-standard.yml
+    permissions:
+      actions: write
+      contents: read
+
+  # Keeps the required check name: green only when every pipeline stage passed.
   check:
-    runs-on: ubuntu-latest
+    needs: pipeline
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    permissions: {}
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: |
-            package-lock.json
-            apps/docs/package-lock.json
-      - run: npm ci
-      - run: npm ci --prefix apps/docs
-      # Doc Bridge uses a Git SHA for clean checkouts and a content hash for dirty ones.
-      # The committed index is content-addressed, so keep that revision mode through the gates.
-      - run: touch .doc-bridge/.ci-content-revision
-      - run: npm run docs:index
-      - run: git diff --exit-code -- doc-bridge.config.json .doc-bridge llms-full.txt
-      - run: npm run check:public-api
-      - run: npm run check
-      - run: npm run test:coverage
-      - run: npm pack --dry-run
-      - if: always()
-        run: rm -f .doc-bridge/.ci-content-revision
+      - name: Pipeline result
+        env:
+          RESULT: ${{ needs.pipeline.result }}
+          MODE: ${{ needs.pipeline.outputs.mode }}
+        run: |
+          echo "pipeline: $RESULT (mode: ${MODE:-unknown})"
+          test "$RESULT" = success
