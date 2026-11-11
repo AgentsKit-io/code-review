@@ -3,6 +3,7 @@ name: CI standard
 # This repository's settings for the organization's reusable CI pipeline
 # (AgentsKit-io/.github, docs/ci.md). Called by ci.yml.
 # Tests stay on node:test (not Vitest), so the Vitest time budget does not apply.
+# FORCE_COLOR=0: the pipeline sets FORCE_COLOR=1, which corrupts the node:test coverage report parsing.
 
 on:
   workflow_call:
@@ -22,7 +23,7 @@ jobs:
     with:
       installer: auto
       typecheck-command: bash scripts/ci/check.sh
-      test-command: npm run test:coverage
-      affected-test-command: npm run test:coverage
+      test-command: env FORCE_COLOR=0 npm run test:coverage
+      affected-test-command: env FORCE_COLOR=0 npm run test:coverage
       build-command: bash scripts/ci/build.sh
       job-timeout-minutes: 20
