@@ -97,7 +97,6 @@
     "test/fixtures/bin/codex",
     "test/fixtures/review/good.ts",
     "test/fixtures/review/unreviewed.ts",
-    "test/ci-required-check.test.mjs"
   ],
   "repository": {
     "type": "git",
