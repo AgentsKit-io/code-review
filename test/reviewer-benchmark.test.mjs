@@ -271,15 +271,18 @@ test('#379: records each finding with its verdict and matched bug, a readable fa
 const checkReportSchema = (report) => {
   assert.ok(['PASS', 'FAIL', 'BLOCKED'].includes(report.decision))
   assert.ok(Array.isArray(report.reasons) && report.reasons.every((r) => typeof r === 'string'))
+  assert.ok(Array.isArray(report.set.prs))
+  assert.match(report.set.digest, /^[0-9a-f]{64}$/)
+  assert.equal(typeof report.run.codeReviewVersion, 'string')
   for (const side of [report.incumbent, report.candidate]) {
     assert.equal(typeof side.name, 'string')
-    for (const key of ['bugsFound', 'bugsKnown', 'falsePositives', 'costUsd', 'meanLatencyMs', 'erroredPrs']) assert.equal(typeof side[key], 'number', key)
+    for (const key of ['bugsFound', 'bugsKnown', 'falsePositives', 'inputTokens', 'outputTokens', 'costUsd', 'meanLatencyMs', 'p90LatencyMs', 'erroredPrs']) assert.equal(typeof side[key], 'number', key)
     assert.ok(Array.isArray(side.perPr))
     assert.equal(side.erroredPrs, side.perPr.filter((p) => p.error).length)
     for (const p of side.perPr) {
       assert.equal(typeof p.id, 'string')
       if (p.error) { assert.equal(typeof p.error, 'string'); continue }
-      for (const key of ['bugsFound', 'bugsKnown', 'falsePositives', 'costUsd', 'latencyMs']) assert.equal(typeof p[key], 'number', `${p.id} ${key}`)
+      for (const key of ['bugsFound', 'bugsKnown', 'falsePositives', 'inputTokens', 'outputTokens', 'costUsd', 'latencyMs']) assert.equal(typeof p[key], 'number', `${p.id} ${key}`)
     }
     assert.equal(side.bugsFound, side.perPr.reduce((n, p) => n + (p.bugsFound ?? 0), 0))
     assert.equal(side.falsePositives, side.perPr.reduce((n, p) => n + (p.falsePositives ?? 0), 0))
