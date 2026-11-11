@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "17f77711650368686916f2ca2181724494eaf78c3cdbd070029852a66166da15",
+  "contentHash": "2a21c809a1bda4f88efc3d24796e33bbfabed2a4af40a5b08051f5fa9039b4b7",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-10T07:30:04.083Z",
+  "generatedAt": "2026-11-11T08:14:44.076Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -225,6 +225,18 @@
         "project"
       ],
       "contentHash": "eeb5b47e953f989c5d7504018a015a075aa94d1076976f69cb4c76aaf3307efe"
+    },
+    {
+      "id": "document:changelog.d/365.md",
+      "type": "document",
+      "title": "365.md",
+      "path": "changelog.d/365.md",
+      "description": "test: validate the schema of the reviewer benchmark report (#365)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "e52e91dd7ee939318ca18883f9d20ffb8dcb977fd5db76c0b1ffbe308ccbc6d7"
     },
     {
       "id": "document:changelog.d/366.md",
@@ -601,14 +613,14 @@
     {
       "id": "document:docs/reviewer-benchmark-report.md",
       "type": "document",
-      "title": "Reviewer benchmark: BLOCKED",
+      "title": "Reviewer benchmark: FAIL",
       "path": "docs/reviewer-benchmark-report.md",
       "description": "Requirement mvp:RF-02: real bugs found and false positives of both reviewers, per PR and in total.",
       "tags": [
         "document",
         "human"
       ],
-      "contentHash": "4dcd79bcc8500d8a1152dbacae149bbc426e7642ba94b3d89a9497dc9a54c91a"
+      "contentHash": "4a3dc88308a13299e75aa58995334d42febd654b7b417dc89e4f0114d9e5d0ee"
     },
     {
       "id": "document:docs/reviewer-benchmark.md",
@@ -3369,7 +3381,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "a7ec125976de34bc2e9b4e1191b2a50a0226089d16c4819cc6b51f8f91fd3953"
+      "contentHash": "b77490dfa04e1207fff9ecf23ecbff3b04172bfb67d05e0e4f3feb0d4872fe7e"
     },
     {
       "id": "module:test/risk-depth.test.mjs",
@@ -3563,8 +3575,8 @@
     }
   },
   "inputs": {
-    "hash": "ee5e379325d0dcd4cdcc3ddce5053fb7f13db357e5b2d0e53d618f3f1b73ba29",
-    "fileCount": 245,
+    "hash": "149ba153d79066160d2c0a5f9a750fa5cee8cfe64be89f8e8144132b3d29a9fe",
+    "fileCount": 246,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3586,9 +3598,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "3bf01c355fe5fa1d3f1d825083d717fdc6ce78f674079168a18e30c18a0ff259",
+    "contentHash": "9150dfd9775c1a34c2331ec4ee7f85cd545603ae54573963a849a8b819ceba05",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "693f8e5e0768660c393fbb0f1cf7f6128d99c4c0b3b95ecb586fe0742bbca6c1",
+    "snapshotHash": "78a053706469f0686299530518b1abad61a4779ff2340f316fc137a3e8d2085f",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3608,7 +3620,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 225,
+      "documentCount": 226,
       "fieldNames": [
         "aliases",
         "body",
@@ -3619,13 +3631,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8222222222222224,
-        "body": 54.67111111111111,
-        "headings": 3.68,
-        "path": 5.546666666666667,
-        "summary": 4.524444444444445,
-        "symbols": 12.555555555555555,
-        "title": 4.248888888888889
+        "aliases": 2.8185840707964602,
+        "body": 54.00442477876106,
+        "headings": 3.747787610619469,
+        "path": 5.539823008849558,
+        "summary": 4.535398230088496,
+        "symbols": 12.5,
+        "title": 4.238938053097345
       }
     },
     "entries": [
@@ -4542,6 +4554,39 @@
           "outbound": []
         },
         "contentHash": "eeb5b47e953f989c5d7504018a015a075aa94d1076976f69cb4c76aaf3307efe",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:changelog.d/365.md",
+        "kind": "document",
+        "path": "changelog.d/365.md",
+        "title": "365.md",
+        "summary": "test: validate the schema of the reviewer benchmark report (#365)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "365.md",
+          "headings": "",
+          "path": "changelog.d/365.md",
+          "symbols": "",
+          "summary": "test: validate the schema of the reviewer benchmark report (#365)",
+          "body": "test: validate the schema of the reviewer benchmark report ( 365)",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "e52e91dd7ee939318ca18883f9d20ffb8dcb977fd5db76c0b1ffbe308ccbc6d7",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6903,7 +6948,7 @@
         "id": "document:docs/reviewer-benchmark-report.md",
         "kind": "document",
         "path": "docs/reviewer-benchmark-report.md",
-        "title": "Reviewer benchmark: BLOCKED",
+        "title": "Reviewer benchmark: FAIL",
         "summary": "Requirement mvp:RF-02: real bugs found and false positives of both reviewers, per PR and in total.",
         "audience": "human",
         "aliases": [],
@@ -6912,12 +6957,12 @@
           "human"
         ],
         "fields": {
-          "title": "Reviewer benchmark: BLOCKED",
-          "headings": "Reviewer benchmark: BLOCKED Counting rule Totals Per PR Falsos positivos por categoria Reproduce",
+          "title": "Reviewer benchmark: FAIL",
+          "headings": "Reviewer benchmark: FAIL Set and version (mvp:RF-01) Counting rule Totals Per PR Falsos positivos por categoria incumbent code-review Failed PRs Cost per PR (mvp:RF-04) Reproduce",
           "path": "docs/reviewer-benchmark-report.md",
           "symbols": "",
           "summary": "Requirement mvp:RF-02: real bugs found and false positives of both reviewers, per PR and in total.",
-          "body": "Reviewer benchmark: BLOCKED Requirement mvp:RF-02 : real bugs found and false positives of both reviewers, per PR and in total. - incumbent errored on 38 PR(s); rerun before comparing - code-review errored on 11 PR(s); rerun before comparing Counting rule Both reviewers run over the same labelled PRs ( quality/benchmark/prs.json ) and are scored by the same function ( scorePr in src/reviewer-benchmark.ts ): - A real bug is a known bug (a defect later fixed by a fix PR) matched by at least one finding on the same file within the line tolerance (default 3 lines); each known bug counts once. - A false positive is any finding that matches no known bug, including every finding on a clean PR. - A PR where the reviewer errored shows error and is not counted; any error makes the decision BLOCKED . Totals Reviewer Bugs found False positives Cost (US$) Mean latency (ms) Errored PRs --- --- --- --- --- --- incumbent 0/32 0 0.00 4 38 code-review 8/32 118 0.00 235158 11 Per PR PR incumbent bugs incumbent false positives code-review bugs code-review false positives --- --- --- --- --- AgentsKit-io/code-review 178 error - 2/2 9 AgentsKit-io/code-review 62 error - error - AgentsKit-io/code-review 40 error - error - AgentsKit-io/code-review 67 error - error - AgentsKit-io/code-review 130 error - error - AgentsKit-io/code-review 80 error - 1/1 1 AgentsKit-io/code-review 180 error - error - AgentsKit-io/code-review 204 error - 0/1 14 AgentsKit-io/code-review 186 error - error - AgentsKit-io/code-review 73 error - error - AgentsKit-io/harness 144 error - 1/1 2 AgentsKit-io/harness 142 error - 1/2 0 AgentsKit-io/harness 133 error - 0/1 3 AgentsKit-io/harness 103 error - 0/1 8 AgentsKit-io/harness 101 error - error - AgentsKit-io/harness 198 error - 1/2 9 AgentsKit-io/harness 199 error - 0/1 2 AgentsKit-io/harness 201 error - 1/2 2 AgentsKit-io/harness 98 error - 1/1 12 AgentsKit-io/harness 111 error - error - AgentsKit-io/harness 39 error - error - AgentsKit-io/harness 184 error - 0/1 3 AgentsKit-io/code-review 27 error - 0/0 5 AgentsKit-io/code-review 166 error - 0/0 3 AgentsKit-io/code-review 280 error - 0/0 3 AgentsKit-io/code-review 319 error - 0/0 0 AgentsKit-io/harness 28 error - 0/0 6 AgentsKit-io/harness 29 error - 0/0 7 AgentsKit-io/harness 42 error - 0/0 3 AgentsKit-io/harness 44 error - 0/0 3 AgentsKit-io/harness 97 error - 0/0 4 AgentsKit-io/harness 107 error - error - AgentsKit-io/doc-bridge 76 error - 0/0 2 AgentsKit-io/doc-bridge 197 error - 0/0 2 AgentsKit-io/doc-bridge 207 error - 0/0 5 AgentsKit-io/doc-bridge 317 error - 0/0 2 AgentsKit-io/doc-bridge 369 error - 0/0 6 AgentsKit-io/doc-bridge 393 error - 0/0 2 Total 0/32 0 8/32 118 Falsos positivos por categoria Findings that matched no known bug, grouped by title (the rule that produced them). The finding list of every PR, with its verdict and the known bug it matched, is in quality/benchmark/report.json ( perPr[].findings ); a failed PR keeps its cause in perPr[].errorDetail (exit code, stage, last stderr lines, secrets redacted). The measurement committed here predates this recording, so it has no per-finding data: rerun the benchmark (see Reproduce) to fill this section; the generator renders one table per reviewer plus a \"Failed PRs\" table. Reproduce The incumbent command is run as <executable <owner/repo <number and prints {\"findings\":[{\"file\",\"line\",\"title\"}],\"costUsd\":0} ; see docs/reviewer-benchmark.md .",
+          "body": "Reviewer benchmark: FAIL Requirement mvp:RF-02 : real bugs found and false positives of both reviewers, per PR and in total. - false positives 0 are not fewer than incumbent 0 Candidate version: 0.32.5; dataset sha256: 54b8dcfae1f257fc512d9e69c115582d2d5681adb10b836366525dcb4950af68 Set and version ( mvp:RF-01 ) Both reviewers were given exactly these PRs, each at the pinned head commit below (the runner stops on a PR whose head moved). - Set: quality/benchmark/prs.json , format version 1, sha256 0af089b36b75271f0028ada15940f8a717f7d50e462a4dfd99e9f65b8c10b68f - 38 merged PRs: 22 buggy (each bug cites the fix that proves it) and 16 clean , from AgentsKit-io/code-review, AgentsKit-io/doc-bridge, AgentsKit-io/harness - code-review: 0.32.5 at commit 8589e2ea9e222d37fe8c1886e10fe0c3e4e1f142 PR Label Commit given to both reviewers --- --- --- AgentsKit-io/code-review 178 buggy fbe240e9e03b471437d86f6e993287912dac96a0 AgentsKit-io/code-review 62 buggy 380f94707384566bea9900c717621035030ad35f AgentsKit-io/code-review 51 buggy b062b50069424693da9e1191793c69a98890caab AgentsKit-io/code-review 67 buggy cbb0e4d056e8b727a94c4db9eb11e5f38c5cb1ad AgentsKit-io/code-review 130 buggy 1bc8f17bb461cba6ef0d4875776f88118f26daf7 AgentsKit-io/code-review 80 buggy c84ae8c136018691b3eb889f89eecfdd1942726f AgentsKit-io/code-review 180 buggy 8777f2b5d79e2443b41f1987644ad191c4797df4 AgentsKit-io/code-review 204 buggy 35f01c0d43e8bfb9596dcfebc481669877b51064 AgentsKit-io/code-review 186 buggy 527325c6a88e2bfaf7b800b29650a0c728d31b4d AgentsKit-io/code-review 73 buggy 414f24075f9334bd4f454279edf7801e4290530c AgentsKit-io/harness 144 buggy b871ec60b8b9a8b77bc0d68f088e48883316b88f AgentsKit-io/harness 142 buggy 320d500b3898e29de48536d2110dd383eb255d3d AgentsKit-io/harness 133 buggy c35caf8cd7de413a2b2b9a01523b8d01e3d2ef8f AgentsKit-io/harness 103 buggy d76d2de59d7c74323fefd642dffcd9a748ca968a AgentsKit-io/harness 101 buggy 48acd101e3749dcda1ba77b396be6cceee9548d3 AgentsKit-io/harness 198 buggy d547f7714fe16c1e1eaac3065d22d9e40094c5b6 AgentsKit-io/harness 199 buggy 5b8a2b38e5d9557aeae1393c55fd411699668f84 AgentsKit-io/harness 201 buggy abee6f9e8588feec3b1c8e0e1a7198e372baeaad AgentsKit-io/harness 98 buggy cc2ce40eb2e5f7157118e5da107b650a264f5618 AgentsKit-io/harness 111 buggy 615bf4a098df96ddd835cbf058915d1e8786e95c AgentsKit-io/harness 39 buggy 41b12845f8d51148ba2037cb18db55281db2a5df AgentsKit-io/harness 184 buggy 496570e1a598972bcb7bb16611d23375c2f2b696 AgentsKit-io/code-review 27 clean f9bee0d37afeecfc8b47d2490c5333623f7b01a6 AgentsKit-io/code-review 166 clean b7429a0dc9c87726cec2ab3a66492e70d1df42a6 AgentsKit-io/code-review 280 clean cdda0d6eef5797a0414a06a523503626d7441643 AgentsKit-io/code-review 319 clean 1b2b78458bc6e4d1b84ae458e787a8dd6c7c152b AgentsKit-io/harness 28 clean 2214c34845d53d6305ca0744f8df07a6a39c57af AgentsKit-io/harness 29 clean dad0818e5ef36be7427bdbf8f8e1522c1b2e1ec5 AgentsKit-io/harness 42 clean 541cb89d5e6625f07c28c6d247238d79654fc0dd AgentsKit-io/harness 44 clean 777b6c5fcbf4f6d34a518affbe9ec55bb9584692 AgentsKit-io/harness 97 clean 9d293fa9fec6f0a9f8d682148d7d0fbb314d3ca0 AgentsKit-io/harness 107 clean 5905653b215b63e0f57f0c102d752d6c1d7bc42c AgentsKit-io/doc-bridge 76 clean c93053c4418680d6a30a8f8d930b08d63b8b7a70 AgentsKit-io/doc-bridge 197 clean 7de3f4c99654d9e13bd202b5b5c2938e233b2faf AgentsKit-io/doc-bridge 207 clean cd54d5acef2b6cacb8999d9db946123a37b35035 AgentsKit-io/doc-bridge 317 clean e3d310bc1a1b5bdb5af61a6abcd46e7f0033a8c3 AgentsKit-io/doc-bridge 369 clean 4105af5e283e6c35e1f23f71e2afffe2f88a1230 AgentsKit-io/doc-bridge 393 clean bfd70eefb2b5d77049ed866e0cbf09be67411602 Counting rule Both reviewers run over the same labelled PRs ( quality/benchmark/prs.json ) and are scored by the same function ( scorePr in src/reviewer-benchmark.ts ): - A real bug is a known bug (a defect later fixed by a fix PR) matched by at least one finding on the same file within the line tolerance (default 3 lines); each known bug counts once. ",
           "aliases": "document human"
         },
         "graph": {
@@ -6950,7 +6995,7 @@
             }
           ]
         },
-        "contentHash": "4dcd79bcc8500d8a1152dbacae149bbc426e7642ba94b3d89a9497dc9a54c91a",
+        "contentHash": "4a3dc88308a13299e75aa58995334d42febd654b7b417dc89e4f0114d9e5d0ee",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -15704,7 +15749,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "a7ec125976de34bc2e9b4e1191b2a50a0226089d16c4819cc6b51f8f91fd3953",
+        "contentHash": "b77490dfa04e1207fff9ecf23ecbff3b04172bfb67d05e0e4f3feb0d4872fe7e",
         "provenance": "observed",
         "confidence": "observed"
       },
