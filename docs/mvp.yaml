@@ -133,6 +133,8 @@ requirements:
   done_when: >-
     A versão do pacote que passou no RF-06 e no RF-08 está publicada no npm e a linha usa exatamente essa versão
     (sem @latest); trocar de versão exige remedir o conjunto rotulado contra o incumbente
+  # gate pronto (#374): scripts/check-version-pin.mjs --pin <x.y.z> só aceita versão exata medida PASS no conjunto atual.
+  # Falta: publicar e fixar na linha a versão que passar no RF-06 e no RF-08 (hoje report.json é FAIL para 0.32.5).
   weight: 1
   acceptance:
     - test: test/reviewer-benchmark.test.mjs
