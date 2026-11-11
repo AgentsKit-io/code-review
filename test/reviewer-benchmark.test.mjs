@@ -315,3 +315,17 @@ test('RF-02: a stubbed incumbent run counts real bugs and false positives of bot
   assert.equal(report.incumbent.erroredPrs, 0)
   assert.equal(report.candidate.erroredPrs, 0)
 })
+
+test('RF-01: the committed report names the digest of the committed set and the version of the code-review it measured', () => {
+  const read = (path) => readFileSync(new URL(path, import.meta.url), 'utf8')
+  const report = JSON.parse(read('../quality/benchmark/report.json'))
+  const set = describeBenchmarkSet(parseBenchmarkDataset(JSON.parse(read('../quality/benchmark/prs.json'))))
+  const markdown = read('../docs/reviewer-benchmark-report.md')
+  assert.equal(report.set.digest, set.digest)
+  assert.equal(report.set.prs, set.prs)
+  assert.match(report.candidateVersion, /^\d+\.\d+\.\d+/)
+  assert.equal(report.run.codeReviewVersion, report.candidateVersion)
+  assert.match(markdown, new RegExp(`sha256 \`${report.set.digest}\``))
+  assert.ok(markdown.includes(`\`${report.run.codeReviewVersion}\``))
+  assert.ok(markdown.includes(`Candidate version: ${report.candidateVersion};`))
+})
