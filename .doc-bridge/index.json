@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "2a21c809a1bda4f88efc3d24796e33bbfabed2a4af40a5b08051f5fa9039b4b7",
+  "contentHash": "7c37e627b804384958ccaf1e9e42afb63ca3f822102e1d4927f099646448b8cd",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-11T08:14:44.076Z",
+  "generatedAt": "2026-11-11T08:46:19.684Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -309,6 +309,18 @@
         "project"
       ],
       "contentHash": "80f1a26dd09f3c5653b2586cfa6e4e9d83a31b9f7f021ae136c0155011704d41"
+    },
+    {
+      "id": "document:changelog.d/411.md",
+      "type": "document",
+      "title": "411.md",
+      "path": "changelog.d/411.md",
+      "description": "test: guard that the committed benchmark report names the set digest and the code-review version (#411)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "1f8d56cf645828de40aef1bc2829a7e059b2de7a0f5297ca819db2a1ec09a246"
     },
     {
       "id": "document:changelog.d/414.md",
@@ -3381,7 +3393,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "b77490dfa04e1207fff9ecf23ecbff3b04172bfb67d05e0e4f3feb0d4872fe7e"
+      "contentHash": "262251b31e7925f5bc78590b326fa47798d17b1fba758b514acf563358a18272"
     },
     {
       "id": "module:test/risk-depth.test.mjs",
@@ -3575,8 +3587,8 @@
     }
   },
   "inputs": {
-    "hash": "149ba153d79066160d2c0a5f9a750fa5cee8cfe64be89f8e8144132b3d29a9fe",
-    "fileCount": 246,
+    "hash": "3ae06f8190ca28f7451ea6556f8e7dc19fe38d441ee3faafe796c94038293c0c",
+    "fileCount": 247,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3598,9 +3610,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "9150dfd9775c1a34c2331ec4ee7f85cd545603ae54573963a849a8b819ceba05",
+    "contentHash": "137eb2530a2c390ed8c745d739d14ed287b90c7f64d8805417bd47cfe9b0f477",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "78a053706469f0686299530518b1abad61a4779ff2340f316fc137a3e8d2085f",
+    "snapshotHash": "145c583d65acfb44a54c98d7d2bb91363466af684eb9c6bf3d78c5eb1964c376",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3620,7 +3632,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 226,
+      "documentCount": 227,
       "fieldNames": [
         "aliases",
         "body",
@@ -3631,13 +3643,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8185840707964602,
-        "body": 54.00442477876106,
-        "headings": 3.747787610619469,
-        "path": 5.539823008849558,
-        "summary": 4.535398230088496,
-        "symbols": 12.5,
-        "title": 4.238938053097345
+        "aliases": 2.814977973568282,
+        "body": 53.82378854625551,
+        "headings": 3.7312775330396475,
+        "path": 5.533039647577093,
+        "summary": 4.572687224669603,
+        "symbols": 12.444933920704846,
+        "title": 4.229074889867841
       }
     },
     "entries": [
@@ -4785,6 +4797,39 @@
           "outbound": []
         },
         "contentHash": "80f1a26dd09f3c5653b2586cfa6e4e9d83a31b9f7f021ae136c0155011704d41",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:changelog.d/411.md",
+        "kind": "document",
+        "path": "changelog.d/411.md",
+        "title": "411.md",
+        "summary": "test: guard that the committed benchmark report names the set digest and the code-review version (#411)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "411.md",
+          "headings": "",
+          "path": "changelog.d/411.md",
+          "symbols": "",
+          "summary": "test: guard that the committed benchmark report names the set digest and the code-review version (#411)",
+          "body": "test: guard that the committed benchmark report names the set digest and the code-review version ( 411)",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "1f8d56cf645828de40aef1bc2829a7e059b2de7a0f5297ca819db2a1ec09a246",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -15749,7 +15794,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "b77490dfa04e1207fff9ecf23ecbff3b04172bfb67d05e0e4f3feb0d4872fe7e",
+        "contentHash": "262251b31e7925f5bc78590b326fa47798d17b1fba758b514acf563358a18272",
         "provenance": "observed",
         "confidence": "observed"
       },
