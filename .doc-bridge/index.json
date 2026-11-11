@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "17f77711650368686916f2ca2181724494eaf78c3cdbd070029852a66166da15",
+  "contentHash": "90b6339a6b260df0dc88bcd5ecbb8cc1fec801d3469baf0dde69fffcda8fa03f",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-10T07:30:04.083Z",
+  "generatedAt": "2026-11-11T06:53:44.226Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -225,6 +225,18 @@
         "project"
       ],
       "contentHash": "eeb5b47e953f989c5d7504018a015a075aa94d1076976f69cb4c76aaf3307efe"
+    },
+    {
+      "id": "document:changelog.d/365.md",
+      "type": "document",
+      "title": "365.md",
+      "path": "changelog.d/365.md",
+      "description": "feat: test the schema of the reviewer benchmark report (#365)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "d3946fbeacfdd6a6eac19e3b93e677490466e5ddf9cf17c06bf9cf1fb81b5272"
     },
     {
       "id": "document:changelog.d/366.md",
@@ -3369,7 +3381,7 @@
         "mjs",
         "test"
       ],
-      "contentHash": "a7ec125976de34bc2e9b4e1191b2a50a0226089d16c4819cc6b51f8f91fd3953"
+      "contentHash": "a3fa96857697537517a7290e4c3377bdeca93fc8bf27e752d7107122bdf39261"
     },
     {
       "id": "module:test/risk-depth.test.mjs",
@@ -3563,8 +3575,8 @@
     }
   },
   "inputs": {
-    "hash": "ee5e379325d0dcd4cdcc3ddce5053fb7f13db357e5b2d0e53d618f3f1b73ba29",
-    "fileCount": 245,
+    "hash": "a70cb6fece85c0aa9ed65d2d15fa9ae7a517c7e06a3def8952a99443f2387edf",
+    "fileCount": 246,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3586,9 +3598,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "3bf01c355fe5fa1d3f1d825083d717fdc6ce78f674079168a18e30c18a0ff259",
+    "contentHash": "452db33f5b272f5d723a8ecd6deb48868b89a81dcc9ad4e1c8eb486308e837cd",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "693f8e5e0768660c393fbb0f1cf7f6128d99c4c0b3b95ecb586fe0742bbca6c1",
+    "snapshotHash": "3d6590bcfd98d11cd36eb7af66bf88c5ffa3df35b44e1ff85758fdb12d04e6ce",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3608,7 +3620,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 225,
+      "documentCount": 226,
       "fieldNames": [
         "aliases",
         "body",
@@ -3619,13 +3631,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8222222222222224,
-        "body": 54.67111111111111,
-        "headings": 3.68,
-        "path": 5.546666666666667,
-        "summary": 4.524444444444445,
-        "symbols": 12.555555555555555,
-        "title": 4.248888888888889
+        "aliases": 2.8185840707964602,
+        "body": 54.46017699115044,
+        "headings": 3.663716814159292,
+        "path": 5.539823008849558,
+        "summary": 4.535398230088496,
+        "symbols": 12.5,
+        "title": 4.238938053097345
       }
     },
     "entries": [
@@ -4542,6 +4554,39 @@
           "outbound": []
         },
         "contentHash": "eeb5b47e953f989c5d7504018a015a075aa94d1076976f69cb4c76aaf3307efe",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:changelog.d/365.md",
+        "kind": "document",
+        "path": "changelog.d/365.md",
+        "title": "365.md",
+        "summary": "feat: test the schema of the reviewer benchmark report (#365)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "365.md",
+          "headings": "",
+          "path": "changelog.d/365.md",
+          "symbols": "",
+          "summary": "feat: test the schema of the reviewer benchmark report (#365)",
+          "body": "feat: test the schema of the reviewer benchmark report ( 365)",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "d3946fbeacfdd6a6eac19e3b93e677490466e5ddf9cf17c06bf9cf1fb81b5272",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -15704,7 +15749,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "a7ec125976de34bc2e9b4e1191b2a50a0226089d16c4819cc6b51f8f91fd3953",
+        "contentHash": "a3fa96857697537517a7290e4c3377bdeca93fc8bf27e752d7107122bdf39261",
         "provenance": "observed",
         "confidence": "observed"
       },
