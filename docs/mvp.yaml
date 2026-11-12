@@ -53,8 +53,8 @@ requirements:
   acceptance:
     - test: test/reviewer-benchmark.test.mjs
   homolog: []
-  issues: [359]
-  prs: [376]
+  issues: [359, 365]
+  prs: [376, 403]
 - id: RF-03
   title: Revisor incumbente executável no benchmark
   done_when: >-
