@@ -175,7 +175,7 @@ test('the report says which set and which version were used, with the commit giv
 
 const root = new URL('..', import.meta.url).pathname
 
-async function runBenchmark(headOf) {
+async function runBenchmark(headOf, { incumbent, candidate, prs: setPrs } = {}) {
   const dir = mkdtempSync(join(tmpdir(), 'bench-runner-test-'))
   const server = createServer((req, res) => {
     const head = headOf(req.url)
@@ -187,13 +187,25 @@ async function runBenchmark(headOf) {
     const log = join(dir, 'calls.log')
     const reviewer = join(dir, 'reviewer.mjs')
     writeFileSync(reviewer, `import { appendFileSync } from 'node:fs'\nappendFileSync(${JSON.stringify(log)}, process.argv.slice(2).join(' ') + '\\n')\nprocess.stdout.write('{"findings":[],"model":"claude-sonnet-5-5","inputTokens":1000,"outputTokens":1000}\\n')\n`, { mode: 0o755 })
-    const wrapper = join(dir, 'reviewer.sh')
-    writeFileSync(wrapper, `#!/bin/sh\nexec ${JSON.stringify(process.execPath)} ${JSON.stringify(reviewer)} "$@"\n`, { mode: 0o755 })
-    const small = { version: 1, prs: dataset.prs.slice(0, 2) }
+    const wrap = (script) => {
+      const path = join(dir, `${script === reviewer ? 'reviewer' : script.split('/').pop()}.sh`)
+      writeFileSync(path, `#!/bin/sh\nexec ${JSON.stringify(process.execPath)} ${JSON.stringify(script)} "$@"\n`, { mode: 0o755 })
+      return path
+    }
+    // A stub that prints, per PR number, the findings given (empty when absent).
+    const stubFor = (name, byNumber) => {
+      const script = join(dir, `${name}.mjs`)
+      writeFileSync(script, `const by = ${JSON.stringify(byNumber)}\nprocess.stdout.write(JSON.stringify({ findings: by[process.argv[3]] ?? [], model: 'claude-sonnet-5-5', inputTokens: 1000, outputTokens: 1000 }) + '\\n')\n`)
+      return wrap(script)
+    }
+    const wrapper = wrap(reviewer)
+    const incumbentCmd = incumbent ? stubFor('incumbent', incumbent) : wrapper
+    const candidateCmd = candidate ? stubFor('candidate', candidate) : wrapper
+    const small = { version: 1, prs: setPrs ?? dataset.prs.slice(0, 2) }
     const file = join(dir, 'set.json')
     writeFileSync(file, JSON.stringify(small))
     const output = join(dir, 'report.json')
-    const child = spawn(process.execPath, [join(root, 'scripts/run-reviewer-benchmark.mjs'), '--incumbent-cmd', wrapper, '--candidate-cmd', wrapper, '--dataset', file, '--output', output], {
+    const child = spawn(process.execPath, [join(root, 'scripts/run-reviewer-benchmark.mjs'), '--incumbent-cmd', incumbentCmd, '--candidate-cmd', candidateCmd, '--dataset', file, '--output', output], {
       env: { ...process.env, AGENTSKIT_BENCHMARK_GITHUB_API: `http://127.0.0.1:${server.address().port}`, GITHUB_TOKEN: 'test-token' },
       stdio: 'ignore',
     })
@@ -254,4 +266,52 @@ test('#379: records each finding with its verdict and matched bug, a readable fa
   assert.match(markdown, /## Falsos positivos por categoria/)
   assert.match(markdown, /\| unused variable \| 2 \|/)
   assert.match(markdown, /\| incumbent \| o\/r#3 \| review \| 2 \|/)
+})
+
+const checkReportSchema = (report) => {
+  assert.ok(['PASS', 'FAIL', 'BLOCKED'].includes(report.decision))
+  assert.ok(Array.isArray(report.reasons) && report.reasons.every((r) => typeof r === 'string'))
+  assert.equal(typeof report.set.prs, 'number')
+  assert.ok(Array.isArray(report.set.commits) && report.set.commits.length === report.set.prs)
+  assert.match(report.set.digest, /^[0-9a-f]{64}$/)
+  assert.equal(typeof report.run.codeReviewVersion, 'string')
+  for (const side of [report.incumbent, report.candidate]) {
+    assert.equal(typeof side.name, 'string')
+    for (const key of ['bugsFound', 'bugsKnown', 'falsePositives', 'inputTokens', 'outputTokens', 'costUsd', 'meanLatencyMs', 'p90LatencyMs', 'erroredPrs']) assert.equal(typeof side[key], 'number', key)
+    assert.ok(Array.isArray(side.perPr))
+    assert.equal(side.erroredPrs, side.perPr.filter((p) => p.error).length)
+    for (const p of side.perPr) {
+      assert.equal(typeof p.id, 'string')
+      if (p.error) { assert.equal(typeof p.error, 'string'); continue }
+      for (const key of ['bugsFound', 'bugsKnown', 'falsePositives', 'inputTokens', 'outputTokens', 'costUsd', 'latencyMs']) assert.equal(typeof p[key], 'number', `${p.id} ${key}`)
+    }
+    assert.equal(side.bugsFound, side.perPr.reduce((n, p) => n + (p.bugsFound ?? 0), 0))
+    assert.equal(side.falsePositives, side.perPr.reduce((n, p) => n + (p.falsePositives ?? 0), 0))
+  }
+  assert.deepEqual(report.incumbent.perPr.map((p) => p.id), report.candidate.perPr.map((p) => p.id))
+}
+
+test('RF-02: the shipped quality/benchmark/report.json follows the report schema', () => {
+  checkReportSchema(JSON.parse(readFileSync(new URL('../quality/benchmark/report.json', import.meta.url), 'utf8')))
+})
+
+test('RF-02: a stubbed incumbent run counts real bugs and false positives of both reviewers by the same rule', async () => {
+  const [first, second] = dataset.prs.slice(0, 2)
+  const set = [
+    { ...first, label: 'buggy', bugs: [{ file: 'a.ts', line: 10, lineTolerance: 5, titleIncludes: ['null'], note: 'null deref' }] },
+    { ...second, label: 'clean', bugs: [] },
+  ]
+  const hit = { file: 'a.ts', line: 11, title: 'Null dereference' }
+  const noise = { file: 'b.ts', line: 1, title: 'style' }
+  const { report } = await runBenchmark((url) => small0.get(url.split('/pulls/')[1]), {
+    prs: set,
+    incumbent: { [first.number]: [hit, noise], [second.number]: [noise] },
+    candidate: { [first.number]: [hit] },
+  })
+  checkReportSchema(report)
+  const counts = (side) => ({ total: [side.bugsFound, side.falsePositives], perPr: side.perPr.map((p) => [p.bugsFound, p.falsePositives]) })
+  assert.deepEqual(counts(report.incumbent), { total: [1, 2], perPr: [[1, 1], [0, 1]] })
+  assert.deepEqual(counts(report.candidate), { total: [1, 0], perPr: [[1, 0], [0, 0]] })
+  assert.equal(report.incumbent.erroredPrs, 0)
+  assert.equal(report.candidate.erroredPrs, 0)
 })

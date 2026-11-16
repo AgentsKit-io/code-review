@@ -1,685 +1,1081 @@
 {
-  "decision": "BLOCKED",
+  "decision": "FAIL",
   "reasons": [
-    "incumbent errored on 38 PR(s); rerun before comparing",
-    "code-review errored on 11 PR(s); rerun before comparing"
+    "false positives 0 are not fewer than incumbent 0"
   ],
+  "candidateVersion": "0.32.5",
+  "datasetSha256": "54b8dcfae1f257fc512d9e69c115582d2d5681adb10b836366525dcb4950af68",
+  "set": {
+    "path": "quality/benchmark/prs.json",
+    "version": 1,
+    "digest": "0af089b36b75271f0028ada15940f8a717f7d50e462a4dfd99e9f65b8c10b68f",
+    "prs": 38,
+    "buggy": 22,
+    "clean": 16,
+    "repositories": [
+      "AgentsKit-io/code-review",
+      "AgentsKit-io/doc-bridge",
+      "AgentsKit-io/harness"
+    ],
+    "commits": [
+      {
+        "id": "AgentsKit-io/code-review#178",
+        "label": "buggy",
+        "commit": "fbe240e9e03b471437d86f6e993287912dac96a0"
+      },
+      {
+        "id": "AgentsKit-io/code-review#62",
+        "label": "buggy",
+        "commit": "380f94707384566bea9900c717621035030ad35f"
+      },
+      {
+        "id": "AgentsKit-io/code-review#51",
+        "label": "buggy",
+        "commit": "b062b50069424693da9e1191793c69a98890caab"
+      },
+      {
+        "id": "AgentsKit-io/code-review#67",
+        "label": "buggy",
+        "commit": "cbb0e4d056e8b727a94c4db9eb11e5f38c5cb1ad"
+      },
+      {
+        "id": "AgentsKit-io/code-review#130",
+        "label": "buggy",
+        "commit": "1bc8f17bb461cba6ef0d4875776f88118f26daf7"
+      },
+      {
+        "id": "AgentsKit-io/code-review#80",
+        "label": "buggy",
+        "commit": "c84ae8c136018691b3eb889f89eecfdd1942726f"
+      },
+      {
+        "id": "AgentsKit-io/code-review#180",
+        "label": "buggy",
+        "commit": "8777f2b5d79e2443b41f1987644ad191c4797df4"
+      },
+      {
+        "id": "AgentsKit-io/code-review#204",
+        "label": "buggy",
+        "commit": "35f01c0d43e8bfb9596dcfebc481669877b51064"
+      },
+      {
+        "id": "AgentsKit-io/code-review#186",
+        "label": "buggy",
+        "commit": "527325c6a88e2bfaf7b800b29650a0c728d31b4d"
+      },
+      {
+        "id": "AgentsKit-io/code-review#73",
+        "label": "buggy",
+        "commit": "414f24075f9334bd4f454279edf7801e4290530c"
+      },
+      {
+        "id": "AgentsKit-io/harness#144",
+        "label": "buggy",
+        "commit": "b871ec60b8b9a8b77bc0d68f088e48883316b88f"
+      },
+      {
+        "id": "AgentsKit-io/harness#142",
+        "label": "buggy",
+        "commit": "320d500b3898e29de48536d2110dd383eb255d3d"
+      },
+      {
+        "id": "AgentsKit-io/harness#133",
+        "label": "buggy",
+        "commit": "c35caf8cd7de413a2b2b9a01523b8d01e3d2ef8f"
+      },
+      {
+        "id": "AgentsKit-io/harness#103",
+        "label": "buggy",
+        "commit": "d76d2de59d7c74323fefd642dffcd9a748ca968a"
+      },
+      {
+        "id": "AgentsKit-io/harness#101",
+        "label": "buggy",
+        "commit": "48acd101e3749dcda1ba77b396be6cceee9548d3"
+      },
+      {
+        "id": "AgentsKit-io/harness#198",
+        "label": "buggy",
+        "commit": "d547f7714fe16c1e1eaac3065d22d9e40094c5b6"
+      },
+      {
+        "id": "AgentsKit-io/harness#199",
+        "label": "buggy",
+        "commit": "5b8a2b38e5d9557aeae1393c55fd411699668f84"
+      },
+      {
+        "id": "AgentsKit-io/harness#201",
+        "label": "buggy",
+        "commit": "abee6f9e8588feec3b1c8e0e1a7198e372baeaad"
+      },
+      {
+        "id": "AgentsKit-io/harness#98",
+        "label": "buggy",
+        "commit": "cc2ce40eb2e5f7157118e5da107b650a264f5618"
+      },
+      {
+        "id": "AgentsKit-io/harness#111",
+        "label": "buggy",
+        "commit": "615bf4a098df96ddd835cbf058915d1e8786e95c"
+      },
+      {
+        "id": "AgentsKit-io/harness#39",
+        "label": "buggy",
+        "commit": "41b12845f8d51148ba2037cb18db55281db2a5df"
+      },
+      {
+        "id": "AgentsKit-io/harness#184",
+        "label": "buggy",
+        "commit": "496570e1a598972bcb7bb16611d23375c2f2b696"
+      },
+      {
+        "id": "AgentsKit-io/code-review#27",
+        "label": "clean",
+        "commit": "f9bee0d37afeecfc8b47d2490c5333623f7b01a6"
+      },
+      {
+        "id": "AgentsKit-io/code-review#166",
+        "label": "clean",
+        "commit": "b7429a0dc9c87726cec2ab3a66492e70d1df42a6"
+      },
+      {
+        "id": "AgentsKit-io/code-review#280",
+        "label": "clean",
+        "commit": "cdda0d6eef5797a0414a06a523503626d7441643"
+      },
+      {
+        "id": "AgentsKit-io/code-review#319",
+        "label": "clean",
+        "commit": "1b2b78458bc6e4d1b84ae458e787a8dd6c7c152b"
+      },
+      {
+        "id": "AgentsKit-io/harness#28",
+        "label": "clean",
+        "commit": "2214c34845d53d6305ca0744f8df07a6a39c57af"
+      },
+      {
+        "id": "AgentsKit-io/harness#29",
+        "label": "clean",
+        "commit": "dad0818e5ef36be7427bdbf8f8e1522c1b2e1ec5"
+      },
+      {
+        "id": "AgentsKit-io/harness#42",
+        "label": "clean",
+        "commit": "541cb89d5e6625f07c28c6d247238d79654fc0dd"
+      },
+      {
+        "id": "AgentsKit-io/harness#44",
+        "label": "clean",
+        "commit": "777b6c5fcbf4f6d34a518affbe9ec55bb9584692"
+      },
+      {
+        "id": "AgentsKit-io/harness#97",
+        "label": "clean",
+        "commit": "9d293fa9fec6f0a9f8d682148d7d0fbb314d3ca0"
+      },
+      {
+        "id": "AgentsKit-io/harness#107",
+        "label": "clean",
+        "commit": "5905653b215b63e0f57f0c102d752d6c1d7bc42c"
+      },
+      {
+        "id": "AgentsKit-io/doc-bridge#76",
+        "label": "clean",
+        "commit": "c93053c4418680d6a30a8f8d930b08d63b8b7a70"
+      },
+      {
+        "id": "AgentsKit-io/doc-bridge#197",
+        "label": "clean",
+        "commit": "7de3f4c99654d9e13bd202b5b5c2938e233b2faf"
+      },
+      {
+        "id": "AgentsKit-io/doc-bridge#207",
+        "label": "clean",
+        "commit": "cd54d5acef2b6cacb8999d9db946123a37b35035"
+      },
+      {
+        "id": "AgentsKit-io/doc-bridge#317",
+        "label": "clean",
+        "commit": "e3d310bc1a1b5bdb5af61a6abcd46e7f0033a8c3"
+      },
+      {
+        "id": "AgentsKit-io/doc-bridge#369",
+        "label": "clean",
+        "commit": "4105af5e283e6c35e1f23f71e2afffe2f88a1230"
+      },
+      {
+        "id": "AgentsKit-io/doc-bridge#393",
+        "label": "clean",
+        "commit": "bfd70eefb2b5d77049ed866e0cbf09be67411602"
+      }
+    ]
+  },
+  "run": {
+    "codeReviewVersion": "0.32.5",
+    "gitCommit": "8589e2ea9e222d37fe8c1886e10fe0c3e4e1f142"
+  },
+  "priceTableDate": "2026-11-02",
   "incumbent": {
     "name": "incumbent",
     "bugsFound": 0,
     "bugsKnown": 32,
     "falsePositives": 0,
-    "costUsd": 0,
-    "meanLatencyMs": 4,
-    "erroredPrs": 38,
+    "inputTokens": 38000,
+    "outputTokens": 19000,
+    "costUsd": 0.3990000000000002,
+    "meanLatencyMs": 2,
+    "p90LatencyMs": 2,
+    "erroredPrs": 0,
     "perPr": [
       {
         "id": "AgentsKit-io/code-review#178",
         "bugsFound": 0,
         "bugsKnown": 2,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 25,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 10,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#62",
         "bugsFound": 0,
         "bugsKnown": 2,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 18,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 1,
+        "findings": []
       },
       {
-        "id": "AgentsKit-io/code-review#40",
+        "id": "AgentsKit-io/code-review#51",
         "bugsFound": 0,
         "bugsKnown": 3,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 14,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#67",
         "bugsFound": 0,
         "bugsKnown": 2,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 11,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#130",
         "bugsFound": 0,
         "bugsKnown": 1,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 8,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#80",
         "bugsFound": 0,
         "bugsKnown": 1,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 4,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#180",
         "bugsFound": 0,
         "bugsKnown": 2,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 3,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#204",
         "bugsFound": 0,
         "bugsKnown": 1,
         "falsePositives": 0,
-        "costUsd": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
         "latencyMs": 2,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#186",
         "bugsFound": 0,
         "bugsKnown": 1,
         "falsePositives": 0,
-        "costUsd": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
         "latencyMs": 2,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#73",
         "bugsFound": 0,
         "bugsKnown": 1,
         "falsePositives": 0,
-        "costUsd": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
         "latencyMs": 2,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#144",
         "bugsFound": 0,
         "bugsKnown": 1,
         "falsePositives": 0,
-        "costUsd": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
         "latencyMs": 2,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#142",
         "bugsFound": 0,
         "bugsKnown": 2,
         "falsePositives": 0,
-        "costUsd": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
         "latencyMs": 2,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#133",
         "bugsFound": 0,
         "bugsKnown": 1,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 3,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#103",
         "bugsFound": 0,
         "bugsKnown": 1,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 2,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 1,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#101",
         "bugsFound": 0,
         "bugsKnown": 2,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 3,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#198",
         "bugsFound": 0,
         "bugsKnown": 2,
         "falsePositives": 0,
-        "costUsd": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
         "latencyMs": 1,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#199",
         "bugsFound": 0,
         "bugsKnown": 1,
         "falsePositives": 0,
-        "costUsd": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
         "latencyMs": 2,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#201",
         "bugsFound": 0,
         "bugsKnown": 2,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 2,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 1,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#98",
         "bugsFound": 0,
         "bugsKnown": 1,
         "falsePositives": 0,
-        "costUsd": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
         "latencyMs": 2,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#111",
         "bugsFound": 0,
         "bugsKnown": 1,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 3,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 1,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#39",
         "bugsFound": 0,
         "bugsKnown": 1,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 1,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#184",
         "bugsFound": 0,
         "bugsKnown": 1,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 3,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#27",
         "bugsFound": 0,
         "bugsKnown": 0,
         "falsePositives": 0,
-        "costUsd": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
         "latencyMs": 1,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#166",
         "bugsFound": 0,
         "bugsKnown": 0,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 1,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#280",
         "bugsFound": 0,
         "bugsKnown": 0,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 3,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#319",
         "bugsFound": 0,
         "bugsKnown": 0,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 2,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 1,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#28",
         "bugsFound": 0,
         "bugsKnown": 0,
         "falsePositives": 0,
-        "costUsd": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
         "latencyMs": 2,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#29",
         "bugsFound": 0,
         "bugsKnown": 0,
         "falsePositives": 0,
-        "costUsd": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
         "latencyMs": 2,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#42",
         "bugsFound": 0,
         "bugsKnown": 0,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 2,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 1,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#44",
         "bugsFound": 0,
         "bugsKnown": 0,
         "falsePositives": 0,
-        "costUsd": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
         "latencyMs": 2,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#97",
         "bugsFound": 0,
         "bugsKnown": 0,
         "falsePositives": 0,
-        "costUsd": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
         "latencyMs": 2,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#107",
         "bugsFound": 0,
         "bugsKnown": 0,
         "falsePositives": 0,
-        "costUsd": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
         "latencyMs": 2,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "findings": []
       },
       {
         "id": "AgentsKit-io/doc-bridge#76",
         "bugsFound": 0,
         "bugsKnown": 0,
         "falsePositives": 0,
-        "costUsd": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
         "latencyMs": 2,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "findings": []
       },
       {
         "id": "AgentsKit-io/doc-bridge#197",
         "bugsFound": 0,
         "bugsKnown": 0,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 3,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 1,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/doc-bridge#207",
         "bugsFound": 0,
         "bugsKnown": 0,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 2,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 1,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/doc-bridge#317",
         "bugsFound": 0,
         "bugsKnown": 0,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 3,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/doc-bridge#369",
         "bugsFound": 0,
         "bugsKnown": 0,
         "falsePositives": 0,
-        "costUsd": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
         "latencyMs": 2,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "findings": []
       },
       {
         "id": "AgentsKit-io/doc-bridge#393",
         "bugsFound": 0,
         "bugsKnown": 0,
         "falsePositives": 0,
-        "costUsd": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
         "latencyMs": 2,
-        "error": "exit 3: incumbent unavailable: the line reviewer lives in the private factory-line repository"
+        "findings": []
       }
     ]
   },
   "candidate": {
     "name": "code-review",
-    "bugsFound": 8,
+    "bugsFound": 0,
     "bugsKnown": 32,
-    "falsePositives": 118,
-    "costUsd": 0,
-    "meanLatencyMs": 235158,
-    "erroredPrs": 11,
+    "falsePositives": 0,
+    "inputTokens": 38000,
+    "outputTokens": 19000,
+    "costUsd": 0.3990000000000002,
+    "meanLatencyMs": 2,
+    "p90LatencyMs": 2,
+    "erroredPrs": 0,
     "perPr": [
       {
         "id": "AgentsKit-io/code-review#178",
-        "bugsFound": 2,
+        "bugsFound": 0,
         "bugsKnown": 2,
-        "falsePositives": 9,
-        "costUsd": 0,
-        "latencyMs": 525178
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#62",
         "bugsFound": 0,
         "bugsKnown": 2,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 145590,
-        "error": "exit 2: shadow-review: review failed (exit 2)"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
-        "id": "AgentsKit-io/code-review#40",
+        "id": "AgentsKit-io/code-review#51",
         "bugsFound": 0,
         "bugsKnown": 3,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 1205,
-        "error": "exit 2: shadow-review: review failed (exit 2)"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#67",
         "bugsFound": 0,
         "bugsKnown": 2,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 399777,
-        "error": "exit 2: shadow-review: review failed (exit 2)"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#130",
         "bugsFound": 0,
         "bugsKnown": 1,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 95669,
-        "error": "exit 2: shadow-review: review failed (exit 2)"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 3,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#80",
-        "bugsFound": 1,
+        "bugsFound": 0,
         "bugsKnown": 1,
-        "falsePositives": 1,
-        "costUsd": 0,
-        "latencyMs": 67498
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#180",
         "bugsFound": 0,
         "bugsKnown": 2,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 298819,
-        "error": "exit 2: shadow-review: review failed (exit 2)"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#204",
         "bugsFound": 0,
         "bugsKnown": 1,
-        "falsePositives": 14,
-        "costUsd": 0,
-        "latencyMs": 367626
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#186",
         "bugsFound": 0,
         "bugsKnown": 1,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 403065,
-        "error": "exit 2: shadow-review: review failed (exit 2)"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#73",
         "bugsFound": 0,
         "bugsKnown": 1,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 412254,
-        "error": "exit 2: shadow-review: review failed (exit 2)"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#144",
-        "bugsFound": 1,
+        "bugsFound": 0,
         "bugsKnown": 1,
-        "falsePositives": 2,
-        "costUsd": 0,
-        "latencyMs": 160572
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#142",
-        "bugsFound": 1,
+        "bugsFound": 0,
         "bugsKnown": 2,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 84698
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#133",
         "bugsFound": 0,
         "bugsKnown": 1,
-        "falsePositives": 3,
-        "costUsd": 0,
-        "latencyMs": 109184
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#103",
         "bugsFound": 0,
         "bugsKnown": 1,
-        "falsePositives": 8,
-        "costUsd": 0,
-        "latencyMs": 297720
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#101",
         "bugsFound": 0,
         "bugsKnown": 2,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 796336,
-        "error": "exit 2: shadow-review: review failed (exit 2)"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#198",
-        "bugsFound": 1,
+        "bugsFound": 0,
         "bugsKnown": 2,
-        "falsePositives": 9,
-        "costUsd": 0,
-        "latencyMs": 396732
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#199",
         "bugsFound": 0,
         "bugsKnown": 1,
-        "falsePositives": 2,
-        "costUsd": 0,
-        "latencyMs": 180482
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#201",
-        "bugsFound": 1,
+        "bugsFound": 0,
         "bugsKnown": 2,
-        "falsePositives": 2,
-        "costUsd": 0,
-        "latencyMs": 229988
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#98",
-        "bugsFound": 1,
+        "bugsFound": 0,
         "bugsKnown": 1,
-        "falsePositives": 12,
-        "costUsd": 0,
-        "latencyMs": 398171
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#111",
         "bugsFound": 0,
         "bugsKnown": 1,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 821808,
-        "error": "exit 2: shadow-review: review failed (exit 2)"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 3,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#39",
         "bugsFound": 0,
         "bugsKnown": 1,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 565215,
-        "error": "exit 2: shadow-review: review failed (exit 2)"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 1,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#184",
         "bugsFound": 0,
         "bugsKnown": 1,
-        "falsePositives": 3,
-        "costUsd": 0,
-        "latencyMs": 248508
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#27",
         "bugsFound": 0,
         "bugsKnown": 0,
-        "falsePositives": 5,
-        "costUsd": 0,
-        "latencyMs": 161240
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#166",
         "bugsFound": 0,
         "bugsKnown": 0,
-        "falsePositives": 3,
-        "costUsd": 0,
-        "latencyMs": 137063
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 1,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#280",
         "bugsFound": 0,
         "bugsKnown": 0,
-        "falsePositives": 3,
-        "costUsd": 0,
-        "latencyMs": 60976
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/code-review#319",
         "bugsFound": 0,
         "bugsKnown": 0,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 45711
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#28",
         "bugsFound": 0,
         "bugsKnown": 0,
-        "falsePositives": 6,
-        "costUsd": 0,
-        "latencyMs": 159346
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#29",
         "bugsFound": 0,
         "bugsKnown": 0,
-        "falsePositives": 7,
-        "costUsd": 0,
-        "latencyMs": 186491
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#42",
         "bugsFound": 0,
         "bugsKnown": 0,
-        "falsePositives": 3,
-        "costUsd": 0,
-        "latencyMs": 72882
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 1,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#44",
         "bugsFound": 0,
         "bugsKnown": 0,
-        "falsePositives": 3,
-        "costUsd": 0,
-        "latencyMs": 160406
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#97",
         "bugsFound": 0,
         "bugsKnown": 0,
-        "falsePositives": 4,
-        "costUsd": 0,
-        "latencyMs": 86581
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 1,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/harness#107",
         "bugsFound": 0,
         "bugsKnown": 0,
         "falsePositives": 0,
-        "costUsd": 0,
-        "latencyMs": 170655,
-        "error": "exit 2: shadow-review: review failed (exit 2)"
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 1,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/doc-bridge#76",
         "bugsFound": 0,
         "bugsKnown": 0,
-        "falsePositives": 2,
-        "costUsd": 0,
-        "latencyMs": 55276
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/doc-bridge#197",
         "bugsFound": 0,
         "bugsKnown": 0,
-        "falsePositives": 2,
-        "costUsd": 0,
-        "latencyMs": 76121
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/doc-bridge#207",
         "bugsFound": 0,
         "bugsKnown": 0,
-        "falsePositives": 5,
-        "costUsd": 0,
-        "latencyMs": 160952
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/doc-bridge#317",
         "bugsFound": 0,
         "bugsKnown": 0,
-        "falsePositives": 2,
-        "costUsd": 0,
-        "latencyMs": 100982
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 1,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/doc-bridge#369",
         "bugsFound": 0,
         "bugsKnown": 0,
-        "falsePositives": 6,
-        "costUsd": 0,
-        "latencyMs": 200681
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 1,
+        "findings": []
       },
       {
         "id": "AgentsKit-io/doc-bridge#393",
         "bugsFound": 0,
         "bugsKnown": 0,
-        "falsePositives": 2,
-        "costUsd": 0,
-        "latencyMs": 94541
+        "falsePositives": 0,
+        "inputTokens": 1000,
+        "outputTokens": 500,
+        "costUsd": 0.010499999999999999,
+        "latencyMs": 2,
+        "findings": []
       }
     ]
   }
