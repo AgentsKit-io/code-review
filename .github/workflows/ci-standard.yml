@@ -1,29 +1,29 @@
 name: CI standard
 
+# This repository's settings for the organization's reusable CI pipeline
+# (AgentsKit-io/.github, docs/ci.md). Called by ci.yml.
+# Tests stay on node:test (not Vitest), so the Vitest time budget does not apply.
+# FORCE_COLOR=0: the pipeline sets FORCE_COLOR=1, which corrupts the node:test coverage report parsing.
+
 on:
-  pull_request:
+  workflow_call:
+    outputs:
+      mode:
+        description: Pipeline mode (draft, light, pr, full, seed or skip).
+        value: ${{ jobs.standard.outputs.mode }}
 
-permissions:
-  contents: read
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+permissions: {}
 
 jobs:
-  verify:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: |
-            package-lock.json
-            apps/docs/package-lock.json
-      - run: npm ci
-      - run: npm ci --prefix apps/docs
-      - run: npm run typecheck
+  standard:
+    uses: AgentsKit-io/.github/.github/workflows/ci.yml@c624db48051670469618d9c74854f3a1affc0138
+    permissions:
+      actions: write
+      contents: read
+    with:
+      installer: auto
+      typecheck-command: bash scripts/ci/check.sh
+      test-command: env FORCE_COLOR=0 npm run test:coverage
+      affected-test-command: env FORCE_COLOR=0 npm run test:coverage
+      build-command: bash scripts/ci/build.sh
+      job-timeout-minutes: 20

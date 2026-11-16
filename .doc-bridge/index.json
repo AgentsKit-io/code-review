@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "364c5ed358d2d406a4260ba67e8756b5999731dc6411d9c6f859ff2b223258a8",
+  "contentHash": "ac98352a6d57bfa4a6bf7bedf987e9821946d3b956ebf755d60864566b6e19dc",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-11T13:19:24.596Z",
+  "generatedAt": "2026-11-16T15:47:47.005Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -321,6 +321,18 @@
         "project"
       ],
       "contentHash": "e50731eef4ea77deee711b05582ecf2231f7e097a097677cbd9d70036a9cb8be"
+    },
+    {
+      "id": "document:changelog.d/416.md",
+      "type": "document",
+      "title": "416.md",
+      "path": "changelog.d/416.md",
+      "description": "ci: run CI through the organization's reusable fail-fast pipeline (#416)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "93128bb647431a530836c84617b9f0592eaadba185fee6885f8b383b505d772e"
     },
     {
       "id": "document:changelog.d/418.md",
@@ -3599,8 +3611,8 @@
     }
   },
   "inputs": {
-    "hash": "422bd3c93da5cced5277c55e0cb85ea499bc12cf518c2978e2c65a2f13e19c64",
-    "fileCount": 248,
+    "hash": "0c6a8c1d5c99df4cd30b45ced9f42e6bb39b984646f2e2fb4e3bbb3d64766d0f",
+    "fileCount": 250,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3622,9 +3634,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "c648113cba365b30de00ebb49a2acec5ca4c20ea6fc5b3cb48af26a03b1f3b19",
+    "contentHash": "0ab4348e36b60097b4fc5211e50ae58f6c0ef811cf7e453dcfede6844784ae2d",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "21f979148c22041cc4604ae2c316dc049ee185f457fb474b622a17892ea4bd56",
+    "snapshotHash": "869facef33553f3cecb7e5b7618601f2ae66859a776b2ea712d8d935c899fcf2",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
     "lexiconVersion": 1,
@@ -3644,7 +3656,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 228,
+      "documentCount": 229,
       "fieldNames": [
         "aliases",
         "body",
@@ -3655,13 +3667,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8157894736842106,
-        "body": 53.60087719298246,
-        "headings": 3.7149122807017543,
-        "path": 5.5394736842105265,
-        "summary": 4.535087719298246,
-        "symbols": 12.390350877192983,
-        "title": 4.2368421052631575
+        "aliases": 2.8122270742358078,
+        "body": 53.46288209606987,
+        "headings": 3.6986899563318776,
+        "path": 5.532751091703057,
+        "summary": 4.558951965065503,
+        "symbols": 12.336244541484715,
+        "title": 4.22707423580786
       }
     },
     "entries": [
@@ -4842,6 +4854,39 @@
           "outbound": []
         },
         "contentHash": "e50731eef4ea77deee711b05582ecf2231f7e097a097677cbd9d70036a9cb8be",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:changelog.d/416.md",
+        "kind": "document",
+        "path": "changelog.d/416.md",
+        "title": "416.md",
+        "summary": "ci: run CI through the organization's reusable fail-fast pipeline (#416)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "416.md",
+          "headings": "",
+          "path": "changelog.d/416.md",
+          "symbols": "",
+          "summary": "ci: run CI through the organization's reusable fail-fast pipeline (#416)",
+          "body": "ci: run CI through the organization's reusable fail-fast pipeline ( 416) CI now calls the pinned reusable pipeline; former steps live in scripts/ci/.",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "93128bb647431a530836c84617b9f0592eaadba185fee6885f8b383b505d772e",
         "provenance": "observed",
         "confidence": "observed"
       },
