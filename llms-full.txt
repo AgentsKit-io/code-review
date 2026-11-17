@@ -2226,6 +2226,28 @@ Canonical source: https://raw.githubusercontent.com/AgentsKit-io/code-review/mai
 
 # Changelog
 
+## 0.33.0
+
+### Minor Changes
+
+- [#374](https://github.com/AgentsKit-io/code-review/pull/374) [`b946ee8`](https://github.com/AgentsKit-io/code-review/commit/b946ee8212b819fc5a540e23fad82e8ded5f0e97) Thanks [@noxcode-factory](https://github.com/apps/noxcode-factory)! - feat: pin the measured version. The reviewer benchmark report now records the measured `candidateVersion` and the labelled dataset's `datasetSha256`, and `scripts/check-version-pin.mjs` (with `checkVersionPin()`) rejects a pin that is `latest`, a tag or a range, that differs from the measured version, that comes from a report that is not `PASS`, or that was measured on another dataset (RF-09).
+
+- [#360](https://github.com/AgentsKit-io/code-review/pull/360) [`a3db09d`](https://github.com/AgentsKit-io/code-review/commit/a3db09dd1df7f6129043906a2b3cb561fabf5148) Thanks [@noxcode-factory](https://github.com/apps/noxcode-factory)! - Add the reviewer benchmark: a 38-PR labelled dataset of real AgentsKit-io PRs, scoring and entry criterion (bugs found, false positives, cost, latency) against the line's incumbent reviewer, `scripts/run-reviewer-benchmark.mjs` to run it each release, and the `agentskit-shadow-review` wrapper for the line's shadow mode. The first run is `BLOCKED` (incumbent not reachable), so the switch stays off.
+
+- [#389](https://github.com/AgentsKit-io/code-review/pull/389) [`39af4c1`](https://github.com/AgentsKit-io/code-review/commit/39af4c10a0bcfa2501fd81b531d711e0ffcf7cdf) Thanks [@noxcode-factory](https://github.com/apps/noxcode-factory)! - New `agentskit-incumbent-review <owner/repo> <number>` command (`mvp:RF-03`): the incumbent line reviewer as an executable for `run-reviewer-benchmark --incumbent-cmd`. It prints `{"findings":[{file,line,title}],"costUsd"}` and exits non-zero on any failure, so an errored PR is never scored as clean.
+
+- [#383](https://github.com/AgentsKit-io/code-review/pull/383) [`6b12f50`](https://github.com/AgentsKit-io/code-review/commit/6b12f50e7c4d7db664ee2048e7f7830e51a062ee) Thanks [@noxcode-factory](https://github.com/apps/noxcode-factory)! - New `agentskit-line-review` command (`mvp:RF-10`) decides the factory line's review stage with Code Review and fails closed. It decides only when the shipped benchmark report is `PASS`. A failed or incomplete review never approves: it falls back to the incumbent, or blocks with `AGENTSKIT_LINE_ON_FAILURE=block`. With `AGENTSKIT_LINE_RECORD` every decision is appended to a log.
+
+- [#375](https://github.com/AgentsKit-io/code-review/pull/375) [`9838674`](https://github.com/AgentsKit-io/code-review/commit/98386746f87d363e3c67ba795886f05602d55e14) Thanks [@noxcode-factory](https://github.com/apps/noxcode-factory)! - Reviewer benchmark: report p90 latency and accept `--stage-timeout-ms` so the candidate must finish every PR within the line's review-stage time (RF-05).
+
+### Patch Changes
+
+- [#353](https://github.com/AgentsKit-io/code-review/pull/353) [`2b63e9b`](https://github.com/AgentsKit-io/code-review/commit/2b63e9bb5cdb5fe6de60e710c8454dce35cc7720) Thanks [@EmersonBraun](https://github.com/EmersonBraun)! - Update the optional `@agentskit/doc-bridge` dependency to ^2.5.0.
+
+- [#376](https://github.com/AgentsKit-io/code-review/pull/376) [`fee22c6`](https://github.com/AgentsKit-io/code-review/commit/fee22c6b706adca97e4ff1e9d063a3d8e4374d5d) Thanks [@noxcode-factory](https://github.com/apps/noxcode-factory)! - Reviewer benchmark report now shows bugs and false positives of both reviewers per PR and in total, with the counting rule and reproduction commands (`mvp:RF-02`).
+
+- [#390](https://github.com/AgentsKit-io/code-review/pull/390) [`0294fad`](https://github.com/AgentsKit-io/code-review/commit/0294fad3d831c2f97172e2f8845aeb7e697326ae) Thanks [@noxcode-factory](https://github.com/apps/noxcode-factory)! - Reviewer benchmark records input and output tokens of both reviewers and prices them with one versioned per-model table (`quality/benchmark/prices.json`); a completed PR with no measured cost blocks the report instead of showing zero (`mvp:RF-04`).
+
 ## 0.32.5
 
 ### Patch Changes
