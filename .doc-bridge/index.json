@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "a1e9c99984761cb7d02787d7f7c86bc2ade2a4024562b5b917a8189a15b0e4dc",
+  "contentHash": "2f9129211edbfdf59d5cb9b41927c2a9fa7387169a6c0d4d2df8234952ecb6d1",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-17T17:21:04.603Z",
+  "generatedAt": "2026-11-17T17:27:04.108Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -124,6 +124,30 @@
         "unclassified"
       ],
       "contentHash": "eb326e8e60cc087b411cbb3e490dc96783c6cb40d371d43688b3832644d61168"
+    },
+    {
+      "id": "document:.claude/rules/ci.md",
+      "type": "document",
+      "title": "Regras de CI",
+      "path": ".claude/rules/ci.md",
+      "description": "Cada regra diz como é verificada. Se a verificação falhar, corrija o código, não a verificação.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "943c6d086f30427dd6f24fb28080c98308b240a6f48f465a840f20dd38e43d9c"
+    },
+    {
+      "id": "document:.claude/rules/seguranca.md",
+      "type": "document",
+      "title": "Regras de segurança",
+      "path": ".claude/rules/seguranca.md",
+      "description": "Cada regra diz como é verificada.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "7fb9819aca4a68e8cf1b61557da584d2fba8e765be931cc83120b3df04abe1f1"
     },
     {
       "id": "document:.github/factory-playbook.md",
@@ -3696,8 +3720,8 @@
     }
   },
   "inputs": {
-    "hash": "5728ab00f6386f2ed55e34b4981e3f8c580e981fb23f7819d28e57afd2602bbe",
-    "fileCount": 254,
+    "hash": "48c279e64b9d82697e9f195fc9703c819b44d715674be878ceed9cfb2f615dd2",
+    "fileCount": 256,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3719,9 +3743,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "0d00f316d04f89f2ed774dd1f23b46b1ae2dbb039b462b1785a0c349a5c9fbc2",
+    "contentHash": "a4f471620746aad656d3f8e1bdd4dc0b33a5d8a49ee7a9b8f2e8e016a5048a79",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "86679f92dccd6a2bbd0b0fb4af425339d12a249283bb60b1577113446b112201",
+    "snapshotHash": "9b3f66f6fa877de9c6e7ef46cc7dac4699a471ca6ac89a65be56f678e7ed937e",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "7fe3cb5d20c435614bd8b721dc11afff39159e00851e1e6ef33c678f9bc172ab",
     "lexiconVersion": 1,
@@ -3741,7 +3765,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 233,
+      "documentCount": 235,
       "fieldNames": [
         "aliases",
         "body",
@@ -3752,13 +3776,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.832618025751073,
-        "body": 53.952789699570815,
-        "headings": 3.7124463519313307,
-        "path": 5.510729613733906,
-        "summary": 4.836909871244635,
-        "symbols": 12.124463519313304,
-        "title": 4.210300429184549
+        "aliases": 2.825531914893617,
+        "body": 54.56595744680851,
+        "headings": 3.697872340425532,
+        "path": 5.506382978723404,
+        "summary": 4.851063829787234,
+        "symbols": 12.02127659574468,
+        "title": 4.191489361702128
       }
     },
     "entries": [
@@ -4329,6 +4353,78 @@
           "outbound": []
         },
         "contentHash": "eb326e8e60cc087b411cbb3e490dc96783c6cb40d371d43688b3832644d61168",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:.claude/rules/ci.md",
+        "kind": "document",
+        "path": ".claude/rules/ci.md",
+        "title": "Regras de CI",
+        "summary": "Cada regra diz como é verificada. Se a verificação falhar, corrija o código, não a verificação.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "Regras de CI",
+          "headings": "Regras de CI",
+          "path": ".claude/rules/ci.md",
+          "symbols": "",
+          "summary": "Cada regra diz como é verificada. Se a verificação falhar, corrija o código, não a verificação.",
+          "body": "Regras de CI Cada regra diz como é verificada. Se a verificação falhar, corrija o código, não a verificação. - Pre-push obrigatório e rápido. .husky/pre-push roda npm run typecheck . Verifica: test -x .husky/pre-push . Não use --no-verify . - Gate do repo. npm run check e npm run test:coverage (npm, package-lock.json ; nunca pnpm nem lockfile novo). Verifica: job check do ci.yml . - Índice gerado em dia. Depois de mudar docs ou o --help da CLI, rode npm run docs:index . Verifica: git diff --exit-code -- doc-bridge.config.json .doc-bridge llms-full.txt no CI. - Não apague nem pule teste para ganhar tempo. Teste lento ou instável vira ticket.",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 1,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:changelog.d/434.md"
+          ],
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:changelog.d/434.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "943c6d086f30427dd6f24fb28080c98308b240a6f48f465a840f20dd38e43d9c",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:.claude/rules/seguranca.md",
+        "kind": "document",
+        "path": ".claude/rules/seguranca.md",
+        "title": "Regras de segurança",
+        "summary": "Cada regra diz como é verificada.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "Regras de segurança",
+          "headings": "Regras de segurança",
+          "path": ".claude/rules/seguranca.md",
+          "symbols": "",
+          "summary": "Cada regra diz como é verificada.",
+          "body": "Regras de segurança Cada regra diz como é verificada. - Nenhum segredo no repositório. Código, docs, fixtures e exemplos usam valores sintéticos óbvios ou gerados no teste. Verifica: gitleaks ( .gitleaks.toml ) no job security do ci-standard.yml , em todo run, mesmo só de docs. - Segredo nunca em log, PR, issue ou commit. Não imprima variáveis de ambiente, tokens nem URLs com senha; referencie o segredo pelo nome (1Password / GitHub env), nunca pelo valor. Verifica: revisão; o --redact do gitleaks protege o log do próprio scan. - Dependência de produção sem vulnerabilidade alta ou crítica. Verifica: npm audit --omit=dev --audit-level=high (ou pnpm audit --prod --audit-level high ) no job security . - Repo privado não vaza para repo público. Antes de copiar qualquer coisa para outro repo, confira gh api repos/<org /<repo --jq .visibility ; se for public , não copie (ver a seção de confidencialidade do AGENTS.md). Verifica: revisão. - Ações de terceiros fixadas. uses: de ação de terceiros (fora de actions/ e das orgs NoxCodeSolutions/AgentsKit-io) vai fixada por SHA de commit, com a versão em comentário. Binário baixado no CI é conferido por sha256 (ex.: gitleaks). Verifica: revisão do workflow.",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "7fb9819aca4a68e8cf1b61557da584d2fba8e765be931cc83120b3df04abe1f1",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -5113,6 +5209,11 @@
           "mentionedBy": [],
           "inbound": [],
           "outbound": [
+            {
+              "kind": "mentions",
+              "id": "document:.claude/rules/ci.md",
+              "confidence": "observed"
+            },
             {
               "kind": "mentions",
               "id": "document:docs/dogfood.md",
