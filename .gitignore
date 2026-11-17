@@ -4,6 +4,7 @@ dist/
 *.tsbuildinfo
 apps/docs/.source/
 *.sarif
-.claude/
+.claude/*
+!.claude/rules/
 .codex/verification/
 .doc-bridge/.ci-content-revision
