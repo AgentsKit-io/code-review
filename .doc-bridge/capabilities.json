@@ -12,15 +12,7 @@
     "index": ".doc-bridge/index.json",
     "llmsTxt": "llms.txt"
   },
-  "capabilities": [
-    "index",
-    "query",
-    "search",
-    "agent-handoff",
-    "gates",
-    "mcp",
-    "human-docs"
-  ],
+  "capabilities": ["index", "query", "search", "agent-handoff", "gates", "mcp", "human-docs"],
   "surfaces": {
     "cli": {
       "bin": "ak-docs",
