@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "47887ec3ae7a250eea6da0cea6521b6ec72ae99998f950b679e788dde0508c4d",
+  "contentHash": "a1e9c99984761cb7d02787d7f7c86bc2ade2a4024562b5b917a8189a15b0e4dc",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-17T07:13:41.180Z",
+  "generatedAt": "2026-11-17T17:21:04.603Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -366,6 +366,18 @@
       "contentHash": "7740c38f8287c52a3317366e8e2e30dee248fc105659f8171624362a19dda429"
     },
     {
+      "id": "document:changelog.d/434.md",
+      "type": "document",
+      "title": "434.md",
+      "path": "changelog.d/434.md",
+      "description": "chore: install pre-push hook, agent CI/security rules and a measurable dogfood declaration (#434)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "9e0623f29a933707a2d83d913c3d0a2e97ddaccee9ba7dfa3812207f6c59b147"
+    },
+    {
       "id": "document:CHANGELOG.md",
       "type": "document",
       "title": "Changelog",
@@ -580,6 +592,18 @@
         "human"
       ],
       "contentHash": "3f7550e39f4c1b735d160711226eb0db3c4f3d994de3468a67cd1483801d3470"
+    },
+    {
+      "id": "document:docs/dogfood.md",
+      "type": "document",
+      "title": "Dogfood declaration",
+      "path": "docs/dogfood.md",
+      "description": "The factory line uses this tool as its own pull-request reviewer, in shadow mode (comments are advisory and never block a merge). The owner decision is recorded here so the claim is measurable.",
+      "tags": [
+        "document",
+        "human"
+      ],
+      "contentHash": "c8766c49ff25694140333b5ef05a5a43108074a388034f2a2f5280d262b8680e"
     },
     {
       "id": "document:docs/getting-started.md",
@@ -3672,8 +3696,8 @@
     }
   },
   "inputs": {
-    "hash": "699731a14434293ffa3bf3445d535a33a14f5e4b29189fa602e91334a992db92",
-    "fileCount": 252,
+    "hash": "5728ab00f6386f2ed55e34b4981e3f8c580e981fb23f7819d28e57afd2602bbe",
+    "fileCount": 254,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3695,9 +3719,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "b9b375b5c8ae823cd2d4436d9a3dbcde2b4eccd14a52773359ffcfccb036ac51",
+    "contentHash": "0d00f316d04f89f2ed774dd1f23b46b1ae2dbb039b462b1785a0c349a5c9fbc2",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "76fa1cdbf0933520b844407e5be3beff358c0d6e45cad00b0482858b4dfec500",
+    "snapshotHash": "86679f92dccd6a2bbd0b0fb4af425339d12a249283bb60b1577113446b112201",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "7fe3cb5d20c435614bd8b721dc11afff39159e00851e1e6ef33c678f9bc172ab",
     "lexiconVersion": 1,
@@ -3717,7 +3741,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 231,
+      "documentCount": 233,
       "fieldNames": [
         "aliases",
         "body",
@@ -3728,13 +3752,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.83982683982684,
-        "body": 53.81385281385281,
-        "headings": 3.735930735930736,
-        "path": 5.523809523809524,
-        "summary": 4.7272727272727275,
-        "symbols": 12.229437229437229,
-        "title": 4.229437229437229
+        "aliases": 2.832618025751073,
+        "body": 53.952789699570815,
+        "headings": 3.7124463519313307,
+        "path": 5.510729613733906,
+        "summary": 4.836909871244635,
+        "symbols": 12.124463519313304,
+        "title": 4.210300429184549
       }
     },
     "entries": [
@@ -5062,6 +5086,45 @@
         "confidence": "observed"
       },
       {
+        "id": "document:changelog.d/434.md",
+        "kind": "document",
+        "path": "changelog.d/434.md",
+        "title": "434.md",
+        "summary": "chore: install pre-push hook, agent CI/security rules and a measurable dogfood declaration (#434)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "434.md",
+          "headings": "",
+          "path": "changelog.d/434.md",
+          "symbols": "",
+          "summary": "chore: install pre-push hook, agent CI/security rules and a measurable dogfood declaration (#434)",
+          "body": "chore: install pre-push hook, agent CI/security rules and a measurable dogfood declaration ( 434) Adds .husky/pre-push (typecheck), .claude/rules/ci.md and seguranca.md , and docs/dogfood.md : the factory line uses this tool as shadow-mode reviewer; target 100% of merged PRs with a run over 7 days.",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "mentions",
+              "id": "document:docs/dogfood.md",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "9e0623f29a933707a2d83d913c3d0a2e97ddaccee9ba7dfa3812207f6c59b147",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "document:CHANGELOG.md",
         "kind": "document",
         "path": "CHANGELOG.md",
@@ -6314,6 +6377,53 @@
         "confidence": "observed"
       },
       {
+        "id": "document:docs/dogfood.md",
+        "kind": "document",
+        "path": "docs/dogfood.md",
+        "title": "Dogfood declaration",
+        "summary": "The factory line uses this tool as its own pull-request reviewer, in shadow mode (comments are advisory and never block a merge). The owner decision is recorded here so the claim is measurable.",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "human"
+        ],
+        "fields": {
+          "title": "Dogfood declaration",
+          "headings": "Dogfood declaration",
+          "path": "docs/dogfood.md",
+          "symbols": "",
+          "summary": "The factory line uses this tool as its own pull-request reviewer, in shadow mode (comments are advisory and never block a merge). The owner decision is recorded here so the claim is measurable.",
+          "body": "Dogfood declaration The factory line uses this tool as its own pull-request reviewer, in shadow mode (comments are advisory and never block a merge). The owner decision is recorded here so the claim is measurable. - Declaration: every PR merged into a repository the factory line operates gets one code-review run in shadow mode. - Metric: share of merged PRs in the repository that got a code-review run. - Target: 100% of merged PRs over a rolling 7-day window. - Source of the count: shadow-mode run reports compared with the list of merged PRs (see docs/shadow-week-protocol.md ). - Decision: approved by the product owner via the factory PM (shadow-mode dogfood, measurable by merged-PR coverage).",
+          "aliases": "document human"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 1,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:changelog.d/434.md"
+          ],
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:changelog.d/434.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": [
+            {
+              "kind": "mentions",
+              "id": "document:docs/shadow-week-protocol.md",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "c8766c49ff25694140333b5ef05a5a43108074a388034f2a2f5280d262b8680e",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "document:docs/for-agents/code-review.md",
         "kind": "document",
         "path": "docs/for-agents/code-review.md",
@@ -7405,10 +7515,18 @@
         },
         "graph": {
           "pagerank": 0.019271,
-          "inboundLinks": 0,
+          "inboundLinks": 1,
           "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
+          "mentionedBy": [
+            "document:docs/dogfood.md"
+          ],
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:docs/dogfood.md",
+              "confidence": "observed"
+            }
+          ],
           "outbound": [
             {
               "kind": "links-to",

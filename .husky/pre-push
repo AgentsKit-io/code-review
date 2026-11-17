@@ -1,0 +1,3 @@
+#!/bin/sh
+# Pre-push hook (mandatory): typecheck, the same gate as CI. Do not use --no-verify.
+npm run typecheck
