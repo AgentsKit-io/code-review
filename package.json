@@ -117,6 +117,7 @@
   "scripts": {
     "review": "tsx src/cli.ts",
     "build": "tsc -p tsconfig.build.json",
+    "lint:biome": "biome check package.json biome.json",
     "typecheck": "tsc --noEmit",
     "test": "npm run build && node --test --test-concurrency=1 test/*.test.mjs",
     "test:coverage": "npm run build && node --experimental-test-coverage --test-coverage-include='dist/src/**/*.js' --test-coverage-exclude='**/test/**' --test-coverage-exclude='**/scripts/**' --test-coverage-exclude='**/apps/**' --test-coverage-exclude='**/examples/**' --test-coverage-lines=93 --test-coverage-branches=79 --test-coverage-functions=92 --test --test-concurrency=1 test/*.test.mjs",
