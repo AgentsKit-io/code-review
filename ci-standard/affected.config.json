@@ -15,13 +15,6 @@
     "test/**",
     "scripts/**"
   ],
-  "ignore": [
-    "docs/**",
-    "*.md",
-    "changelog.d/**",
-    ".gitignore",
-    "doc-bridge.config.json",
-    ".claude/**"
-  ],
+  "ignore": ["docs/**", "*.md", "changelog.d/**", ".gitignore", "doc-bridge.config.json", ".claude/**"],
   "contractGlobs": []
 }

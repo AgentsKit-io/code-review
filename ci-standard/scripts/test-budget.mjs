@@ -11,15 +11,15 @@
 // ci-standard/scripts/slow-tests.mjs reads for the job summary (the 10 slowest tests).
 // Overrides: TEST_BAIL=0|1, TEST_SLOW=0|1 (1 = run the slow tests too), TEST_TIMEOUT_MS=<ms>.
 
-export const SLOW_TEST_WARN_MS = 2_000;
-export const PR_TEST_TIMEOUT_MS = 10_000;
-export const SLOW_TEST_GLOB = '**/*.slow.test.*';
+export const SLOW_TEST_WARN_MS = 2_000
+export const PR_TEST_TIMEOUT_MS = 10_000
+export const SLOW_TEST_GLOB = '**/*.slow.test.*'
 
 /** `pr` on the PR path (bail, 10 s per test, no slow files), `full` otherwise. */
 export function testProfile(env = process.env) {
-  const profile = env.CI_TEST_PROFILE;
-  if (profile === 'pr' || profile === 'full') return profile;
-  return env.GITHUB_EVENT_NAME === 'pull_request' ? 'pr' : 'full';
+  const profile = env.CI_TEST_PROFILE
+  if (profile === 'pr' || profile === 'full') return profile
+  return env.GITHUB_EVENT_NAME === 'pull_request' ? 'pr' : 'full'
 }
 
 /**
@@ -28,26 +28,26 @@ export function testProfile(env = process.env) {
  * path; `exclude` = the repo's own excludes, the slow glob is added on the PR path).
  */
 export function vitestBudget({ testTimeout = 60_000, exclude = ['**/node_modules/**'], env = process.env } = {}) {
-  const pr = testProfile(env) === 'pr';
-  const bail = env.TEST_BAIL === '1' ? 1 : env.TEST_BAIL === '0' ? 0 : pr ? 1 : 0;
-  const skipSlow = env.TEST_SLOW ? env.TEST_SLOW === '0' : pr;
+  const pr = testProfile(env) === 'pr'
+  const bail = env.TEST_BAIL === '1' ? 1 : env.TEST_BAIL === '0' ? 0 : pr ? 1 : 0
+  const skipSlow = env.TEST_SLOW ? env.TEST_SLOW === '0' : pr
   const timeout =
     Number(env.TEST_TIMEOUT_MS) > 0
       ? Number(env.TEST_TIMEOUT_MS)
       : pr
         ? Math.min(PR_TEST_TIMEOUT_MS, testTimeout)
-        : testTimeout;
+        : testTimeout
   const options = {
     bail,
     slowTestThreshold: SLOW_TEST_WARN_MS,
     testTimeout: timeout,
     exclude: skipSlow ? [...exclude, SLOW_TEST_GLOB] : [...exclude],
-  };
-  const dir = env.CI_TEST_REPORT_DIR;
+  }
+  const dir = env.CI_TEST_REPORT_DIR
   if (dir) {
     // One file per vitest process: a workspace that runs one vitest per app writes one report each.
-    options.reporters = ['default', 'json'];
-    options.outputFile = { json: `${dir.replace(/\/$/, '')}/vitest-${process.pid}-${Date.now()}.json` };
+    options.reporters = ['default', 'json']
+    options.outputFile = { json: `${dir.replace(/\/$/, '')}/vitest-${process.pid}-${Date.now()}.json` }
   }
-  return options;
+  return options
 }
