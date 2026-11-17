@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "ac98352a6d57bfa4a6bf7bedf987e9821946d3b956ebf755d60864566b6e19dc",
+  "contentHash": "47887ec3ae7a250eea6da0cea6521b6ec72ae99998f950b679e788dde0508c4d",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-16T15:47:47.005Z",
+  "generatedAt": "2026-11-17T07:13:41.180Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -14,6 +14,13 @@
       "title": "Code Review CLI handoff",
       "path": "docs/for-agents/code-review.md",
       "description": "Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and GitHub pull requests. Bounded diff-first context packs run one multidimensional analysis; adversarial votes remove weak findings; reporters emit Markdown, GitHub reviews, and SARIF."
+    },
+    {
+      "id": "docs-site",
+      "type": "agent-doc",
+      "title": "Docs site agent handoff",
+      "path": "docs/for-agents/docs-site.md",
+      "description": "`apps/docs` is the Fumadocs presentation surface for https://code-review.agentskit.io. It renders the curated guides from `docs/` and must never run real reviews or hold provider keys."
     },
     {
       "id": "index",
@@ -345,6 +352,18 @@
         "project"
       ],
       "contentHash": "c199827bc3d68bd704c6bbc59e78b7526fa76d5c5604f27a9b5f30834b7e484f"
+    },
+    {
+      "id": "document:changelog.d/433.md",
+      "type": "document",
+      "title": "433.md",
+      "path": "changelog.d/433.md",
+      "description": "feat: add docs-site doc-bridge handoff covering apps/docs (#433)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "7740c38f8287c52a3317366e8e2e30dee248fc105659f8171624362a19dda429"
     },
     {
       "id": "document:CHANGELOG.md",
@@ -3570,11 +3589,41 @@
       "notes": [
         "Provider-neutral local and GitHub code review CLI, Action, reporters, Fumadocs site, and repository documentation."
       ]
+    },
+    "docs-site": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "docs-site",
+        "path": "apps/docs"
+      },
+      "startHere": "docs/for-agents/docs-site.md",
+      "readBeforeEditing": [
+        "docs/for-agents/docs-site.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "apps/docs"
+      ],
+      "checks": [
+        "npm run docs:web:typecheck",
+        "npm run docs:web:build"
+      ],
+      "humanDoc": "https://code-review.agentskit.io/docs",
+      "bridge": {
+        "humanDoc": "external"
+      },
+      "notes": [
+        "Fumadocs presentation site for the Code Review documentation; it never runs real reviews."
+      ]
     }
   },
   "lookup": {
     "packages": [
-      "code-review"
+      "code-review",
+      "docs-site"
     ],
     "ownership": {
       "code-review": {
@@ -3589,6 +3638,18 @@
         "purpose": "Provider-neutral local and GitHub code review CLI, Action, reporters, Fumadocs site, and repository documentation.",
         "humanDoc": "https://code-review.agentskit.io/docs",
         "agentDoc": "docs/for-agents/code-review.md"
+      },
+      "docs-site": {
+        "id": "docs-site",
+        "path": "apps/docs",
+        "checks": [
+          "npm run docs:web:typecheck",
+          "npm run docs:web:build"
+        ],
+        "checksSource": "ownership",
+        "purpose": "Fumadocs presentation site for the Code Review documentation; it never runs real reviews.",
+        "humanDoc": "https://code-review.agentskit.io/docs",
+        "agentDoc": "docs/for-agents/docs-site.md"
       }
     },
     "intents": {
@@ -3611,8 +3672,8 @@
     }
   },
   "inputs": {
-    "hash": "0c6a8c1d5c99df4cd30b45ced9f42e6bb39b984646f2e2fb4e3bbb3d64766d0f",
-    "fileCount": 250,
+    "hash": "699731a14434293ffa3bf3445d535a33a14f5e4b29189fa602e91334a992db92",
+    "fileCount": 252,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3634,11 +3695,11 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "0ab4348e36b60097b4fc5211e50ae58f6c0ef811cf7e453dcfede6844784ae2d",
+    "contentHash": "b9b375b5c8ae823cd2d4436d9a3dbcde2b4eccd14a52773359ffcfccb036ac51",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "869facef33553f3cecb7e5b7618601f2ae66859a776b2ea712d8d935c899fcf2",
+    "snapshotHash": "76fa1cdbf0933520b844407e5be3beff358c0d6e45cad00b0482858b4dfec500",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
-    "configurationHash": "6ad53012fd476bbb5004715cdda29f860ec52e88215d28638c78eee245eddca7",
+    "configurationHash": "7fe3cb5d20c435614bd8b721dc11afff39159e00851e1e6ef33c678f9bc172ab",
     "lexiconVersion": 1,
     "graphMetricsVersion": "1.0.0",
     "weights": {
@@ -3656,7 +3717,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 229,
+      "documentCount": 231,
       "fieldNames": [
         "aliases",
         "body",
@@ -3667,13 +3728,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8122270742358078,
-        "body": 53.46288209606987,
-        "headings": 3.6986899563318776,
-        "path": 5.532751091703057,
-        "summary": 4.558951965065503,
-        "symbols": 12.336244541484715,
-        "title": 4.22707423580786
+        "aliases": 2.83982683982684,
+        "body": 53.81385281385281,
+        "headings": 3.735930735930736,
+        "path": 5.523809523809524,
+        "summary": 4.7272727272727275,
+        "symbols": 12.229437229437229,
+        "title": 4.229437229437229
       }
     },
     "entries": [
@@ -3726,30 +3787,44 @@
         "id": "area:apps/docs",
         "kind": "area",
         "path": "apps/docs",
-        "title": "docs",
-        "aliases": [],
+        "title": "Docs site agent handoff",
+        "summary": "Fumadocs presentation site for the Code Review documentation; it never runs real reviews.",
+        "audience": "agent",
+        "aliases": [
+          "docs-site"
+        ],
         "tags": [
-          "area"
+          "area",
+          "ownership"
         ],
         "fields": {
-          "title": "docs",
-          "headings": "",
+          "title": "Docs site agent handoff",
+          "headings": "Docs site agent handoff Purpose Change routes Verification",
           "path": "apps/docs",
           "symbols": "",
-          "summary": "",
-          "body": "",
-          "aliases": "area"
+          "summary": "Fumadocs presentation site for the Code Review documentation; it never runs real reviews.",
+          "body": "Docs site agent handoff Purpose apps/docs is the Fumadocs presentation surface for https://code-review.agentskit.io. It renders the curated guides from docs/ and must never run real reviews or hold provider keys. Change routes - Content lives in docs/ ; edit pages there, not in generated apps/docs/.source . - App code, layout, and routes live in apps/docs/ ; it has its own package-lock.json ( npm install --prefix apps/docs ). - Read apps/docs/AGENTS.md for the framework version rules before editing app code. Verification",
+          "aliases": "docs-site area ownership"
         },
         "graph": {
-          "pagerank": 0,
-          "inboundLinks": 2,
-          "coveredBy": [],
+          "pagerank": 0.035651,
+          "inboundLinks": 4,
+          "coveredBy": [
+            "document:docs/for-agents/docs-site.md"
+          ],
           "mentionedBy": [
             "document:apps/docs/README.md",
-            "document:CHANGELOG.md"
+            "document:changelog.d/433.md",
+            "document:CHANGELOG.md",
+            "document:docs/for-agents/docs-site.md"
           ],
           "packageId": "package:@agentskit/code-review",
           "inbound": [
+            {
+              "kind": "covers",
+              "id": "document:docs/for-agents/docs-site.md",
+              "confidence": "declared"
+            },
             {
               "kind": "mentions",
               "id": "document:apps/docs/README.md",
@@ -3757,15 +3832,26 @@
             },
             {
               "kind": "mentions",
+              "id": "document:changelog.d/433.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
               "id": "document:CHANGELOG.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/for-agents/docs-site.md",
               "confidence": "observed"
             }
           ],
           "outbound": []
         },
-        "contentHash": "753432dc6f4a3a1dcfbae07761b77f25fa56931e02cce58bbef0022689e9a759",
+        "contentHash": "5c3497d355bb7f399b70ea28d3ed8adb02ecf311606731f8a2450047a9dd9488",
         "provenance": "observed",
-        "confidence": "observed"
+        "confidence": "observed",
+        "ownershipId": "docs-site"
       },
       {
         "id": "area:bench",
@@ -4336,7 +4422,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.020391,
+          "pagerank": 0.019271,
           "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [
@@ -4407,10 +4493,18 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 0,
+          "inboundLinks": 1,
           "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
+          "mentionedBy": [
+            "document:docs/for-agents/docs-site.md"
+          ],
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:docs/for-agents/docs-site.md",
+              "confidence": "observed"
+            }
+          ],
           "outbound": []
         },
         "contentHash": "495f609dcae69007a0eeb247d5e6f0cb36566b152af061abcd575477b8d1859d",
@@ -4924,6 +5018,50 @@
         "confidence": "observed"
       },
       {
+        "id": "document:changelog.d/433.md",
+        "kind": "document",
+        "path": "changelog.d/433.md",
+        "title": "433.md",
+        "summary": "feat: add docs-site doc-bridge handoff covering apps/docs (#433)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "433.md",
+          "headings": "",
+          "path": "changelog.d/433.md",
+          "symbols": "",
+          "summary": "feat: add docs-site doc-bridge handoff covering apps/docs (#433)",
+          "body": "feat: add docs-site doc-bridge handoff covering apps/docs ( 433) Registers apps/docs as an owned package in doc-bridge.config.json with its agent handoff docs/for-agents/docs-site.md , so every editRoot has generated for-agents coverage.",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "mentions",
+              "id": "area:apps/docs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/for-agents/docs-site.md",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "7740c38f8287c52a3317366e8e2e30dee248fc105659f8171624362a19dda429",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "document:CHANGELOG.md",
         "kind": "document",
         "path": "CHANGELOG.md",
@@ -4945,7 +5083,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.023378,
+          "pagerank": 0.022094,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -5152,7 +5290,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.048629,
+          "pagerank": 0.045958,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -5203,7 +5341,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.028631,
+          "pagerank": 0.027058,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -5329,7 +5467,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.022124,
+          "pagerank": 0.020909,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5399,7 +5537,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.022124,
+          "pagerank": 0.020909,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5459,7 +5597,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.022124,
+          "pagerank": 0.020909,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5519,7 +5657,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.022124,
+          "pagerank": 0.020909,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5589,7 +5727,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.022124,
+          "pagerank": 0.020909,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5659,7 +5797,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.025111,
+          "pagerank": 0.023732,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5729,7 +5867,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.022124,
+          "pagerank": 0.020909,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5784,7 +5922,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.022124,
+          "pagerank": 0.020909,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -5851,7 +5989,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.022124,
+          "pagerank": 0.020909,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5921,7 +6059,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.022124,
+          "pagerank": 0.020909,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -5976,7 +6114,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.020391,
+          "pagerank": 0.019271,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -6060,7 +6198,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.064279,
+          "pagerank": 0.060749,
           "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [
@@ -6132,7 +6270,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.025854,
+          "pagerank": 0.024434,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -6200,7 +6338,7 @@
           "aliases": "code-review document agent package"
         },
         "graph": {
-          "pagerank": 0.071892,
+          "pagerank": 0.067944,
           "inboundLinks": 6,
           "coveredBy": [],
           "mentionedBy": [
@@ -6424,6 +6562,66 @@
         "confidence": "observed"
       },
       {
+        "id": "document:docs/for-agents/docs-site.md",
+        "kind": "document",
+        "path": "docs/for-agents/docs-site.md",
+        "title": "Docs site agent handoff",
+        "summary": "`apps/docs` is the Fumadocs presentation surface for https://code-review.agentskit.io. It renders the curated guides from `docs/` and must never run real reviews or hold provider keys.",
+        "audience": "agent",
+        "aliases": [
+          "docs-site"
+        ],
+        "tags": [
+          "document",
+          "agent",
+          "package"
+        ],
+        "fields": {
+          "title": "Docs site agent handoff",
+          "headings": "Docs site agent handoff Purpose Change routes Verification",
+          "path": "docs/for-agents/docs-site.md",
+          "symbols": "",
+          "summary": "`apps/docs` is the Fumadocs presentation surface for https://code-review.agentskit.io. It renders the curated guides from `docs/` and must never run real reviews or hold provider keys.",
+          "body": "Docs site agent handoff Purpose apps/docs is the Fumadocs presentation surface for https://code-review.agentskit.io. It renders the curated guides from docs/ and must never run real reviews or hold provider keys. Change routes - Content lives in docs/ ; edit pages there, not in generated apps/docs/.source . - App code, layout, and routes live in apps/docs/ ; it has its own package-lock.json ( npm install --prefix apps/docs ). - Read apps/docs/AGENTS.md for the framework version rules before editing app code. Verification",
+          "aliases": "docs-site document agent package"
+        },
+        "graph": {
+          "pagerank": 0.019271,
+          "inboundLinks": 1,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:changelog.d/433.md"
+          ],
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:changelog.d/433.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": [
+            {
+              "kind": "covers",
+              "id": "area:apps/docs",
+              "confidence": "declared"
+            },
+            {
+              "kind": "mentions",
+              "id": "area:apps/docs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:apps/docs/AGENTS.md",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "3d489d4bbcfdd3632544a21245aebf48be45454bfdafa9e6df55bcf5e1392307",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "document:docs/for-agents/index.md",
         "kind": "document",
         "path": "docs/for-agents/index.md",
@@ -6447,7 +6645,7 @@
           "aliases": "index document agent"
         },
         "graph": {
-          "pagerank": 0.023378,
+          "pagerank": 0.022094,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -6499,7 +6697,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.022867,
+          "pagerank": 0.021611,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -6624,7 +6822,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.020391,
+          "pagerank": 0.019271,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -6693,7 +6891,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.028119,
+          "pagerank": 0.026575,
           "inboundLinks": 6,
           "coveredBy": [],
           "mentionedBy": [
@@ -6931,7 +7129,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.031107,
+          "pagerank": 0.029398,
           "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [],
@@ -7001,7 +7199,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.022867,
+          "pagerank": 0.021611,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -7068,7 +7266,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.052455,
+          "pagerank": 0.049574,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -7123,7 +7321,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.037722,
+          "pagerank": 0.035651,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -7206,7 +7404,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.020391,
+          "pagerank": 0.019271,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -7249,7 +7447,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.037811,
+          "pagerank": 0.035735,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -7338,7 +7536,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.020391,
+          "pagerank": 0.019271,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [
@@ -7470,7 +7668,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.028631,
+          "pagerank": 0.027058,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -7544,7 +7742,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.044701,
+          "pagerank": 0.042246,
           "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [
@@ -16262,7 +16460,7 @@
           "aliases": "code-review @agentskit/code-review package ownership"
         },
         "graph": {
-          "pagerank": 0.081501,
+          "pagerank": 0.077024,
           "inboundLinks": 7,
           "coveredBy": [
             "document:docs/for-agents/code-review.md"
@@ -16315,7 +16513,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "851e9ac77fb14b8bacd1017c4bf2ee2952727d2a2a3364738d3a34cc93d26db5",
+        "contentHash": "4fd7baa4e95d74a2628618fb537ffe60885f15aac6ebe830628f562fd551ceb2",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"
