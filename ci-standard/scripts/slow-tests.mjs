@@ -192,7 +192,10 @@ export function fromNotice(message) {
 
 export function markdown(list, { top = 10 } = {}) {
   if (list.length === 0) return '### Slowest tests\n\nNo timed tests in the reports.\n'
-  const rows = list.map((t, i) => `| ${i + 1} | ${seconds(t)} | ${flag(t)} | \`${label(t).replace(/\\/g, '\\\\').replace(/\|/g, '\\|')}\` |`)
+  const rows = list.map(
+    (t, i) =>
+      `| ${i + 1} | ${seconds(t)} | ${flag(t)} | \`${label(t).replace(/\\/g, '\\\\').replace(/\|/g, '\\|')}\` |`,
+  )
   return [
     `### Slowest tests (top ${top})`,
     '',
@@ -230,10 +233,7 @@ export function runsPath(repo, workflow = '') {
 
 /** Job-name filter from `a|b|c`: case-insensitive substring match on each literal part (no regex built from input). */
 export function jobNameFilter(spec) {
-  const parts = String(spec)
-    .toLowerCase()
-    .split('|')
-    .filter(Boolean)
+  const parts = String(spec).toLowerCase().split('|').filter(Boolean)
   return { test: (name) => parts.some((p) => String(name).toLowerCase().includes(p)) }
 }
 
