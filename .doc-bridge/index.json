@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "0e4d896c4836fd83d9ebfe3a67011ee652e5a22c5ff4acc61ea2a05091524316",
+  "contentHash": "d7259b27c754f729979a7f7df4efca6d418e5b041e76fdb1bf20db050d9dce9e",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-17T10:25:56.289Z",
+  "generatedAt": "2026-11-17T10:47:04.639Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -1310,7 +1310,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "d07a967b305170f24b0d6f0b1c9084f9b5b69382270bf2814bb7e2ff4a2caf46"
+      "contentHash": "836a5a76a5519d9dbe6149b705c209ed39ae6b6f626cf66a1fa574600f263814"
     },
     {
       "id": "module:ci-standard/scripts/no-fixed-ports.mjs",
@@ -1391,6 +1391,7 @@
         "fromNotice",
         "fromRepo",
         "fromVitestJson",
+        "jobNameFilter",
         "markdown",
         "merge",
         "notice",
@@ -1403,7 +1404,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "3f3f888f2d9b6e0ad27515585f22c1e146187df27a84357d632e9d2781b452b5"
+      "contentHash": "5d8a1fcb3291879bcccbf3986beeb33f9a79279eed603cdc06a274c2799bb27b"
     },
     {
       "id": "module:ci-standard/scripts/test-budget.d.mts",
@@ -1541,7 +1542,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "ae4fe41c9b5139c537c7fccd576eb014b456130e2a457a90b39f3c7bb953b91d"
+      "contentHash": "6617c7b690feba950ffaab1e69bb93252db004ab2dba50b05e95c500a40a2f4e"
     },
     {
       "id": "module:ci-standard/test/affected.test.mjs",
@@ -4077,7 +4078,7 @@
     }
   },
   "inputs": {
-    "hash": "31c3d7b0cb945c220b86410741f07cf3a474b86b1332b4e666f1f123d695a60f",
+    "hash": "81080d1e73f9a9f2410b21e5687d25450a5b1425af69bef8fe4b69ae0756822b",
     "fileCount": 278,
     "projectionVersion": 2
   },
@@ -4100,9 +4101,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "a4368bffe6919ad357e8bfd863413b2e4c0a3b25dfbc470370fbb9aefe8b8175",
+    "contentHash": "8806d8ef574a2ec77e9c03d11e8ddf02e230d47912ac47e327e32eebfa3fb826",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "d8aea5f3ea3b984d1eb8049e68dae9ee000a0f5e298fbec10e4121a80994df66",
+    "snapshotHash": "82165ef2203e529d6120c8190d95033341c6fc63879d2923ff699d48b7f0a5ac",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "7fe3cb5d20c435614bd8b721dc11afff39159e00851e1e6ef33c678f9bc172ab",
     "lexiconVersion": 1,
@@ -4138,7 +4139,7 @@
         "headings": 3.40234375,
         "path": 5.65625,
         "summary": 4.4296875,
-        "symbols": 12.0546875,
+        "symbols": 12.0703125,
         "title": 4.21484375
       }
     },
@@ -10005,7 +10006,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "d07a967b305170f24b0d6f0b1c9084f9b5b69382270bf2814bb7e2ff4a2caf46",
+        "contentHash": "836a5a76a5519d9dbe6149b705c209ed39ae6b6f626cf66a1fa574600f263814",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -10206,6 +10207,7 @@
           "fromNotice",
           "fromRepo",
           "fromVitestJson",
+          "jobNameFilter",
           "markdown",
           "merge",
           "notice",
@@ -10222,7 +10224,7 @@
           "title": "slow-tests.mjs",
           "headings": "",
           "path": "ci-standard/scripts/slow-tests.mjs",
-          "symbols": "BUDGET_FAIL_MS BUDGET_WARN_MS fromJunit fromLocalRun fromLog fromNotice fromRepo fromVitestJson markdown merge notice parse runsPath slowest",
+          "symbols": "BUDGET_FAIL_MS BUDGET_WARN_MS fromJunit fromLocalRun fromLog fromNotice fromRepo fromVitestJson jobNameFilter markdown merge notice parse runsPath slowest",
           "summary": "",
           "body": "",
           "aliases": "module mjs scripts"
@@ -10243,7 +10245,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "3f3f888f2d9b6e0ad27515585f22c1e146187df27a84357d632e9d2781b452b5",
+        "contentHash": "5d8a1fcb3291879bcccbf3986beeb33f9a79279eed603cdc06a274c2799bb27b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -10548,7 +10550,7 @@
             }
           ]
         },
-        "contentHash": "ae4fe41c9b5139c537c7fccd576eb014b456130e2a457a90b39f3c7bb953b91d",
+        "contentHash": "6617c7b690feba950ffaab1e69bb93252db004ab2dba50b05e95c500a40a2f4e",
         "provenance": "observed",
         "confidence": "observed"
       },
