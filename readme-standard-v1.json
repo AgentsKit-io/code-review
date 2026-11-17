@@ -123,41 +123,14 @@
       "path": "README.md",
       "profileId": "top-level-repository",
       "dimensions": {
-        "promise": [
-          "Deep, low-noise AI code review",
-          "It is intended for"
-        ],
-        "proof": [
-          "## Verified proof",
-          "test/cli-smoke.test.mjs"
-        ],
-        "examples": [
-          "## Run your first review",
-          "<!-- readme-example:first-review -->"
-        ],
-        "visuals": [
-          "docs/assets/agentskit-mark.svg",
-          "docs/assets/code-review-terminal.png",
-          "```mermaid"
-        ],
-        "maturity": [
-          "## Maturity",
-          "pre-v1 (`0.32.x`)"
-        ],
-        "compatibility": [
-          "## Compatibility",
-          "Node.js 20+"
-        ],
-        "contribution": [
-          "## Contributing",
-          "CONTRIBUTING.md",
-          "LICENSE"
-        ],
-        "metadata": [
-          "**Tags:**",
-          "`agentskit`",
-          "**Topics:**"
-        ],
+        "promise": ["Deep, low-noise AI code review", "It is intended for"],
+        "proof": ["## Verified proof", "test/cli-smoke.test.mjs"],
+        "examples": ["## Run your first review", "<!-- readme-example:first-review -->"],
+        "visuals": ["docs/assets/agentskit-mark.svg", "docs/assets/code-review-terminal.png", "```mermaid"],
+        "maturity": ["## Maturity", "pre-v1 (`0.32.x`)"],
+        "compatibility": ["## Compatibility", "Node.js 20+"],
+        "contribution": ["## Contributing", "CONTRIBUTING.md", "LICENSE"],
+        "metadata": ["**Tags:**", "`agentskit`", "**Topics:**"],
         "ecosystem": [
           "## AgentsKit ecosystem",
           "registry.agentskit.io/docs",
