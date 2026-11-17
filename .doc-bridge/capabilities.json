@@ -7,12 +7,20 @@
     "name": "AgentsKit Code Review",
     "root": "."
   },
-  "contentHash": "dced8524b8f6baf406b8bd85bc9621ed5f5891165d8fb1bf0b38fd4d61ee1c9f",
+  "contentHash": "7dc219f3571d2872f8d6e4b1143116a8a473a2dbe470916541b66297987b3c5a",
   "artifacts": {
     "index": ".doc-bridge/index.json",
     "llmsTxt": "llms.txt"
   },
-  "capabilities": ["index", "query", "search", "agent-handoff", "gates", "mcp", "human-docs"],
+  "capabilities": [
+    "index",
+    "query",
+    "search",
+    "agent-handoff",
+    "gates",
+    "mcp",
+    "human-docs"
+  ],
   "surfaces": {
     "cli": {
       "bin": "ak-docs",
