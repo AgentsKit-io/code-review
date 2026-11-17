@@ -7,12 +7,7 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": [
-      "**",
-      "!.doc-bridge",
-      "!llms-full.txt",
-      "!doc-bridge.config.json"
-    ]
+    "includes": ["**", "!.doc-bridge", "!llms-full.txt", "!doc-bridge.config.json"]
   },
   "formatter": {
     "enabled": true,
