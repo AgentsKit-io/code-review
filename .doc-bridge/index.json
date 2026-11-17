@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "47887ec3ae7a250eea6da0cea6521b6ec72ae99998f950b679e788dde0508c4d",
+  "contentHash": "aa4849f282f6e656f61403284ffedfad036a8741ae4cf5fc8731b29e31f2825e",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-17T07:13:41.180Z",
+  "generatedAt": "2026-11-17T10:15:36.702Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -354,6 +354,18 @@
       "contentHash": "c199827bc3d68bd704c6bbc59e78b7526fa76d5c5604f27a9b5f30834b7e484f"
     },
     {
+      "id": "document:changelog.d/432.md",
+      "type": "document",
+      "title": "432.md",
+      "path": "changelog.d/432.md",
+      "description": "fix: sync the platform CI standard (ci-standard.yml, setup-deps/ci-mode actions, ci-standard scripts, pre-push hook) and move the repo's settings to the inputs of ci.yml (#432)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "252911a71dc85cfe33571cad04df42336e11cf52f5edc1b2b95033e349798b5d"
+    },
+    {
       "id": "document:changelog.d/433.md",
       "type": "document",
       "title": "433.md",
@@ -424,6 +436,18 @@
         "unclassified"
       ],
       "contentHash": "6a20abc1fbe29cf764820ccf81d46693d5627178a68294d2c7342a1f343452e1"
+    },
+    {
+      "id": "document:docs/adr/0000-template.md",
+      "type": "document",
+      "title": "ADR NNNN — {título curto da decisão}",
+      "path": "docs/adr/0000-template.md",
+      "description": "Status: proposta | aceita | substituída por NNNN Data: AAAA-MM-DD Responsável: {quem decidiu}",
+      "tags": [
+        "document",
+        "human"
+      ],
+      "contentHash": "f60acf6801d9fec5d5e5a4eab89c40a2d71bebdfa99b32157058c6c1c31ef6be"
     },
     {
       "id": "document:docs/adr/0001-bounded-provider-neutral-cli-agents.md",
@@ -1233,6 +1257,387 @@
         "reviewbench"
       ],
       "contentHash": "7bf82e84e8a053e62bfb8b0dd7e63447f6d5f5526b61d403c8f1d33ba35ed501"
+    },
+    {
+      "id": "module:ci-standard/scripts/affected.mjs",
+      "type": "module",
+      "title": "affected.mjs",
+      "path": "ci-standard/scripts/affected.mjs",
+      "symbols": [
+        "changedFiles",
+        "classify",
+        "crossCheck",
+        "globToRegExp",
+        "parseNx",
+        "parseTurbo"
+      ],
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "11d3b5694f78b48032e3f9d6639efa0d6c76853d2c28299d59922229ad58866d"
+    },
+    {
+      "id": "module:ci-standard/scripts/cache-guard.mjs",
+      "type": "module",
+      "title": "cache-guard.mjs",
+      "path": "ci-standard/scripts/cache-guard.mjs",
+      "symbols": [
+        "checkDirs",
+        "checkText"
+      ],
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "1927a56a9b2a8e061530d6aa3a3d3e023fcb9814be8e05529307336b9b700c76"
+    },
+    {
+      "id": "module:ci-standard/scripts/guard-baseline.mjs",
+      "type": "module",
+      "title": "guard-baseline.mjs",
+      "path": "ci-standard/scripts/guard-baseline.mjs",
+      "symbols": [
+        "BASELINE_FILE",
+        "applyBaseline",
+        "loadBaseline",
+        "writeBaseline"
+      ],
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "6cdb53027028e83c789f2f1e992cd458368a44ef0045bfdbed4996e4d6460483"
+    },
+    {
+      "id": "module:ci-standard/scripts/no-fixed-ports.mjs",
+      "type": "module",
+      "title": "no-fixed-ports.mjs",
+      "path": "ci-standard/scripts/no-fixed-ports.mjs",
+      "symbols": [
+        "DEFAULT_GLOBS",
+        "RULES",
+        "inScope",
+        "scanFiles",
+        "scanText"
+      ],
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "d717d332254e4dddd3de3fa5a7928ce7a3fd4afc59685d3cf59de8dba1b324fc"
+    },
+    {
+      "id": "module:ci-standard/scripts/oxlint-baseline.mjs",
+      "type": "module",
+      "title": "oxlint-baseline.mjs",
+      "path": "ci-standard/scripts/oxlint-baseline.mjs",
+      "symbols": [
+        "failingFiles",
+        "fromPattern",
+        "listed",
+        "toPattern"
+      ],
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "cfc7b5ff8d39b6ab8528329ce35153ff9dfa348fc581b57ede569d0288e73764"
+    },
+    {
+      "id": "module:ci-standard/scripts/oxlint-migrate.mjs",
+      "type": "module",
+      "title": "oxlint-migrate.mjs",
+      "path": "ci-standard/scripts/oxlint-migrate.mjs",
+      "symbols": [
+        "RULES",
+        "migrate"
+      ],
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "3e0bf693abab7fcfab1c8ceb2a60a4f86d0efff0b7516e60bed472f317ca9879"
+    },
+    {
+      "id": "module:ci-standard/scripts/pre-push.mjs",
+      "type": "module",
+      "title": "pre-push.mjs",
+      "path": "ci-standard/scripts/pre-push.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "6e6e9744b554d2e3402e618dd07476c63ffcedbdd44ce2ef22febc74cf26c038"
+    },
+    {
+      "id": "module:ci-standard/scripts/slow-tests.mjs",
+      "type": "module",
+      "title": "slow-tests.mjs",
+      "path": "ci-standard/scripts/slow-tests.mjs",
+      "symbols": [
+        "BUDGET_FAIL_MS",
+        "BUDGET_WARN_MS",
+        "fromJunit",
+        "fromLocalRun",
+        "fromLog",
+        "fromNotice",
+        "fromRepo",
+        "fromVitestJson",
+        "markdown",
+        "merge",
+        "notice",
+        "parse",
+        "runsPath",
+        "slowest"
+      ],
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "6b9e22dcae348bf8aa25882ecceff86ba8cf07fa3098b765e4f169dc88ae1540"
+    },
+    {
+      "id": "module:ci-standard/scripts/test-budget.d.mts",
+      "type": "module",
+      "title": "test-budget.d.mts",
+      "path": "ci-standard/scripts/test-budget.d.mts",
+      "symbols": [
+        "PR_TEST_TIMEOUT_MS",
+        "SLOW_TEST_GLOB",
+        "SLOW_TEST_WARN_MS",
+        "testProfile",
+        "vitestBudget"
+      ],
+      "tags": [
+        "module",
+        "mts",
+        "scripts"
+      ],
+      "contentHash": "99ccc9ef0d077551b19b7e50f6fa7fc9d011aedaeb77253ced4972cfdeb83f65"
+    },
+    {
+      "id": "module:ci-standard/scripts/test-budget.mjs",
+      "type": "module",
+      "title": "test-budget.mjs",
+      "path": "ci-standard/scripts/test-budget.mjs",
+      "symbols": [
+        "PR_TEST_TIMEOUT_MS",
+        "SLOW_TEST_GLOB",
+        "SLOW_TEST_WARN_MS",
+        "testProfile",
+        "vitestBudget"
+      ],
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "b7316fb88aac4f274f022c7e254a6dbbe3fbb70307fa752f357d39b12e5e0ca3"
+    },
+    {
+      "id": "module:ci-standard/scripts/test-clock.d.mts",
+      "type": "module",
+      "title": "test-clock.d.mts",
+      "path": "ci-standard/scripts/test-clock.d.mts",
+      "symbols": [
+        "DAY",
+        "HOUR",
+        "MINUTE",
+        "SECOND",
+        "addMs",
+        "fakeClock",
+        "startOfNextUtcMonth",
+        "startOfUtcDay",
+        "startOfUtcMonth",
+        "testNow"
+      ],
+      "tags": [
+        "module",
+        "mts",
+        "scripts"
+      ],
+      "contentHash": "4d93a02ebc487d8fe5e1229a0dc009a624c2233ede18def0bc44d10798cbbea6"
+    },
+    {
+      "id": "module:ci-standard/scripts/test-clock.mjs",
+      "type": "module",
+      "title": "test-clock.mjs",
+      "path": "ci-standard/scripts/test-clock.mjs",
+      "symbols": [
+        "DAY",
+        "HOUR",
+        "MINUTE",
+        "SECOND",
+        "addMs",
+        "fakeClock",
+        "startOfNextUtcMonth",
+        "startOfUtcDay",
+        "startOfUtcMonth",
+        "testNow"
+      ],
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "a16df45d852aa9bd7f8edd2db4379a9b73a01c711aa287ef8d155da428790c8d"
+    },
+    {
+      "id": "module:ci-standard/scripts/test-env.d.mts",
+      "type": "module",
+      "title": "test-env.d.mts",
+      "path": "ci-standard/scripts/test-env.d.mts",
+      "symbols": [
+        "baseDatabaseUrl",
+        "createTestDatabase",
+        "databasePrefix",
+        "dropDatabase",
+        "dropTestDatabases",
+        "freePort",
+        "freePorts",
+        "jobPrefix",
+        "listTestDatabases",
+        "loadPg",
+        "runPrefix",
+        "testDatabaseName"
+      ],
+      "tags": [
+        "module",
+        "mts",
+        "scripts"
+      ],
+      "contentHash": "1fe155147e55084803bfb45f349f6de620031e11eb659d4302c455dd31b93891"
+    },
+    {
+      "id": "module:ci-standard/scripts/test-env.mjs",
+      "type": "module",
+      "title": "test-env.mjs",
+      "path": "ci-standard/scripts/test-env.mjs",
+      "symbols": [
+        "baseDatabaseUrl",
+        "createTestDatabase",
+        "databasePrefix",
+        "dropDatabase",
+        "dropTestDatabases",
+        "freePort",
+        "freePorts",
+        "jobPrefix",
+        "listTestDatabases",
+        "loadPg",
+        "runPrefix",
+        "testDatabaseName"
+      ],
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "301c1126f05ce0e239ce15e48ca11d3edd83382ab1934230d823fb2416df708b"
+    },
+    {
+      "id": "module:ci-standard/test/affected.test.mjs",
+      "type": "module",
+      "title": "affected.test.mjs",
+      "path": "ci-standard/test/affected.test.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "test"
+      ],
+      "contentHash": "076ded836522422b4999e52031838123e81365f7a5b85849ce4fd695fcb828d7"
+    },
+    {
+      "id": "module:ci-standard/test/cache-guard.test.mjs",
+      "type": "module",
+      "title": "cache-guard.test.mjs",
+      "path": "ci-standard/test/cache-guard.test.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "test"
+      ],
+      "contentHash": "f5e53f56b10522ba0c502ee8c4ad07f0d85a2917d496ff9dececa06edd1dc348"
+    },
+    {
+      "id": "module:ci-standard/test/guard-baseline.test.mjs",
+      "type": "module",
+      "title": "guard-baseline.test.mjs",
+      "path": "ci-standard/test/guard-baseline.test.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "test"
+      ],
+      "contentHash": "c975b7f03d7b3ef768cffb8a123988873cbef16a7c76b968bba17a6f4d320e6e"
+    },
+    {
+      "id": "module:ci-standard/test/no-fixed-ports.test.mjs",
+      "type": "module",
+      "title": "no-fixed-ports.test.mjs",
+      "path": "ci-standard/test/no-fixed-ports.test.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "test"
+      ],
+      "contentHash": "32bcec147e3c340bcb40b00df219ec7e71fec9d3dd2d4871f846fa576e11a872"
+    },
+    {
+      "id": "module:ci-standard/test/oxlint-baseline.test.mjs",
+      "type": "module",
+      "title": "oxlint-baseline.test.mjs",
+      "path": "ci-standard/test/oxlint-baseline.test.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "test"
+      ],
+      "contentHash": "466736c3bfc6c1f7f3542953db097d5f55581cf21ab3dd0289bdda51938d43d3"
+    },
+    {
+      "id": "module:ci-standard/test/oxlint-migrate.test.mjs",
+      "type": "module",
+      "title": "oxlint-migrate.test.mjs",
+      "path": "ci-standard/test/oxlint-migrate.test.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "test"
+      ],
+      "contentHash": "1f90c2e93f38ab7ff1d48b03d2bf99e41c62b98af008a6ef1915ed4b60e42371"
+    },
+    {
+      "id": "module:ci-standard/test/slow-tests.test.mjs",
+      "type": "module",
+      "title": "slow-tests.test.mjs",
+      "path": "ci-standard/test/slow-tests.test.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "test"
+      ],
+      "contentHash": "9adad0090a23ee462fc892e44914f4daabc27000042ad4087c87c33a9b0ca3ba"
+    },
+    {
+      "id": "module:ci-standard/test/test-env.test.mjs",
+      "type": "module",
+      "title": "test-env.test.mjs",
+      "path": "ci-standard/test/test-env.test.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "test"
+      ],
+      "contentHash": "339532dc75988584fd3b753fa138a35d6f04793ce518de47e9970be0c82fe8b8"
     },
     {
       "id": "module:examples/verify-readme.mjs",
@@ -3672,8 +4077,8 @@
     }
   },
   "inputs": {
-    "hash": "699731a14434293ffa3bf3445d535a33a14f5e4b29189fa602e91334a992db92",
-    "fileCount": 252,
+    "hash": "94b8e1adadd889c0b72ec7ce22808046ae6fe7389a12d9439019cbf0c46b6662",
+    "fileCount": 278,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3695,9 +4100,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "b9b375b5c8ae823cd2d4436d9a3dbcde2b4eccd14a52773359ffcfccb036ac51",
+    "contentHash": "94704d931e60a5c018efcc27e645774dca17d7df414f56764eeab55fb7104578",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "76fa1cdbf0933520b844407e5be3beff358c0d6e45cad00b0482858b4dfec500",
+    "snapshotHash": "d5099bf126df5ae0d82c8bfbe723e0a1a6c4507b09f771a244b5eaea85bfb332",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "7fe3cb5d20c435614bd8b721dc11afff39159e00851e1e6ef33c678f9bc172ab",
     "lexiconVersion": 1,
@@ -3717,7 +4122,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 231,
+      "documentCount": 256,
       "fieldNames": [
         "aliases",
         "body",
@@ -3728,13 +4133,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.83982683982684,
-        "body": 53.81385281385281,
-        "headings": 3.735930735930736,
-        "path": 5.523809523809524,
-        "summary": 4.7272727272727275,
-        "symbols": 12.229437229437229,
-        "title": 4.229437229437229
+        "aliases": 2.83984375,
+        "body": 49.01171875,
+        "headings": 3.40234375,
+        "path": 5.65625,
+        "summary": 4.4296875,
+        "symbols": 12.0546875,
+        "title": 4.21484375
       }
     },
     "entries": [
@@ -3881,6 +4286,37 @@
           "outbound": []
         },
         "contentHash": "448b2898e393ce7b22684c51b828710502399fe23a82c28b76084b12bd815257",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "area:ci-standard",
+        "kind": "area",
+        "path": "ci-standard",
+        "title": "ci-standard",
+        "aliases": [],
+        "tags": [
+          "area"
+        ],
+        "fields": {
+          "title": "ci-standard",
+          "headings": "",
+          "path": "ci-standard",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "area"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "9dd3e808a9288a1be5344f0a88b5fb83c531cbf89b5a369ef1529800911a15b5",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -5018,6 +5454,39 @@
         "confidence": "observed"
       },
       {
+        "id": "document:changelog.d/432.md",
+        "kind": "document",
+        "path": "changelog.d/432.md",
+        "title": "432.md",
+        "summary": "fix: sync the platform CI standard (ci-standard.yml, setup-deps/ci-mode actions, ci-standard scripts, pre-push hook) and move the repo's settings to the inputs of ci.yml (#432)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "432.md",
+          "headings": "",
+          "path": "changelog.d/432.md",
+          "symbols": "",
+          "summary": "fix: sync the platform CI standard (ci-standard.yml, setup-deps/ci-mode actions, ci-standard scripts, pre-push hook) and move the repo's settings to the inputs of ci.yml (#432)",
+          "body": "fix: sync the platform CI standard (ci-standard.yml, setup-deps/ci-mode actions, ci-standard scripts, pre-push hook) and move the repo's settings to the inputs of ci.yml ( 432)",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "252911a71dc85cfe33571cad04df42336e11cf52f5edc1b2b95033e349798b5d",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "document:changelog.d/433.md",
         "kind": "document",
         "path": "changelog.d/433.md",
@@ -5442,6 +5911,39 @@
           "outbound": []
         },
         "contentHash": "6a20abc1fbe29cf764820ccf81d46693d5627178a68294d2c7342a1f343452e1",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:docs/adr/0000-template.md",
+        "kind": "document",
+        "path": "docs/adr/0000-template.md",
+        "title": "ADR NNNN — {título curto da decisão}",
+        "summary": "Status: proposta | aceita | substituída por NNNN Data: AAAA-MM-DD Responsável: {quem decidiu}",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "human"
+        ],
+        "fields": {
+          "title": "ADR NNNN — {título curto da decisão}",
+          "headings": "ADR NNNN — {título curto da decisão} Contexto Decisão Consequências",
+          "path": "docs/adr/0000-template.md",
+          "symbols": "",
+          "summary": "Status: proposta | aceita | substituída por NNNN Data: AAAA-MM-DD Responsável: {quem decidiu}",
+          "body": "ADR NNNN — {título curto da decisão} Status: proposta aceita substituída por NNNN Data: AAAA-MM-DD Responsável: {quem decidiu} Contexto O problema, as forças em jogo e as restrições (custo, prazo, runtime, segurança). Fatos com fonte, não opinião. Decisão O que foi decidido, numa frase, e os detalhes que a tornam verificável (o que muda no código, em que arquivo ou job). Consequências O que fica mais fácil, o que fica mais difícil, o risco que se aceita e como medir se a decisão funcionou. Alternativas descartadas e por quê. <!-- Como usar: copie para docs/adr/{próximo número com 4 dígitos}-{slug}.md e preencha. ADR aceita não é editada: uma decisão nova cria outra ADR, que marca a antiga como \"substituída por NNNN\". Repo que já guarda ADRs em outro caminho mantém o caminho e o registra no AGENTS.md. --",
+          "aliases": "document human"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "f60acf6801d9fec5d5e5a4eab89c40a2d71bebdfa99b32157058c6c1c31ef6be",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -9340,6 +9842,1043 @@
           "outbound": []
         },
         "contentHash": "7bf82e84e8a053e62bfb8b0dd7e63447f6d5f5526b61d403c8f1d33ba35ed501",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:ci-standard/scripts/affected.mjs",
+        "kind": "module",
+        "path": "ci-standard/scripts/affected.mjs",
+        "title": "affected.mjs",
+        "aliases": [],
+        "symbols": [
+          "changedFiles",
+          "classify",
+          "crossCheck",
+          "globToRegExp",
+          "parseNx",
+          "parseTurbo"
+        ],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "affected.mjs",
+          "headings": "",
+          "path": "ci-standard/scripts/affected.mjs",
+          "symbols": "changedFiles classify crossCheck globToRegExp parseNx parseTurbo",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:ci-standard",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/scripts/no-fixed-ports.mjs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/test/affected.test.mjs",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "11d3b5694f78b48032e3f9d6639efa0d6c76853d2c28299d59922229ad58866d",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:ci-standard/scripts/cache-guard.mjs",
+        "kind": "module",
+        "path": "ci-standard/scripts/cache-guard.mjs",
+        "title": "cache-guard.mjs",
+        "aliases": [],
+        "symbols": [
+          "checkDirs",
+          "checkText"
+        ],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "cache-guard.mjs",
+          "headings": "",
+          "path": "ci-standard/scripts/cache-guard.mjs",
+          "symbols": "checkDirs checkText",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:ci-standard",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/test/cache-guard.test.mjs",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/scripts/guard-baseline.mjs",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "1927a56a9b2a8e061530d6aa3a3d3e023fcb9814be8e05529307336b9b700c76",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:ci-standard/scripts/guard-baseline.mjs",
+        "kind": "module",
+        "path": "ci-standard/scripts/guard-baseline.mjs",
+        "title": "guard-baseline.mjs",
+        "aliases": [],
+        "symbols": [
+          "BASELINE_FILE",
+          "applyBaseline",
+          "loadBaseline",
+          "writeBaseline"
+        ],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "guard-baseline.mjs",
+          "headings": "",
+          "path": "ci-standard/scripts/guard-baseline.mjs",
+          "symbols": "BASELINE_FILE applyBaseline loadBaseline writeBaseline",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:ci-standard",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/scripts/cache-guard.mjs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/scripts/no-fixed-ports.mjs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/test/cache-guard.test.mjs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/test/guard-baseline.test.mjs",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "6cdb53027028e83c789f2f1e992cd458368a44ef0045bfdbed4996e4d6460483",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:ci-standard/scripts/no-fixed-ports.mjs",
+        "kind": "module",
+        "path": "ci-standard/scripts/no-fixed-ports.mjs",
+        "title": "no-fixed-ports.mjs",
+        "aliases": [],
+        "symbols": [
+          "DEFAULT_GLOBS",
+          "RULES",
+          "inScope",
+          "scanFiles",
+          "scanText"
+        ],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "no-fixed-ports.mjs",
+          "headings": "",
+          "path": "ci-standard/scripts/no-fixed-ports.mjs",
+          "symbols": "DEFAULT_GLOBS RULES inScope scanFiles scanText",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:ci-standard",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/test/no-fixed-ports.test.mjs",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/scripts/affected.mjs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/scripts/guard-baseline.mjs",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "d717d332254e4dddd3de3fa5a7928ce7a3fd4afc59685d3cf59de8dba1b324fc",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:ci-standard/scripts/oxlint-baseline.mjs",
+        "kind": "module",
+        "path": "ci-standard/scripts/oxlint-baseline.mjs",
+        "title": "oxlint-baseline.mjs",
+        "aliases": [],
+        "symbols": [
+          "failingFiles",
+          "fromPattern",
+          "listed",
+          "toPattern"
+        ],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "oxlint-baseline.mjs",
+          "headings": "",
+          "path": "ci-standard/scripts/oxlint-baseline.mjs",
+          "symbols": "failingFiles fromPattern listed toPattern",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:ci-standard",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/test/oxlint-baseline.test.mjs",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "cfc7b5ff8d39b6ab8528329ce35153ff9dfa348fc581b57ede569d0288e73764",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:ci-standard/scripts/oxlint-migrate.mjs",
+        "kind": "module",
+        "path": "ci-standard/scripts/oxlint-migrate.mjs",
+        "title": "oxlint-migrate.mjs",
+        "aliases": [],
+        "symbols": [
+          "RULES",
+          "migrate"
+        ],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "oxlint-migrate.mjs",
+          "headings": "",
+          "path": "ci-standard/scripts/oxlint-migrate.mjs",
+          "symbols": "RULES migrate",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:ci-standard",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/test/oxlint-migrate.test.mjs",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "3e0bf693abab7fcfab1c8ceb2a60a4f86d0efff0b7516e60bed472f317ca9879",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:ci-standard/scripts/pre-push.mjs",
+        "kind": "module",
+        "path": "ci-standard/scripts/pre-push.mjs",
+        "title": "pre-push.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "pre-push.mjs",
+          "headings": "",
+          "path": "ci-standard/scripts/pre-push.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:ci-standard",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "6e6e9744b554d2e3402e618dd07476c63ffcedbdd44ce2ef22febc74cf26c038",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:ci-standard/scripts/slow-tests.mjs",
+        "kind": "module",
+        "path": "ci-standard/scripts/slow-tests.mjs",
+        "title": "slow-tests.mjs",
+        "aliases": [],
+        "symbols": [
+          "BUDGET_FAIL_MS",
+          "BUDGET_WARN_MS",
+          "fromJunit",
+          "fromLocalRun",
+          "fromLog",
+          "fromNotice",
+          "fromRepo",
+          "fromVitestJson",
+          "markdown",
+          "merge",
+          "notice",
+          "parse",
+          "runsPath",
+          "slowest"
+        ],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "slow-tests.mjs",
+          "headings": "",
+          "path": "ci-standard/scripts/slow-tests.mjs",
+          "symbols": "BUDGET_FAIL_MS BUDGET_WARN_MS fromJunit fromLocalRun fromLog fromNotice fromRepo fromVitestJson markdown merge notice parse runsPath slowest",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:ci-standard",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/test/slow-tests.test.mjs",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "6b9e22dcae348bf8aa25882ecceff86ba8cf07fa3098b765e4f169dc88ae1540",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:ci-standard/scripts/test-budget.d.mts",
+        "kind": "module",
+        "path": "ci-standard/scripts/test-budget.d.mts",
+        "title": "test-budget.d.mts",
+        "aliases": [],
+        "symbols": [
+          "PR_TEST_TIMEOUT_MS",
+          "SLOW_TEST_GLOB",
+          "SLOW_TEST_WARN_MS",
+          "testProfile",
+          "vitestBudget"
+        ],
+        "tags": [
+          "module",
+          "mts",
+          "scripts"
+        ],
+        "fields": {
+          "title": "test-budget.d.mts",
+          "headings": "",
+          "path": "ci-standard/scripts/test-budget.d.mts",
+          "symbols": "PR_TEST_TIMEOUT_MS SLOW_TEST_GLOB SLOW_TEST_WARN_MS testProfile vitestBudget",
+          "summary": "",
+          "body": "",
+          "aliases": "module mts scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:ci-standard",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "99ccc9ef0d077551b19b7e50f6fa7fc9d011aedaeb77253ced4972cfdeb83f65",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:ci-standard/scripts/test-budget.mjs",
+        "kind": "module",
+        "path": "ci-standard/scripts/test-budget.mjs",
+        "title": "test-budget.mjs",
+        "aliases": [],
+        "symbols": [
+          "PR_TEST_TIMEOUT_MS",
+          "SLOW_TEST_GLOB",
+          "SLOW_TEST_WARN_MS",
+          "testProfile",
+          "vitestBudget"
+        ],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "test-budget.mjs",
+          "headings": "",
+          "path": "ci-standard/scripts/test-budget.mjs",
+          "symbols": "PR_TEST_TIMEOUT_MS SLOW_TEST_GLOB SLOW_TEST_WARN_MS testProfile vitestBudget",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:ci-standard",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/test/slow-tests.test.mjs",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "b7316fb88aac4f274f022c7e254a6dbbe3fbb70307fa752f357d39b12e5e0ca3",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:ci-standard/scripts/test-clock.d.mts",
+        "kind": "module",
+        "path": "ci-standard/scripts/test-clock.d.mts",
+        "title": "test-clock.d.mts",
+        "aliases": [],
+        "symbols": [
+          "DAY",
+          "HOUR",
+          "MINUTE",
+          "SECOND",
+          "addMs",
+          "fakeClock",
+          "startOfNextUtcMonth",
+          "startOfUtcDay",
+          "startOfUtcMonth",
+          "testNow"
+        ],
+        "tags": [
+          "module",
+          "mts",
+          "scripts"
+        ],
+        "fields": {
+          "title": "test-clock.d.mts",
+          "headings": "",
+          "path": "ci-standard/scripts/test-clock.d.mts",
+          "symbols": "DAY HOUR MINUTE SECOND addMs fakeClock startOfNextUtcMonth startOfUtcDay startOfUtcMonth testNow",
+          "summary": "",
+          "body": "",
+          "aliases": "module mts scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:ci-standard",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "4d93a02ebc487d8fe5e1229a0dc009a624c2233ede18def0bc44d10798cbbea6",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:ci-standard/scripts/test-clock.mjs",
+        "kind": "module",
+        "path": "ci-standard/scripts/test-clock.mjs",
+        "title": "test-clock.mjs",
+        "aliases": [],
+        "symbols": [
+          "DAY",
+          "HOUR",
+          "MINUTE",
+          "SECOND",
+          "addMs",
+          "fakeClock",
+          "startOfNextUtcMonth",
+          "startOfUtcDay",
+          "startOfUtcMonth",
+          "testNow"
+        ],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "test-clock.mjs",
+          "headings": "",
+          "path": "ci-standard/scripts/test-clock.mjs",
+          "symbols": "DAY HOUR MINUTE SECOND addMs fakeClock startOfNextUtcMonth startOfUtcDay startOfUtcMonth testNow",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:ci-standard",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "re-exports",
+              "id": "module:ci-standard/scripts/test-env.d.mts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "re-exports",
+              "id": "module:ci-standard/scripts/test-env.mjs",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "a16df45d852aa9bd7f8edd2db4379a9b73a01c711aa287ef8d155da428790c8d",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:ci-standard/scripts/test-env.d.mts",
+        "kind": "module",
+        "path": "ci-standard/scripts/test-env.d.mts",
+        "title": "test-env.d.mts",
+        "aliases": [],
+        "symbols": [
+          "baseDatabaseUrl",
+          "createTestDatabase",
+          "databasePrefix",
+          "dropDatabase",
+          "dropTestDatabases",
+          "freePort",
+          "freePorts",
+          "jobPrefix",
+          "listTestDatabases",
+          "loadPg",
+          "runPrefix",
+          "testDatabaseName"
+        ],
+        "tags": [
+          "module",
+          "mts",
+          "scripts"
+        ],
+        "fields": {
+          "title": "test-env.d.mts",
+          "headings": "",
+          "path": "ci-standard/scripts/test-env.d.mts",
+          "symbols": "baseDatabaseUrl createTestDatabase databasePrefix dropDatabase dropTestDatabases freePort freePorts jobPrefix listTestDatabases loadPg runPrefix testDatabaseName",
+          "summary": "",
+          "body": "",
+          "aliases": "module mts scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:ci-standard",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "re-exports",
+              "id": "module:ci-standard/scripts/test-clock.mjs",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "1fe155147e55084803bfb45f349f6de620031e11eb659d4302c455dd31b93891",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:ci-standard/scripts/test-env.mjs",
+        "kind": "module",
+        "path": "ci-standard/scripts/test-env.mjs",
+        "title": "test-env.mjs",
+        "aliases": [],
+        "symbols": [
+          "baseDatabaseUrl",
+          "createTestDatabase",
+          "databasePrefix",
+          "dropDatabase",
+          "dropTestDatabases",
+          "freePort",
+          "freePorts",
+          "jobPrefix",
+          "listTestDatabases",
+          "loadPg",
+          "runPrefix",
+          "testDatabaseName"
+        ],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "test-env.mjs",
+          "headings": "",
+          "path": "ci-standard/scripts/test-env.mjs",
+          "symbols": "baseDatabaseUrl createTestDatabase databasePrefix dropDatabase dropTestDatabases freePort freePorts jobPrefix listTestDatabases loadPg runPrefix testDatabaseName",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:ci-standard",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/test/test-env.test.mjs",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": [
+            {
+              "kind": "re-exports",
+              "id": "module:ci-standard/scripts/test-clock.mjs",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "301c1126f05ce0e239ce15e48ca11d3edd83382ab1934230d823fb2416df708b",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:ci-standard/test/affected.test.mjs",
+        "kind": "module",
+        "path": "ci-standard/test/affected.test.mjs",
+        "title": "affected.test.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "test"
+        ],
+        "fields": {
+          "title": "affected.test.mjs",
+          "headings": "",
+          "path": "ci-standard/test/affected.test.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs test"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:ci-standard",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/scripts/affected.mjs",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "076ded836522422b4999e52031838123e81365f7a5b85849ce4fd695fcb828d7",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:ci-standard/test/cache-guard.test.mjs",
+        "kind": "module",
+        "path": "ci-standard/test/cache-guard.test.mjs",
+        "title": "cache-guard.test.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "test"
+        ],
+        "fields": {
+          "title": "cache-guard.test.mjs",
+          "headings": "",
+          "path": "ci-standard/test/cache-guard.test.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs test"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:ci-standard",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/scripts/cache-guard.mjs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/scripts/guard-baseline.mjs",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "f5e53f56b10522ba0c502ee8c4ad07f0d85a2917d496ff9dececa06edd1dc348",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:ci-standard/test/guard-baseline.test.mjs",
+        "kind": "module",
+        "path": "ci-standard/test/guard-baseline.test.mjs",
+        "title": "guard-baseline.test.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "test"
+        ],
+        "fields": {
+          "title": "guard-baseline.test.mjs",
+          "headings": "",
+          "path": "ci-standard/test/guard-baseline.test.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs test"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:ci-standard",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/scripts/guard-baseline.mjs",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "c975b7f03d7b3ef768cffb8a123988873cbef16a7c76b968bba17a6f4d320e6e",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:ci-standard/test/no-fixed-ports.test.mjs",
+        "kind": "module",
+        "path": "ci-standard/test/no-fixed-ports.test.mjs",
+        "title": "no-fixed-ports.test.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "test"
+        ],
+        "fields": {
+          "title": "no-fixed-ports.test.mjs",
+          "headings": "",
+          "path": "ci-standard/test/no-fixed-ports.test.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs test"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:ci-standard",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/scripts/no-fixed-ports.mjs",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "32bcec147e3c340bcb40b00df219ec7e71fec9d3dd2d4871f846fa576e11a872",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:ci-standard/test/oxlint-baseline.test.mjs",
+        "kind": "module",
+        "path": "ci-standard/test/oxlint-baseline.test.mjs",
+        "title": "oxlint-baseline.test.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "test"
+        ],
+        "fields": {
+          "title": "oxlint-baseline.test.mjs",
+          "headings": "",
+          "path": "ci-standard/test/oxlint-baseline.test.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs test"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:ci-standard",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/scripts/oxlint-baseline.mjs",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "466736c3bfc6c1f7f3542953db097d5f55581cf21ab3dd0289bdda51938d43d3",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:ci-standard/test/oxlint-migrate.test.mjs",
+        "kind": "module",
+        "path": "ci-standard/test/oxlint-migrate.test.mjs",
+        "title": "oxlint-migrate.test.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "test"
+        ],
+        "fields": {
+          "title": "oxlint-migrate.test.mjs",
+          "headings": "",
+          "path": "ci-standard/test/oxlint-migrate.test.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs test"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:ci-standard",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/scripts/oxlint-migrate.mjs",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "1f90c2e93f38ab7ff1d48b03d2bf99e41c62b98af008a6ef1915ed4b60e42371",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:ci-standard/test/slow-tests.test.mjs",
+        "kind": "module",
+        "path": "ci-standard/test/slow-tests.test.mjs",
+        "title": "slow-tests.test.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "test"
+        ],
+        "fields": {
+          "title": "slow-tests.test.mjs",
+          "headings": "",
+          "path": "ci-standard/test/slow-tests.test.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs test"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:ci-standard",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/scripts/slow-tests.mjs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/scripts/test-budget.mjs",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "9adad0090a23ee462fc892e44914f4daabc27000042ad4087c87c33a9b0ca3ba",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:ci-standard/test/test-env.test.mjs",
+        "kind": "module",
+        "path": "ci-standard/test/test-env.test.mjs",
+        "title": "test-env.test.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "test"
+        ],
+        "fields": {
+          "title": "test-env.test.mjs",
+          "headings": "",
+          "path": "ci-standard/test/test-env.test.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs test"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:ci-standard",
+          "packageId": "package:@agentskit/code-review",
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:ci-standard/scripts/test-env.mjs",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "339532dc75988584fd3b753fa138a35d6f04793ce518de47e9970be0c82fe8b8",
         "provenance": "observed",
         "confidence": "observed"
       },
