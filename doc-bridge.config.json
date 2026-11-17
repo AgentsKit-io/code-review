@@ -65,6 +65,16 @@
           ],
           "agentDoc": "docs/for-agents/code-review.md",
           "humanDoc": "https://code-review.agentskit.io/docs"
+        },
+        "docs-site": {
+          "path": "apps/docs",
+          "purpose": "Fumadocs presentation site for the Code Review documentation; it never runs real reviews.",
+          "checks": [
+            "npm run docs:web:typecheck",
+            "npm run docs:web:build"
+          ],
+          "agentDoc": "docs/for-agents/docs-site.md",
+          "humanDoc": "https://code-review.agentskit.io/docs"
         }
       },
       "intents": [
