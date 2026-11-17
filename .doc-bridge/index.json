@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "1b62e6d25ac8f2f1edca8c368672c44b3d2ccb4e956895dbaa2828586b1b33e1",
+  "contentHash": "f54aadfff2bccccb9b5d83d7c5e9120b61555e8b28ebd3324521d91c9aa26fb2",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-17T04:13:51.165Z",
+  "generatedAt": "2026-11-17T04:14:12.449Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -352,6 +352,18 @@
         "project"
       ],
       "contentHash": "c199827bc3d68bd704c6bbc59e78b7526fa76d5c5604f27a9b5f30834b7e484f"
+    },
+    {
+      "id": "document:changelog.d/433.md",
+      "type": "document",
+      "title": "433.md",
+      "path": "changelog.d/433.md",
+      "description": "feat: add docs-site doc-bridge handoff covering apps/docs (#433)",
+      "tags": [
+        "document",
+        "project"
+      ],
+      "contentHash": "a334b22d49eb5b1719a19a893977bb23040b19378c1f7397745bd42354901bd8"
     },
     {
       "id": "document:CHANGELOG.md",
@@ -3660,8 +3672,8 @@
     }
   },
   "inputs": {
-    "hash": "d4d82b0539e7d794d3f9d5be1b59fd7e60024cec28851fe1ae3f22c9ea6ef6d0",
-    "fileCount": 251,
+    "hash": "4092459e2a9f0fe4558d3919dc9131a31d82db0482202efdf23b6f155cf1b7f5",
+    "fileCount": 252,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -3683,9 +3695,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "82f39fc70a6699b5747ac1af0552b01655c15a69734fe7363cbc272c599cb426",
+    "contentHash": "bc544033875536ea63e1095cdf7dd2d452aed61ab01641b2c749923ad5ec429a",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "ff53f163136da17bee7f8c5dd0c7186bc5b1018fbc59eea88a723a2034973344",
+    "snapshotHash": "42e9ed679dde544b6e407a9ba6bdde6a4a21a6e80e3cfeea3c597b24d66b350b",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "7fe3cb5d20c435614bd8b721dc11afff39159e00851e1e6ef33c678f9bc172ab",
     "lexiconVersion": 1,
@@ -3705,7 +3717,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 230,
+      "documentCount": 231,
       "fieldNames": [
         "aliases",
         "body",
@@ -3716,13 +3728,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 2.8434782608695652,
-        "body": 53.86521739130435,
-        "headings": 3.743478260869565,
-        "path": 5.530434782608696,
-        "summary": 4.6869565217391305,
-        "symbols": 12.282608695652174,
-        "title": 4.230434782608696
+        "aliases": 2.83982683982684,
+        "body": 53.692640692640694,
+        "headings": 3.727272727272727,
+        "path": 5.523809523809524,
+        "summary": 4.7272727272727275,
+        "symbols": 12.229437229437229,
+        "title": 4.220779220779221
       }
     },
     "entries": [
@@ -4996,6 +5008,39 @@
           "outbound": []
         },
         "contentHash": "c199827bc3d68bd704c6bbc59e78b7526fa76d5c5604f27a9b5f30834b7e484f",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:changelog.d/433.md",
+        "kind": "document",
+        "path": "changelog.d/433.md",
+        "title": "433.md",
+        "summary": "feat: add docs-site doc-bridge handoff covering apps/docs (#433)",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "project"
+        ],
+        "fields": {
+          "title": "433.md",
+          "headings": "",
+          "path": "changelog.d/433.md",
+          "symbols": "",
+          "summary": "feat: add docs-site doc-bridge handoff covering apps/docs (#433)",
+          "body": "feat: add docs-site doc-bridge handoff covering apps/docs ( 433)",
+          "aliases": "document project"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "a334b22d49eb5b1719a19a893977bb23040b19378c1f7397745bd42354901bd8",
         "provenance": "observed",
         "confidence": "observed"
       },
