@@ -20,5 +20,5 @@ AgentsKit Code Review is a provider-neutral CLI and GitHub Action for configurab
 ## Knowledge
 
 - [Code Review CLI handoff](docs/for-agents/code-review.md): Provider-neutral, low-noise AI code review for local Git diffs, files/stdin, and GitHub pull requests. Bounded diff-first context packs run one multidimensional analysis; adversarial votes remove weak findings; reporters emit Markdown, GitHub reviews, and SARIF.
-- [Docs site handoff](docs/for-agents/docs-site.md): `apps/docs` is the Fumadocs presentation surface for https://code-review.agentskit.io. It renders the curated guides from `docs/` and must never run real reviews or hold provider keys.
+- [Docs site agent handoff](docs/for-agents/docs-site.md): `apps/docs` is the Fumadocs presentation surface for https://code-review.agentskit.io. It renders the curated guides from `docs/` and must never run real reviews or hold provider keys.
 - [Code Review agent docs](docs/for-agents/index.md): - Code Review CLI handoff — ownership, change routes, security boundaries, and verification: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/docs/for-agents/code-review.md - Concise machine map — discovery, raw sources, and all six ecosystem products: https://raw.githubusercontent.com/AgentsKit-io/code-review/main/llms.txt - Full machine corpus — public, operational, governance,

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "aa276f4dd0222c835af78594c77e439578fb9a7b671ef3f74bd3e190c2fc4a6a",
+  "contentHash": "b356dc8042d6c67edf9478da32231c01820068c8ea05e5b78de9f3adc38f1f36",
   "contentHashAlgo": "sha256-semantic-v1",
-  "generatedAt": "2026-11-17T04:54:30.809Z",
+  "generatedAt": "2026-11-17T05:06:14.515Z",
   "project": {
     "name": "AgentsKit Code Review",
     "root": "."
@@ -18,7 +18,7 @@
     {
       "id": "docs-site",
       "type": "agent-doc",
-      "title": "Docs site handoff",
+      "title": "Docs site agent handoff",
       "path": "docs/for-agents/docs-site.md",
       "description": "`apps/docs` is the Fumadocs presentation surface for https://code-review.agentskit.io. It renders the curated guides from `docs/` and must never run real reviews or hold provider keys."
     },
@@ -363,7 +363,7 @@
         "document",
         "project"
       ],
-      "contentHash": "facc8e3366aac10a4b33d062d1ccf4802d440deb7733a0bdd56dece589fbbde3"
+      "contentHash": "7740c38f8287c52a3317366e8e2e30dee248fc105659f8171624362a19dda429"
     },
     {
       "id": "document:CHANGELOG.md",
@@ -3672,7 +3672,7 @@
     }
   },
   "inputs": {
-    "hash": "03722de35bf45c29ae1af286eaf5dc435f95282dcffe4650b2e685c385db9488",
+    "hash": "8e1bd0d2fcb0f8d9728009e158cf89288395b268b8ab03a426652be514e0246f",
     "fileCount": 252,
     "projectionVersion": 2
   },
@@ -3695,9 +3695,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "f39fff7e62d575db23cdb4757e1cef1bdacff922416cf85e4afd9e50c0b0a7f9",
+    "contentHash": "980c3b75ebd8cdf532cd23f587628555dedf74616858804725a75bf6b4459997",
     "contentHashAlgo": "sha256-semantic-v1",
-    "snapshotHash": "925c5493c19b051a5d5a5379c58ef1c156a9386fdd66d5f106ad3f31336aacff",
+    "snapshotHash": "7221c79149d2df363b184d7849262a9dc4576d0e473605910030b208ebdd02b2",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "7fe3cb5d20c435614bd8b721dc11afff39159e00851e1e6ef33c678f9bc172ab",
     "lexiconVersion": 1,
@@ -3729,12 +3729,12 @@
       ],
       "averageFieldLength": {
         "aliases": 2.83982683982684,
-        "body": 53.731601731601735,
-        "headings": 3.727272727272727,
+        "body": 53.81385281385281,
+        "headings": 3.735930735930736,
         "path": 5.523809523809524,
         "summary": 4.7272727272727275,
         "symbols": 12.229437229437229,
-        "title": 4.220779220779221
+        "title": 4.229437229437229
       }
     },
     "entries": [
@@ -3787,7 +3787,7 @@
         "id": "area:apps/docs",
         "kind": "area",
         "path": "apps/docs",
-        "title": "Docs site handoff",
+        "title": "Docs site agent handoff",
         "summary": "Fumadocs presentation site for the Code Review documentation; it never runs real reviews.",
         "audience": "agent",
         "aliases": [
@@ -3798,22 +3798,23 @@
           "ownership"
         ],
         "fields": {
-          "title": "Docs site handoff",
-          "headings": "Docs site handoff Purpose Change routes Verification",
+          "title": "Docs site agent handoff",
+          "headings": "Docs site agent handoff Purpose Change routes Verification",
           "path": "apps/docs",
           "symbols": "",
           "summary": "Fumadocs presentation site for the Code Review documentation; it never runs real reviews.",
-          "body": "Docs site handoff Purpose apps/docs is the Fumadocs presentation surface for https://code-review.agentskit.io. It renders the curated guides from docs/ and must never run real reviews or hold provider keys. Change routes - Content lives in docs/ ; edit pages there, not in generated apps/docs/.source . - App code, layout, and routes live in apps/docs/ ; it has its own package-lock.json ( npm install --prefix apps/docs ). - Read apps/docs/AGENTS.md for the framework version rules before editing app code. Verification",
+          "body": "Docs site agent handoff Purpose apps/docs is the Fumadocs presentation surface for https://code-review.agentskit.io. It renders the curated guides from docs/ and must never run real reviews or hold provider keys. Change routes - Content lives in docs/ ; edit pages there, not in generated apps/docs/.source . - App code, layout, and routes live in apps/docs/ ; it has its own package-lock.json ( npm install --prefix apps/docs ). - Read apps/docs/AGENTS.md for the framework version rules before editing app code. Verification",
           "aliases": "docs-site area ownership"
         },
         "graph": {
           "pagerank": 0.035651,
-          "inboundLinks": 3,
+          "inboundLinks": 4,
           "coveredBy": [
             "document:docs/for-agents/docs-site.md"
           ],
           "mentionedBy": [
             "document:apps/docs/README.md",
+            "document:changelog.d/433.md",
             "document:CHANGELOG.md",
             "document:docs/for-agents/docs-site.md"
           ],
@@ -3827,6 +3828,11 @@
             {
               "kind": "mentions",
               "id": "document:apps/docs/README.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:changelog.d/433.md",
               "confidence": "observed"
             },
             {
@@ -5029,7 +5035,7 @@
           "path": "changelog.d/433.md",
           "symbols": "",
           "summary": "feat: add docs-site doc-bridge handoff covering apps/docs (#433)",
-          "body": "feat: add docs-site doc-bridge handoff covering apps/docs ( 433) Also adds a lint:biome script (Biome 2.6.4, format check on its config files).",
+          "body": "feat: add docs-site doc-bridge handoff covering apps/docs ( 433) Registers apps/docs as an owned package in doc-bridge.config.json with its agent handoff docs/for-agents/docs-site.md , so every editRoot has generated for-agents coverage.",
           "aliases": "document project"
         },
         "graph": {
@@ -5038,9 +5044,20 @@
           "coveredBy": [],
           "mentionedBy": [],
           "inbound": [],
-          "outbound": []
+          "outbound": [
+            {
+              "kind": "mentions",
+              "id": "area:apps/docs",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/for-agents/docs-site.md",
+              "confidence": "observed"
+            }
+          ]
         },
-        "contentHash": "facc8e3366aac10a4b33d062d1ccf4802d440deb7733a0bdd56dece589fbbde3",
+        "contentHash": "7740c38f8287c52a3317366e8e2e30dee248fc105659f8171624362a19dda429",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -6548,7 +6565,7 @@
         "id": "document:docs/for-agents/docs-site.md",
         "kind": "document",
         "path": "docs/for-agents/docs-site.md",
-        "title": "Docs site handoff",
+        "title": "Docs site agent handoff",
         "summary": "`apps/docs` is the Fumadocs presentation surface for https://code-review.agentskit.io. It renders the curated guides from `docs/` and must never run real reviews or hold provider keys.",
         "audience": "agent",
         "aliases": [
@@ -6560,20 +6577,28 @@
           "package"
         ],
         "fields": {
-          "title": "Docs site handoff",
-          "headings": "Docs site handoff Purpose Change routes Verification",
+          "title": "Docs site agent handoff",
+          "headings": "Docs site agent handoff Purpose Change routes Verification",
           "path": "docs/for-agents/docs-site.md",
           "symbols": "",
           "summary": "`apps/docs` is the Fumadocs presentation surface for https://code-review.agentskit.io. It renders the curated guides from `docs/` and must never run real reviews or hold provider keys.",
-          "body": "Docs site handoff Purpose apps/docs is the Fumadocs presentation surface for https://code-review.agentskit.io. It renders the curated guides from docs/ and must never run real reviews or hold provider keys. Change routes - Content lives in docs/ ; edit pages there, not in generated apps/docs/.source . - App code, layout, and routes live in apps/docs/ ; it has its own package-lock.json ( npm install --prefix apps/docs ). - Read apps/docs/AGENTS.md for the framework version rules before editing app code. Verification",
+          "body": "Docs site agent handoff Purpose apps/docs is the Fumadocs presentation surface for https://code-review.agentskit.io. It renders the curated guides from docs/ and must never run real reviews or hold provider keys. Change routes - Content lives in docs/ ; edit pages there, not in generated apps/docs/.source . - App code, layout, and routes live in apps/docs/ ; it has its own package-lock.json ( npm install --prefix apps/docs ). - Read apps/docs/AGENTS.md for the framework version rules before editing app code. Verification",
           "aliases": "docs-site document agent package"
         },
         "graph": {
           "pagerank": 0.019271,
-          "inboundLinks": 0,
+          "inboundLinks": 1,
           "coveredBy": [],
-          "mentionedBy": [],
-          "inbound": [],
+          "mentionedBy": [
+            "document:changelog.d/433.md"
+          ],
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:changelog.d/433.md",
+              "confidence": "observed"
+            }
+          ],
           "outbound": [
             {
               "kind": "covers",
@@ -6592,7 +6617,7 @@
             }
           ]
         },
-        "contentHash": "95ea4b3b9df8e428dd3ed63cde26d4ffd5dda2416c7d7daa1956aa9672747a0f",
+        "contentHash": "b130080a945a15e4761335fd7e0ec994da9960b0f51751a8ea83abd6f52d80e8",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -16488,7 +16513,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "2ae87663639d5b3affb43d797135d552dcceac4ce8c3a5a030368ab8dff0b3d7",
+        "contentHash": "851e9ac77fb14b8bacd1017c4bf2ee2952727d2a2a3364738d3a34cc93d26db5",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "code-review"

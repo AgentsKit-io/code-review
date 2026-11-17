@@ -1,5 +1,4 @@
 ---
-
 type: package
 package: docs-site
 title: Docs site agent handoff
@@ -8,7 +7,7 @@ editRoot: apps/docs
 checks: [npm run docs:web:typecheck, npm run docs:web:build]
 ---
 
-# Docs site handoff
+# Docs site agent handoff
 
 ## Purpose
 

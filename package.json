@@ -144,8 +144,7 @@
     "readme:standard:refresh": "node scripts/refresh-readme-standard.mjs",
     "docs:web:dev": "npm --prefix apps/docs run dev",
     "docs:web:build": "npm --prefix apps/docs run build",
-    "docs:web:typecheck": "npm --prefix apps/docs run typecheck",
-    "lint:biome": "biome format biome.json tsconfig.json"
+    "docs:web:typecheck": "npm --prefix apps/docs run typecheck"
   },
   "dependencies": {
     "@agentskit/adapters": "^0.19.0",
@@ -163,7 +162,6 @@
     "@agentskit/doc-bridge": "^2.5.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.6.4",
     "@changesets/changelog-github": "^1.0.1",
     "@changesets/cli": "^3.0.3",
     "@types/json-schema": "^7.0.15",
