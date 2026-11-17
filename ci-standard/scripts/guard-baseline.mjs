@@ -20,7 +20,12 @@ export function applyBaseline(violations, baseline) {
 }
 
 export function writeBaseline(name, violations, file = BASELINE_FILE) {
-  const all = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : {}
+  let all = {}
+  try {
+    all = JSON.parse(readFileSync(file, 'utf8'))
+  } catch (e) {
+    if (e?.code !== 'ENOENT') throw e
+  }
   all[name] = [...new Set(violations.map((v) => v.file))].sort()
   writeFileSync(file, `${JSON.stringify(all, null, 2)}\n`)
   return all[name].length

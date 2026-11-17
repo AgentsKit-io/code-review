@@ -203,7 +203,7 @@ export async function listTestDatabases(baseUrl, prefix = databasePrefix()) {
     const r = await client.query(
       `SELECT datname, shobj_description(oid, 'pg_database') AS created
        FROM pg_database WHERE datname LIKE $1 ORDER BY datname`,
-      [`${prefix.replace(/_/g, '\\_')}\\_%`],
+      [`${prefix.replace(/\\/g, '\\\\').replace(/_/g, '\\_')}\\_%`],
     )
     return r.rows.map((row) => ({ name: row.datname, createdAt: row.created ? new Date(row.created) : undefined }))
   } finally {

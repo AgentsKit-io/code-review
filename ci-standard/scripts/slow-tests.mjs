@@ -192,7 +192,7 @@ export function fromNotice(message) {
 
 export function markdown(list, { top = 10 } = {}) {
   if (list.length === 0) return '### Slowest tests\n\nNo timed tests in the reports.\n'
-  const rows = list.map((t, i) => `| ${i + 1} | ${seconds(t)} | ${flag(t)} | \`${label(t).replace(/\|/g, '\\|')}\` |`)
+  const rows = list.map((t, i) => `| ${i + 1} | ${seconds(t)} | ${flag(t)} | \`${label(t).replace(/\\/g, '\\\\').replace(/\|/g, '\\|')}\` |`)
   return [
     `### Slowest tests (top ${top})`,
     '',
@@ -226,6 +226,15 @@ const ghLog = (path) => {
  */
 export function runsPath(repo, workflow = '') {
   return `repos/${repo}/actions/workflows/${encodeURIComponent(workflow || 'ci.yml')}/runs?status=completed&per_page=50`
+}
+
+/** Job-name filter from `a|b|c`: case-insensitive substring match on each literal part (no regex built from input). */
+export function jobNameFilter(spec) {
+  const parts = String(spec)
+    .toLowerCase()
+    .split('|')
+    .filter(Boolean)
+  return { test: (name) => parts.some((p) => String(name).toLowerCase().includes(p)) }
 }
 
 /** The latest completed CI runs of a repo that ran tests: their `slow-tests` notices, else the test jobs' logs. */
@@ -310,7 +319,7 @@ function main(argv) {
     else if (a === '--run') opts.run = argv[++i]
     else if (a === '--runs') opts.runs = Number(argv[++i])
     else if (a === '--workflow') opts.workflow = argv[++i]
-    else if (a === '--jobs') opts.jobs = new RegExp(argv[++i], 'i')
+    else if (a === '--jobs') opts.jobs = jobNameFilter(argv[++i])
     else opts.paths.push(a)
   }
   let tests = []
