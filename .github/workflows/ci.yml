@@ -18,10 +18,24 @@ concurrency:
 
 jobs:
   pipeline:
+    # The CI standard (docs/ci-standard.md of platform-template). Leave `runner` empty. Tests stay on node:test.
+    # FORCE_COLOR=0: the pipeline sets FORCE_COLOR=1, which corrupts the node:test coverage report parsing.
     uses: ./.github/workflows/ci-standard.yml
     permissions:
       actions: write
       contents: read
+    with:
+      tool: paths
+      base-branch: main
+      installer: auto
+      linter: biome
+      lint-command: npm run lint:biome
+      format-command: none
+      typecheck-command: bash scripts/ci/check.sh
+      test-command: env FORCE_COLOR=0 npm run test:coverage
+      affected-test-command: env FORCE_COLOR=0 npm run test:coverage
+      build-command: bash scripts/ci/build.sh
+      job-timeout-minutes: 20
 
   # Keeps the required check name: green only when every pipeline stage passed.
   check:
