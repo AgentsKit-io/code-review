@@ -148,7 +148,7 @@
     "docs:web:typecheck": "npm --prefix apps/docs run typecheck"
   },
   "dependencies": {
-    "@agentskit/adapters": "^0.19.0",
+    "@agentskit/adapters": "^0.19.0 || ^1.0.0",
     "@agentskit/core": "^1.15.0",
     "@agentskit/cross-platform": "^0.3.0",
     "@agentskit/ink": "0.10.16",
