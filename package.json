@@ -151,7 +151,7 @@
     "@agentskit/adapters": "^0.19.0",
     "@agentskit/core": "^1.15.0",
     "@agentskit/cross-platform": "^0.3.0",
-    "@agentskit/ink": "0.10.16",
+    "@agentskit/ink": "1.0.0",
     "@agentskit/net": "^0.2.3",
     "@agentskit/runtime": "^0.11.2",
     "@agentskit/tools": "^0.13.15",
