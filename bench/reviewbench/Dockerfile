@@ -1,6 +1,6 @@
 # ReviewBench reviewer image for AgentsKit code-review (agent contract: AGENT_CONTRACT.md in review-bench/ReviewBench).
 # Build from the repository root:  docker build -f bench/reviewbench/Dockerfile -t code-review-rb:dev .
-FROM node:22-slim AS build
+FROM node:26-slim@sha256:abe7e5a82b61a8ef67b315b85497c9e65173387ccf2f4a029248184b8e020be5 AS build
 WORKDIR /app
 COPY package.json package-lock.json tsconfig.json tsconfig.build.json ./
 RUN npm ci --ignore-scripts --no-audit --no-fund
@@ -8,7 +8,7 @@ COPY src ./src
 COPY agents ./agents
 RUN npm run build && npm prune --omit=dev --ignore-scripts
 
-FROM node:22-slim
+FROM node:26-slim@sha256:abe7e5a82b61a8ef67b315b85497c9e65173387ccf2f4a029248184b8e020be5
 RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
     && npm install -g --no-audit --no-fund @anthropic-ai/claude-code && npm cache clean --force
